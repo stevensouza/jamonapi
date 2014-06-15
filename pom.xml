@@ -1,0 +1,45 @@
+ <project>
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
+  
+  <groupId>com.jamonapi</groupId>
+  <artifactId>jamon</artifactId>
+  <packaging>jar</packaging>
+  <name>JAMon (Java Application Monitor)</name>
+  <version>2.75</version>
+  
+  <description>The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.
+  
+    1) It contains the ability to monitor JDBC/SQL, web page requests, ejb's, log4j, interfaces and more.
+    2) It tracks aggregate stats for each sql statement, page request etc. and also lets you look at this information and more via the JAMon war.
+    3) You can also access JAMon statistics via the api
+  </description>
+  <url>http://jamonapi.sourceforge.net/</url>
+  
+  <licenses>
+    <license>
+      <name>JAMon License (BSD)</name>
+      <url>http://jamonapi.sourceforge.net/JAMonLicense.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  
+  <scm>
+    <url>http://jamonapi.cvs.sourceforge.net/viewvc/jamonapi/jamonapi/src/java/com/jamonapi/</url>
+    <connection>scm:cvs:pserver:anonymous@jamonapi.cvs.sourceforge.net:/cvsroot/jamonapi</connection>
+  </scm>
+  
+  <developers>
+    <developer>
+      <id>stevesouza</id>
+      <name>Steve Souza</name>
+      <email>admin@jamonapi.com</email>
+    </developer>
+  </developers>
+
+</project>

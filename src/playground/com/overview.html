@@ -1,0 +1,76 @@
+<body>
+The Java Application Monitor (JAMon v1.0) is a free, simple, high performance, thread safe, Java API that 
+allows developers to easily monitor production applications. 
+
+<p>
+JAMon can be used to determine application performance bottlenecks, user/application interactions, 
+and application scalability. JAMon gathers summary statistics such as hits, execution times 
+(total, average, minimum, maximum, standard deviation), simultaneous application requests and more. 
+JAMon statistics are displayed in the JAMon report.
+</p>
+
+<p>
+JAMon was developed primarily for monitoring J2EE applications, however it can be used in any JDK 1.2 or 
+higher environment. JAMon can be used in Servlets, JSP's, EJB's and Java Beans in various J2EE Application Servers 
+(Sybase's EAServer, and BEA's WebLogic,…), and can also be used in other programming environments that can call 
+Java code (ColdFusion, PowerBuilder, BroadVision, ...).
+</p>
+
+<p><b>JAMon Implementation details</b></p>
+<p>
+The implementation of JAMon uses several design patterns from the book "Design Patterns Elements of Reusable 
+Object-Oriented Software" by Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides. A number
+of the creational patterns are used to create monitors.  The convention is that any class involved in the
+creation of monitors has the word Factory in its name.   Other patterns such as the decorator, and composite
+patterns are also used.
+</p>
+
+<p>
+Despite JAMon's relatively high number of classes, in most cases the only methods that are required to begin monitoring are
+MonitorFactory.add(...), MonitorFactory.start(…), Monitor.stop(), and MonitorFactory.getReport().  Most of JAMon's classes are pretty simple.
+</p>
+
+<p>
+"TestClass" has sample invocations of JAMon code.  I run the TestClass's main() method whenever code 
+changes are made to ensure that errors weren't introduced.  "TestClassPerformance" has various performance tests.
+</p>
+
+<p>
+The decorator pattern dominates the design of JAMon.  The decorator pattern is a way to chain objects with the same
+interface (Monitor), but different responsibilities.  
+</p>
+
+<p>
+When a method such as start(...) is called on the first Monitor in the chain it performs its work and calls the start(...) method on the 
+next Monitor in the chain.  The classes referenced in this decorator chain are the most 
+important in JAMon and are responsible for tracking all JAMon statistics.  
+</p>
+
+<p>
+The outer most Monitor returned to the client in the decorator chain (for Timing Monitors) is unique per invocation of the start(...) method.  
+All of the other Monitors in the chain gather summary statistics and are shared by every invocation of MonitorFactory.start(...) that is 
+passed the same label.  Because multiple threads may simultaneously attempt to update the summary statistics, Monitors are thread safe.
+</p>
+
+<p>
+JAMon makes extensive use of HashMaps in storing Monitors.  The label passed to "MonitorFactory.start("myMonitorLabel");"  is the key to the HashMap
+and Monitors are the values.  
+</p>
+
+<p>
+JAMon consumes very few resources and is fast.  On a 2 GHz Pentium IV, start() and stop() were were called 625,000 times 
+in 1 second!  JAMon can also be disabled at runtime to even further minimize impact on application performance.  
+</p>
+
+<p>JAMon follows a few conventions:
+<ul>
+<li>Interfaces are public, and classes are hidden with package access only
+<li>Many of the interfaces have a base class implementation that adds methods that can be used in inheritance.  For example
+    an interface in JAMon is Range, and the base class is RangeImp
+</ul>
+</p>
+
+<p>For further information on JAMon look at the JAMon user's manual at <a href="http://www.jamonapi.com">www.jamonapi.com</a> or review 
+the source code which is also available via this site.</p>
+<p>Steve Souza - <a href="mailto:admin@jamonapi.com">admin@jamonapi.com</a> (JAMon v1.0)</p>
+</body>

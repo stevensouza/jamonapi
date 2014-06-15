@@ -1,0 +1,293 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta name="keywords" lang="en-us" content="java, performance tuning, jamonlistener, log4j, jboss, appender, JAMonAppender, listener, monitor, bottleneck, scale, scalability, monitoring tools, page hits, page counter, currentTimeMillis, benchmark, jamonapi, free, freeware, shareware, open source, measure, fdsapi, http, valve, tomcat, jetty, jboss, appserver, webserver, formatteddataset, servlet filter">
+<meta name="description" content="The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.">
+<title>JAMon - JAMonAppender for Log4j</title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<div align="center">
+<script type="text/javascript"><!--
+google_ad_client = "pub-2677015225815089";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text_image";
+google_ad_channel ="";
+google_color_border = "336699";
+google_color_bg = "FFFFFF";
+google_color_link = "0000FF";
+google_color_url = "008000";
+google_color_text = "000000";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+
+<hr>
+
+
+<p align="center">
+<img src="jamon1.jpg" id="fdsbanner1" border="0" /></a>
+</p>
+
+<h2 align='center'>HTTP Monitoring with JAMon</h2>
+
+
+<!-- START JAMON SPECIFIC HTML -->
+
+<table border="0" width="80%" align="center">
+<tr>
+</tr>
+<tr align="left">
+<th><ol>
+   <li><a href="#intro">Monitoring HTTP Requests</a></li>
+   <li><a href="#interpretting">Interpretting JAMon HTTP Data</a></li>
+   <li><a href="#configuring">Configuring the JAMon HTTP Monitor</a></li>
+   <li><a href="tomcat6_server.xml">Sample Tomcat 6 server.xml file</a></li>   
+   <li><a href="jboss_server.xml">Sample JBoss 4.0.5 server.xml file</a></li>   
+   <li><a href="jetty.xml">Sample Jetty 6.1.5 jetty.xml file</a></li>   
+</ol>
+
+
+
+</th>
+</tr>
+<tr>
+<td><br><br></td>
+</tr>
+</table>
+
+<table border="0" width="80%" align="center">
+
+
+
+
+<tr>
+<th align="left"><h2><a name="intro">1. Monitoring HTTP Requests</a></h2></th>
+</tr>
+<tr>
+<td>
+
+   <p>JAMon 2.7 introduces HTTP monitoring.  JAMon HTTP Monitoring uses reflection to monitor different aspects of the containers HttpServletRequest, and HttpServletResponse objects.  
+   With JAMon you can monitor individual page performance, frequency of each http status code (200, 404 etc.), number of bytes returned in a response, Servlet exceptions and much more.  As is always the case with JAMon HTTP monitoring can be enabled/disabled
+   at run time.Http monitoring requires no application code changes.  Simply use one of the following approaches: </p>
+   
+   <ul><li><b>Tomcat 6</b></li>
+    <ul>
+        <li>Put jamon-2.7.jar (or higher) in the tomcat 'lib' directory. </li>
+        <li>Put jamon.war (or higher) in the tomcat 'webapps' directory. </li>
+        <li>Add the following Valve line to Tomcat's server.xml file. The 'Engine' line is used to show context.</li>
+           <ul><code>&lt;Engine name="Catalina" defaultHost="localhost"&gt;<br>
+              &lt;Valve className="com.jamonapi.http.JAMonTomcatValve"/&gt;</code>
+           </ul>
+    </ul>
+    </ul>
+    
+    <ul><li><b>Tomcat 4/5/5.5</b></li>
+    <ul>
+        <li>Put jamon-2.7.jar (or higher) in the tomcat 'common/lib' directory. </li>
+        <li>Put jamontomcat-2.7.jar (or higher) in the tomcat 'server/lib' directory. (Note this is not jamon-2.7.jar)</li>
+        <li>Put jamon.war (or higher) in the tomcat 'webapps' directory. </li>
+        <li>Add the following Valve line to Tomcat's server.xml file using the appropriate version. Note only one of the valve lines should be used, and also note the package is 'com.jamontomcat' and not 'com.jamonapi'.
+        The 'Engine' line is used to show context.</li>
+           <ul><code>&lt;Engine name="Catalina" defaultHost="localhost"&gt;<br>
+              &lt;Valve className="com.jamontomcat.JAMonTomcat4Valve"/&gt;<br>
+              &lt;Valve className="com.jamontomcat.JAMonTomcat5Valve"/&gt;<br>
+              &lt;Valve className="com.jamontomcat.JAMonTomcat55Valve"/&gt;<br></code>
+           </ul>
+    </ul>
+    </ul>   
+    <ul>
+        <li><b>JBoss 4.0.5/4.2</b> - Other versions may work too.</li>
+         <ul>
+        <li>Put jamon-2.7.jar (or higher) in the jboss instance 'lib' directory (ex. default/lib). </li>
+        <li>Put jamon.war (or higher) in the jboss instance 'deploy' directory. (ex. default/deploy).</li>
+        <li>Add the following Valve line to Tomcat's server.xml file (i.e. jbossweb-tomcat55.sar/server.xml). The 'Engine' line is used to show context.</li>
+          <ul><code>&lt;Engine name="Catalina" defaultHost="localhost"&gt;<br>
+              &lt;Valve className="com.jamonapi.http.JAMonTomcatValve"/&gt;</code>
+           </ul>
+    </ul>
+    </ul>
+
+    <ul>
+    <li><b>Jetty 6.1.5</b>  - Other versions may work too.</li>
+         <ul>
+        <li>Put jamon-2.7.jar (or higher) in the jetty 'lib' directory. </li>
+        <li>Put jamon.war in the jetty 'webapps' directory.</li>
+        <li>Add the following Handler line to Jetty's jetty.xml file (i.e. etc/jetty.xml). The 'Engine' line is used to show context.</li>
+          <ul><code>&lt;Set name="handler"&gt;<br>
+             ...<br>
+             &lt;Item&gt;<br>
+            &lt;New id="JAMonHandler" class="com.jamonapi.http.JAMonJettyHandler"/&gt;<br>
+            &lt;/Item&gt; <br>
+           &lt;/Set&gt; <br></code>
+
+           </ul>
+    </ul>
+    </ul>    
+    <ul><li><b>Web Application</b> -  Add the appropriate servlet filter (com.jamonapi.http.JAMonServletFilter) to he applications web.xml file </li> </ul>
+    <ul><li><b>Custom monitoring</b> - Should you use another container you can use the com.jamonapi.http.HttpMonFactory class to easily monitor any web container</li></ul>
+   </ul>
+   
+ </td>
+</tr>
+
+<tr>
+<td><br><br></td>
+</tr>
+
+
+<tr>
+<th align="left"><h2><a name="interpretting">2. Interpretting JAMon HTTP Data</a></h2></th>
+</tr>
+<tr>
+<td>
+
+
+ <p>By default JAMon will track something similar to the following (The screen snapshot was taken while monitoring tomcat6). However, with simple configuration via
+ server.xml, or jetty.xml - any HttpServletRequest, or HttpServletResponse method that takes no arguments, and returns an Object can be monitored (i.e. request.getRequestURI() for example).  This is
+ covered in more detail later in this document.  Note all HTTP monitors can be seen by entering 'http' into the jamonadmin.jsp 'filter' field.
+ </p>
+ 
+ <p>The following describes JAMon's default HTTP Monitors:  </p>
+  <ul> 
+ <li><b>com.jamonapi.http.JAMonTomcatValve.request.allPages, ms. </b>- Stats for all resources/pages executed by the container.  As is the case for all JAMon monitors 
+ hits, avg, min, max, currently active and more stats are tracked.  Anytime the units are ms (milliseconds) the label tracks execution time.</li>
+ <li><b>com.jamonapi.http.JAMonTomcatValve.request.contextpath: /jamon, ms.</b> - Page execution stats for all pages in a context
+ </li>
+ <li><b>com.jamonapi.http.JAMonTomcatValve.request.page.value: /jamon/jamonadmin.jsp, ms.</b> - Page execution stats for individual pages in the container
+ </li>
+ <li><b>com.jamonapi.http.JAMonTomcatValve.response.getContentCount(), bytes </b>- Size in bytes of all pages.
+ </li>
+ <li><b>com.jamonapi.http.JAMonTomcatValve.response.getStatus().value: 200, httpStatus </b>- Number of resources that return a particular http status code.  In this example the http status code 
+ is 200.
+ </li>
+ <li><b>com.jamonapi.http.JAMonTomcatValve.ServletException</b> - Number of servlet exceptions thrown by the container. (Not in the report below)
+ </li>
+ </ul>
+ 
+ <p><img src="jamon_httpmon.jpg" border="1"> </p>
+
+ <p>Any JAMon buffer listener can be attached to any JAMon monitor.  This allows you to not only look at the aggregate stats above, but look at interesting details such
+ as the details of when the slowest page was executed, or the ServletException stack trace, or the most recent N page requests.  See other parts of the JAMon documenation to
+ learn more about JAMon Buffer Listeners.  JAMon 2.7 introduces the HttpBufferListener which puts a stack trace in the details buffer should one occur during a page request.  The
+ following is an example of what one might look like.  (Note stack traces can also be seen in any of the other buffer listeners, however not as a separate column). The following buffer
+ listener was attached to 'com.jamonapi.http.JAMonTomcatValve.request.allPages', and so would have a FIFOBuffer of the last N requests. As always JAMon buffer listeners can be added/removed
+ at runtime. </p>
+ 
+ <p>The first 4 lines of the report show successful page invocations.  The columns represent the row number in the report (RowNum), the resource/page name (Label), the stack trace if one occurred
+ (Exception), the execution time in ms. (LastValue), the number of pages that were executing when this one was (Active), and the date-time when the resource/page was invoked.  
+ The 5th line shows a page that had a stack trace.<p>
+ 
+  <p><img src="jamon_httpmon_details.jpg" border="1"> </p>
+ 
+
+</td>
+</tr>
+
+<tr>
+<td><br><br></td>
+</tr>
+
+
+<tr>
+<th align="left"><h2><a name="configuring">3. Configuring the JAMon HTTP Monitor</a></h2></th>
+</tr>
+<tr>
+<td>
+
+
+ <p>JAMon can monitor various aspects of servlet requests and responses via declarative configuration.  This is done via specifying a comma delimitted string in the server.xml, or 
+ jetty.mxl files, or programattically by calling the 'setSummaryLabel(String)' method.  What follows is a sample tomcat valve that specifies the default monitors explicitly:  
+ </p>
+ 
+ <p>
+ <code>
+     &lt;Engine name="Catalina" defaultHost="localhost"&gt;<br>
+     &lt;Valve className="com.jamonapi.http.JAMonTomcatValve" summaryLabels="request.getRequestURI().ms as allPages, 
+     request.getRequestURI().value.ms as page, 
+     response.getContentCount().bytes, 
+     response.getStatus().value.httpStatus, 
+     request.contextpath.ms" /&gt;
+     </code>
+ </p>
+ 
+ <p>The above causes the JAMonTomcatValve.setSummaryLabels method to be called with the comma delimitted String passed as an argument.  A '.' separates tokens within
+  one monitor.   The String is parsed to the following 5 monitors.
+  <ul>
+    <li><b>request.getRequestURI().ms as allPages</b> - Each monitor begins with either 'request', or 'response' followed by a method name.  Any method that is in HttpServletRequest, HttpServletResponse
+    that takes no arguments and returns a value can be called.  In this example getRequestURI() is called.  Because the method name you specify is used to make a call based on reflection it is important
+    you get the case right and have no typos.  In addition any method can also be called that matches these criterion 
+    and also inherits from these classes.  For example any method from Tomcat's org.apache.catalina.connector.Request, or org.apache.catalina.connector.Response. The next value specifies to use
+    the units of 'ms.' (milliseconds).  Implicitly these units also tell JAMon to time the request.  'ms.' are the only units that will time the request.  'as allPages' is an optional alias
+    that will can be used to make the JAMon label more readable.  Example JAMon Label: com.jamonapi.http.JAMonTomcatValve.request.allPages, ms.</li>
+    
+    <li><b>request.getRequestURI().value.ms as page</b> - This monitor is similar to the above except for the use of the keyword 'value'.  In this caes 'value' tells JAMon to take the value that 
+    the 'request.getRequestURI()' method returns and use it in the JAMon label.  'getRequestURI()' returns the requested page name such as '/jamon/jamonadmin.jsp'.  The effect of this summary label
+    is to create a JAMon label of the following format:  com.jamonapi.http.JAMonTomcatValve.request.page.value: /jamon/jamonadmin.jsp, ms.
+    </li>
+    
+    <li><b>response.getContentCount().bytes</b> - This label calls the HttpServletResponse.getContentCount() method and passes its return value (an int indicating bytes in the response)
+    to the monitor.  This allows JAMon to track such stats as the average, and max bytes in a response.  The units are in 'bytes'.  Note any unit that is not 'ms.' will take the return
+    value and use it as the JAMon value if it is a number or if the method returns a String it will simply pass the number 1 to JAMon having the effect of only 'counting' the label.  This summary label
+    creates the JAMon label:  com.jamonapi.http.JAMonTomcatValve.response.getContentCount(), bytes
+    </li>
+    
+    <li><b>response.getStatus().value.httpStatus</b> - This label calls the HttpServletResponse.getStatus() method which returns the <a href="http://www.w3.org/Protocols/HTTP/HTRESP.html">http status code</a>
+    of the request (i.e. 200=ok, 404=file not found).  It uses the special token 'value' to indicate that the value returned from the function (200, 404 etc) will be used as part of the JAMon key.  Remember JAMon 
+    depends on keys being relatively unique, so don't use 'value' for something that can potentially generate a large number of keys (request.getQueryString() for example). 
+    By default JAMon will not add any new HTTP Monitoring labels if the total number of JAMon monitor labels is greater than 5000.  However, any existing JAMon entries 
+    will still be updated. In the Tomcat Valve, Jetty Handler, and Servlet filter this value can be changed by calling the 'setSize(int size)' method.  
+    If '0' is passed the number of HTTP monitors can grow unbounded. The units in this example are 'httpStatus'.  
+    An example JAMon label: com.jamonapi.http.JAMonTomcatValve.response.getStatus().value: 404, httpStatus.
+    </li>
+    
+    <li><b>request.contextpath.ms</b> - In addition to 'value' there are two other keywords that allow you to generate a JAMon key.  They are 'url', and 'contextpath'.  'contextpath' will use
+    the return value from 'request.getContextPath()' as part of the key.  An example of a return value is '/jamon'.  'url' will use 'request.getRequestURI()' as part of the key.  Any value other than 'request', 
+    'response', 'methodName()', 'value', 'contextpath', 'url' and '.' will be used as the units.  'value', 'contextpath', and 'url' can be used in combination.  They will be used as part of the
+    key in the order they are specified.  An example JAMon label: com.jamonapi.http.JAMonTomcatValve.request.contextpath: /jamon, ms.. 
+    </li>
+    
+    <li><b>An additional example - request.getStatus().contextpath.value.ms</b> Using the above mentioned keyworeds this summary label would return the 
+    following representative JAMon label:  com.jamonapi.http.JAMonTomcatValve.request.getStatus().contextpath: /jamon, value: 404 (i.e. shows how many 404 errors occured in the jamon context).
+    </li>
+    
+    <li><b>'default' and 'demo'</b> - Using either 'default' or 'demo' as the summary label has special meaning to JAMon.  'default' uses the HTTP monitors defaults as you would expect.  However you can also
+    add to default by providing a string like the following:  default, request.getStatus().contextpath.value.ms.   'demo' is only to be used so you can see many of the possible monitors and shouldn't be
+    used in production.  'demo' is an easy way to see what other summary labels you may want to add.  Keep in mind some of the 'demo' labels may not be very helpful as it is really
+    a dumb cartesian product of possibilities ignoring whether or not they are useful.
+    </li>
+
+    </ul>
+    
+    <p>Regardless which summary label you use JAMon will always put the page name, and stack trace (should there be one) in the details buffer.  
+    Note other methods that are part of the JAMonTomcatValve's and the JAMonJettyHandler can also be called in the same way 'setSummaryLabel' was called.</p>
+  </p>
+  
+
+
+</td>
+</tr>
+
+<tr>
+<td><br><br></td>
+</tr>
+</table>
+
+
+
+<p align="center">
+<a href="http://www.fdsapi.com"><img src="fds_logo_fulltext_blue2_150.jpg"
+id="fdsbanner" border="1" /></a>
+<a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=96550&amp;type=4" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a>
+<a href="http://www.jamonapi.com"><img src="jamon_banner3.jpg"
+id="jamonbanner" border="1" /></a>
+</p>
+
+<!-- END JAMON SPECIFIC HTML -->
+
+</body>
+</html>

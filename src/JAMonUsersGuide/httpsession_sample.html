@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html><head><title>HTTP Session sample (HttpSessionBindingListener)</title></head>
+
+<body>
+
+<code>
+javax.servlet.http.*;<br>
+<b>import com.jamonapi.*;</b><br><br><br>
+
+/*<br>
+To put the object into an HTTPSession call: session.setAttribute("user", new User("steve"));<br>
+*/<br>
+<br>
+<br>
+public class User extends java.lang.Object implements HttpSessionBindingListener {<br>
+      <b>      private Monitor userMon;</b><br>
+      <b>      private Monitor sessionMon;</b><br>
+            // Assumes you have a way of populating the userName<br>
+            private String userName;<br>
+            public User(String userName) {<br>
+              this.userName=userName;<br>
+            }<br>
+<br>
+<br> 
+          public void valueBound(HttpSessionBindingEvent event) {<br>
+      <b>           sessionMon = MonitorFactory.start("MyAppName.allSessions");</b><br>
+      <b>           userMon = MonitorFactory.start("MyAppName.session."+userName);</b><br>
+          }<br>
+<br>
+<br> 
+    /* Called when a sessin ends with an explicit invalidate() or its timeout period has been reached. */<br>
+<br> 
+          public void valueUnbound(HttpSessionBindingEvent event) {<br>
+      <b>           userMon.stop();</b><br>
+      <b>           sessionMon.stop();</b><br>
+          }<br>
+<br>
+<br>
+}
+</code>
+
+</body></html>

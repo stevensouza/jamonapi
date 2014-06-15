@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>JAMon 2.0 WebSphere 5.1 jakarta-oro classloading problem</title>
+</head>
+<html>
+<body>
+<h1>Websphere 5.1 ORO Classloader Problem</h1>
+<p>Posting by Jeroen Borgers</p>
+
+JAMon-2.0 WebSphere 5.1 jakarta-oro classloading problem</p>
+
+<p>If you run JAMon-2.0 in WebSphere (5.1) and when starting the JAMonAdmin.jsp page,
+you get the error message:</p>
+
+<p>Error 500: org.apache.oro.text.regex.Util: method
+split(Ljava/util/Collection;Lorg/apache/oro/text/regex/PatternMatcher;Lorg/apache/oro/text/regex/Pattern;Ljava/lang/String;)V
+not found</p>
+
+<p>You probably have a jakarta-oro classloading problem. Oro classes are
+available from a websphere-internal jar.</p>
+
+<p>Solution:</p>
+
+<p>Put jakarta-oro-2.0.8.jar "in front" in the classloader hierarchy:
+WebSphereConsole-> server -> Process Definitions -> JVM -> set classpath
+= path_including_jakarta-oro-2.0.8.jar</p>
+
+<p>Details:</p>
+
+<p>See
+http://www-128.ibm.com/developerworks/websphere/techjournal/0406_brown/0406_brown.html
+clarifies the issue. When I execute the class finder servlet with the
+org.apache.oro.text.regex.Util class,
+it reports that this class is loaded from websphere/lib/jyton.jar. Nice
+tool this servlet BTW.</p>
+
+<p>However, the solution provided by the article does *not* work.</p>
+
+<p>The solution can be found at
+http://www.nabble.com/Re:-OpenCms6.0.0-on-IBM-WebSphere-5.1-p1061848.html</p>
+
+<p>Note: if your app uses jakarta-oro of a different version than 2.0.8,
+you may have another version conflict to deal with.</p>
+
+
+
+</body>
+</html>
+

@@ -1,0 +1,271 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" type="text/css" href="JAMonStyles.css">
+<title>JAMon Admin Page</title>
+<script language="JavaScript" type="text/javascript">
+<!--
+    // Row highlighter
+    var objClass
+
+    function rollOnRow(obj, txt) {
+        objClass = obj.className
+        obj.className = "rowon";
+        window.status = txt;
+    }
+    
+    function rollOffRow(obj) {
+        obj.className = objClass;
+		window.status= "";
+    }
+// -->
+</script>
+</head>
+<body>
+
+<form action="JAMonAdmin.html" method="post">
+<table border='0' cellpadding='0' cellspacing='0' width='75%'>
+<tr>
+<td style='text-align:left;'><table class='layoutmain' border='0' cellpadding='2' cellspacing='2' bgcolor='#669999'>
+    <tr>
+    <th><input name='Refresh' type='SUBMIT' value='Refresh'></th>
+    <th><input name='Reset' type='SUBMIT' value='Reset'></th>
+    <th><input name='Enable' type='SUBMIT' value='Enable'></th>
+    <th><input name='Disable' type='SUBMIT' value='Disable'></th>
+    </tr>
+</table></td>
+<td><table border='0' width='100%'>
+    <tr>
+    <th nowrap><font size='5' color='#303030'>JAMon Admin Page - <a href="http://www.jamonapi.com" target="_blank">Users Guide</a></font></th>
+    </tr>
+</table></td>
+</tr>
+</table>
+
+
+
+
+<!-- Begin Report Sect. -->
+<table border='0' cellpadding='0' cellspacing='0'>
+<tr>
+<td><table class='layoutmain' border='1' cellpadding='2' cellspacing='0' rules='all'>
+    <tr class='headtextr' valign='top'>
+    <th><a href='JAMonAdmin.html'>Monitor Label</a><br><img src='desc.gif'></th>
+    <th><a href='JAMonAdmin.html'>Hits </a><br></th>
+    <th><a href='JAMonAdmin.html'>Avg ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>Total ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>Std Dev ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>Min ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>Max ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>Active</a><br></th>
+    <th><a href='JAMonAdmin.html'>Avg Active</a><br></th>
+    <th><a href='JAMonAdmin.html'>Max Active</a><br></th>
+    <th><a href='JAMonAdmin.html'>First access</a><br></th>
+    <th><a href='JAMonAdmin.html'>Last access</a><br></th>
+    <th><a href='JAMonAdmin.html'>Primary</a><br></th>
+    <th><a href='JAMonAdmin.html'>0-10ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>11-20ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>21-40ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>41-80ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>81-160ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>161-320ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>321-640ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>641-1280ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>1281-2560ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>2561-5120ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>5121-10240ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>10241-20480ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>>20480ms.</a><br></th>
+    <th><a href='JAMonAdmin.html'>Monitor Label</a><br><img src='desc.gif'></th>
+    </tr>
+    <tr class='headtextr'>
+    <th colspan='13'>&nbsp;</th>
+    <th colspan='13'>Hits/Avg ms. &nbsp &nbsp &nbsp &nbsp &nbsp (Avg Active/Primary Active/Global Active)</th>
+    <th>&nbsp;</th>
+    </tr>
+    <tr class='odd' onMouseOver='rollOnRow(this, "Statistics for JAMonDemo.pageHits.5/12/02")' onMouseOut='rollOffRow(this)'>
+    <th class='headtextc' align='left' nowrap>JAMonDemo.pageHits.5/12/02</th>
+    <td nowrap>30</td>
+    <td nowrap>3,439</td>
+    <td nowrap>103,189</td>
+    <td nowrap>211</td>
+    <td nowrap>3,144</td>
+    <td nowrap>3,796</td>
+    <td nowrap>0</td>
+    <td nowrap>2.8</td>
+    <td nowrap>5</td>
+    <td nowrap>5/12/02 2:59:58 PM</td>
+    <td nowrap>5/12/02 3:35:43 PM</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>30/3,439&nbsp(2.8/2.8/7.6)</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <th class='headtextc' align='left' nowrap>JAMonDemo.pageHits.5/12/02</th>
+    </tr>
+    <tr class='even' onMouseOver='rollOnRow(this, "Statistics for JAMonDemo.pageHits.127-0-0-1")' onMouseOut='rollOffRow(this)'>
+    <th class='headtextc' align='left' nowrap>JAMonDemo.pageHits.127-0-0-1</th>
+    <td nowrap>30</td>
+    <td nowrap>3,439</td>
+    <td nowrap>103,189</td>
+    <td nowrap>211</td>
+    <td nowrap>3,144</td>
+    <td nowrap>3,796</td>
+    <td nowrap>0</td>
+    <td nowrap>2.8</td>
+    <td nowrap>5</td>
+    <td nowrap>5/12/02 2:59:58 PM</td>
+    <td nowrap>5/12/02 3:35:43 PM</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>30/3,439&nbsp(2.8/2.8/8.6)</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <th class='headtextc' align='left' nowrap>JAMonDemo.pageHits.127-0-0-1</th>
+    </tr>
+    <tr class='odd' onMouseOver='rollOnRow(this, "Statistics for JAMonDemo.pageHits")' onMouseOut='rollOffRow(this)'>
+    <th class='headtextc' align='left' nowrap>JAMonDemo.pageHits</th>
+    <td nowrap>30</td>
+    <td nowrap>3,441</td>
+    <td nowrap>103,259</td>
+    <td nowrap>208</td>
+    <td nowrap>3,144</td>
+    <td nowrap>3,796</td>
+    <td nowrap>0</td>
+    <td nowrap>2.8</td>
+    <td nowrap>5</td>
+    <td nowrap>5/12/02 2:59:58 PM</td>
+    <td nowrap>5/12/02 3:35:43 PM</td>
+    <td nowrap>Yes</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>30/3,441&nbsp(2.8/2.8/6.6)</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <th class='headtextc' align='left' nowrap>JAMonDemo.pageHits</th>
+    </tr>
+    <tr class='even' onMouseOver='rollOnRow(this, "Statistics for JAMonDemo.getMusicians(Wailers)")' onMouseOut='rollOffRow(this)'>
+    <th class='headtextc' align='left' nowrap>JAMonDemo.getMusicians(Wailers)</th>
+    <td nowrap>30</td>
+    <td nowrap>143</td>
+    <td nowrap>4,318</td>
+    <td nowrap>70</td>
+    <td nowrap>50</td>
+    <td nowrap>251</td>
+    <td nowrap>0</td>
+    <td nowrap>1.0</td>
+    <td nowrap>2</td>
+    <td nowrap>5/12/02 3:00:01 PM</td>
+    <td nowrap>5/12/02 3:35:43 PM</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>8/50&nbsp(1/1/4)</td>
+    <td nowrap>7/114&nbsp(1/2.3/7.9)</td>
+    <td nowrap>15/207&nbsp(1.1/4.1/13.4)</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <th class='headtextc' align='left' nowrap>JAMonDemo.getMusicians(Wailers)</th>
+    </tr>
+    <tr class='odd' onMouseOver='rollOnRow(this, "Statistics for JAMonDemo.getMusicians(Maytals)")' onMouseOut='rollOffRow(this)'>
+    <th class='headtextc' align='left' nowrap>JAMonDemo.getMusicians(Maytals)</th>
+    <td nowrap>30</td>
+    <td nowrap>149</td>
+    <td nowrap>4,476</td>
+    <td nowrap>73</td>
+    <td nowrap>50</td>
+    <td nowrap>290</td>
+    <td nowrap>0</td>
+    <td nowrap>1.0</td>
+    <td nowrap>2</td>
+    <td nowrap>5/12/02 3:00:01 PM</td>
+    <td nowrap>5/12/02 3:35:43 PM</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>8/50&nbsp(1/1/4)</td>
+    <td nowrap>7/127&nbsp(1/2.3/7.9)</td>
+    <td nowrap>15/212&nbsp(1.1/4.1/13.5)</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <th class='headtextc' align='left' nowrap>JAMonDemo.getMusicians(Maytals)</th>
+    </tr>
+    <tr class='even' onMouseOver='rollOnRow(this, "Statistics for JAMonDemo.getMusicians(Culture)")' onMouseOut='rollOffRow(this)'>
+    <th class='headtextc' align='left' nowrap>JAMonDemo.getMusicians(Culture)</th>
+    <td nowrap>30</td>
+    <td nowrap>143</td>
+    <td nowrap>4,316</td>
+    <td nowrap>69</td>
+    <td nowrap>50</td>
+    <td nowrap>251</td>
+    <td nowrap>0</td>
+    <td nowrap>1.0</td>
+    <td nowrap>2</td>
+    <td nowrap>5/12/02 3:00:01 PM</td>
+    <td nowrap>5/12/02 3:35:42 PM</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>8/50&nbsp(1/1/4)</td>
+    <td nowrap>8/124&nbsp(1/2.5/8.5)</td>
+    <td nowrap>14/208&nbsp(1.1/4.1/13.6)</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <td nowrap>&nbsp</td>
+    <th class='headtextc' align='left' nowrap>JAMonDemo.getMusicians(Culture)</th>
+    </tr>
+</table></td>
+</tr>
+</table>
+<!-- End Report Sect. -->
+
+
+
+</form>
+</body>
+</html>
+

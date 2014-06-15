@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="build" path="java"/>
+	<classpathentry kind="src" path="src/test"/>
+	<classpathentry kind="lib" path="/Users/stevesouza/workspace/jamonapi/lib/ant.jar"/>
+	<classpathentry kind="lib" path="/Users/stevesouza/workspace/jamonapi/lib/catalina-optional.jar"/>
+	<classpathentry kind="lib" path="/Users/stevesouza/workspace/jamonapi/lib/catalina.jar"/>
+	<classpathentry kind="lib" path="/Users/stevesouza/workspace/jamonapi/lib/fdsapi-1.2.jar"/>
+	<classpathentry kind="lib" path="/Users/stevesouza/workspace/jamonapi/lib/hsqldb.jar"/>
+	<classpathentry kind="lib" path="/Users/stevesouza/workspace/jamonapi/lib/jakarta-oro-2.0.8.jar"/>
+	<classpathentry kind="lib" path="/Users/stevesouza/workspace/jamonapi/lib/javaee.jar"/>
+	<classpathentry kind="lib" path="/Users/stevesouza/workspace/jamonapi/lib/jetty-6.1.5.jar"/>
+	<classpathentry kind="lib" path="/Users/stevesouza/workspace/jamonapi/lib/jetty-util-6.1.5.jar"/>
+	<classpathentry kind="lib" path="/Users/stevesouza/workspace/jamonapi/lib/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="/Users/stevesouza/workspace/jamonapi/lib/servlet-api.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/fest-assert-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/fest-util-1.1.6.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.10.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

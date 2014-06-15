@@ -1,0 +1,46 @@
+<code>
+import java.io.*;<br>
+import javax.servlet.*;<br>
+import javax.servlet.http.*;<br>
+<b>import com.jamonapi.*;</b><br><br><br>
+
+
+public class MonitorFilter extends HttpServlet implements Filter {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  private FilterConfig filterConfig;<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;  //Handle the passed-in FilterConfig<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  public void init(FilterConfig filterConfig) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    this.filterConfig = filterConfig;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  }<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;  //Process the request/response pair<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  throws IOException, ServletException {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    // monitor page hits and processing time<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    <b>Monitor monitor = MonitorFactory.start(getURI(request));</b><br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      //call next filter in chain<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      filterChain.doFilter(request, response);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    finally {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      <b>monitor.stop();</b><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  }<br><br>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;  protected String getURI(ServletRequest request){<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    if (request instanceof HttpServletRequest) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      return ((HttpServletRequest)request).getRequestURI();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      return "Not an  HttpServletRequest";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  }<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;  //Clean up resources<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  public void destroy() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    filterConfig=null;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;  }<br><br>
+
+}<br>
+</code>

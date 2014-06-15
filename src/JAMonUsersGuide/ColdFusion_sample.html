@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Cold Fusion Code Sample</title>
+</head>
+
+<body>
+
+<code title="Cold Fusion Code Sample">
+<pre>
+Start script (included in every coldfusion page)
+
+// note the call to create loads the class in coldfusion. an object isn’t created until the first method is
+// invoked (a default constructor is first called), or an init(…) method is called (init invokes the corresponding
+// constructor).  note below the monitorFactory.start() is a static method that returns a Monitor object which
+// ColdFusion can also handle.  we simply put JAMon.jar in the classpath of the ColdFusion machine.
+</pre>
+
+
+<pre>
+&lt;!--- Start Code---&gt;
+&lt;cfobject action="CREATE" type="JAVA" name="CMmonitor1" class="com.jamonapi.Monitor"&gt;
+&lt;cfobject action="CREATE" type="JAVA" name="CMmonitor2" class="com.jamonapi.Monitor"&gt;
+&lt;cfobject action="CREATE" type="JAVA" name="CMmonitor3" class="com.jamonapi.Monitor"&gt;
+&lt;cfobject action="CREATE" type="JAVA" name="CMmonitor4" class="com.jamonapi.Monitor"&gt;
+&lt;cfobject action="CREATE" type="JAVA" name="cmmonitorFactory" class="com.jamonapi.MonitorFactory"&gt;
+
+
+&lt;cfset myUser=replace(REMOTE_ADDR,'.','-','All')&gt;
+     &lt;cfoutput&gt;
+          &lt;cfscript&gt;
+               CMmonitor1=cmmonitorFactory.start("manual.allpages");
+               CMmonitor2=cmmonitorFactory.start("manual.#cgi.script_name#");
+               CMmonitor3=cmmonitorFactory.start("manual.#myUser#");
+               CMmonitor4=cmmonitorFactory.start("manual.allpages.#dateformat(now(),'mm/dd/yyyy')#");
+          &lt;/cfscript&gt;
+     &lt;/cfoutput&gt;
+&lt;!--- YOUR COLD FUSION TEMPLATE---&gt;
+
+
+&lt;--- To stop ---&gt;
+ &lt;cfscript&gt;
+     CMmonitor1.stop();
+     CMmonitor2.stop();
+     CMmonitor3.stop();
+     CMmonitor4.stop();
+&lt;/cfscript&gt;
+</pre>
+</code>
+
+</body>
+</html>

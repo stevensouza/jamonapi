@@ -1,0 +1,579 @@
+notes for jamon 3.0
+
+note to run md5 on mac simpy run.
+md5 j*.* (for jamon files on release)
+
+*****start new design notes
+- Should i put the new RecentValues list in Mon or BaseStatsImp.  Being as I don't want frequency dist
+to do this at this point I was thinking about putting it in Mon.
+    - i think just in Mon class.
+    - methods:  would go in MonitorInt
+           public List getLastValues() 
+           public Object[][] getLastValues() (getRecentValues())
+           public setLastValuesSize(int size) // 0 would wipeout
+           public int getLastValuesSize();
+           reset() would get rid of data in last values.
+
+MonitorFactory.getMonitor("page").getLastValuesHeader();
+MonitorFactory.getMonitor("page").getLastValues();
+
+- classes of interest
+
+FreqeuncyDistBase extends FrequencyDistImp (basestatsimp) i..e it is like monitor
+calls super.addValue(...);
+
+interface MonitorInt extends BaseStats 
+public abstract class Monitor extends BaseStatsImp implements MonitorInt 
+ abstract class MonitorImp extends Monitor implements RowData  {
+
+class Mon extends MonitorImp {
+  public Monitor add(double value) {
+      addValue(value);
+      range.add(value);
+      return this;
+        
+  }
+}
+
+
+public interface FrequencyDist extends BaseStats 
+
+abstract class BaseStatsImp implements BaseStats {
+  /** Calculate aggregate stas (min, max */
+  public synchronized void addValue(double value) {
+        
+        // calculate min
+        if (value < min) {
+            min = value;
+        }
+        
+        // calculate max
+        if (value > max) {
+            max = value;
+        }
+        
+        // most recent value
+        lastValue=value;
+        
+        // calculate hits i.e. n
+        hits++;
+        
+        // calculate total i.e. sumofX's
+        total+=value;
+        
+        // used in std deviation
+        sumOfSquares+=value*value;
+        
+        // Being as TimeMonitors already have the current time and are passing it in
+        // the value (casted as long) for last access need not be recalculated. 
+        // Using this admittedly ugly approach saved about 20% performance 
+        // overhead on timing monitors.
+        if (!isTimeMonitor) 
+           setAccessStats(System.currentTimeMillis());
+       
+  }
+  
+
+}
+
+*****end new design notes
+
+
+
+MonitorFactory.getComposite("select * from array").reset();
+MonitorComposite comp=MonitorFactory.getComposite("select * from array")
+Object[][] data=comp.getData();
+Monitor[] monArray=comp.getMonitors();
+String label=mon.getLabel();
+
+i think composites are always attached to the originals in the Map.
+comp.enable();
+comp.disable();
+comp.remove();//??
+
+This document contains general ideas for work in progress.
+- chain monitor factories for saving to a db. reassign the secondary factory, save it, then
+discard it.
+
+new documentation/uses of the new stuff
+- jamon is really an aggregate in memory database.  i.e. keep summaries and discard details
+- simple concept that can be implemented in any language.   map, synchronization helpful but not required
+- note negatives are supported
+- resource releasing - binary - do a +1 for acquisition and a -1 for release. examples
+  - open/close - Connections, ResultSets, Files, 
+  - Get/Free or release - locks,
+  - login/logout - total shows shows current login.  can also do start on login and stop on logout
+  - activate/deactivate - active column can show this too with time based stats
+- Exceptions
+- log4j - errors/warnings - jamon appender
+- Struts ActionEvents
+- Bytes sent/received
+- reads/writes
+- daily stats by tacking on date
+- servers
+  - what is currently happening - active
+  - buffer size
+- db
+  - jdbc calls
+  - server stats such as accesses for each table
+  - cache hits
+  - query time
+  - resultset size (rows, and cols and cells) - size in bytes per resultset too
+  - 
+- app server stats
+  - jvm free memory
+  - cpu utilization
+- application stats
+  - user logins
+  - sql stats - stored proc
+  - purchases - total, max, average
+- counting things
+
+
+- Car stats
+  - trips (towork)
+  - gas stats such as fillup
+  - antilock breaking detection
+  - other errors
+  - mpg
+- phone calls
+  - phone # - stats for each person you call
+  - all calls
+  - peak minutes
+  - roaming minutes
+- tv watching
+  - time per channel
+  - commercials watched
+  - viewing period
+- jamon stop watch.
+- use arraysql to query jamon stats and take action based on threshold
+  ex select * from array where label = 'purchases' and total>1000000
+  ex  select * from array where label = 'purchases' and max>1000
+  ex select * from array where label = 'purchases' and (total>1000000 or max>1000)
+  ex select * from array where label = 'pageHits' and avg>5000-- page threshold exceeded
+
+
+
+*****NEW CHANGES TO ADD GENERAL AGGREGATION TO MORE THAN JUST TIME
+think about 9) which is how active works with time, and in general.  also
+see if  can be backwardly compatible.
+
+1.1) calling syntax
+Monitor mon=MonitorFactory.start("pageHit");
+...code...
+mon.stop();
+
+Monitor mon=MonitorFactory.add("bytes",1000);
+
+Monitor mon=MonitorFactory.add("purchase");
+...code...
+mon.stop(1000);
+
+if time was used this works the same as the first.
+Monitor mon1=SimpleMonitor.start();
+Monitor mon=MonitorFactory.add("PageHit");
+...code...
+mon.stop(mon1.stop());
+
+4) put in column for units/extrainfo
+
+4.5) methods for adding Rangels
+mon.add("purchase", "dollars", 100);
+MonitorFactory.addRange("dollars", new Linear(0,100000)); set buckets say 10
+MonitorFactory.addRange("dollars", new Exponential(0,100000)); set buckets say 10
+MonitorFactory.addRange("dollars", pass in array); unlimited buckets.
+or 
+MonitorFactory.addRange("dollars", new Range(array)); unlimited buckets.
+MonitorFactory.getRange("dollars").copy();  // Ranges are cloneable.
+
+5) info on Range objects
+- Linear, Exponential are Range objects.
+range.getIndex(value); -- ranges now how do figure out which one to add to.
+better yet try this:
+FrequencyDist dist=range.getFrequencyDist(value);
+getDist(value).increment(value);  // currently
+change to 
+getDist(value).accumulate(value);  // currently
+* ranges:
+ *  first range always less than, and last range always greater than.
+ *  MonitorFactory mf=new MonitorFactory(ranges);
+ *  each range=header label, start range, end range
+  MonitorFactory.increase("timingmon", mon.getAcrued());
+ 
+
+
+6) Thoughts on signatures and active.
+-
+mon.start();
+mon.add("time",time);
+mon.stop();
+
+7) Range reporting in jamonadmin.jsp
+- report selection drop down.  if you select all it displays all common stats (units, hits, avg, min, max, first accessed, last accessed)
+- report selection would also show:  minimal, minimal and active
+- report selection drop down will show any identical number ranges (not by name as dollars may have a different range if it is car prices vs 
+gross domestic profit)
+- look into precision of Double
+
+
+8) top method choices
+I think i like aggregate best, but also consider add, accumulate
+
+ 
+9) design thoughts
+  Monitor mon=MonitorFactory.increase("label",1000);
+  mon.stop();// if called then active stats start to show.  other than that they continue to climb.
+ 
+  // stop is not required.
+  MonitorFactory.increase("label",-1000);
+  Monitor mon=MonitorFactory.start();
+  ...code...
+  mon.stop();
+ 
+ * Collect the following stats for increase:  hits, avg, total, std dev, min, max, 
+      (active, max active, min active) display NA unless 1 stop was called, first accessed, last accessed,
+      ranges (pass in?  
+ 
+  
+ * MonitorFactory mf=new MonitorFactory();
+ * mf.getData(); depricate
+ * mf.getPerfData();
+ * mf.getPerfReport();
+ * 
+ * mf.getaddData()
+ * mf.getArregateReport();
+ *
+ * 2) MinimalMonitor interface should work with doubles.  Note this is widening so exsiting code should work.
+ *  i.e. mon.increase(100) would still work, but now so would mon.increase(100.555);
+ *has increase(long), but no start and stop methods
+ *
+ *      AccumulateMonitorInterface introduces start(), stop(), and primary()
+ *          AccumulateMonitor
+                TimingMonitor - starts decorator chain and passes time down the chain
+                TimeStatsMonitor
+ *              ActiveStatsMonitor
+ *              LastAccessMonitor
+                TimeStatsDistMonitor
+                NullAccumulateMonitor
+ *
+ *      MonitorComposite
+ *
+ *      Monitor (abstract)
+ *          BaseMonitor
+ *              NullMonitor
+ *
+ *
+ *      BasicTimingMonitor
+ *
+ *info 
+ *        TimingMonitor mon=new TimingMonitor(
+        new TimeStatsMonitor(
+        new ActiveStatsMonitor(
+        new LastAccessMonitor(
+        new TimeStatsDistMonitor()))));
+ *
+ * 3) existing monitors have start(), stop(), and increase().
+ *     start() // increments hits, and active
+ *     stop() 
+         increase() ??increments time, decrements active;
+ *   
+ *    new one
+ *      increase("label",100); 
+ *         could call start() which calls increase?? 
+ *          increase(100); increments hits, increments value being tracked, increments active
+ *          stop() optional - decrements active (grows unbounded but not displayed unless stop() is called), 
+
+features to add.  
+1)have jamonadmin.jsp?format=xml
+2)arraysql for jamonadmin.jsp
+
+******
+
+
+
+
+
+/*
+ * Main.java
+ *
+ * Created on May 28, 2005, 5:21 PM
+ */
+
+package com.jamonapi;
+
+/**
+
+- went through all classes to see impact of going from String[][] to Object[][].  Impact seems minimal
+
+
+1) changing getData to return Object[][]
+convert(double value) {
+  return new Double(value);
+}
+
+1.1) LeafFactory
+        TimingMonitor mon=new TimingMonitor(
+        new TimeStatsMonitor(
+        new ActiveStatsMonitor(
+        new LastAccessMonitor(
+        new TimeStatsDistMonitor()))));
+
+1.2) TimingMonitor - no changes - tracks current invocation.
+
+1.3) TimeStatsMonitor - tracks basic stats
+    
+original    synchronized protected void getDataThis(ArrayList rowData)    {
+        rowData.add(convertToString(hits));
+        rowData.add(convertToString(avg()));
+        rowData.add(convertToString(total));
+        rowData.add(convertToString(stdDev()));
+        rowData.add(convertToString(min));
+        rowData.add(convertToString(max));
+        
+    }
+- not sure if i should use double or not
+
+changed    synchronized protected void getDataThis(ArrayList rowData)    {
+        rowData.add(convert(hits));
+        rowData.add(convert(avg()));
+        rowData.add(convert(total));
+        rowData.add(convert(stdDev()));
+        rowData.add(convert(min));
+        rowData.add(convert(max));
+        
+    }
+
+
+
+1.4) ActiveStatsMonitor 
+    /** Add this instances data to the ArrayList.  This method is used to convert Monitor data to a tabular format **/
+    synchronized protected void getDataThis(ArrayList rowData)     {
+        rowData.add(convert(active));
+        rowData.add(convert(avg()));
+        rowData.add(convert(max));
+    }
+
+1.5) LastAccessMonitor
+    synchronized protected void getDataThis(ArrayList rowData)     {
+        rowData.add(new Date(firstAccessTime));
+        rowData.add(new Date(accrued));
+    }
+
+1.6) TimeStatsDistMonitor
+        public String toString()        {
+//            final String SPACE="&nbsp";
+            if (hits==0)
+//                return SPACE;
+		return "";
+            else
+/*                return  convertToString(hits)+"/"+
+                convertToString(avgTime())+SPACE+"("+
+                convertToString(avgActive())+"/"+
+                convertToString(avgPrimaryActive())+"/"+
+                convertToString(avgTotalActive())+")";
+*/
+                StringBuffer buffer=  new StringBuffer();
+
+		buffer.append(convertToString(hits));
+		buffer.append("/");
+		buffer.append(convertToString(avgTime()));
+		buffer.append(SPACE);
+		buffer.append("(");
+		buffer.append(convertToString(avgActive()))
+		buffer.append("/")
+		buffer.append(convertToString(avgPrimaryActive()))
+		buffer.append("/");
+		buffer.append(convertToString(avgTotalActive()))
+		buffer.append(")");
+
+		return buffer.toString();
+  
+        }
+    }
+
+    
+1.1) MinimalMonitor - change all
+    public void getData(ArrayList rowData);
+
+MonitorComposite - 2 getData methods
+	- must change return type to Object[][]
+     **/
+    public String[][] getData()    {
+        MonitorConverter mc=new MonitorConverter(this);
+        return mc.getData();
+        
+    }
+
+1.1) MonitorConverter - takes a MonitorComposite in the constructor
+Note this is the main method that needs to change
+original    protected void getLeafData(String label, MinimalMonitor monitor)   {
+        ArrayList rowData=new ArrayList(TYPICAL_NUM_CHILDREN);// the arraylist will be created by the called routine.
+        rowData.add(label);  // add display label such as "pages.homepage"
+        monitor.getData(rowData);  // appends monitor data to the arraylist
+        
+        String[] rowDataArray=new String[0];
+        
+        rowsList.add(rowData.toArray(rowDataArray));
+        
+    }
+
+    // Get leaf data is only called at the lowest level and once per row.  All calls to this point were
+    // calls to composite.
+    
+changed    protected void getLeafData(String label, MinimalMonitor monitor)   {
+        ArrayList rowData=new ArrayList(TYPICAL_NUM_CHILDREN);// the arraylist will be created by the called routine.
+        rowData.add(label);  // add display label such as "pages.homepage"
+        monitor.getData(rowData);  // appends monitor data to the arraylist
+        
+//        String[] rowDataArray=new String[0];
+        Object[] rowDataArray=new Object[0];
+        
+        rowsList.add(rowData.toArray(rowDataArray));
+        
+    }
+
+    
+ getData methods follow
+
+    public String[][] getData()    {
+        return getData("");
+    }
+    
+    
+    public String[][] getData(String label)   {
+        getCompositeData(label, rootComposite);
+        
+        int rows=rowsList.size();
+        
+        if (rows==0) {
+            return EMPTY_ARRAY;
+        }
+        else
+            return utils.arrayListToString(rowsList);
+        
+    }
+    
+    public Object[][] getData(String label, int sortCol, String sortOrder) {
+        Object[][] data=getData(label);
+        
+        if (data==EMPTY_ARRAY) // Avoid index out of range exception when monitor has no data
+            return data;
+        else
+            return Misc.sort(data, sortCol, sortOrder);
+    }
+
+note 
+    protected void getData(String label, MinimalMonitor monitor)  {
+        if (monitor instanceof MonitorComposite)
+            getCompositeData(label, (MonitorComposite) monitor);  // recursive
+        else
+            getLeafData(label, monitor);
+    }
+    
+    
+    protected void getCompositeData(final String localLabel, final MonitorComposite composite)   {
+        // inner classes in a method can only access local variables that are defined as final
+        class GetMonitorData implements Command {
+            Map.Entry mapEntry;
+            MinimalMonitor monitor;
+            
+            public void execute(Object value) throws Exception {
+                String label=localLabel;
+                mapEntry = (Map.Entry) value;
+                
+                monitor = (MinimalMonitor) mapEntry.getValue();
+                String key=mapEntry.getKey().toString();  // something like pagesC or homepageL
+                label += composite.getLabelFromKey(key);  // pages. or homepage
+                
+                getData(label, monitor);  // recursive
+            }
+        }
+        
+        composite.iterateMapEntries(new GetMonitorData());
+    }
+    
+    
+    
+
+2) separate war with jamonadmin.jsp only.   
+arraysql
+
+3) demo fdsapi.jar with arraysql, and log4j jamon filter and recent filter.
+have arraysql entry but also have filter for only lables that does a regular expression.
+
+
+
+4) directions to install servlet filter
+
+5) Add MonitorFactory.getData(), MonitorFactory.getHeader()
+ *
+ * see why display report is slow
+ * get rid of onfocus and do onclick
+ * update web page with servlet example and what is new
+ * update jamonadmin.jsp to move images and stylesheet.
+ * pass in jamonadmin.jsp and gif directory to getReport(sortcol, sortorder, jamonadmin, gifdir);
+ *
+ * @author  ssouza
+ */
+
+public class Delme {
+    
+    private static double var=0;
+    
+    /** Creates a new instance of Main */
+    public Delme() {
+    }
+    
+    public static void increase(double arg) {
+        var=var+arg; 
+    }
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        Monitor mon=MonitorFactory.start();
+        for (int i=0;i<100000000;i++)
+            ;
+        System.out.println("noop mon: "+mon.stop());
+
+        mon=MonitorFactory.start();
+        int intVar=0;
+        for (int i=0;i<100000000;i++)
+            intVar=intVar+1;
+        System.out.println("int mon: "+mon.stop());
+        
+        mon=MonitorFactory.start();
+        long longVar=0;
+        for (int i=0;i<100000000;i++)
+            longVar=longVar+1;
+        System.out.println("long mon: "+mon.stop());        
+
+        mon=MonitorFactory.start();
+        float floatVar=0;
+        for (int i=0;i<100000000;i++)
+            floatVar=floatVar+1.0f;
+        System.out.println("float mon: "+mon.stop());        
+
+        mon=MonitorFactory.start();
+        double doubleVar=0;
+        for (int i=0;i<100000000;i++)
+            doubleVar=doubleVar+100.5d;
+        System.out.println("double value="+doubleVar+", double mon: "+mon.stop()); 
+
+        mon=MonitorFactory.start();
+        for (int i=0;i<100000000;i++)
+            increase(100.5d);
+        System.out.println("increase method="+doubleVar+", double mon: "+mon.stop()); 
+        
+        System.out.println("double min="+Double.MIN_VALUE);
+        System.out.println("double max="+Double.MAX_VALUE);
+        
+        System.out.println("float min="+Float.MIN_VALUE);
+        System.out.println("float max="+Float.MAX_VALUE);
+        
+        System.out.println(123456789.987654321+1);
+        
+    }
+    
+}

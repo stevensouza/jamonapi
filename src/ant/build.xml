@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="../.." default="all" name="jamonapi">
+ <!--  ===========================================================================   -->
+ <!--  Properties   -->
+ <!--  ===========================================================================   -->
+  <property name="project" value="JAMonAPI"/>
+  <property name="jamonapi_version" value="2.75"/>
+  <property name="name" value="${project}"/>
+  <property name="src" value="${basedir}/src"/>
+  <property name="build" value="${basedir}/build"/>
+  <property name="dist" value="${basedir}\dist"/>
+  <property name="backup" value="${basedir}/backup/"/>
+  <property name="releasedir" value="${basedir}/release/"/>
+  <property name="doc" value="${src}/doc/javadoc/"/>
+  <property name="lib" value="${basedir}/lib/"/>
+  <property name="java" value="${src}/java/"/>
+  <property name="osmon" value="${src}/osmon/"/>
+  <property name="debug" value="true"/>
+  <property name="deprication" value="false"/>
+  <property name="source" value="1.5"/>
+  <property name="vm" value="1.5"/>
+  <property name="dist.jar" value="${dist}/jamon-${jamonapi_version}.jar"/> 
+  <property name="sources.jar" value="${dist}/jamon-${jamonapi_version}-sources.jar"/> 
+  <property name="javadoc.jar" value="${dist}/jamon-${jamonapi_version}-javadoc.jar"/>
+  <property name="osmon.zip" value="${dist}/osmon-${jamonapi_version}.zip"/>	
+  <property name="jamontomcat.jar" value="${dist}/jamontomcat-${jamonapi_version}.jar"/> 
+  <property name="dist.zip" value="${dist}/JAMON_ALL"/>
+  <property name="webxml" value="${src}/WAR/WEB-INF/web.xml"/>
+  <property name="war_file" value="${dist}\jamon.war"/>
+  <property name="package" value="com.jamonapi, com.jamonapi.proxy, com.jamonapi.http, com.jamonapi.utils, com.jamonapi.log4j"/>
+  <property name="tomcatjavafiles" value="com/jamontomcat/*.class"/>
+  <property name="tomcat4jar" value="${lib}catalina_tomcat4.jar"/>
+  <property name="tomcat55jar" value="${lib}catalina.jar"/>
+  
+ 
+  <!--property environment="env"/-->
+  <path id="class.path">
+
+    <fileset dir="${lib}">
+        <include name="*.zip"/>
+        <include name="*.jar"/>
+    	<exclude name="catalina_tomcat4.jar"/>
+    </fileset>
+
+  </path>
+
+  <path id="class.path.tomcat4">
+
+	    <fileset dir="${lib}">
+	        <include name="*.zip"/>
+	        <include name="*.jar"/>
+	    	<exclude name="catalina.jar"/>
+	    </fileset>
+
+ </path>
+
+ <!--  ===========================================================================   -->
+<!--  TARGET [PREPARE]   -->
+ <!--  ===========================================================================   -->
+ <target name="prepare">
+ <!--  Create the timestamp   -->
+  <tstamp/>
+ <!--  Create the build directory used by compile   -->
+  <mkdir dir="${backup}"/>
+  <mkdir dir="${build}"/>
+  <!--mkdir dir="${dist}"/-->
+  <mkdir dir="${doc}"/>
+  </target>
+  
+  
+ <!--  ===========================================================================   -->
+ <!--  TARGET [BACKUP]   -->
+ <!--  ===========================================================================   -->
+ <target depends="prepare" name="backup">
+  <!-- Exclude all .class and .java~ (netbeans backup files  -->
+  <jar basedir="${src}" excludes="**/*.class,**/*.java~" jarfile="${backup}/${DSTAMP}_${name}.zip"/>
+
+    <copy todir="${backup}">
+    <fileset dir="${dist}">
+      <include name="*.war"/>
+    	<include name="*.jar"/>
+    	<include name="*.zip"/>
+    </fileset>
+    <mapper from="*" to="${DSTAMP}_*" type="glob"/>
+   </copy>
+
+  </target>
+  
+	 <!--  ===========================================================================   -->
+	 <!--  TARGET [RELEASE]  generates final distribution zip for sourceforge release! -->
+	 <!--  ===========================================================================   -->
+	 <target depends="WAR, javadoc" name="release">
+
+	    <jar destfile="${sources.jar}" basedir="${java}">
+	    <include name="**/*.java"/>
+	    </jar>
+	 	
+	    <jar destfile="${javadoc.jar}" basedir="${doc}">
+	    </jar>
+	 	
+	     <zip destfile="${osmon.zip}" basedir="${osmon}">
+	     </zip>
+	 	
+
+	  <!-- Exclude all .class and .java~ (netbeans backup files  -->
+	  <zip destfile="${releasedir}//jamonall-${jamonapi_version}.zip">
+	    <fileset dir="${basedir}">
+	        <include name="pom.xml" />
+	    </fileset>
+
+	    <fileset dir="${dist}">
+	      <include name="*.war"/>
+	      <include name="*.jar"/>
+	      <include name="*.zip"/>	    	
+	    </fileset>
+	  	
+	 </zip>
+	 	
+	  </target>
+  
+ <!--  ===========================================================================   -->
+<!--  TARGET [CLEAN]   -->
+ <!--  ===========================================================================   -->
+<target depends="prepare,backup" name="clean">
+  <delete dir="${build}"/>
+  <delete>
+		<fileset dir="${dist}">
+  			<include name ="*.war"/>
+			<include name ="*.jar"/>
+			<include name ="*.zip"/>
+		</fileset>
+  	</delete>
+  <delete dir="${doc}"/>
+  </target>
+  
+  
+   <!--  ===========================================================================   -->
+ <!--  TARGET [COMPILE]   -->
+ <!--  ===========================================================================   -->
+ <target depends="clean" name="compile">
+  <mkdir dir="${build}"/>
+  <!--  Compile the java code from ${src} into ${build}   -->
+  <javac  classpathref="class.path" debug="${debug}" deprecation="${deprication}" destdir="${build}" srcdir="${java}"  includes="**/*.java"  target="${vm}" source="${vm}">
+   <exclude name="**/jamontomcat/JAMonTomcat4Valve.java"/>
+   <exclude name="**/jamontomcat/JAMonTomcat5Valve.java"/>
+    <exclude name="**/jamonapi/aop/JAMonEJBInterceptor.java"/>
+    <exclude name="**/jamonapi/proxy/JAMonDataSource.java"/>
+  </javac>
+ 	
+  <javac  classpathref="class.path.tomcat4" debug="${debug}" deprecation="${deprication}" destdir="${build}" srcdir="${java}"  target="${vm}" source="${vm}">
+    <include name="**/jamontomcat/JAMonTomcat4Valve.java"/>
+    <include name="**/jamontomcat/JAMonTomcat5Valve.java"/>
+  </javac>
+ 	
+  <javac  classpathref="class.path" debug="${debug}" deprecation="${deprication}" destdir="${build}" srcdir="${java}"  target="1.5" source="1.5">
+    <include name="**/jamonapi/aop/JAMonEJBInterceptor.java"/>
+    <include name="**/jamonapi/proxy/JAMonDataSource.java"/>
+</javac>
+ 	
+  </target>
+
+ <!--  ===========================================================================   -->
+ <!--  TARGET [JAVADOC]   -->
+ <!--  ===========================================================================   -->
+<target depends="" name="javadoc">
+ <mkdir dir="${doc}"/>
+ <javadoc classpathref="class.path" destdir="${doc}" packagenames="${package}" >
+
+ <sourcepath>
+  <pathelement location="${src}/java"/>
+  </sourcepath>
+  </javadoc>
+ </target>
+
+ <!--  ===========================================================================   -->
+ <!--  TARGET [ALL]   -->
+ <!--  ===========================================================================   -->
+  <target depends="dist" name="all"/>
+  
+<!--  ===========================================================================   -->
+<!--  TARGET [DIST]   -->
+<!--  ===========================================================================   -->
+	<target depends="backup,WAR,JAR,javadoc" name="dist">
+
+		<!--basedir="${src}"-->
+		<zip  destfile="${dist.zip}.zip" defaultexcludes="true">			  
+
+	          <zipfileset dir="${src}/java" prefix="src/java">
+	                <include name="**/**"/>
+	          </zipfileset>			  
+	          <zipfileset dir="${dist}" prefix="dist">
+	                <include name="*.jar"/>
+		          	<include name="*.war"/>
+	          </zipfileset>
+	          <zipfileset dir="${src}/WAR" prefix="src/WAR">
+	                <include name="*"/>
+	          </zipfileset>				
+	          <zipfileset dir="${src}/docs" prefix="docs">
+	                <include name="**/**"/>
+	          </zipfileset>		
+	          <zipfileset dir="${src}/images" prefix="src/images">
+	                <include name="**/**"/>
+	          </zipfileset>	
+		</zip>
+		
+		
+		
+	    <move todir="${dist}">
+	    <fileset dir="${dist}">
+			<include name = "*.zip"/>	    	
+	    </fileset>
+	    <mapper from="*" to="${DSTAMP}_*" type="glob"/>
+	   </move>
+		
+		
+	</target>
+	
+ <!--  ===========================================================================   -->
+ <!--  TARGET [WAR]   -->
+ <!--  ===========================================================================   -->
+  <target depends="JAR" name="WAR">
+    <echo message="${war_file}"/>
+    <war destfile="${war_file}" webxml="${webxml}">
+
+
+        <lib dir="${lib}">
+               <include name="hsqldb.jar"/>
+               <include name="fdsapi*.jar"/>
+               <include name="jakarta-oro*.jar"/>
+        </lib>
+
+          <zipfileset dir="${src}/WAR/css" prefix="css">
+                <include name="*"/>
+          </zipfileset>
+                   
+          <zipfileset dir="${src}/WAR/images" prefix="images">
+                <include name="*"/>
+          </zipfileset>
+
+          <zipfileset dir="${src}/WAR">
+                <include name="*"/>
+          </zipfileset>
+
+
+    </war>
+
+  </target>
+
+    <!--  ===========================================================================   -->
+ <!--  TARGET [JAR]   -->
+ <!--  ===========================================================================   -->
+  <target depends="compile" name="JAR">
+    <echo message="${dist.jar}"/>
+
+    <jar destfile="${dist.jar}" basedir="${build}" >
+	<include name="**/*.class"/>
+    <exclude name="${tomcatjavafiles}"/>
+        
+                  
+     <manifest>
+      <attribute name="version" value="JAMon ${jamonapi_version}"/>         
+     </manifest>
+
+    </jar>
+  	
+    <echo message="${jamontomcat.jar}"/>
+
+    <jar destfile="${jamontomcat.jar}" basedir="${build}" >
+    <include name="${tomcatjavafiles}"/>
+        
+                  
+     <manifest>
+      <attribute name="version" value="JAMon ${jamonapi_version}"/>         
+     </manifest>
+
+    </jar>
+
+    </target>
+
+ <!--  ===========================================================================   -->
+ <!--  TARGET [BINARIES]   -->
+ <!--  ===========================================================================   -->
+  <target depends="JAR,WAR" name="BINARIES">
+  </target>
+
+</project>

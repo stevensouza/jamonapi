@@ -1,0 +1,61 @@
+<xml xmlns:v="urn:schemas-microsoft-com:vml"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:p="urn:schemas-microsoft-com:office:powerpoint">
+ <p:presentation notessizex="4404" notessizey="5847">
+  <p:master id="4" type="main" href="master04.htm" xmlhref="master04.xml"
+   template="pas" layout="title_body"
+   slots="title,body,dateTime,footer,slideNumber">
+   <p:schemes>
+    <p:colorscheme
+     colors="#FFFFFF,#000000,#808080,#000000,#00CC99,#3333CC,#CCCCFF,#B2B2B2"/>
+    <p:colorscheme
+     colors="#0000FF,#FFFFFF,#000000,#FFFF00,#FF9900,#00FFFF,#FF0000,#969696"/>
+    <p:colorscheme
+     colors="#FFFFCC,#000000,#666633,#808000,#339933,#800000,#0033CC,#FFCC66"/>
+    <p:colorscheme
+     colors="#FFFFFF,#000000,#333333,#000000,#DDDDDD,#808080,#4D4D4D,#EAEAEA"/>
+    <p:colorscheme
+     colors="#FFFFFF,#000000,#808080,#000000,#FFCC66,#0000FF,#CC00CC,#C0C0C0"/>
+    <p:colorscheme
+     colors="#FFFFFF,#000000,#808080,#000000,#C0C0C0,#0066FF,#FF0000,#009900"/>
+    <p:colorscheme
+     colors="#FFFFFF,#000000,#808080,#000000,#3399FF,#99FFCC,#CC00CC,#B2B2B2"/>
+   </p:schemes>
+  </p:master>
+  <p:master id="1" type="notes" href="master01.htm" layout="notes"
+   slots="header,dateTime,slideImage,body,footer,slideNumber"/>
+  <p:slide id="1" href="slide0001.htm" layout="title_only" slots="title">
+   <p:headersfooters noheader="t"/>
+  </p:slide>
+  <p:slide id="115" href="slide0115.htm" layout="title_body" slots="title,body"/>
+  <p:slide id="120" href="slide0120.htm" layout="title_body" slots="title,body"
+   collapseoutline="t"/>
+  <p:slide id="86" href="slide0086.htm" layout="title_body" slots="title,body"/>
+  <p:slide id="122" href="slide0122.htm" layout="title_body" slots="title,body"/>
+  <p:slide id="114" href="slide0114.htm" layout="title_body" slots="title,body"/>
+  <p:slide id="112" href="slide0112.htm" layout="title_body" slots="title,body"/>
+  <p:slide id="61" href="slide0061.htm" layout="title_body" slots="title,body"/>
+  <p:slide id="63" href="slide0063.htm" layout="title_body" slots="title,body"/>
+  <p:slide id="121" href="slide0121.htm" layout="title_body" slots="title,body"/>
+  <p:slide id="85" href="slide0085.htm" layout="title_body" slots="title,body"/>
+  <p:viewstate type="slideView" sorterscale="75" restoredleft="209"
+   restoredtop="745" manualadjustleft="t" manualadjusttop="t"/>
+  <p:slideshowsettings pencolor="schemeText" manualadvance="t"/>
+  <p:kinsoku language="Japanese" level="levelOne"/>
+  <p:font name="Times New Roman" charset="0" type="4"/>
+  <p:font name="Arial" charset="0" type="4" family="34"/>
+  <p:font name="Book Antiqua" charset="0" type="6" family="18"/>
+  <p:font name="Wingdings" charset="2" type="6" family="2"/>
+  <p:headersfooters noheader="t"/>
+  <p:headersfooters notes="t" slidenumber="t"/>
+  <p:pptdocumentsettings framecolors="WhiteTextOnBlack" hideslideanimation="t"
+   browsersupport="dual"/>
+ </p:presentation>
+ <o:shapedefaults v:ext="edit" spidmax="462850" fillcolor="none [0]">
+  <v:fill color="none [0]"/>
+  <v:stroke startarrowwidth="narrow" startarrowlength="short" endarrowwidth="narrow"
+   endarrowlength="short" weight="2.25pt"/>
+  <o:colormru v:ext="edit" colors="#009,#33f,lime,black,#333,red,green,maroon"/>
+  <o:colormenu v:ext="edit" strokecolor="red" shadowcolor="none"
+   extrusioncolor="none [0]"/>
+ </o:shapedefaults></xml>

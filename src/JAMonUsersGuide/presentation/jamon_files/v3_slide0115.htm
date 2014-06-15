@@ -1,0 +1,185 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=PowerPoint.Slide>
+<meta name=Generator content="Microsoft PowerPoint 9">
+<link id=Main-File rel=Main-File href="../jamon.htm">
+<link rel=Preview href=preview.wmf>
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+p\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+v\:textbox {display:none;}
+</style>
+<![endif]-->
+<title>Principal Review Board</title>
+<meta name=Description content="10-Dec-03: Performance Tuning Overview">
+<link rel=next href="v3_slide0120.htm">
+<![if !ppt]>
+<script>
+<!--
+function Update()
+{
+  if( window.name == "PPTSld" )
+    parent.SlideUpdated('v3_slide0115.htm');   
+  else
+    parent.location.href = "v3_document.htm";
+}
+
+function NoHref() {}
+//-->
+</script>
+<![endif]>
+</head>
+
+<body background="v3_master04_background.jpg" bgcolor=white alink="#114ffb"
+link="#8901f3" vlink="#00dfca" text=black topmargin=0 leftmargin=0
+onload="Update()">
+
+<table border=0 valign=top width=475 height=356 cellpadding=0 cellspacing=0>
+ <tr>
+  <td width=32 height=0 nowrap><img src="v3_space.gif" border=0></td>
+  <td width=4 height=0 nowrap><img src="v3_space.gif" border=0></td>
+  <td width=40 height=0 nowrap><img src="v3_space.gif" border=0></td>
+  <td width=321 height=0 nowrap><img src="v3_space.gif" border=0></td>
+  <td width=23 height=0 nowrap><img src="v3_space.gif" border=0></td>
+  <td width=11 height=0 nowrap><img src="v3_space.gif" border=0></td>
+  <td width=40 height=0 nowrap><img src="v3_space.gif" border=0></td>
+ </tr>
+ <tr>
+  <td width=475 height=12 colspan=8></td>
+ </tr>
+ <tr>
+  <td width=76 height=24 colspan=3></td>
+  <td width=321 height=24>
+  <table border=0 valign=top cellpadding=0 cellspacing=0>
+   <tr>
+    <td width=321 height=24><font face=Arial color=white size=4><b>Performance
+    Tuning Overview</b></font><br>
+    </td>
+   </tr>
+  </table>
+  </td>
+  <td width=78 height=24 colspan=4></td>
+ </tr>
+ <tr>
+  <td width=475 height=51 colspan=8></td>
+ </tr>
+ <tr>
+  <td width=36 height=151 colspan=2></td>
+  <td width=395 height=151 colspan=4>
+  <table border=0 valign=top cellpadding=0 cellspacing=0>
+   <tr>
+    <td width=17 height=0 nowrap><img src="v3_space.gif" border=0></td>
+    <td width=2 height=0 nowrap><img src="v3_space.gif" border=0></td>
+    <td width=4 height=0 nowrap><img src="v3_space.gif" border=0></td>
+    <td width=15 height=0 nowrap><img src="v3_space.gif" border=0></td>
+    <td width=1 height=0 nowrap><img src="v3_space.gif" border=0></td>
+    <td width=86 height=0 nowrap><img src="v3_space.gif" border=0></td>
+    <td width=77 height=0 nowrap><img src="v3_space.gif" border=0></td>
+    <td width=12 height=0 nowrap><img src="v3_space.gif" border=0></td>
+    <td width=12 height=0 nowrap><img src="v3_space.gif" border=0></td>
+    <td width=136 height=0 nowrap><img src="v3_space.gif" border=0></td>
+    <td width=4 height=0 nowrap><img src="v3_space.gif" border=0></td>
+    <td width=18 height=0 nowrap><img src="v3_space.gif" border=0></td>
+    <td width=1 height=0 nowrap><img src="v3_space.gif" border=0></td>
+   </tr>
+   <tr>
+    <td width=17 height=18><font face=Wingdings color="#fc0128" size=1>l</font></td>
+    <td width=367 height=18 colspan=11><font face="Times New Roman" size=2>Performance
+    problems occur in a small portion of code</font><br>
+    </td>
+    <td width=10 height=18 colspan=2></td>
+   </tr>
+   <tr>
+    <td width=394 height=1 colspan=14></td>
+   </tr>
+   <tr>
+    <td width=23 height=16 colspan=3></td>
+    <td width=15 height=16><font face=Wingdings color="#fc0128" size=1>l</font></td>
+    <td width=324 height=16 colspan=6><font face="Times New Roman" size=1>4% of
+    application code accounts for more than 50% of the</font><br>
+    </td>
+    <td width=32 height=16 colspan=4></td>
+   </tr>
+   <tr>
+    <td width=38 height=14 colspan=4></td>
+    <td width=176 height=14 colspan=4><font face="Times New Roman" size=1>execution
+    time. - Donald Knuth</font><br>
+    </td>
+    <td width=180 height=14 colspan=6></td>
+   </tr>
+   <tr>
+    <td width=23 height=16 colspan=3></td>
+    <td width=15 height=16><font face=Wingdings color="#fc0128" size=1>l</font></td>
+    <td width=356 height=16 colspan=10><font face="Times New Roman" size=1>20%
+    of application code accounts for 80% of the execution time</font><br>
+    </td>
+   </tr>
+   <tr>
+    <td width=38 height=14 colspan=4></td>
+    <td width=87 height=14 colspan=2><font face="Times New Roman" size=1>-<span
+    style="mso-spacerun: yes">  </span>Barry Boehm</font><br>
+    </td>
+    <td width=269 height=14 colspan=8></td>
+   </tr>
+   <tr>
+    <td width=17 height=18><font face=Wingdings color="#fc0128" size=1>l</font></td>
+    <td width=349 height=18 colspan=10><font face="Times New Roman" size=2>Developers,
+    using guesswork, are notoriously bad at</font><br>
+    </td>
+    <td width=28 height=18 colspan=3></td>
+   </tr>
+   <tr>
+    <td width=17 height=17></td>
+    <td width=209 height=17 colspan=8><font face="Times New Roman" size=2>deciding
+    what code to optimize</font><br>
+    </td>
+    <td width=168 height=17 colspan=5></td>
+   </tr>
+   <tr>
+    <td width=394 height=1 colspan=14></td>
+   </tr>
+   <tr>
+    <td width=17 height=18><font face=Wingdings color="#fc0128" size=1>l</font></td>
+    <td width=368 height=18 colspan=12><font face="Times New Roman" size=2>Measuring
+    performance statistics helps developers find</font><br>
+    </td>
+    <td width=9 height=18></td>
+   </tr>
+   <tr>
+    <td width=17 height=17></td>
+    <td width=185 height=17 colspan=6><font face="Times New Roman" size=2>that
+    4% of code to optimize</font><br>
+    </td>
+    <td width=192 height=17 colspan=7></td>
+   </tr>
+  </table>
+  </td>
+  <td width=44 height=151 colspan=2></td>
+ </tr>
+ <tr>
+  <td width=475 height=29 colspan=8></td>
+ </tr>
+ <tr>
+  <td width=32 height=18></td>
+  <td width=443 height=18 colspan=7><img src="v3_slide0115_image004.gif"
+  border=0 width=443 height=18></td>
+ </tr>
+ <tr>
+  <td width=475 height=45 colspan=8></td>
+ </tr>
+ <tr>
+  <td width=420 height=26 colspan=5></td>
+  <td width=51 height=26 colspan=2><img src="v3_master04_image005.gif"
+  border=0 width=51 height=26></td>
+  <td width=4 height=26></td>
+ </tr>
+</table>
+
+</body>
+
+</html>
