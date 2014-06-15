@@ -10,7 +10,7 @@
   <groupId>com.jamonapi</groupId>
   <artifactId>jamon-parent</artifactId>
   <packaging>pom</packaging>
-  <name>JAMon (Java Application Monitor) Parent</name>
+  <name>JAMon Parent</name>
   <version>2.76</version>
 
      <modules>

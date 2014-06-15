@@ -10,7 +10,7 @@
   <groupId>com.jamonapi</groupId>
   <artifactId>jamon_core</artifactId>
   <packaging>jar</packaging>
-  <name>JAMon (Java Application Monitor) Core</name>
+  <name>JAMon Core</name>
 
   <build>
       <finalName>jamon</finalName>

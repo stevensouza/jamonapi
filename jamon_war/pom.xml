@@ -10,7 +10,7 @@
   <groupId>com.jamonapi</groupId>
   <artifactId>jamon_war</artifactId>
   <packaging>war</packaging>
-  <name>JAMon (Java Application Monitor) War</name>
+  <name>JAMon War</name>
   <version>${jamon.version}</version>
 
   <build>
