@@ -1,4 +1,4 @@
-moving to git
+moving to git (2nd commit)
 
 notes for jamon 3.0
 
