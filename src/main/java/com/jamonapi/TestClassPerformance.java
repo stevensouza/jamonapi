@@ -4,6 +4,8 @@ package com.jamonapi;
 /**
  * Class used to test performance of JAMon.  It is only used for testing purposes.
  *
+ *   java -cp jamon-2.76.jar com.jamonapi.TestClassPerformance 1000000
+ *   
  * @author  steve souza
  */
 public class TestClassPerformance {
