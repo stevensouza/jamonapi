@@ -83,13 +83,7 @@
     <Engine name="Catalina" defaultHost="localhost">
     
     <Valve className="com.jamonapi.http.JAMonTomcatValve" />
-    
-    <!-- 
-     Note tomcat6 can simply use com.jamonapi.http.JAMonTomcatValve
-     <Valve className="com.jamontomcat.JAMonTomcat4Valve"/>
-     <Valve className="com.jamontomcat.JAMonTomcat5Valve"/>
-     <Valve className="com.jamontomcat.JAMonTomcat55Valve"/>
-    -->
+
 
       <!--For clustering, please take a look at documentation at:
           /docs/cluster-howto.html  (simple how to)
