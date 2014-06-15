@@ -8,11 +8,16 @@
   </parent>
   
   <groupId>com.jamonapi</groupId>
-  <artifactId>jamon</artifactId>
-  <packaging>jar</packaging>
-  <name>JAMon (Java Application Monitor)</name>
+  <artifactId>jamon-parent</artifactId>
+  <packaging>pom</packaging>
+  <name>JAMon (Java Application Monitor) Parent</name>
   <version>2.76</version>
-  
+
+     <modules>
+         <module>jamon_core</module>
+         <module>jamon_war</module>
+     </modules>
+
   <description>The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.
   
     1) It contains the ability to monitor JDBC/SQL, web page requests, ejb's, log4j, interfaces and more.
@@ -33,6 +38,8 @@
     <url>http://jamonapi.cvs.sourceforge.net/viewvc/jamonapi/jamonapi/src/java/com/jamonapi/</url>
     <connection>scm:cvs:pserver:anonymous@jamonapi.cvs.sourceforge.net:/cvsroot/jamonapi</connection>
   </scm>
+
+
   
   <developers>
     <developer>
@@ -56,6 +63,7 @@
          <jetty6.version>6.1.25</jetty6.version>
          <hsqldb.version>2.3.2</hsqldb.version>
          <jdk.version>1.6</jdk.version>
+         <jamon.version>2.76</jamon.version>
      </properties>
 
      <build>
@@ -99,7 +107,6 @@
              <artifactId>hsqldb</artifactId>
              <version>${hsqldb.version}</version>
              <scope>test</scope>
-
          </dependency>
 
          <dependency>

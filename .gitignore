@@ -8,10 +8,19 @@ playground/src/main/resources/data/out/*
 .idea/
 *.iml
 *.iws
+.#*
 
 # Mac
 .DS_Store
 
+#CVS
+CVS/
+
+
+
 # Maven
 /log/
 /target/
+/jamon_core/target
+/jamon_war/target
+

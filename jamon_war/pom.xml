@@ -1,0 +1,19 @@
+ <project>
+  <modelVersion>4.0.0</modelVersion>
+
+     <parent>
+         <groupId>com.jamonapi</groupId>
+         <artifactId>jamon-parent</artifactId>
+         <version>2.76</version>
+     </parent>
+
+  <groupId>com.jamonapi</groupId>
+  <artifactId>jamon_war</artifactId>
+  <packaging>war</packaging>
+  <name>JAMon (Java Application Monitor) War</name>
+  <version>${jamon.version}</version>
+
+  <build>
+    <finalName>jamon</finalName>
+  </build>
+</project>
