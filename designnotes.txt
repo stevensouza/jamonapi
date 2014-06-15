@@ -1,3 +1,5 @@
+moving to git
+
 notes for jamon 3.0
 
 note to run md5 on mac simpy run.
