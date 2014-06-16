@@ -36,7 +36,7 @@
   
   <scm>
     <url>http://jamonapi.cvs.sourceforge.net/viewvc/jamonapi/jamonapi/src/java/com/jamonapi/</url>
-    <connection>scm:cvs:pserver:anonymous@jamonapi.cvs.sourceforge.net:/cvsroot/jamonapi</connection>
+    <connection>scm:git:git://git.code.sf.net/p/jamonapi/jamonapi</connection>
   </scm>
 
 
