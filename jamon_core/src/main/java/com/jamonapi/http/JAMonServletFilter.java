@@ -1,14 +1,8 @@
 package com.jamonapi.http;
 
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServlet;
+import java.io.IOException;
 
 
 /** Note this servlet filter is more functional than com.jamonapi.JAMonFilter, but either can be used.

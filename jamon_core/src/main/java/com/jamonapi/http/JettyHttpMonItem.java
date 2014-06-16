@@ -1,10 +1,9 @@
 package com.jamonapi.http;
 
 
-import org.mortbay.jetty.Request;
-
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
+import org.mortbay.jetty.Request;
 
 /**
  *  Used to monitor jetty requests via the JAMonJettyHandler.

@@ -1,13 +1,12 @@
 package com.jamonapi.proxy;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import com.jamonapi.MonitorFactory;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
-
-import com.jamonapi.MonitorFactory;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 
 public class SQLDeArgerTest {

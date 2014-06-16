@@ -1,16 +1,15 @@
 package com.jamonapi.http;
 
 
-import java.io.IOException;
-import java.util.Iterator;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-
 import com.jamonapi.MonKeyImp;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import com.jamonapi.utils.Misc;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Iterator;
 
 
 /**

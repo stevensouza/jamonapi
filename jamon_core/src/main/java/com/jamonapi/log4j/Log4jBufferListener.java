@@ -1,7 +1,5 @@
 package com.jamonapi.log4j;
 
-import org.apache.log4j.spi.LoggingEvent;
-
 import com.jamonapi.JAMonBufferListener;
 import com.jamonapi.JAMonListener;
 import com.jamonapi.MonKey;
@@ -10,6 +8,7 @@ import com.jamonapi.utils.BufferList;
 import com.jamonapi.utils.DetailData;
 import com.jamonapi.utils.DetailDataWrapper;
 import com.jamonapi.utils.Misc;
+import org.apache.log4j.spi.LoggingEvent;
 
 /**
  * This class can act as a standard JAMonBufferListener/FIFOBuffer or more

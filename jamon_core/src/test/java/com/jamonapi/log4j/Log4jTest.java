@@ -1,15 +1,14 @@
 package com.jamonapi.log4j;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-
-import java.util.Properties;
-
+import com.jamonapi.MonitorFactory;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.jamonapi.MonitorFactory;
+import java.util.Properties;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Tests that show that log4j properly calls the log4j {@code JAMonAppender} to aggregate calls and
  * generalize and aggregate individual messages.

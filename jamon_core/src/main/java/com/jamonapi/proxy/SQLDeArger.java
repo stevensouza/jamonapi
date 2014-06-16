@@ -1,13 +1,13 @@
 package com.jamonapi.proxy;
 
 
+import com.jamonapi.MonitorFactory;
+import com.jamonapi.utils.AppMap;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import com.jamonapi.MonitorFactory;
-import com.jamonapi.utils.AppMap;
 /** SQLDeArger takes a sql statement and 1) replaces argument values ('souza', "souza", 'souza''s', 100, 100.5, 0xff, 10e9) with question marks
  *  It makes full sql statements look more like a prepared statement.  2) Returns a sql type which is simply the first word of the command
  *  (typically 'select', 'update' etc. 3) Returns any specified keywords that are in the parsed sql.  This is a good way to return table names.

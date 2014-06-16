@@ -1,16 +1,15 @@
 package com.jamonapi.http;
 
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.mortbay.jetty.HttpConnection;
 import org.mortbay.jetty.Request;
 import org.mortbay.jetty.Response;
 import org.mortbay.jetty.handler.HandlerWrapper;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /** Handler that can be used to track request access in jetty.  See www.jamonapi.com for more info on how to
  * add this handler to the jetty.xml file.  This is a wrapper class for the true monitoring class of HttpMonFactory.

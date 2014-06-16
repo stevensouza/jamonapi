@@ -1,10 +1,9 @@
 package com.jamonapi.proxy;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-
+import com.jamonapi.proxy.JAMonDriver.URLInfo;
 import org.junit.Test;
 
-import com.jamonapi.proxy.JAMonDriver.URLInfo;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 
 public class JAMonDriverTest {

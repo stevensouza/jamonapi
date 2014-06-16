@@ -1,12 +1,12 @@
 package com.jamonapi.aop;
 
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.InvocationContext;
-
 import com.jamonapi.MonKeyImp;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import com.jamonapi.utils.Misc;
+
+import javax.interceptor.AroundInvoke;
+import javax.interceptor.InvocationContext;
 /** Class for monitoring ejb's via aop */
 public class JAMonEJBInterceptor {
     private static final String EXCEPTION_STR="JAMonEJBInterceptor.EJBException";

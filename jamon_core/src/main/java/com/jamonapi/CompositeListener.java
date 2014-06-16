@@ -1,10 +1,10 @@
 package com.jamonapi;
 
+import com.jamonapi.utils.DetailData;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import com.jamonapi.utils.DetailData;
 
 /** A class that can contain other listeners that can listen to jamon events of interest.
  * These classes will all implement the JAMonListener interface too.  This is an example of the

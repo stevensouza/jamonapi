@@ -1,10 +1,10 @@
 package com.jamonapi;
 
-import java.util.Comparator;
-
 import com.jamonapi.utils.BufferHolder;
 import com.jamonapi.utils.JAMonArrayComparator;
 import com.jamonapi.utils.NExtremeBufferHolder;
+
+import java.util.Comparator;
 
 /** Buffer used to keep the last N recent array values based on the comparator.  Note the Comparator must
  * be thread safe.  It can also stored the last n recent values of ToArray objects.  By using various Comparators

@@ -1,12 +1,12 @@
 package com.jamonapi;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.jamonapi.utils.BufferList;
 import com.jamonapi.utils.BufferListDetailData;
 import com.jamonapi.utils.DetailData;
 import com.jamonapi.utils.ToArray;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /** JAMonListener that puts jamon data into a buffer that allows you to display the last N configurable
  * detail events.  The buffer will have the detail label, value and invocation date for the monitor that

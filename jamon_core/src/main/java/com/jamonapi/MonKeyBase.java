@@ -1,11 +1,6 @@
 package com.jamonapi;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /** Class that can be used as a composite key for MonitorFactor.add(compositeKey, 100) method calls
  * Note the passed in LinkedHashMap is used as a key to another Map that looks up the associated monitor.

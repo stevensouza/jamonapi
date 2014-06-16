@@ -1,16 +1,10 @@
 package com.jamonapi;
 
 
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 /**
  * The following should be put in the Web Application's web.xml file to enable servlet monitoring.

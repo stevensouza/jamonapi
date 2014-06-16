@@ -1,24 +1,15 @@
 package com.jamonapi.proxy;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import com.jamonapi.FactoryEnabled;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.sql.*;
+import java.util.*;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 
 /** Class that tests the various JAMon proxy classes via the main method */

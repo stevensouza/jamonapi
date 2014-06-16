@@ -1,8 +1,7 @@
 package com.jamonapi.http;
 
-import java.io.IOException;
-
 import javax.servlet.ServletException;
+import java.io.IOException;
 
 /** Generic monitoring interface used with HttpServletRequest, and HttpServletResponse objects used in servlet containers.
  * It will also monitor any objects that implement these interfaces as well as any of the methods the implementing classes

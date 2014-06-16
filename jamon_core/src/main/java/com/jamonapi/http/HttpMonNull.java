@@ -1,8 +1,7 @@
 package com.jamonapi.http;
 
-import java.io.IOException;
-
 import javax.servlet.ServletException;
+import java.io.IOException;
 
 /**
  * HttpMon that is used instead of HttpMonRequest when monitoring is disabled.

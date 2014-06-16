@@ -1,23 +1,16 @@
 package com.jamonapi.proxy;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import com.jamonapi.BasicTimingMonitor;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorComposite;
 import com.jamonapi.MonitorFactory;
 import com.jamonapi.utils.Misc;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.sql.*;
+import java.util.*;
+import java.util.Date;
 
 /**
  * Class that implements JDBC specific proxied monitoring.  The following are monitored by this class

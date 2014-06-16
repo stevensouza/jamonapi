@@ -1,11 +1,11 @@
 package com.jamonapi;
 
+import com.jamonapi.utils.Misc;
+import com.jamonapi.utils.ToArray;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.jamonapi.utils.Misc;
-import com.jamonapi.utils.ToArray;
 
 /** Class used to add the label, value and time invoked for the associated monitor.  Used in the
  * jamonBufferListener class.

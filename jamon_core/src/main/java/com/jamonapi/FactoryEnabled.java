@@ -1,16 +1,11 @@
 package com.jamonapi;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
-
 import com.jamonapi.utils.DetailData;
 import com.jamonapi.utils.Misc;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 /** Factory that creates Monitors.  Main workhorse for creating monitors. This can be created directly.  {@code MonitorFactory} is simply
  * a wrapper that makes calling this class simpler.   {@code MonitorFactory} contains a static reference to

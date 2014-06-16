@@ -1,11 +1,12 @@
 package com.jamonapi.utils;
+
+import com.jamonapi.Monitor;
+import com.jamonapi.MonitorFactory;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
-import com.jamonapi.Monitor;
-import com.jamonapi.MonitorFactory;
 
 /** Reusable Utilities used for File manipulations such as reading a file as a String.  **/
 public class FileUtils extends java.lang.Object {

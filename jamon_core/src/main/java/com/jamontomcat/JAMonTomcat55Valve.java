@@ -1,21 +1,14 @@
 package com.jamontomcat;
 
 
-
-
-
-
-
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-
+import com.jamonapi.http.HttpMon;
+import com.jamonapi.http.HttpMonFactory;
 import org.apache.catalina.Valve;
 import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.Response;
 
-import com.jamonapi.http.HttpMon;
-import com.jamonapi.http.HttpMonFactory;
+import javax.servlet.ServletException;
+import java.io.IOException;
 
 /** Note this is simply a copy of com.jamonapi.http.JAMonTomcatValve. Tomcat 5.5 would not work with the valve in the same jar as the jamon classes
  * and also display stats in jamon.war.  Simply compile this class separately and put it in tomcats /server/classes/com/jamontomcatvalve/http and put jamon-2.7.jar or higher in tomcats

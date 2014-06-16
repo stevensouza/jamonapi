@@ -1,15 +1,14 @@
 package com.jamonapi.proxy;
 
+import javax.naming.NamingException;
+import javax.naming.Reference;
+import javax.naming.Referenceable;
+import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Logger;
-
-import javax.naming.NamingException;
-import javax.naming.Reference;
-import javax.naming.Referenceable;
-import javax.sql.DataSource;
 /** The datasource is incomplete.  the object factory is not done.  It should
  *  be able to wrap an existing DataSource however.
  */

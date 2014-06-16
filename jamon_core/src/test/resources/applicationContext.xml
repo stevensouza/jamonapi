@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+
+
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+<!-- autoscan for spring components as well as autowiring
+looks for
+@Component - general spring component (usually use)
+@Controller - spring mvc controller
+@Repository - data repository
+@Service
+@Aspect - spring finds this AspectJ annotation.  I had to put in the include-filter to get this to work (wasn't in the book)
+
+P. 79 spring in action mentions was that you don't have to annotate if you
+define to automatically bring in all classes that inherit from another. An advantage
+of this approach is that you can springify classes you don't own.
+
+Note page 81 shows how you can more or less replace this xml file with java code
+though that seems nonstandard to me.
+
+-->
+<aop:aspectj-autoproxy/>
+
+<context:component-scan base-package="com.jamonapi">
+    <context:include-filter type="annotation"  expression="org.aspectj.lang.annotation.Aspect"/>
+</context:component-scan>
+
+<bean id="hiSpringBean" class="com.jamonapi.aop.spring.HelloSpringBean"/>
+<bean id="monitorMe" class="com.jamonapi.aop.spring.MonitorMe"/>
+
+
+ <!--
+ This could instead be declared with @Component annotation
+ -->
+
+
+<!--
+<bean id="jamonMonitoringAspectInterceptor" class="org.springframework.aop.interceptor.JamonPerformanceMonitorInterceptor">
+    <property name="trackAllInvocations" value="true"></property>
+</bean>
+-->
+
+
+
+<!-- MonitorAnnotated on class -->
+<!--
+<aop:config>
+        <aop:pointcut id="jamonMonitoringPointcut2"
+                      expression="com.jamonapi.aop.spring.SystemAopPointcutDefinitions.monitorAnnotatedClass()"/>
+        <aop:advisor pointcut-ref="jamonMonitoringPointcut2" advice-ref="jamonMonitoringAspectInterceptor"/>
+</aop:config>
+-->
+
+    <!-- In the following few lines various JamonAopKeyHelpers are created.  Only one is used for the jamonAspect.
+    If you want to play around with the various ways of geneating jamon keys and details then you can uncomment them
+    out in the jamonAspect below. Note you can also create your own implementation
+    -->
+
+    <!-- default for jamon aspects if you don't specify a key helper.
+         based class key generator (lable and details) which doesn't track arguments
+    -->
+    <!--
+    <bean class="com.jamonapi.aop.spring.JamonAopKeyHelperSimple"/>
+    -->
+
+    <!-- puts args in jamon details. note either doing it for standard execution or exceptions can be disabled
+         independently
+     -->
+    <!--
+    <bean class="com.jamonapi.aop.spring.JamonAopKeyHelper"/>
+   -->
+
+   <!-- disable -->
+    <!--
+    <bean id="jamonAopKeyHelper" class="com.jamonapi.aop.spring.JamonAopKeyHelper">
+      <property name="useArgsWithMethodDetails" value="false" />
+      <property name="useArgsWithExceptionDetails" value="false" />
+    </bean>
+    -->
+
+    <!-- the following default will track exceptions, but not the exception in the details and not arguments -->
+    <!--
+        <bean id="jamonAspect" class="com.jamonapi.aop.spring.JamonAspect">
+     -->
+
+    <bean id="jamonAspect" class="com.jamonapi.aop.spring.JamonAspect">
+       <!--  <property name="exceptionBufferListener" value="true" /> -->
+       <!-- <property name="useArgsWithExceptionDetails" value="true"/> -->
+       <!-- <property name="useArgsWithMethodDetails" value="true"/> -->
+
+        <!-- look how to enable/disable exception fifo buffer listener on all values -->
+        <!--     <constructor-arg ref="jamonAopKeyHelper" /> -->
+        <!--   <constructor-arg ref="jamonAopKeyHelperWithArgs" /> -->
+        <!--   <constructor-arg ref="jamonAopKeyHelperWithArgsDisabled" /> -->
+   </bean>
+
+<!-- MonitorAnnotation on method name -->
+    <aop:config>
+        <aop:pointcut id="jamonMonitoringPointcut4"
+                      expression="execution(* com.jamonapi.aop.spring.MonitorMe.anotherMethod*(..))"/>
+        <aop:aspect id="jamonSpringAspect" ref="jamonAspect">
+            <aop:around
+                    pointcut-ref="jamonMonitoringPointcut4"
+                    method="monitor"/>
+        </aop:aspect>
+    </aop:config>
+
+    <!-- can also do || - expression="bean(monitorMe4) || bean(monitorMe3)"/> -->
+    <aop:config>
+        <aop:pointcut id="jamonMonitoringPointcut5"
+                      expression="bean(hiSpringBean)"/>
+        <aop:aspect id="jamonSpringAspect2" ref="jamonAspect">
+            <aop:around
+                    pointcut-ref="jamonMonitoringPointcut5"
+                    method="monitor"/>
+        </aop:aspect>
+    </aop:config>
+</beans>
+

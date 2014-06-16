@@ -1,16 +1,11 @@
 package com.jamonapi;
 
-import static org.fest.assertions.api.Assertions.assertThat;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-
+import com.jamonapi.utils.BufferList;
 import org.junit.Test;
 
-import com.jamonapi.utils.BufferList;
+import java.util.*;
+
+import static org.fest.assertions.api.Assertions.assertThat;
 
 
 public class JAMonListenerFactoryTest {

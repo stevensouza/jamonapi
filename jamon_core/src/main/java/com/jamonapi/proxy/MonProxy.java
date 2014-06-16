@@ -1,17 +1,17 @@
 package com.jamonapi.proxy;
 
+import com.jamonapi.MonKeyImp;
+import com.jamonapi.Monitor;
+import com.jamonapi.MonitorFactory;
+import com.jamonapi.utils.Logger;
+import com.jamonapi.utils.Misc;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.SQLException;
 import java.util.Date;
-
-import com.jamonapi.MonKeyImp;
-import com.jamonapi.Monitor;
-import com.jamonapi.MonitorFactory;
-import com.jamonapi.utils.Logger;
-import com.jamonapi.utils.Misc;
 
 /**
  * By using this proxy class ANY java interface can be monitored for performance and exceptions via JAMon.

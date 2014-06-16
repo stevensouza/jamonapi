@@ -1,12 +1,12 @@
 package com.jamonapi.utils;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import org.junit.Test;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map;
 
-import org.junit.Test;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 
 public class MiscTest {

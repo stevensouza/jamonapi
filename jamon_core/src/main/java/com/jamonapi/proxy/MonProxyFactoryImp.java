@@ -2,16 +2,8 @@ package com.jamonapi.proxy;
 
 
 import java.lang.reflect.Proxy;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.sql.*;
+import java.util.*;
 
 /**
  * MonProxyFactory allows developers to monitor ANY interface by simply passing the Object implementing

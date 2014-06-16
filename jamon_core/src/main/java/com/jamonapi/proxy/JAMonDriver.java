@@ -1,20 +1,16 @@
 package com.jamonapi.proxy;
 
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.DriverPropertyInfo;
-import java.sql.SQLException;
-import java.util.Properties;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.jamonapi.MonKey;
 import com.jamonapi.MonKeyImp;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import com.jamonapi.utils.Misc;
+
+import java.sql.*;
+import java.util.Properties;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** This class will be a proxy for the underlying jdbc driver. */
 public class JAMonDriver implements Driver

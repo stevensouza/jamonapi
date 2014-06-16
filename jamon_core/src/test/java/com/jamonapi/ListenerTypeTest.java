@@ -1,11 +1,11 @@
 package com.jamonapi;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 
 public class ListenerTypeTest {

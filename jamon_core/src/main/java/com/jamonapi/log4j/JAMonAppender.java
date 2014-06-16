@@ -1,16 +1,11 @@
 package com.jamonapi.log4j;
 
+import com.jamonapi.*;
+import com.jamonapi.utils.DefaultGeneralizer;
+import com.jamonapi.utils.Generalizer;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Level;
 import org.apache.log4j.spi.LoggingEvent;
-
-import com.jamonapi.JAMonListenerFactory;
-import com.jamonapi.MonKey;
-import com.jamonapi.MonKeyImp;
-import com.jamonapi.Monitor;
-import com.jamonapi.MonitorFactory;
-import com.jamonapi.utils.DefaultGeneralizer;
-import com.jamonapi.utils.Generalizer;
 
 /**
  * Implementaton of a log4j Appender that allows you to summarize log4j stats via jamon and view

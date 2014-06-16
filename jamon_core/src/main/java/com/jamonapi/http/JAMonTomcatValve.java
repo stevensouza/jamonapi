@@ -1,14 +1,12 @@
 package com.jamonapi.http;
 
 
-
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-
 import org.apache.catalina.Valve;
 import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.Response;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
 
 /** This valve works in tomcat 6 and jboss tomcat 5.5.  An alternative approach is to use the jamontomcat-2.7.jar and this approach is required for
  *  tomcat 4/5. The Valve architecture and signatures were changed between release 5 and 5.5. For tomcat 5.5

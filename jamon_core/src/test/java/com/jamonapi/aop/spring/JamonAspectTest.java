@@ -1,0 +1,122 @@
+package com.jamonapi.aop.spring;
+
+import com.jamonapi.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import static org.fest.assertions.api.Assertions.assertThat;
+
+public class JamonAspectTest {
+    private static final String JAMON_EXCEPTION="com.jamonapi.Exceptions";
+    private static final String VALUE_LISTENER="value";
+    private static final String BUFFER="FIFOBuffer";
+    private static final String METHOD = "void com.jamonapi.aop.spring.HelloSpringBean.setMyString(String)";
+
+    private ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+
+    @Before
+    public void setUp() {
+        MonitorFactory.reset();
+    }
+
+    private void runApp() throws InterruptedException {
+            HelloSpringBean hi = (HelloSpringBean) context.getBean("hiSpringBean");
+            MonitorMe monitorMe = context.getBean("monitorMe", MonitorMe.class);
+
+            for (int i=0;i<10;i++) {
+                hi.getMyString();
+                hi.setMyString("hello");
+                monitorMe.anotherMethodForMe();
+                monitorMe.helloWorld();
+                try {
+                    monitorMe.anotherMethod("argument.txt"); // throws exception
+                } catch (Exception e) {
+
+                }
+            }
+
+        }
+
+
+    @Test
+    public void testMethodsAreMonitored() throws Exception {
+        runApp();
+
+        String report = MonitorFactory.getReport();
+
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(6);
+        assertThat(report).contains("HelloSpringBean.getMyString()");
+        assertThat(report).contains("HelloSpringBean.setMyString(String)");
+        assertThat(report).contains("MonitorMe.anotherMethod(String)");
+        assertThat(report).contains("MonitorMe.anotherMethodForMe()");
+        assertThat(report).contains("java.io.FileNotFoundException");
+        assertThat(report).contains(JAMON_EXCEPTION);
+        assertThat(MonitorFactory.getMonitor(JAMON_EXCEPTION, "Exception").hasListeners()).isFalse();
+    }
+
+    @Test
+    public void testMethodsAreMonitored_WithBufferListener() throws Exception {
+        JamonAspect aspect = context.getBean("jamonAspect", JamonAspect.class);
+        aspect.setExceptionBufferListener(true);
+
+        runApp();
+
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(6);
+        assertThat(MonitorFactory.getMonitor(JAMON_EXCEPTION, "Exception").hasListeners()).isTrue();
+    }
+
+    @Test
+    public void testMethodsAreMonitored_ArgsWithExceptionDetails() throws Exception {
+        JamonAspect aspect = context.getBean("jamonAspect", JamonAspect.class);
+        aspect.setExceptionBufferListener(true);
+        aspect.setUseArgsWithExceptionDetails(true);
+
+        runApp();
+
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(6);
+        String bufferValue = getBufferValue(JAMON_EXCEPTION, "Exception");
+        assertThat(bufferValue).contains("arguments(1)");
+        assertThat(bufferValue).contains("argument.txt");
+    }
+
+    @Test
+    public void testMethodsAreMonitored_ArgsWithMethodDetails() throws Exception {
+        JamonAspect aspect = context.getBean("jamonAspect", JamonAspect.class);
+        aspect.setExceptionBufferListener(true);
+        aspect.setUseArgsWithMethodDetails(true);
+        MonitorFactory.getMonitor(METHOD,"ms.")
+               .addListener("value", JAMonListenerFactory.get(BUFFER));
+
+        runApp();
+
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(6);
+        String bufferValue = getBufferValue(JAMON_EXCEPTION, "Exception");
+        assertThat(bufferValue).doesNotContain("arguments(1)");
+        assertThat(bufferValue).doesNotContain("hello");
+
+        bufferValue = getBufferValue(METHOD, "ms.");
+        assertThat(bufferValue).contains("arguments(1)");
+        assertThat(bufferValue).contains("hello");
+    }
+
+    // get first value in buffer listener if it exists;
+    private String getBufferValue(String label, String units) {
+        Monitor mon = MonitorFactory.getMonitor(label, units);
+        if (!mon.hasListeners()) {
+            return "";
+        }
+
+        JAMonBufferListener bufferListener = (JAMonBufferListener) mon
+                .getListenerType(VALUE_LISTENER).getListener(BUFFER);
+        JAMonDetailValue listenerData = (JAMonDetailValue) bufferListener.getBufferList().getCollection().get(0);
+        String firstValue="";
+        for (Object obj : listenerData.toArray()) {
+            firstValue+=obj+"\n";
+        }
+        return firstValue;
+    }
+
+
+}

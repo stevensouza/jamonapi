@@ -1,13 +1,8 @@
 package com.jamonapi.proxy;
 
 
-
 import java.lang.reflect.Proxy;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.List;
 
 /**

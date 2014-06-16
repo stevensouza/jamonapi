@@ -2,12 +2,12 @@
 package com.jamonapi;
 
 
+import com.jamonapi.utils.DetailData;
+import com.jamonapi.utils.Misc;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.jamonapi.utils.DetailData;
-import com.jamonapi.utils.Misc;
 
 /**
  * Treats groups of monitors the same way you treat one monitor.  i.e. you can enable/disable/reset

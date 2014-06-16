@@ -1,9 +1,9 @@
 package com.jamonapi.proxy;
 
 
-import java.util.List;
-
 import com.jamonapi.utils.BufferList;
+
+import java.util.List;
 
 /** Various parameters that are needed by all proxy jamon monitors.  They
  * are passed around via this object and so shared by all.

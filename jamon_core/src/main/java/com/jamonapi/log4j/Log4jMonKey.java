@@ -1,8 +1,7 @@
 package com.jamonapi.log4j;
 
-import org.apache.log4j.spi.LoggingEvent;
-
 import com.jamonapi.MonKeyImp;
+import org.apache.log4j.spi.LoggingEvent;
 
 /**
  * MonKey used to put log4j records into jamon hashmap. It is the same as
