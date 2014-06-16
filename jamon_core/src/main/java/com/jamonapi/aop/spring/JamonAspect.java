@@ -41,7 +41,7 @@ public class JamonAspect {
         MonKeyImp key = new MonKeyImp(label, details, "ms.");
         Monitor mon = MonitorFactory.start(key);
         try {
-            retVal = proceedingJoinPoint.proceed();;
+            retVal = proceedingJoinPoint.proceed();
         } catch (Throwable t) {
             String exceptionDetails = keyHelper.getDetails(proceedingJoinPoint, t);
             key.setDetails(exceptionDetails);
