@@ -14,7 +14,7 @@
   <property name="doc" value="${src}/doc/javadoc/"/>
   <property name="lib" value="${basedir}/lib/"/>
   <property name="java" value="${src}/java/"/>
-  <property name="osmon" value="${src}/osmon/"/>
+  <property name="osmon" value="/jamon_osmon/osmon/"/>
   <property name="debug" value="true"/>
   <property name="deprication" value="false"/>
   <property name="source" value="1.5"/>
@@ -98,7 +98,7 @@
 	    <jar destfile="${javadoc.jar}" basedir="${doc}">
 	    </jar>
 	 	
-	     <zip destfile="${osmon.zip}" basedir="${osmon}">
+	     <zip destfile="${osmon.zip}" basedir="/jamon_osmon/osmon">
 	     </zip>
 	 	
 
