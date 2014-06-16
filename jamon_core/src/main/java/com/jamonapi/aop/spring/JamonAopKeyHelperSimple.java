@@ -5,7 +5,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by stevesouza on 6/8/14.
+ * Created by stevesouza on 6/8/14.  Simple implementation of creating jamon keys (labels and details).  The usage
+ * of arguments is a noop;
  */
 @Component
 public class JamonAopKeyHelperSimple implements JamonAopKeyHelperInt<ProceedingJoinPoint> {
@@ -31,11 +32,19 @@ public class JamonAopKeyHelperSimple implements JamonAopKeyHelperInt<ProceedingJ
                 .toString();
     }
 
+    /** This method is a noop
+     *
+     * @param useArgsWithMethodDetails
+     */
     @Override
     public void setUseArgsWithMethodDetails(boolean useArgsWithMethodDetails) {
 
     }
 
+    /** This method is a noop
+     *
+     * @param useArgsWithExceptionDetails
+     */
     @Override
     public void setUseArgsWithExceptionDetails(boolean useArgsWithExceptionDetails) {
 

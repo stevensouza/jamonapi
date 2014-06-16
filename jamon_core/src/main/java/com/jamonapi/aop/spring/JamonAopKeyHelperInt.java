@@ -2,9 +2,11 @@ package com.jamonapi.aop.spring;
 
 /**
  * Created by stevesouza on 6/8/14.
+ * This was intended to be more generic, but currently works with JoinPoints only.
  *
+ * This class creates jamon labels (method, and exception) and creates details too
+ * (for method and exception).
  * T = joinPoint or method
- * M = Monitor like jamon or something else
  */
 public interface JamonAopKeyHelperInt<T> {
     /** jamon label to be used in key */

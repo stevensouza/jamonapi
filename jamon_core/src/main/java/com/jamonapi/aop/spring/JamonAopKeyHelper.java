@@ -5,11 +5,10 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.stereotype.Component;
 
 /**
- * Class that monitors mehtods, and tracks their excepctions with jamon.  The difference between this class and
- * it base class is this class can put the values passed as arguments in jamon.  For example if a method was invoked
- * as 'myObject.myMethod("jeff", "beck"); the arguments jeff, beck would be accessible in the jamonListener
- * via jamon details for the method (useArgsWtihMethodDetails) or the exception (useArgsWithExceptionDetails).  If both
- * are disabled then it has the same effect as its base class
+ * Class that monitors helps create keys, details, arguments and exceptions for jamon aop.  With agument tracking
+ * If a method was invoked as 'myObject.myMethod("jeff", "beck"); the arguments jeff, beck would be accessible
+ * in the jamonListener  via jamon details for the method (setUseArgsWithMethodDetails) or the exception
+ * (setUseArgsWithExceptionDetails).
  */
 @Component
 public class JamonAopKeyHelper implements JamonAopKeyHelperInt<ProceedingJoinPoint> {
@@ -27,30 +26,61 @@ public class JamonAopKeyHelper implements JamonAopKeyHelperInt<ProceedingJoinPoi
         this.useArgsWithExceptionDetails = useArgsWithExceptionDetails;
     }
 
+    /**
+     * Track arguments for all methods monitored.
+     * @param useArgsWithMethodDetails
+     */
     public void setUseArgsWithMethodDetails(boolean useArgsWithMethodDetails) {
         this.useArgsWithMethodDetails = useArgsWithMethodDetails;
     }
 
+    /**
+     * Track arguments for all exceptions thrown.
+     * @param useArgsWithExceptionDetails
+     */
     public void setUseArgsWithExceptionDetails(boolean useArgsWithExceptionDetails) {
         this.useArgsWithExceptionDetails = useArgsWithExceptionDetails;
     }
 
+    /** Create the jamon label as a method name
+     *
+     * @param proceedingJoinPoint
+     * @return
+     */
     @Override
     public String getLabel(ProceedingJoinPoint proceedingJoinPoint) {
         return proceedingJoinPoint.getSignature().toString();
     }
 
+    /** Create a label out of the passed in exception. It will be the exception class name
+     *
+     * @param exception
+     * @return
+     */
     @Override
     public String getExceptionLabel(Throwable exception) {
         return exception.getClass().getName();
     }
 
+    /** Create details for the invoked method.  This is used in jamon listeners
+     * (for example viewable in the jamon web app).
+     *
+     * @param proceedingJoinPoint
+     * @return
+     */
     @Override
     public String getDetails(ProceedingJoinPoint proceedingJoinPoint) {
         String signature = getLabel(proceedingJoinPoint);
         return createDetailMessage(proceedingJoinPoint, signature, useArgsWithMethodDetails);
     }
 
+    /** Create details for when an exception is thrown.  This would be the stack trace and possibly the methods
+     * arguments.
+     *
+     * @param proceedingJoinPoint
+     * @param exception
+     * @return
+     */
     @Override
     public String getDetails(ProceedingJoinPoint proceedingJoinPoint, Throwable exception) {
         String detailMessage = createDetailMessage(proceedingJoinPoint, "", useArgsWithExceptionDetails);
@@ -61,6 +91,9 @@ public class JamonAopKeyHelper implements JamonAopKeyHelperInt<ProceedingJoinPoi
         return stackTrace;
     }
 
+    // append the method arguments to the base detail message. for example myMethod("steve") would append
+    // arguments(1):
+    // steve
     private void appendArgs(StringBuilder sb, Object[] args) {
         if (args==null) {
             return;
@@ -79,6 +112,7 @@ public class JamonAopKeyHelper implements JamonAopKeyHelperInt<ProceedingJoinPoi
 
     }
 
+    // build the detail message - appending the args if true is passed in.
     private String createDetailMessage(ProceedingJoinPoint proceedingJoinPoint, String baseMessage, boolean useArgsInDetails) {
         if (useArgsInDetails) {
             StringBuilder sb = new StringBuilder().append(baseMessage);
