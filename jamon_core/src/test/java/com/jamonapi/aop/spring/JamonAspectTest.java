@@ -6,6 +6,8 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.io.FileNotFoundException;
+
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class JamonAspectTest {
@@ -39,8 +41,13 @@ public class JamonAspectTest {
 
         }
 
+    @Test(expected = FileNotFoundException.class)
+    public void testRethrowsException() throws  FileNotFoundException{
+        MonitorMe monitorMe = context.getBean("monitorMe", MonitorMe.class);
+        monitorMe.anotherMethod("argument.txt"); // throws exception
+    }
 
-    @Test
+      @Test
     public void testMethodsAreMonitored() throws Exception {
         runApp();
 
