@@ -11,16 +11,18 @@ import java.io.FileNotFoundException;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class JamonAspectTest {
-    private static final String JAMON_EXCEPTION="com.jamonapi.Exceptions";
+    private static final String JAMON_EXCEPTION=MonitorFactory.EXCEPTIONS_LABEL;
+    private static final String EXCEPTION = "Exception";
     private static final String VALUE_LISTENER="value";
     private static final String BUFFER="FIFOBuffer";
     private static final String METHOD = "void com.jamonapi.aop.spring.HelloSpringBean.setMyString(String)";
 
-    private ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+    private ApplicationContext context;
 
     @Before
     public void setUp() {
         MonitorFactory.reset();
+        context = new ClassPathXmlApplicationContext("applicationContext.xml");
     }
 
     private void runApp() throws InterruptedException {
@@ -38,7 +40,6 @@ public class JamonAspectTest {
 
                 }
             }
-
         }
 
     @Test(expected = FileNotFoundException.class)
@@ -47,7 +48,8 @@ public class JamonAspectTest {
         monitorMe.anotherMethod("argument.txt"); // throws exception
     }
 
-      @Test
+    /** methods should be monitored, but not all of them (based on defined pointcuts) */
+    @Test
     public void testMethodsAreMonitored() throws Exception {
         runApp();
 
@@ -60,18 +62,18 @@ public class JamonAspectTest {
         assertThat(report).contains("MonitorMe.anotherMethodForMe()");
         assertThat(report).contains("java.io.FileNotFoundException");
         assertThat(report).contains(JAMON_EXCEPTION);
-        assertThat(MonitorFactory.getMonitor(JAMON_EXCEPTION, "Exception").hasListeners()).isFalse();
+        assertThat(MonitorFactory.getMonitor(JAMON_EXCEPTION, EXCEPTION).hasListener(VALUE_LISTENER, BUFFER)).isTrue();
     }
 
     @Test
-    public void testMethodsAreMonitored_WithBufferListener() throws Exception {
+    public void testMethodsAreMonitored_BufferListenerDisabled() throws Exception {
         JamonAspect aspect = context.getBean("jamonAspect", JamonAspect.class);
-        aspect.setExceptionBufferListener(true);
+        aspect.setExceptionBufferListener(false);
 
         runApp();
 
         assertThat(MonitorFactory.getNumRows()).isEqualTo(6);
-        assertThat(MonitorFactory.getMonitor(JAMON_EXCEPTION, "Exception").hasListeners()).isTrue();
+        assertThat(MonitorFactory.getMonitor(JAMON_EXCEPTION, EXCEPTION).hasListener(VALUE_LISTENER, BUFFER)).isFalse();
     }
 
     @Test
@@ -83,7 +85,7 @@ public class JamonAspectTest {
         runApp();
 
         assertThat(MonitorFactory.getNumRows()).isEqualTo(6);
-        String bufferValue = getBufferValue(JAMON_EXCEPTION, "Exception");
+        String bufferValue = getBufferValue(JAMON_EXCEPTION, EXCEPTION);
         assertThat(bufferValue).contains("arguments(1)");
         assertThat(bufferValue).contains("argument.txt");
     }
@@ -99,7 +101,7 @@ public class JamonAspectTest {
         runApp();
 
         assertThat(MonitorFactory.getNumRows()).isEqualTo(6);
-        String bufferValue = getBufferValue(JAMON_EXCEPTION, "Exception");
+        String bufferValue = getBufferValue(JAMON_EXCEPTION, EXCEPTION);
         assertThat(bufferValue).doesNotContain("arguments(1)");
         assertThat(bufferValue).doesNotContain("hello");
 
@@ -125,5 +127,30 @@ public class JamonAspectTest {
         return firstValue;
     }
 
+    /** testing with a more simplified spring application context xml that is easier for people to start with. */
+    @Test
+    public void testMethodsAreMonitored_WithMinmalApplicatonContext() throws Exception {
+        context = new ClassPathXmlApplicationContext("minimalApplicationContext.xml");
+        MonitorMe monitorMe = context.getBean("monitorMe", MonitorMe.class);
+
+        for (int i=0;i<10;i++) {
+           monitorMe.anotherMethodForMe();
+           monitorMe.helloWorld();
+           try {
+              monitorMe.anotherMethod("argument.txt"); // throws exception
+            } catch (Exception e) {
+            }
+        }
+
+        String report = MonitorFactory.getReport();
+
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(5);
+        assertThat(report).contains("MonitorMe.anotherMethod(String)");
+        assertThat(report).contains("MonitorMe.anotherMethodForMe()");
+        assertThat(report).contains("MonitorMe.helloWorld()");
+        assertThat(report).contains("java.io.FileNotFoundException");
+        assertThat(report).contains(JAMON_EXCEPTION);
+        assertThat(MonitorFactory.getMonitor(JAMON_EXCEPTION, EXCEPTION).hasListener(VALUE_LISTENER, BUFFER)).isTrue();
+    }
 
 }

@@ -27,7 +27,7 @@ public class JamonAopKeyHelper implements JamonAopKeyHelperInt<ProceedingJoinPoi
     }
 
     /**
-     * Track arguments for all methods monitored.
+     * Track arguments for all methods monitored. By default this is disabled.
      * @param useArgsWithMethodDetails
      */
     public void setUseArgsWithMethodDetails(boolean useArgsWithMethodDetails) {
@@ -35,14 +35,15 @@ public class JamonAopKeyHelper implements JamonAopKeyHelperInt<ProceedingJoinPoi
     }
 
     /**
-     * Track arguments for all exceptions thrown.
+     * Track arguments for all exceptions thrown. By default this is disabled.
      * @param useArgsWithExceptionDetails
      */
     public void setUseArgsWithExceptionDetails(boolean useArgsWithExceptionDetails) {
         this.useArgsWithExceptionDetails = useArgsWithExceptionDetails;
     }
 
-    /** Create the jamon label as a method name
+    /** Uses a jamon label as a method name.  Example: void com.stevesouza.spring.MonitorMe3.myMethod2(String)
+     *
      *
      * @param proceedingJoinPoint
      * @return
@@ -52,7 +53,8 @@ public class JamonAopKeyHelper implements JamonAopKeyHelperInt<ProceedingJoinPoi
         return proceedingJoinPoint.getSignature().toString();
     }
 
-    /** Create a label out of the passed in exception. It will be the exception class name
+    /** Create a label out of the passed in exception. It will be the exception class name. Example:
+     * java.io.IOException
      *
      * @param exception
      * @return
@@ -63,7 +65,8 @@ public class JamonAopKeyHelper implements JamonAopKeyHelperInt<ProceedingJoinPoi
     }
 
     /** Create details for the invoked method.  This is used in jamon listeners
-     * (for example viewable in the jamon web app).
+     * (for example viewable in the jamon web app).  If the useArgsWithMethodDetails boolean has been set then
+     * the param values will also be viewable for the invoked method.
      *
      * @param proceedingJoinPoint
      * @return
@@ -75,7 +78,7 @@ public class JamonAopKeyHelper implements JamonAopKeyHelperInt<ProceedingJoinPoi
     }
 
     /** Create details for when an exception is thrown.  This would be the stack trace and possibly the methods
-     * arguments.
+     * arguments if useArgsWithExceptionDetails has been set.
      *
      * @param proceedingJoinPoint
      * @param exception
@@ -91,9 +94,10 @@ public class JamonAopKeyHelper implements JamonAopKeyHelperInt<ProceedingJoinPoi
         return stackTrace;
     }
 
-    // append the method arguments to the base detail message. for example myMethod("steve") would append
-    // arguments(1):
-    // steve
+    /* append the method arguments to the base detail message. for example myMethod("steve") would append
+     *  arguments(1):
+     *  steve
+     */
     private void appendArgs(StringBuilder sb, Object[] args) {
         if (args==null) {
             return;
@@ -109,10 +113,12 @@ public class JamonAopKeyHelper implements JamonAopKeyHelperInt<ProceedingJoinPoi
                 sb.append(",\n");
             }
         }
-
     }
 
-    // build the detail message - appending the args if true is passed in.
+    /** build the detail message - appending the args if true is passed in. Example of args:
+     * arguments(1):
+     *  steve
+     */
     private String createDetailMessage(ProceedingJoinPoint proceedingJoinPoint, String baseMessage, boolean useArgsInDetails) {
         if (useArgsInDetails) {
             StringBuilder sb = new StringBuilder().append(baseMessage);
