@@ -1,5 +1,5 @@
 <%@ page language="java" buffer="8kb" autoFlush="true" isThreadSafe="true" isErrorPage="false"  %>
-<%@ page import="java.sql.*, javax.sql.*, java.util.*, java.text.*, javax.naming.*, com.jamonapi.*, com.jamonapi.utils.*, com.jamonapi.proxy.*, com.fdsapi.*, com.fdsapi.arrays.*" %>
+<%@ page import="java.sql.*, javax.sql.*, java.util.*, java.text.*, javax.naming.*, com.jamonapi.*, com.jamonapi.utils.*, com.jamonapi.proxy.*, com.fdsapi.*, com.fdsapi.arrays.*, net.sf.xsshtmlfilter.HTMLFilter" %>
 
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"> 

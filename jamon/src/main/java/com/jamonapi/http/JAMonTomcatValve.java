@@ -30,7 +30,7 @@ import java.io.IOException;
 public class JAMonTomcatValve extends org.apache.catalina.valves.ValveBase implements HttpMonManage {
 
     private static final String PREFIX="com.jamonapi.http.JAMonTomcatValve";
-    private static final String DEFAULT_SUMMARY="default, response.getContentCount().bytes, response.getStatus().value.httpStatus, request.contextpath.ms";
+    private static final String DEFAULT_SUMMARY="default, response.getStatus().value.httpStatus, request.contextpath.ms";
 
     private HttpMonFactory httpMonFactory=new HttpMonFactory(PREFIX);
 

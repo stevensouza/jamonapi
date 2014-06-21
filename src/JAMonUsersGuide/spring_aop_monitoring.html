@@ -1,9 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<meta name="keywords" lang="en-us" content="java, performance tuning, jamonlistener, log4j, jboss, appender, JAMonAppender, listener, monitor, bottleneck, scale, scalability, monitoring tools, page hits, page counter, currentTimeMillis, benchmark, jamonapi, free, freeware, shareware, open source, measure, fdsapi, http, valve, tomcat, jetty, jboss, appserver, webserver, formatteddataset, servlet filter">
+<meta name="keywords" lang="en-us" content="spring, aop, jamonaspect, java, performance tuning, jamonlistener, log4j, jboss, appender, JAMonAppender, listener, monitor, bottleneck, scale, scalability, monitoring tools, page hits, page counter, currentTimeMillis, benchmark, jamonapi, free, freeware, shareware, open source, measure, fdsapi, http, valve, tomcat, jetty, jboss, appserver, webserver, formatteddataset, servlet filter">
 <meta name="description" content="The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.">
-<title>HTTP Monitoring</title>
+<title>Spring and Jamon using AOP</title>
 </head>
 <body bgcolor="#FFFFFF">
 
@@ -33,7 +33,7 @@ google_color_text = "000000";
 <img src="jamon1.jpg" id="fdsbanner1" border="0" /></a>
 </p>
 
-<h2 align='center'>HTTP Monitoring with JAMon</h2>
+<h2 align='center'>Using Spring and JAMon together - Monitoring with AOP</h2>
 
 
 <!-- START JAMON SPECIFIC HTML -->
@@ -43,8 +43,8 @@ google_color_text = "000000";
 </tr>
 <tr align="left">
 <th><ol>
-   <li><a href="#intro">Monitoring HTTP Requests</a></li>
-   <li><a href="#interpretting">Interpretting JAMon HTTP Data</a></li>
+   <li><a href="#intro">Introduction</a></li>
+   <li><a href="#interpretting">Show me how it works?</a></li>
    <li><a href="#configuring">Configuring the JAMon HTTP Monitor</a></li>
    <li><a href="tomcat6_server.xml">Sample Tomcat 6 server.xml file</a></li>   
    <li><a href="jboss_server.xml">Sample JBoss 4.0.5 server.xml file</a></li>   
@@ -66,26 +66,33 @@ google_color_text = "000000";
 
 
 <tr>
-<th align="left"><h2><a name="intro">1. Monitoring HTTP Requests</a></h2></th>
+<th align="left"><h2><a name="intro">1. Introduction</a></h2></th>
 </tr>
 <tr>
 <td>
 
-   <p>JAMon 2.7 introduces HTTP monitoring.  JAMon HTTP Monitoring uses reflection to monitor different aspects of the containers HttpServletRequest, and HttpServletResponse objects.  
-   With JAMon you can monitor individual page performance, frequency of each http status code (200, 404 etc.), number of bytes returned in a response, Servlet exceptions and much more.  As is always the case with JAMon HTTP monitoring can be enabled/disabled
-   at run time.Http monitoring requires no application code changes.  Simply use one of the following approaches: </p>
+   <p>JAMon and Aspect Oriented Programming are a perfect pairing.  JAMon can wrap any method call and track concurrency, performance, exceptions and also view the N most recent invocations
+       to name only a few of the possibilities. Combined with Spring you can monitor all of your spring beans using either annotations or by putting a few lines in your applicationContext.xml file.
+       JAMon 2.7 introduces HTTP monitoring.  This page will give information on how to use JAMon and Spring together. </p>
+
+    <p>Spring comes with the <a href="http://docs.spring.io/spring/docs/3.0.x/api/org/springframework/aop/interceptor/JamonPerformanceMonitorInterceptor.html">JamonPerformanceMonitorInterceptor</a>
+    which also allows you to monitor your Spring beans with JAMon.  Feel free to use it if you wish.  However, JamonAspect has a few advantages over
+    JamonPerformanceMonitorInterceptor</p>
    
-   <ul><li><b>Tomcat 6,7,8+</b></li>
     <ul>
-        <li>Put jamon-2.7.jar (or higher) in the tomcat 'lib' directory. </li>
-        <li>Put jamon.war (or higher) in the tomcat 'webapps' directory. </li>
-        <li>Add the following Valve line to Tomcat's server.xml file. The 'Engine' line is used to show context.</li>
-           <ul><code>&lt;Engine name="Catalina" defaultHost="localhost"&gt;<br>
-              &lt;Valve className="com.jamonapi.http.JAMonTomcatValve"/&gt;</code>
-           </ul>
+        <li><b>Track Specific Exceptions</b> - If the method you are monitoring throws an exception JamonAspect counts the specific exception (i.e. java.io.FileNotFoundException) </li>
+        <li><b>Track General Exceptions</b> -JamonAspect also counts a total for all exceptions (the label is com.jamonapi.Exceptions)</li>
+        <li><b>View stacktraces</b> -By default JamonAspect lets you view the 50 most recent stacktraces that have occured in your application via the JAMon webapp viewer. This feature can be configured
+        to view more exceptions. It can also be configured to view the stack traces of specific exceptions (i.e. java.io.FileNotFoundException).</li>
+        <li><b>View method parameters</b> -JamonAspect can be configured to display the most recent method parameters in the JAMon webapp viewer. This is particularly useful in a development or staging environment.
+            This is disabled by default.</li>
+        <li><b>View method parameters when exceptions are thrown</b> -JamonAspect can be configured to display the most recent method parameters for any methods that throw and exception. This is disabled by default.</li>
     </ul>
-    </ul>
-    
+
+    <p>Note: It should be noted that it would be easy to change the code in JamonPerformanceMonitorInterceptor to perform all of the above, or you could even write it yourself. In the future, I will try to
+        work with the Spring team to get them to enhance their code.
+    </p>
+
     <ul><li><b>Tomcat 4/5/5.5</b></li>
     <ul>
         <li>Put jamon-2.7.jar (or higher) in the tomcat 'common/lib' directory. </li>

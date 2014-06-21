@@ -1,5 +1,5 @@
 <%@ page language="java" buffer="8kb" autoFlush="true" isThreadSafe="true" isErrorPage="false"  %>
-<%@ page import="java.util.*, java.util.regex.*, java.text.*, com.jamonapi.*, com.jamonapi.proxy.*, com.jamonapi.utils.*, com.fdsapi.*, com.fdsapi.arrays.*" %>
+<%@ page import="java.util.*, java.util.regex.*, java.text.*, com.jamonapi.*, com.jamonapi.proxy.*, com.jamonapi.utils.*, com.fdsapi.*, com.fdsapi.arrays.*, net.sf.xsshtmlfilter.HTMLFilter" %>
 
 <%
 
@@ -293,8 +293,14 @@ Object[][] formatBody= {
 
 String[] bufferSizeHeader={"bufferSize","bufferSizeDisplay"};
 Object[][] bufferSizeBody={
-                 {"No Action", "No Action"},                  {"50", "50 rows"}, 
-                 {"100", "100 rows"},                  {"250", "250 rows"}, 	             {"500","500 rows"}, 	             {"1000","1000 rows"}, 	             {"2000","2000 rows"},            };
+                 {"No Action", "No Action"}, 
+                 {"50", "50 rows"}, 
+                 {"100", "100 rows"}, 
+                 {"250", "250 rows"}, 
+	             {"500","500 rows"}, 
+	             {"1000","1000 rows"}, 
+	             {"2000","2000 rows"}, 
+           };
 
 
 // There is no technical limit to buffer size, so other possibilities could be added.
@@ -302,7 +308,16 @@ private static void setBufferSize(JAMonBufferListener listener, String bufferSiz
 
   if ("50".equals(bufferSize))
 	listener.getBufferList().setBufferSize(50);
-  else if ("100".equals(bufferSize))    listener.getBufferList().setBufferSize(100);  else if ("250".equals(bufferSize))     listener.getBufferList().setBufferSize(250);  else if ("500".equals(bufferSize))    listener.getBufferList().setBufferSize(500);  else if ("1000".equals(bufferSize))    listener.getBufferList().setBufferSize(1000);  else if ("2000".equals(bufferSize))    listener.getBufferList().setBufferSize(2000);
+  else if ("100".equals(bufferSize))
+    listener.getBufferList().setBufferSize(100);
+  else if ("250".equals(bufferSize)) 
+    listener.getBufferList().setBufferSize(250);
+  else if ("500".equals(bufferSize)) 
+   listener.getBufferList().setBufferSize(500);
+  else if ("1000".equals(bufferSize)) 
+   listener.getBufferList().setBufferSize(1000);
+  else if ("2000".equals(bufferSize)) 
+   listener.getBufferList().setBufferSize(2000);
 
 }
 
@@ -333,7 +348,8 @@ private synchronized Template getJAMonTemplate(FormattedDataSet fds) {
 
 // if the value is null then return the passed in default else return the value
 private static String getValue(String value, String defaultValue) {
-  return (value==null || "".equals(value.trim())) ? defaultValue: value;
+    HTMLFilter  vFilter = new HTMLFilter();
+    return (value==null || "".equals(value.trim())) ? defaultValue: vFilter.filter(value);
 }
 
 // convert arg to an int or return the default

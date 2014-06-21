@@ -8,7 +8,7 @@
      </parent>
 
   <groupId>com.jamonapi</groupId>
-  <artifactId>jamon_core</artifactId>
+  <artifactId>jamon</artifactId>
   <packaging>jar</packaging>
   <name>JAMon Core</name>
 
