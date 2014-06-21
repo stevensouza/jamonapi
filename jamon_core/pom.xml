@@ -13,6 +13,7 @@
   <name>JAMon Core</name>
 
   <build>
-      <finalName>jamon</finalName>
+    <finalName>jamon-${jamon.version}</finalName>
   </build>
+
 </project>
