@@ -71,7 +71,7 @@ this reason.
     -->
 
 <!-- default key helper. puts args in jamon details. by default exceptions details are tracked but params are not used.
-This does not need to be creaated in spring as it is the default for the JamonAspect anyway.
+This does not need to be created in spring as it is the default for the JamonAspect anyway.
 -->
     <!--
     <bean class="com.jamonapi.aop.spring.JamonAopKeyHelper"/>

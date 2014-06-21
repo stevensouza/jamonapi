@@ -19,14 +19,6 @@
 </head>
 <body bgcolor="#FFFFFF">
 
-<div align="center">
-<h1 align='center'>Performance Tuning services and training</h1>
-Is your code having performance problems?  Are your users complaining?  Are your teams pointing the finger?  Do you want to move past all that, be analytical and just solve the problem? 
-Whether your problems are caused by your database, file IO, garbage collection or object allocation we can help.  Let's talk! Drop us a line at <a href="mailto:admin@jamonapi.com">admin@jamonapi.com</a>.
-</div>
-
-<hr>
-
 
 <p align="center">
 <img src="jamon1.jpg" id="fdsbanner1" border="0" /></a>
@@ -67,7 +59,7 @@ Whether your problems are caused by your database, file IO, garbage collection o
 		<li><a href="http://sourceforge.net/project/showfiles.php?group_id=96550">Download JAMon</a></li>
                 <li><a href="http://sourceforge.net/forum/forum.php?forum_id=334830">Get support for JAMon</a></li>
 		<li><a href="javadoc/index.html">JAMon JavaDocs</a></li>
-		<li><a href="http://jamonapi.cvs.sourceforge.net/jamonapi/jamonapi/src/java/com/jamonapi/">JAMon Source Code</a></li>
+		<li><a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/">JAMon Source Code</a></li>
 		<li><a href="presentation/jamon.htm">JAMon Slides (html)</a></li>
 		<li><a href="jamon_22.ppt">JAMon 2.2 Slides (powerpoint)</a></li>
 		<li><a href="http://www.fdsapi.com">FormattedDataSet HomePage</a></li>
@@ -184,7 +176,7 @@ Whether your problems are caused by your database, file IO, garbage collection o
 
     <p>JAMon was developed primarily for monitoring J2EE applications, however JAMon 1.0/2.0 can be used in any JDK 1.2
     or higher environment, and JAMon 2.1 can be used in any JDK 1.4 or higher environment.   JAMon can be used in Servlets, JSP's, EJB's and Java 
-    Beans in various J2EE Application Servers (Sybase's EAServer, and BEA's WebLogic, WebSphere…), and can also be used in other programming
+    Beans in various J2EE Application Servers (Sybase's EAServer, and BEA's WebLogic, WebSphereï¿½), and can also be used in other programming
     environments that can call Java code (ColdFusion, PowerBuilder, BroadVision, ...).  JAMon is particularly useful in multithreaded software like a 
      database engine.</p>
 
@@ -687,7 +679,7 @@ creation).</p>
 <tr>
 <td>
     <p>JAMon 2.0 can be thought of as an in-memory aggregate database.    Most databases store the details (rows) 
-       and these details can be aggregated/summarized by writing SQL (using the ‘group by’ clause).  JAMon 
+       and these details can be aggregated/summarized by writing SQL (using the ï¿½group byï¿½ clause).  JAMon 
        takes the approach of throwing out the details and keeping the aggregates.  This allows JAMon to be 
        very fast and have a small memory footprint.  
     </p>
@@ -725,14 +717,14 @@ creation).</p>
 <td>
     <p>JAMon 1.0 only tracked aggregate statistics for time (the units were in milliseconds/ms.).  For example, 
        if the following code was called 10 times: <br>
-        &nbsp;&nbsp;&nbsp;<b>Monitor mon=MonitorFactory.start(“myPage.jsp”);</b><br>
-        &nbsp;&nbsp;&nbsp;…page code…<br>
+        &nbsp;&nbsp;&nbsp;<b>Monitor mon=MonitorFactory.start(ï¿½myPage.jspï¿½);</b><br>
+        &nbsp;&nbsp;&nbsp;ï¿½page codeï¿½<br>
         &nbsp;&nbsp;&nbsp;<b>mon.stop();</b><br>
     </p>
 
     <p>Representative performance statistics may look like this:   10 hits, average=100 milliseconds (ms.), 
        total=1000 ms., minimum=50 ms., maximum=200 ms.  This is very useful, but there are many things it 
-       would be useful to aggregate that are not time based (i.e. money, MB, locks, rows, …)
+       would be useful to aggregate that are not time based (i.e. money, MB, locks, rows, ï¿½)
     </p>
 </td>
 </tr>
@@ -782,12 +774,12 @@ creation).</p>
        <li><b>An in-memory aggregate log</b> - A log retains details, JAMon retains aggregates
        <li><b>DSS for the application</b> - JAMon allows developers to unleash the power of statistics on the internals of their applications
        <li><b>Similar to the SQL 'group by' clause</b> - Each call to JAMon aggregates information similar to the following select: 
-          <ul><li>select key, count(*), sum(values), stddev(values), min(values), max(values), avg(values), min(date), max(date),mostRecentValue,…other stats too… from MyTable group by key</li></ul>
+          <ul><li>select key, count(*), sum(values), stddev(values), min(values), max(values), avg(values), min(date), max(date),mostRecentValue,ï¿½other stats tooï¿½ from MyTable group by key</li></ul>
        <li><b>A compromise between keeping details or just aggregates (enter JAMon Ranges)</b> - JAMon also has the concept 
           of ranges that allows you to keep track of summary statistics for subsets of data for a particular monitor.  
           (i.e. For example if you were tracking 'points per game' for NBA players you may have the following ranges 
           for 0-10 points, 10-20 points, 20-30 points, 30-40 points, 50-60 points, 70-80 points, 80-90 points, 
-          90-100 points).  This can add extra information beyond basic summary data and still doesn’t consume much memory.  
+          90-100 points).  This can add extra information beyond basic summary data and still doesnï¿½t consume much memory.  
           It is a compromise between keeping all data or just summary data.  Developers can define their own ranges.
       </ul>
 </td>
@@ -811,12 +803,12 @@ creation).</p>
        <li><b>Monitoring Servers and multi-threaded applications</b> - JAMon is particularly useful in multithreaded applications like database engines, JDBC drivers, frameworks, EJBs, Application Servers, web applications (In fact the JAMon servlet filter lets you monitor web application performance without changing a line of code), and more.
        <li><b>Performance Statistics</b> - Execution times for JDBC calls, IO, page hits and any other Java calls can all be tracked.
        <li><b>Concurrency/Scalability Statistics</b> - What is currently executing in your application and how it affects performance (i.e. scalability) can also be tracked.
-       <li><b>Understanding how users interact with your application</b> - What are the peak hours?  Is the system used on nights?  Weekends?  How many simultaneous users are there?  Who is logged in now? What are the most popular pages?  Are some pages not used?…
+       <li><b>Understanding how users interact with your application</b> - What are the peak hours?  Is the system used on nights?  Weekends?  How many simultaneous users are there?  Who is logged in now? What are the most popular pages?  Are some pages not used?ï¿½
        <li><b>Tracking phone calls on a Java enabled cell phone</b> - Monthly minutes, number of calls, calls to individual and more could all be tracked.
       </ul>
 
-       <p>Note: Querying JAMon statistics - Between JAMon’s API for extracting the aggregate data, and the 
-          FormattedDataSet’s 	<a href="http://fdsapi.sourceforge.net/javadocs/com/fdsapi/arrays/ArraySQL.html">ArraySQL</a> class which allows you to query the JAMon statistics in a SQL like manner, 
+       <p>Note: Querying JAMon statistics - Between JAMonï¿½s API for extracting the aggregate data, and the 
+          FormattedDataSetï¿½s 	<a href="http://fdsapi.sourceforge.net/javadocs/com/fdsapi/arrays/ArraySQL.html">ArraySQL</a> class which allows you to query the JAMon statistics in a SQL like manner, 
           your programs can easily take action based on JAMon data.
        </p>
 
@@ -834,7 +826,7 @@ creation).</p>
 <td>
     <p>The simple syntax below demonstrates how easy it is to aggregate statistics for purchases (the units are in dollars).  
        The number ($123.40) represents the dollar value of the individual purchase:  
-       MonitorFactory.add(“purchases”, “$”, 123.4);
+       MonitorFactory.add(ï¿½purchasesï¿½, ï¿½$ï¿½, 123.4);
      </p>
 
      <p>If the code above was called every time a purchase was made (with 123.4 replaced by a variable) then 
@@ -848,9 +840,9 @@ creation).</p>
        <ul>
             <li>Timing Code - This is all JAMon 1.0 could do.  
             <ul>
-              <li>Web Page performance: MonitorFactory.start(“pageHit”);
-              <li>Web Page performance by user:  MonitorFactory.start(“pageHit.ssouza”); (or dynamically getting user name from a variable:  MonitorFactory.start(“pageHit.”+userName);
-              <li>Method performance:  MonitorFactory.start(“com.mypackage.myMethod()”);
+              <li>Web Page performance: MonitorFactory.start(ï¿½pageHitï¿½);
+              <li>Web Page performance by user:  MonitorFactory.start(ï¿½pageHit.ssouzaï¿½); (or dynamically getting user name from a variable:  MonitorFactory.start(ï¿½pageHit.ï¿½+userName);
+              <li>Method performance:  MonitorFactory.start(ï¿½com.mypackage.myMethod()ï¿½);
            </ul>
        </ul>
 
@@ -861,38 +853,38 @@ creation).</p>
    <ul>
      <li>Counting Items.  
       <ul>
-        <li>Counting Exceptions/Errors/Warnings in your program (a useful log4J appender could be created to do this, or a base class application exception that calls JAMon in the constructor):  MonitorFactory.add(“com.jamonapi.MyException”,”Exception”,1)
-        <li>Counting Logged in users:  MonitorFactory.add(“users”,”count”,24);
-        <li>Counting Connections opened:  MonitorFactory.add(“connection”,”jdbc”, 5); 
+        <li>Counting Exceptions/Errors/Warnings in your program (a useful log4J appender could be created to do this, or a base class application exception that calls JAMon in the constructor):  MonitorFactory.add(ï¿½com.jamonapi.MyExceptionï¿½,ï¿½Exceptionï¿½,1)
+        <li>Counting Logged in users:  MonitorFactory.add(ï¿½usersï¿½,ï¿½countï¿½,24);
+        <li>Counting Connections opened:  MonitorFactory.add(ï¿½connectionï¿½,ï¿½jdbcï¿½, 5); 
         <li>Counting currently opened connections
         <ul>
-          <li>In the open method increment the openConnections counter:  MonitorFactory.add(“openConnections”,”jdbc”, 1);
-          <li>In the close method decrement the openConnections counter:  MonitorFactory(“openConnections”,”jdbc”,-1);
+          <li>In the open method increment the openConnections counter:  MonitorFactory.add(ï¿½openConnectionsï¿½,ï¿½jdbcï¿½, 1);
+          <li>In the close method decrement the openConnections counter:  MonitorFactory(ï¿½openConnectionsï¿½,ï¿½jdbcï¿½,-1);
         </ul>
      </ul>
-    <li>Code metrics:  MonitorFactory.add(“com.me.MyBigClass”,”lines of code”,4000);
-    <li>Counting cache hits/misses:  MonitorFactory.add(“cachehit”, “count”, 1);  MonitorFactory.add(“cachemiss”,”count”,1);
-    <li>Counting binary conditions such as true/false, yes/no, up/down, on/off etc (or more generally anything that has a limited number of outcomes):  MonitorFactory.add(“ServerUp”,”boolean”,1); or MonitorFactory.add(“ServerUp,”boolean”, 0)
+    <li>Code metrics:  MonitorFactory.add(ï¿½com.me.MyBigClassï¿½,ï¿½lines of codeï¿½,4000);
+    <li>Counting cache hits/misses:  MonitorFactory.add(ï¿½cachehitï¿½, ï¿½countï¿½, 1);  MonitorFactory.add(ï¿½cachemissï¿½,ï¿½countï¿½,1);
+    <li>Counting binary conditions such as true/false, yes/no, up/down, on/off etc (or more generally anything that has a limited number of outcomes):  MonitorFactory.add(ï¿½ServerUpï¿½,ï¿½booleanï¿½,1); or MonitorFactory.add(ï¿½ServerUp,ï¿½booleanï¿½, 0)
     <li>Business/Application Data 
       <ul>
-        <li>Money statistics:  MonitorFactory.add(“heatingcost”, “$”,70);
-        <li>Song time in minutes:  MonitorFactory.add(“songduration”,”minutes”,4.5);
-        <li>Phone call duration in minutes by phone number:  MonitorFactory.add(“703-919-9000”,”phonenumber”,16);
-        <li>Scoring average: MonitorFactory.add(“nbaPlayer”,”points”,25);
-        <li>BlackBox type data: MonitorFactory.add(“breakingDistance”,”feet”,200);
+        <li>Money statistics:  MonitorFactory.add(ï¿½heatingcostï¿½, ï¿½$ï¿½,70);
+        <li>Song time in minutes:  MonitorFactory.add(ï¿½songdurationï¿½,ï¿½minutesï¿½,4.5);
+        <li>Phone call duration in minutes by phone number:  MonitorFactory.add(ï¿½703-919-9000ï¿½,ï¿½phonenumberï¿½,16);
+        <li>Scoring average: MonitorFactory.add(ï¿½nbaPlayerï¿½,ï¿½pointsï¿½,25);
+        <li>BlackBox type data: MonitorFactory.add(ï¿½breakingDistanceï¿½,ï¿½feetï¿½,200);
       </ul>
     <li>Internals of a Java program.  JAMon 2.0 shines when it comes to tracking data within a Java server program 
         such as an application server, web server or database server.  Here are some examples:
       <ul>
-        <li>Buffer size in bytes: MonitorFactory.add(“bufferSize”,”bytes”,list.size())
-        <li>Number of rows in ResultSets: MonitorFactory.add(“ResultSet.numRows”,”rows”,4000);
-        <li>Number of cells in a table: MonitorFactory.add(“table”,”cells”,rows*cols);
-        <li>Free memory:  MonitorFactory.add(“Free Memory”, “MB”, Runtime.getRuntime().freeMemory());
-        <li>Free memory With Buffer Detail Info:  MonitorFactory.add(new MonKeyImp(“Free Memory”, "max memory="+Runtime.getRuntime().maxMemory()+", totalMemory="+Runtime.getRuntime().totalMemory(),“MB”), Runtime.getRuntime().freeMemory());
-        <li>Count Updates/Deletes/Inserts/Selectcs against a Database table :  MonitorFactory.add(“tablename”,”updates”,1);
-        <li>Number of open file descriptors:  MonitoFactory.add(“openFileDescriptors”,”count”,500);
-        <li>Number of locks in use:  MonitorFactory.add(“locksInUse”,”count”, 250123);
-        <li>Backup time:  MonitorFactory.add(“backupTime”,”minutes”,10);
+        <li>Buffer size in bytes: MonitorFactory.add(ï¿½bufferSizeï¿½,ï¿½bytesï¿½,list.size())
+        <li>Number of rows in ResultSets: MonitorFactory.add(ï¿½ResultSet.numRowsï¿½,ï¿½rowsï¿½,4000);
+        <li>Number of cells in a table: MonitorFactory.add(ï¿½tableï¿½,ï¿½cellsï¿½,rows*cols);
+        <li>Free memory:  MonitorFactory.add(ï¿½Free Memoryï¿½, ï¿½MBï¿½, Runtime.getRuntime().freeMemory());
+        <li>Free memory With Buffer Detail Info:  MonitorFactory.add(new MonKeyImp(ï¿½Free Memoryï¿½, "max memory="+Runtime.getRuntime().maxMemory()+", totalMemory="+Runtime.getRuntime().totalMemory(),ï¿½MBï¿½), Runtime.getRuntime().freeMemory());
+        <li>Count Updates/Deletes/Inserts/Selectcs against a Database table :  MonitorFactory.add(ï¿½tablenameï¿½,ï¿½updatesï¿½,1);
+        <li>Number of open file descriptors:  MonitoFactory.add(ï¿½openFileDescriptorsï¿½,ï¿½countï¿½,500);
+        <li>Number of locks in use:  MonitorFactory.add(ï¿½locksInUseï¿½,ï¿½countï¿½, 250123);
+        <li>Backup time:  MonitorFactory.add(ï¿½backupTimeï¿½,ï¿½minutesï¿½,10);
      </ul>
    </ul>
 
@@ -900,20 +892,20 @@ creation).</p>
    <ul>
      <li>Standard Measures that have properties and units
      <ul>
-       <li>property=distance, unit=mile, foot, centimeter, meter, kilometer, light year,…
-       <li>property=weight, unit=pound, ounce, ton, gram, kilogram…
-       <li>property=mass, unit=gram, kilogram,…
-       <li>property=time, unit=ms., second, minute, hour, day, week, month, year, decade, century…
-       <li>property=volume, unit=quart, gallon, litre,…
+       <li>property=distance, unit=mile, foot, centimeter, meter, kilometer, light year,ï¿½
+       <li>property=weight, unit=pound, ounce, ton, gram, kilogramï¿½
+       <li>property=mass, unit=gram, kilogram,ï¿½
+       <li>property=time, unit=ms., second, minute, hour, day, week, month, year, decade, centuryï¿½
+       <li>property=volume, unit=quart, gallon, litre,ï¿½
        <li>property=temperature, unit=degree fahrenheit, degree celsius
-       <li>property=area, unit=square inch, square foot, square mile, square meter, square kilometer, acre,…
-       <li>property=size, unit=byte,MB,GB,…
-       <li>property=currentcy/money, unit=dollar, franc, peso, euro…
+       <li>property=area, unit=square inch, square foot, square mile, square meter, square kilometer, acre,ï¿½
+       <li>property=size, unit=byte,MB,GB,ï¿½
+       <li>property=currentcy/money, unit=dollar, franc, peso, euroï¿½
     </ul>
   </ul>
 
   <p>Other numbers you could summarize:  quantity, percentage, count, total, min, max, grade, score, rating, 
-  rank, price, cost,…
+  rank, price, cost,ï¿½
   </p>
 
 
@@ -986,7 +978,7 @@ creation).</p>
 <td>
     <p>
       <ul>
-        <li><b>Improved Performance</b> – The following are performance characteristics when executing serially.  Tests were done on my
+        <li><b>Improved Performance</b> ï¿½ The following are performance characteristics when executing serially.  Tests were done on my
         rather old IBM ThinkPad T30 Pentium IV NoteBook PC.  To execute performance tests execute:  "java -cp jamon-2.1.jar com.jamonapi.TestClassPerformance 1000000".
         All tests call MonitorFactory.start("label"), and mon.stop() the specified number of times per second.
         <ul>
@@ -999,8 +991,8 @@ creation).</p>
         <li><b>Improved Synchronized Performance</b> - Improved performance when there is contention.
         <li><b>More Flexibility</b> - JAMon 2.0 can now track ANY number associated with ANY key (not just time anymore).
         <li><b>Simplified Code</b> - Though JAMon 2.0 can do more than JAMon 1.0 the code is simpler.
-        <li><b>More accessibility of JAMon statistics</b> – Values such as hits, avg, min, max and more are all accessible through the API now.  Also the FormattedDataSet’s <a href="http://fdsapi.sourceforge.net/javadocs/com/fdsapi/arrays/ArraySQL.html">ArraySQL</a> class allows developers to query JAMon data (see below).
-        <li><b>Improved Reporting</b> – Data can be queried, and displayed as XML/HTML/Excel
+        <li><b>More accessibility of JAMon statistics</b> ï¿½ Values such as hits, avg, min, max and more are all accessible through the API now.  Also the FormattedDataSetï¿½s <a href="http://fdsapi.sourceforge.net/javadocs/com/fdsapi/arrays/ArraySQL.html">ArraySQL</a> class allows developers to query JAMon data (see below).
+        <li><b>Improved Reporting</b> ï¿½ Data can be queried, and displayed as XML/HTML/Excel
         <li><b>ArraySQL - Querying JAMon Data</b> - Though ArraySQL is not part of JAMon it is used in jamonadmin.jsp and can 
          be used to query JAMon stats in a SQL like manner (i.e. select * from array where hits>1000 and total>50000).  Being able
          to so easily get data out of JAMon will open up new ways to leverage the JAMon monitoring data.
@@ -1303,7 +1295,7 @@ public class MonitorTest {
     summary statistics will include data from all 10 calls.</p>
     <p>The next line in the example is the sleep() method.  The sleep() method takes one argument, which is the
     number of milliseconds the active thread should sleep.   The loop has the effect of sleeping the thread
-    for 101,102,…,and 110 ms.  Finally comes the stop() method which will stop gathering statistics.</p>
+    for 101,102,ï¿½,and 110 ms.  Finally comes the stop() method which will stop gathering statistics.</p>
     <p>After the loop we print the statistics to the console, taking advantage of the monitor's toString() method.
     Let's take a look at what these statistics mean: </p>
     <blockquote><img src="console1.gif" border="0">
@@ -1476,7 +1468,7 @@ public class JAMonDemo extends javax.servlet.http.HttpServlet {
 <th align="left"><h3><a name="JAMonReport">9.a The JAMon Report</a></h3></th>
 </tr>
 <tr>
-<td><p>The JAMon report has one row for each unique monitor label that was passed to the MonitorFactory.start("…") method.
+<td><p>The JAMon report has one row for each unique monitor label that was passed to the MonitorFactory.start("ï¿½") method.
     This row is called a "JAMon report entry".  The JAMon report displays all monitor information in one HTML table.
     The following statistics were discussed in enough detail in the previous example and won't be covered here:
     monitor label, hits, average, total, minimum, maximum, first access and last access.</p>
