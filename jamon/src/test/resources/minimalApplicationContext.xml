@@ -12,11 +12,13 @@
     http://www.springframework.org/schema/aop
     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
+<!-- monitoMe is the bean we will monitor -->
 <bean id="monitorMe" class="com.jamonapi.aop.spring.MonitorMe"/>
 <bean id="jamonAspect" class="com.jamonapi.aop.spring.JamonAspect"/>
 
-<!-- Link the bean to the JamonAspect so it is monitored.  There are many ways to do this using aspectJ pointcut
- syntax.  For example annotations or packages can be specified.You can also use the '||' conditional to
+<!-- Link the bean to the JamonAspect so it is monitored.  Here we will simply specify the beanId.
+ There are many ways to do this using aspectJ pointcut syntax.  For example annotations or packages
+ can be specified.You can also use the '||' conditional to
  monitor many beans. Example: expression="bean(monitorMe4) || bean(monitorMe3)"/>
 -->
 <aop:config>
