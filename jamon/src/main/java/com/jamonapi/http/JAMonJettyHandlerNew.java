@@ -13,17 +13,17 @@ import java.io.IOException;
  * This is class works with Jetty version 9.
  * 
  */
-public class JAMonJettyHandler9 extends HandlerWrapper implements HttpMonManage{
+public class JAMonJettyHandlerNew extends HandlerWrapper implements HttpMonManage{
 
-    private static final String PREFIX="com.jamonapi.http.JAMonJettyHandler9";
+    private static final String PREFIX="com.jamonapi.http.JAMonJettyHandlerNew";
 
     private static final String DEFAULT_SUMMARY="default, response.getContentCount().bytes, response.getStatus().value.ms";
 
-    private HttpMonFactory httpMonFactory=new JettyHttpMonFactory9(PREFIX);
+    private HttpMonFactory httpMonFactory=new JettyHttpMonFactoryNew(PREFIX);
 
     private String jamonSummaryLabels="default";
 
-    public JAMonJettyHandler9() {
+    public JAMonJettyHandlerNew() {
         setSummaryLabels(jamonSummaryLabels);
     }
 

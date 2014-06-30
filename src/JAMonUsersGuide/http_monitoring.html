@@ -109,9 +109,26 @@ google_color_text = "000000";
            </ul>
     </ul>
     </ul>
+    
+  <ul>
+    <li><b>Jetty 8/9</b></li>
+         <ul>
+        <li>Put jamon-2.77.jar (or higher) in the jetty 'lib/etc' directory.</li>
+        <li>Put jamon.war in the jetty 'webapps' directory.</li>
+        <li>Add the following Handler line to Jetty's jetty.xml file (i.e. etc/jetty.xml). The 'Engine' line is used to show context.</li>
+          <ul><code>&lt;Set name="handler"&gt;<br>
+             ...<br>
+             &lt;Item&gt;<br>
+            &lt;New id="JAMonHandler" class="com.jamonapi.http.JAMonJettyHandlerNew"/&gt;<br>
+            &lt;/Item&gt; <br>
+           &lt;/Set&gt; <br></code>
 
+           </ul>
+    </ul>
+    </ul>    
+    
     <ul>
-    <li><b>Jetty 6.1.5</b>  - The package and approach to handlers changed on following versions of jetty.  Contact me if you would like to work with a later version.</li>
+    <li><b>Jetty 6.1.5</b></li>
          <ul>
         <li>Put jamon-2.7.jar (or higher) in the jetty 'lib' directory. (note in later versions of jetty the jamon jar should be put in lib/ext)</li>
         <li>Put jamon.war in the jetty 'webapps' directory.</li>

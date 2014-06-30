@@ -9,12 +9,12 @@ import org.eclipse.jetty.server.Request;
 /**
  *  Used to monitor jetty requests via the JAMonJettyHandler.
  */
-class JettyHttpMonItem9 extends HttpMonItem {
+class JettyHttpMonItemNew extends HttpMonItem {
 
-    JettyHttpMonItem9() {
+    JettyHttpMonItemNew() {
     }
 
-    JettyHttpMonItem9(String label, HttpMonFactory httpMonFactory) {
+    JettyHttpMonItemNew(String label, HttpMonFactory httpMonFactory) {
         super(label, httpMonFactory);
     }
 
