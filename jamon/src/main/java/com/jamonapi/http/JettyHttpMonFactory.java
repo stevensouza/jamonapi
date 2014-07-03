@@ -6,6 +6,8 @@ package com.jamonapi.http;
  */
 public class JettyHttpMonFactory extends HttpMonFactory {
 
+    private static final long serialVersionUID = -728341901466268550L;
+
     public JettyHttpMonFactory(String labelPrefix) {
         super(labelPrefix);
     }

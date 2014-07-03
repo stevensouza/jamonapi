@@ -1,6 +1,8 @@
 package com.jamonapi;
 
 
+import java.io.Serializable;
+
 /**
  * Contains the data associated with a monitor. These internals can be passed
  * around and shared by other monitor instances that are tracking aggregate
@@ -10,9 +12,11 @@ package com.jamonapi;
  * Created on December 11, 2005, 10:19 PM
  */
 
-final class MonInternals {
+final class MonInternals implements Serializable {
 
-    /** seed value to ensure that the first value always sets the max */
+	private static final long serialVersionUID = -1687353465350155034L;
+	
+	/** seed value to ensure that the first value always sets the max */
     static final double MAX_DOUBLE = -Double.MAX_VALUE;
     /** seed value to ensure that the first value always sets the min */
     static final double MIN_DOUBLE = Double.MAX_VALUE;

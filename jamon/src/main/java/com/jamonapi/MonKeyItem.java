@@ -1,5 +1,7 @@
 package com.jamonapi;
 
+import java.io.Serializable;
+
 /** Used for MonKey to allow jamon to have the generalized form of the key for aggregation, and the
  * more specific form for writing out details say to a buffer.
  * 
@@ -14,7 +16,7 @@ package com.jamonapi;
  *
  */
 
-public interface MonKeyItem {
+public interface MonKeyItem extends Serializable {
     public Object getDetails();
 
     public void setDetails(Object details);

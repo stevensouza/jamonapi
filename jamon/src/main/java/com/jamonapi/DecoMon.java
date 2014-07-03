@@ -14,6 +14,8 @@ package com.jamonapi;
 
 class DecoMon extends MonitorImp {
 
+    private static final long serialVersionUID = -8936342776090523892L;
+
     // The two following fields are unique to this instance.  MonInternals are shared
     // by all monitors with this same logical key.
     private MonKey decoKey;

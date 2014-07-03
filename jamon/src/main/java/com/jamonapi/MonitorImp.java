@@ -9,6 +9,8 @@ import java.util.List;
 
 class MonitorImp extends Monitor implements RowData  {
 
+    private static final long serialVersionUID = -7168830707925667762L;
+
     MonitorImp(MonInternals monData) {
         super(monData);
     }
@@ -142,6 +144,8 @@ class MonitorImp extends Monitor implements RowData  {
 
 
     private static class NullMonKey implements MonKey {
+
+        private static final long serialVersionUID = 614096102261371086L;
 
         public String getLabel() {
             return "";

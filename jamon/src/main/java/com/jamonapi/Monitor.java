@@ -1,5 +1,6 @@
 package com.jamonapi;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,8 +13,11 @@ import java.util.Date;
 // Note this was done as an empty abstract class so a recompile isn't needed
 // to go to jamon 2.0. I had originally tried to make Monitor an interface.
 // public abstract class Monitor extends BaseStatsImp implements MonitorInt {
-public abstract class Monitor implements MonitorInt {
-    // Internal data passed from monitor to monitor.
+public abstract class Monitor implements MonitorInt, Serializable {
+
+	private static final long serialVersionUID = -1040490585063203451L;
+	
+	// Internal data passed from monitor to monitor.
     MonInternals monData;
     private double active; // note this needs to be an instance variable purely to support skip which has to subtract out the active if the variable is skipped.
 

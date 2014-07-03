@@ -1,5 +1,6 @@
 package com.jamonapi;
 
+import java.io.Serializable;
 import java.util.EventListener;
 
 /** Interface that can be implemented if you want to code something to listen for JAMon events
@@ -10,7 +11,7 @@ import java.util.EventListener;
  *
  */
 
-public interface JAMonListener extends EventListener {
+public interface JAMonListener extends EventListener, Serializable {
     /** Gets the name of this listener */
     public String getName();
 

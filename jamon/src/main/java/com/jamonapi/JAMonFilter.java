@@ -46,7 +46,7 @@ import java.io.IOException;
 
 public class JAMonFilter extends HttpServlet implements Filter {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 5042175352685469474L;
     private FilterConfig filterConfig = null;
 
 

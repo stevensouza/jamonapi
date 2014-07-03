@@ -10,6 +10,7 @@ package com.jamonapi;
  *
  */
 public class MonKeyItemBase implements MonKeyItem {
+    private static final long serialVersionUID = -7951545796617418392L;
     private Object summaryLabel;
     private Object details;
 
