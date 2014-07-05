@@ -20,6 +20,7 @@ package com.jamonapi;
 
 class TimeMonNano extends TimeMon {
     private static final long NANOSECS_PER_MILLISEC=1000000;
+    private static final long serialVersionUID = 3663420181020178535L;
 
     public TimeMonNano(MonKey key, MonInternals monData) {
         super(key, monData);

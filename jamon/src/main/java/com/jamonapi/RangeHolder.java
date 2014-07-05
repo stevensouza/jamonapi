@@ -1,5 +1,6 @@
 
 package com.jamonapi;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +11,9 @@ import java.util.List;
 
 
 
-public class RangeHolder {
+public class RangeHolder implements Serializable {
 
+    private static final long serialVersionUID = -5450423615086133693L;
     List ranges=new ArrayList();
     private boolean isLessThan=false;
     private String lastHeader="";
@@ -132,7 +134,8 @@ public class RangeHolder {
     }
 
 
-    static class RangeHolderItem {
+    static class RangeHolderItem implements Serializable {
+        private static final long serialVersionUID = -4432326375632557487L;
         private String displayHeader;
         private double endPoint;
         public RangeHolderItem(String displayHeader, double endPoint) {

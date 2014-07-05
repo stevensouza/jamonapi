@@ -1,6 +1,8 @@
 
 package com.jamonapi;
 
+import java.io.Serializable;
+
 /**
  * Simple counter class used to track activity stats
  *
@@ -8,8 +10,9 @@ package com.jamonapi;
  *  @author  ssouza
  */
 
-final class Counter  {
+final class Counter implements Serializable {
 
+    private static final long serialVersionUID = -5334718713379221206L;
     private double count;
     private boolean enabled=true;
 

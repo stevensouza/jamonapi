@@ -1,11 +1,14 @@
 package com.jamonapi;
 import com.jamonapi.utils.DetailData;
 
+import java.io.Serializable;
+
 /** Object that contains a listener type such as value, max, min or maxactive.
  * This object can contain multiple objects per listener type.
  */
-public final class ListenerType implements DetailData {
+public final class ListenerType implements DetailData, Serializable {
 
+    private static final long serialVersionUID = 4979897325006229408L;
     private JAMonListener listener;
     // will lock on MonInternal to allow direct access to listener which improves performance.
     // This brought my TestPerformanceClass performance from about 600 ms. to 484 ms.

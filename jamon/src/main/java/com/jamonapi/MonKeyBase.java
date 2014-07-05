@@ -13,6 +13,8 @@ import java.util.*;
  */
 public class MonKeyBase implements MonKey {
 
+    private static final long serialVersionUID = -1808590097158106085L;
+
     /**
      * A key implmentation for label, and units type monitors.
      */

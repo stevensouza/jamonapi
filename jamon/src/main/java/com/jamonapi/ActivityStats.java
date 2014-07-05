@@ -1,13 +1,17 @@
 
 package com.jamonapi;
 
+import java.io.Serializable;
+
 /**
  * Class used to track the number of active monitors (including global/primary/this).
  * It allows you to see how many monitors are concurrently running at any given time.
  *
  */
 
-final class ActivityStats {
+final class ActivityStats implements Serializable {
+
+    private static final long serialVersionUID = 7556315032740339165L;
 
     final Counter allActive;  // the number of monitors that are now running
     final Counter primaryActive;  // the number of monitors marked primary that are now running

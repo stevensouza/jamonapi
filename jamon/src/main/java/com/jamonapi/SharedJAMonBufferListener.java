@@ -11,6 +11,7 @@ import com.jamonapi.utils.BufferList;
  */
 
 public class SharedJAMonBufferListener extends JAMonBufferListener {
+    private static final long serialVersionUID = 7685604879682605718L;
     private int ID=1;
     private boolean factory=true;
 

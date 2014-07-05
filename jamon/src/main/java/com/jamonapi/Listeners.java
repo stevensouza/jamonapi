@@ -1,12 +1,14 @@
 package com.jamonapi;
 
+import java.io.Serializable;
+
 /** Holds any {@code ListenerType}'s that a {@code Monitor} has.
  * 
  * @author stevesouza
  *
  */
 
-final class Listeners {
+final class Listeners implements Serializable {
     public static final String VALUE = "value";
     public static final String MAX = "max";
     public static final String MAXACTIVE = "maxactive";
@@ -17,6 +19,7 @@ final class Listeners {
     static final int MAX_LISTENER_INDEX=1;
     static final int MAXACTIVE_LISTENER_INDEX=2;
     static final int MIN_LISTENER_INDEX=3;
+    private static final long serialVersionUID = 8336728612747684904L;
     private final ListenerType[] listenerArray=new ListenerType[4];
 
     Listeners(Object lockObj) {

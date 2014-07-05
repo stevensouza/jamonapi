@@ -14,6 +14,7 @@ import java.util.List;
 
 abstract class FrequencyDistImp extends MonitorImp implements FrequencyDist {
 
+    private static final long serialVersionUID = 309408157086212779L;
     protected double endValue;
 
     @Override

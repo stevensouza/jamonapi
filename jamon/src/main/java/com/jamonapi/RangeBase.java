@@ -4,6 +4,7 @@ package com.jamonapi;
  */
 final class RangeBase extends RangeImp  {
 
+    private static final long serialVersionUID = -5979501020715242505L;
     private double[] rangeValues;
 
 

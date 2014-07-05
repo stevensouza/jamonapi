@@ -5,6 +5,7 @@ package com.jamonapi;
 import com.jamonapi.utils.DetailData;
 import com.jamonapi.utils.Misc;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +14,9 @@ import java.util.List;
  * Treats groups of monitors the same way you treat one monitor.  i.e. you can enable/disable/reset
  * etc a group of monitors.
  */
-public class MonitorComposite extends Monitor  implements DetailData  {
+public class MonitorComposite extends Monitor implements DetailData  {
+
+    private static final long serialVersionUID = -3449140252550908942L;
 
     private final Monitor[] monitors;// the monitors in the composite
     private final int numRows; // rows in the composite
