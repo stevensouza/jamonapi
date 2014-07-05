@@ -196,7 +196,7 @@ public class MonitorFactory {
     }
 
     /** Return the composite monitor (a collection of monitors) associated with the passed in units. Note in JAMon 1.0 this
-     *  method would take a lable and would return all monitors that matched that criterion.   This ability is now better performed
+     *  method would take a label and would return all monitors that matched that criterion.   This ability is now better performed
      *  using ArraySQL from the FormattedDataSet API.  See JAMonAdmin.jsp for an example.
      * 
      * <p>Sample call:</p>
