@@ -129,6 +129,17 @@ public class MonitorFactory {
         return factory.start(key);
     }
 
+
+    /** start nanosecond timer */
+    public Monitor startNano(String label) {
+        return factory.startNano(label);
+    }
+
+    /** Provide your own key to a nanosecond timer */
+    public Monitor startNano(MonKey key) {
+        return factory.startNano(key);
+    }
+
     /**Return the monitor associated with the label, and units.  All statistics associated with the monitor can then be accessed such
      * as hits, total, avg, min, and max. If the monitor does not exist it will be created.
      * 
