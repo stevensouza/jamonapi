@@ -7,7 +7,6 @@
          <version>2.77</version>
      </parent>
 
-  <groupId>com.jamonapi</groupId>
   <artifactId>jamon</artifactId>
   <packaging>jar</packaging>
   <name>JAMon Core</name>
