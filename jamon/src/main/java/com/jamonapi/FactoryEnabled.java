@@ -318,6 +318,7 @@ public class FactoryEnabled implements MonitorFactoryInterface {
 
     /** Builds ranges */
     private static class RangeFactory  implements DetailData {
+        private static final long serialVersionUID = -3148737594525009545L;
         private Map rangeFactoryMap=Misc.createConcurrentMap(50);
 
 

@@ -1,5 +1,6 @@
 package com.jamonapi.utils;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -7,7 +8,7 @@ import java.util.List;
  * returns true or not.
  *
  */
-public interface BufferHolder {
+public interface BufferHolder extends Serializable {
     /** Remove the smallest element from the BufferList if the buffer is full and  shouldReplaceWith(...)
      * returns true.
      * 

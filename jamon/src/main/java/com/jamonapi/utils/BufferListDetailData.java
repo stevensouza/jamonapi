@@ -9,6 +9,7 @@ package com.jamonapi.utils;
  * </ul>
  */
 public class BufferListDetailData implements DetailData {
+    private static final long serialVersionUID = -4845836085102900245L;
 
     private String[] header;
     private Object[][] data;

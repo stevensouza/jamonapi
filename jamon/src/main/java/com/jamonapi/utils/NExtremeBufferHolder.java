@@ -10,6 +10,7 @@ import java.util.List;
  * be thread safe.
  */
 public class NExtremeBufferHolder implements BufferHolder, Comparator {
+    private static final long serialVersionUID = -7949575383655080400L;
     private Object nextToRemove;
     private List list=new ArrayList();
 

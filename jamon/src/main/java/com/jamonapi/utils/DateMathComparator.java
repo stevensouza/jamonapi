@@ -1,5 +1,6 @@
 package com.jamonapi.utils;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -10,7 +11,8 @@ import java.util.GregorianCalendar;
  * was passed in the dateField.
  * 
  */
-public class DateMathComparator extends JAMonComparator {
+public class DateMathComparator extends JAMonComparator implements Serializable {
+    private static final long serialVersionUID = -3153772066240951517L;
     private int dateField;
     private int dateToAdd;
 

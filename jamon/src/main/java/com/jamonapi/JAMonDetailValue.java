@@ -3,6 +3,7 @@ package com.jamonapi;
 import com.jamonapi.utils.Misc;
 import com.jamonapi.utils.ToArray;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,7 +13,8 @@ import java.util.List;
  * 
  * @author steve souza
  */
-public final class JAMonDetailValue implements ToArray {
+public final class JAMonDetailValue implements Serializable, ToArray {
+    private static final long serialVersionUID = 2210164449488502225L;
     private final MonKey key;
     private final double value; // monitors lastValue
     private final long time;  // invocation time

@@ -20,6 +20,8 @@ import java.util.List;
 
 public class BufferList implements DetailData {
 
+    private static final long serialVersionUID = -835418445782907948L;
+
     private boolean enabled=true;
     private int bufferSize=50;
     private String[] header;

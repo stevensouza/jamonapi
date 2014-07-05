@@ -9,6 +9,7 @@ import java.util.List;
  *
  */
 public class FIFOBufferHolder implements BufferHolder {
+    private static final long serialVersionUID = 4401446322076040645L;
     private LinkedList bufferList=new LinkedList();
 
     public void add(Object replaceWithObj) {

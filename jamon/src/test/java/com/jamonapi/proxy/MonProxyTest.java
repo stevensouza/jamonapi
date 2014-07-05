@@ -248,7 +248,7 @@ public class MonProxyTest {
         assertThat( proxyObj.equals(proxyObj)).isTrue();
         assertThat( proxyObj.equals(proxyObj2)).isTrue();
         assertThat( proxyObj2.equals(proxyObj)).isTrue();
-        assertThat(  proxyObj.equals(proxyObjTwice)).isTrue();
+        assertThat( proxyObj.equals(proxyObjTwice)).isTrue();
         assertThat( noProxyObj.equals(noProxyObj)).isTrue();
 
         assertThat(  noProxyObj.equals(proxyObj)).isFalse();
