@@ -68,6 +68,7 @@
          <jamon.version>2.77</jamon.version>
          <spring.aop.version>1.8.0</spring.aop.version>
          <spring.version>4.0.2.RELEASE</spring.version>
+         <commons.version>3.3.2</commons.version>
      </properties>
 
      <build>
