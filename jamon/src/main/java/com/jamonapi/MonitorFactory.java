@@ -131,12 +131,12 @@ public class MonitorFactory {
 
 
     /** start nanosecond timer */
-    public Monitor startNano(String label) {
+    public static Monitor startNano(String label) {
         return factory.startNano(label);
     }
 
     /** Provide your own key to a nanosecond timer */
-    public Monitor startNano(MonKey key) {
+    public static Monitor startNano(MonKey key) {
         return factory.startNano(key);
     }
 
