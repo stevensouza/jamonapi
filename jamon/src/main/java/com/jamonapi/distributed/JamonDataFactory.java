@@ -7,10 +7,14 @@ import com.jamonapi.utils.Misc;
  */
 public class JamonDataFactory {
 
+    // CHANGE FROM STATIC !!!!
+    private static JamonData jamonData;
     public JamonData get() {
-        JamonData jamonData =  create("com.jamonapi.distributed.DistributedJamonHazelcast");
         if (jamonData==null) {
-            jamonData = new LocalJamonData();
+            jamonData =  create("com.jamonapi.distributed.DistributedJamonHazelcast");
+            if (jamonData==null) {
+                jamonData = new LocalJamonData();
+            }
         }
 
        return jamonData;
@@ -19,8 +23,7 @@ public class JamonDataFactory {
     private static JamonData create(String className) {
         try {
             return (JamonData) Class.forName(className).newInstance();
-        } catch (Exception e) {
-
+        } catch (Throwable e) {
         }
         return null;
     }

@@ -21,10 +21,13 @@ public class MonitorComposite extends Monitor implements DetailData  {
     private final int numRows; // rows in the composite
     private final static int TYPICAL_NUM_CHILDREN=200;// hopefully makes it so the monitor need not grow all the time
 
+    private final Date dateCreated;
+
     /** Creates a new instance of MonitorComposite */
     public MonitorComposite(Monitor[] monitors) {
         this.monitors=monitors;
         numRows=(monitors==null) ? 0 : monitors.length;
+        dateCreated = new Date();
     }
 
     MonitorComposite() {
@@ -295,6 +298,11 @@ public class MonitorComposite extends Monitor implements DetailData  {
         }
 
         return firstAccess;
+    }
+
+
+    public Date getDateCreated() {
+        return dateCreated;
     }
 
 

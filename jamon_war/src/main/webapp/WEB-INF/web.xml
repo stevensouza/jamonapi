@@ -6,6 +6,23 @@
 
 <web-app>
 
+
+    <context-param>
+        <param-name>distributedDataRefreshRate</param-name>
+        <param-value>55</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>distributedDataTimeToLive</param-name>
+        <param-value>120</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>
+            com.jamonapi.http.JamonServletContextListener
+        </listener-class>
+    </listener>
+
    <servlet>
     <servlet-name>jamonadmin</servlet-name>
     <jsp-file>/jamonadmin.jsp</jsp-file>
@@ -49,4 +66,7 @@
             menu.jsp
         </welcome-file>
     </welcome-file-list>
+
+
+
 </web-app>

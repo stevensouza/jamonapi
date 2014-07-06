@@ -2,11 +2,9 @@ package com.jamonapi.distributed;
 
 import com.jamonapi.MonitorComposite;
 import com.jamonapi.MonitorFactory;
+import com.jamonapi.utils.Misc;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * Class that returns the static jamon data for the jvm as returned by MonitorFactory.getRootMonitor()
@@ -24,7 +22,7 @@ public class LocalJamonData implements JamonData {
     }
     @Override
     public Map<String, MonitorComposite> getMap() {
-        jamonData.put(INSTANCE, MonitorFactory.getRootMonitor());
+        put();
         return jamonData;
     }
 
@@ -60,7 +58,7 @@ public class LocalJamonData implements JamonData {
      */
     @Override
     public void put() {
-
+        jamonData.put(INSTANCE, MonitorFactory.getRootMonitor());
     }
 
     @Override
@@ -71,4 +69,5 @@ public class LocalJamonData implements JamonData {
 
         return null;
     }
+
 }

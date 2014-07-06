@@ -1,5 +1,5 @@
 <%@ page language="java" buffer="8kb" autoFlush="true" isThreadSafe="true" isErrorPage="false"  %>
-<%@ page import="com.fdsapi.*, com.fdsapi.arrays.*, net.sf.xsshtmlfilter.HTMLFilter, java.text.DateFormat, java.text.DecimalFormat, java.util.Date, java.util.HashMap, java.util.Map,  java.util.regex.Matcher" %>
+<%@ page import="com.fdsapi.*, com.fdsapi.arrays.*, net.sf.xsshtmlfilter.HTMLFilter, java.text.DateFormat, java.text.DecimalFormat, java.util.*,  java.util.regex.Matcher" %>
 <%@ page import="java.util.regex.Pattern" %>
 <%@ page import="com.jamonapi.*, com.jamonapi.proxy.*, com.jamonapi.utils.*, com.jamonapi.distributed.*" %>
 
@@ -12,6 +12,7 @@ FormattedDataSet fds=new FormattedDataSet();
 LocaleContext.setLocale(request.getLocale());
 
 // Assign request parameters to local variables.
+String instanceName    = getValue(request.getParameter("instanceName"),"local");
 String action    = getValue(request.getParameter("action"),"Refresh");
 String monProxyAction = getValue(request.getParameter("monProxyAction"),"No Action");
 
@@ -46,6 +47,7 @@ arraySQLExec = (arraySQLExec.trim().toLowerCase().startsWith("select")) ? arrayS
 
 // Build the request parameter query string that will be part of every clickable column.
 String query="";
+query+="&instanceName="+instanceName;
 query+="&displayTypeValue="+displayType;
 query+="&RangeName="+rangeName;
 query+="&outputTypeValue="+outputType;
@@ -80,7 +82,8 @@ String outputText;
  //   }
 JamonDataFactory jamonDataFactory = new JamonDataFactory();
 JamonData jamonData = jamonDataFactory.get();
-MonitorComposite mc =  jamonData.get("local");
+jamonData.put();
+MonitorComposite mc =  jamonData.get(instanceName);
 session.setAttribute("monitorComposite",mc);
 
 
@@ -180,6 +183,7 @@ function helpWin() {
 <tr>
 <td><table class="layoutmain" border="0" cellpadding="4" cellspacing="0" width="750" align="left">
     <tr class="sectHead">
+    <th>Instance</th>
     <th>JAMon Action</th>
     <th>Mon Proxy Action</th>
     <th>Output</th>
@@ -192,6 +196,7 @@ function helpWin() {
     <th align="right"><a href="javascript:helpWin();" style="color:#C5D4E4;">Help</a></th>
     </tr>
     <tr class="even">
+    <th><%=fds.getDropDownListBox(instanceNameHeader, getInstanceData(jamonData.getInstances()), instanceName)%></th>
     <th><%=fds.getDropDownListBox(actionHeader, actionBody, "")%></th>
     <th><%=fds.getDropDownListBox(monProxyHeader, getMonProxyBody() , "")%></th>
     <th><%=fds.getDropDownListBox(outputTypeHeader, outputTypeBody, outputType)%></th>
@@ -272,6 +277,18 @@ function helpWin() {
 
 <%!
 
+String[] instanceNameHeader={"instanceName","instanceNameDisplay"};
+private static Object[][] getInstanceData(Set instances) {
+    Object[][] data=new Object[instances.size()][];
+    Object[] instanceArray = instances.toArray();
+    for (int i=0; i<instanceArray.length; i++) {
+        data[i] = new Object[2];
+        data[i][0] = instanceArray[i];
+        data[i][1] = instanceArray[i];
+    }
+    return data;
+}
+
 String[] actionHeader={"action","actionDisplay"};
 Object[][] actionBody={
                  {"Refresh", "Refresh"}, 
@@ -298,9 +315,9 @@ private static Object[][] getMonProxyBody() {
    String resultSet=enabledMessage(MonProxyFactory.isResultSetEnabled())+"ResultSet";
 
    return new Object[][] {
-                 {"No Action", enableInfo}, 
-                 {"Enable All", "Enable All"}, 
-                 {"Disable All", "Disable All"}, 
+             {"No Action", enableInfo},
+             {"Enable All", "Enable All"},
+             {"Disable All", "Disable All"},
 	         {sql,sql}, 
 	         {exceptions,exceptions}, 
 	         {interfaces,interfaces}, 

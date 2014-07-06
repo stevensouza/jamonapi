@@ -6,18 +6,32 @@ import com.hazelcast.core.IMap;
 import com.jamonapi.MonitorComposite;
 import com.jamonapi.MonitorFactory;
 
+import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Created by stevesouza on 7/6/14.
  */
+
+/** NOTE THIS CLASS NEEDS TO SUPPORT local too for performance reasons */
+// need to make this something like 7/6/14
+//    MonitorComposite mc = MonitorFactory.getRootComposite();
+///   mc = mc.getComposite(rangeName);
+//    MonitorComposite mc=MonitorFactory.getComposite(rangeName);
+// see    public MonitorComposite getComposite(String units) {
+//  return new MonitorComposite(getMonitors(units));
+//   }
+    // monitor.hasListeners() being wrong
+//Time too live
+//        Timer period
+
 public class DistributedJamonHazelcast implements JamonData {
 
     // could be Map if we don't want the instance methods of hazelcast
     private IMap<String, MonitorComposite> jamonDataMap;
     // This should really be an ISet, but ISet doesn't support time-to-live methods
-    private IMap<String, String> instances;
+    private IMap<String, Date> instances;
     private HazelcastInstance hazelCast;
     private LocalJamonData localJamonData = new LocalJamonData();
 
@@ -58,7 +72,7 @@ public class DistributedJamonHazelcast implements JamonData {
     public void put() {
         String key = getInstance();
         jamonDataMap.set(key, MonitorFactory.getRootMonitor(), 1, TimeUnit.HOURS);
-        instances.set(key, key, 1, TimeUnit.HOURS);
+        instances.set(key, new Date(), 1, TimeUnit.HOURS);
     }
 
     /** NOTE THIS CLASS NEEDS TO SUPPORT local too for performance reasons */
@@ -75,6 +89,9 @@ public class DistributedJamonHazelcast implements JamonData {
         if (monitorComposite==null) {
             monitorComposite = jamonDataMap.get(key);
         }
+
+        System.out.println("***** hazelcast stats for jamonmap: "+jamonDataMap.getLocalMapStats());
+
         return monitorComposite;
     }
 
@@ -89,7 +106,6 @@ public class DistributedJamonHazelcast implements JamonData {
     public static void main(String[] args) throws InterruptedException {
         DistributedJamonHazelcast driver = new DistributedJamonHazelcast();
         String nodeName = driver.getInstance();
-        driver.hazelCast.shutdown();
         int i=0;
         while (true) {
             i++;
@@ -101,6 +117,10 @@ public class DistributedJamonHazelcast implements JamonData {
                 MonitorComposite composite =  driver.get(nodeName);
                 System.out.println("****distributed mapsize: " + driver.getMap().size() + ", MonitorComposite rows: " + composite.getNumRows());
                 System.out.println("**** cluster members: " + driver.hazelCast.getCluster().getMembers());
+                System.out.println("****"+driver.hazelCast.getCluster().getLocalMember().toString());
+                System.out.println("****"+driver.hazelCast.getName());
+                System.out.println(driver.jamonDataMap.getLocalMapStats());
+
             }
         }
     }
