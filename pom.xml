@@ -11,7 +11,7 @@
   <artifactId>jamon-parent</artifactId>
   <packaging>pom</packaging>
   <name>JAMon Parent</name>
-  <version>2.77</version>
+  <version>2.78</version>
 
   <modules>
    <module>jamon</module>
@@ -65,7 +65,7 @@
          <jetty9.version>9.2.1.v20140609</jetty9.version>
          <hsqldb.version>2.3.2</hsqldb.version>
          <jdk.version>1.6</jdk.version>
-         <jamon.version>2.77</jamon.version>
+         <jamon.version>2.78</jamon.version>
          <spring.aop.version>1.8.0</spring.aop.version>
          <spring.version>4.0.2.RELEASE</spring.version>
          <commons.version>3.3.2</commons.version>
