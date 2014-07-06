@@ -1,16 +1,13 @@
 package com.jamonapi;
 
 import com.jamonapi.utils.Misc;
-import com.jamonapi.utils.MiscTest;
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.*;
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 

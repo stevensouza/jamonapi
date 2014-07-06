@@ -5,7 +5,6 @@ package com.jamonapi;
 import com.jamonapi.utils.DetailData;
 import com.jamonapi.utils.Misc;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
