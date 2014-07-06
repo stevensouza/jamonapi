@@ -62,6 +62,13 @@ public class DistributedJamonHazelcast implements JamonData {
     }
 
     /** NOTE THIS CLASS NEEDS TO SUPPORT local too for performance reasons */
+    // need to make this something like 7/6/14
+//    MonitorComposite mc = MonitorFactory.getRootComposite();
+///   mc = mc.getComposite(rangeName);
+//    MonitorComposite mc=MonitorFactory.getComposite(rangeName);
+    // see    public MonitorComposite getComposite(String units) {
+    //  return new MonitorComposite(getMonitors(units));
+    //   }
     @Override
     public MonitorComposite get(String key) {
         MonitorComposite monitorComposite = localJamonData.get(key);
@@ -75,9 +82,14 @@ public class DistributedJamonHazelcast implements JamonData {
         return hazelCast.getCluster().getLocalMember().toString();
     }
 
+    public void shutDownHazelCast() {
+        hazelCast.shutdown();
+    }
+
     public static void main(String[] args) throws InterruptedException {
         DistributedJamonHazelcast driver = new DistributedJamonHazelcast();
         String nodeName = driver.getInstance();
+        driver.hazelCast.shutdown();
         int i=0;
         while (true) {
             i++;
