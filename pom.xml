@@ -69,6 +69,7 @@
          <spring.aop.version>1.8.0</spring.aop.version>
          <spring.version>4.0.2.RELEASE</spring.version>
          <commons.version>3.3.2</commons.version>
+         <hazelcast.version>3.2.3</hazelcast.version>
      </properties>
 
      <build>
