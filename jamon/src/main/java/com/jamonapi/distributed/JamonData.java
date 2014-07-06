@@ -27,12 +27,23 @@ public interface JamonData {
     public Set<String> getInstances();
 
 
-    /**
+     /**
      *
      * @param instanceKey key that identifies the jvm instance that the JAMon data is for.
+     * @param monitorComposite jamon data
+     */
+  //  public void put(String instanceKey, MonitorComposite monitorComposite);
+
+    /**
+     * Puts the data in with the default key. For example 'local'
      * @param monitorComposite jamon data @
      */
-    public void put(String instanceKey, MonitorComposite monitorComposite);
+    //public void put(MonitorComposite monitorComposite);
+
+    /**
+     * Puts the default data (MonitorFactory.getRootMonitor()) in with the default key (For example 'local')
+     */
+    public void put();
 
     /**
      *

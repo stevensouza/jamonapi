@@ -36,7 +36,7 @@ public class LocalJamonDataTest {
 
     @Test
     public void testPut() throws Exception {
-        localJamonData.put("i_will_not_be_created_instance", MonitorFactory.getRootMonitor());
+        localJamonData.put();
         assertThat(localJamonData.getMap().size()).isEqualTo(1);
         assertThat(localJamonData.getInstances().size()).isEqualTo(1);
     }
