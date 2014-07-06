@@ -14,8 +14,8 @@ import java.util.TreeSet;
  */
 public class LocalJamonData implements JamonData {
     public static final String INSTANCE = "local";
-    private  Map<String, MonitorComposite> jamonData;
-    private  Set<String> instances;
+    private final Map<String, MonitorComposite> jamonData;
+    private final Set<String> instances;
 
     public LocalJamonData() {
         jamonData = new HashMap<String, MonitorComposite>();

@@ -1,6 +1,5 @@
 package com.jamonapi.distributed;
 
-import com.jamonapi.Mon;
 import com.jamonapi.MonitorComposite;
 import com.jamonapi.MonitorFactory;
 import org.junit.After;
@@ -8,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 public class LocalJamonDataTest {
 
@@ -21,7 +19,7 @@ public class LocalJamonDataTest {
 
     @After
     public void cleanUp() {
-        MonitorFactory.reset();;
+        MonitorFactory.reset();
     }
 
     @Test
