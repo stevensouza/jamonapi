@@ -82,7 +82,6 @@ String outputText;
  //   }
 JamonDataFactory jamonDataFactory = new JamonDataFactory();
 JamonData jamonData = jamonDataFactory.get();
-jamonData.put();
 MonitorComposite mc =  jamonData.getMonitors(instanceName).filterByUnits(rangeName);
 session.setAttribute("monitorComposite",mc);
 
