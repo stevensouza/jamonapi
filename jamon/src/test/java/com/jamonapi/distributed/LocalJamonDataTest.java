@@ -43,13 +43,13 @@ public class LocalJamonDataTest {
 
     @Test
     public void testGet() throws Exception {
-        MonitorComposite monitorComposite = localJamonData.get(LocalJamonData.INSTANCE);
+        MonitorComposite monitorComposite = localJamonData.getMonitors(LocalJamonData.INSTANCE);
         assertThat(monitorComposite.getReport()).isEqualTo(MonitorFactory.getRootMonitor().getReport());
     }
 
     @Test
     public void testGet_WithInvalidArg() throws Exception {
-        MonitorComposite monitorComposite = localJamonData.get("i_do_not_exist_instance");
+        MonitorComposite monitorComposite = localJamonData.getMonitors("i_do_not_exist_instance");
         assertThat(monitorComposite).isNull();
     }
 }

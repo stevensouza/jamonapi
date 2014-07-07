@@ -80,6 +80,16 @@ public class MonitorCompositeTest {
 
     }
 
+    @Test
+    public void testGetMonitorWithUnits() {
+       MonitorComposite composite = MonitorFactory.getRootMonitor();
+       assertThat(composite.filterByUnits("AllMonitors").getNumRows()).isEqualTo(composite.getNumRows());
+       assertThat(composite.filterByUnits("ms.").getNumRows()).isEqualTo(BUFFER_SIZE+1);
+       assertThat(composite.filterByUnits("ns.").getNumRows()).isEqualTo(BUFFER_SIZE);
+       assertThat(composite.filterByUnits("count").getNumRows()).isEqualTo(BUFFER_SIZE+1);
+       assertThat(composite.filterByUnits("no_exist_units").getMonitors()).isNull();
+    }
+
     private Monitor getMonitorWithListeners(MonitorComposite monitorComposite) {
         MonKey key = new MonKeyImp(EXCEPTION_METHOD, "ms.");
         for (Monitor mon : monitorComposite.getMonitors()) {

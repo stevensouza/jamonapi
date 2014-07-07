@@ -6,6 +6,7 @@ import com.jamonapi.utils.DetailData;
 import com.jamonapi.utils.Misc;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -25,8 +26,8 @@ public class MonitorComposite extends Monitor implements DetailData  {
 
     /** Creates a new instance of MonitorComposite */
     public MonitorComposite(Monitor[] monitors) {
-        this.monitors=monitors;
-        numRows=(monitors==null) ? 0 : monitors.length;
+        this.monitors = monitors;
+        numRows = (monitors==null) ? 0 : monitors.length;
         dateCreated = new Date();
     }
 
@@ -37,6 +38,35 @@ public class MonitorComposite extends Monitor implements DetailData  {
     public Monitor[] getMonitors() {
         return monitors;
     }
+
+    private Monitor[] getMonitorsWithUnits(String units) {
+        if (monitors==null || units==null) {
+            return null;
+        } else if ("AllMonitors".equalsIgnoreCase(units)) {
+            return monitors;
+        }
+
+        int size=monitors.length;
+        List rows=new ArrayList(monitors.length);
+        for (int i=0;i<size;i++) {
+            // if units of range match units of this monitor then
+            if (units.equalsIgnoreCase(monitors[i].getMonKey().getRangeKey())) {
+                rows.add(monitors[i]);
+            }
+        }
+
+        if (rows.size()==0) {
+            return null;
+        } else {
+            return (MonitorImp[]) rows.toArray(new MonitorImp[0]);
+        }
+    }
+
+    public MonitorComposite filterByUnits(String units) {
+        return new MonitorComposite(getMonitorsWithUnits(units));
+    }
+
+
 
     /** Pass in an array with col1=lables, and col2=units and then call methods */
     public static MonitorComposite getMonitors(String[][] labels) {
@@ -58,6 +88,7 @@ public class MonitorComposite extends Monitor implements DetailData  {
         return new MonitorComposite(monArray);
 
     }
+
 
     public int getNumRows() {
         return numRows;

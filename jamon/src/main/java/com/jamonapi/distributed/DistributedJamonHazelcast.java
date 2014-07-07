@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
     // monitor.hasListeners() being wrong
 //Time too live
 //        Timer period
+//http://localhost:8080/mancenter
 
 public class DistributedJamonHazelcast implements JamonData {
 
@@ -56,17 +57,6 @@ public class DistributedJamonHazelcast implements JamonData {
         allInstances.addAll(instances.keySet());
         return allInstances;
     }
-//
-//    @Override
-//    public void put(String key, MonitorComposite monitorComposite) {
-//        jamonDataMap.set(key, monitorComposite, 1, TimeUnit.HOURS);
-//        instances.set(key, key, 1, TimeUnit.HOURS);
-//    }
-//
-//    @Override
-//    public void put(MonitorComposite monitorComposite) {
-//
-//    }
 
     @Override
     public void put() {
@@ -75,17 +65,9 @@ public class DistributedJamonHazelcast implements JamonData {
         instances.set(key, new Date(), 1, TimeUnit.HOURS);
     }
 
-    /** NOTE THIS CLASS NEEDS TO SUPPORT local too for performance reasons */
-    // need to make this something like 7/6/14
-//    MonitorComposite mc = MonitorFactory.getRootComposite();
-///   mc = mc.getComposite(rangeName);
-//    MonitorComposite mc=MonitorFactory.getComposite(rangeName);
-    // see    public MonitorComposite getComposite(String units) {
-    //  return new MonitorComposite(getMonitors(units));
-    //   }
     @Override
-    public MonitorComposite get(String key) {
-        MonitorComposite monitorComposite = localJamonData.get(key);
+    public MonitorComposite getMonitors(String key) {
+        MonitorComposite monitorComposite = localJamonData.getMonitors(key);
         if (monitorComposite==null) {
             monitorComposite = jamonDataMap.get(key);
         }
@@ -114,7 +96,7 @@ public class DistributedJamonHazelcast implements JamonData {
             TimeUnit.SECONDS.sleep(1);
             if (i%10==0) {
                 driver.put();
-                MonitorComposite composite =  driver.get(nodeName);
+                MonitorComposite composite =  driver.getMonitors(nodeName);
                 System.out.println("****distributed mapsize: " + driver.getMap().size() + ", MonitorComposite rows: " + composite.getNumRows());
                 System.out.println("**** cluster members: " + driver.hazelCast.getCluster().getMembers());
                 System.out.println("****"+driver.hazelCast.getCluster().getLocalMember().toString());
