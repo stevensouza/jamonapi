@@ -7,10 +7,10 @@
 
 
 FormattedDataSet fds=new FormattedDataSet();
-
-
+MonitorComposite mc = (MonitorComposite) session.getAttribute("monitorComposite");
 MonKey key=(MonKey)session.getAttribute("monKey");
 String listenerType = "value";
+
 if (request.getParameter("listenertype")==null  && session.getAttribute("listenerType")!=null)
   listenerType=(String)session.getAttribute("listenerType");
 else if (request.getParameter("listenertype")!=null) {
@@ -78,8 +78,8 @@ else {
 
   JAMonListener listener=null;
 
-  if (MonitorFactory.exists(key))
-    listener=MonitorFactory.getMonitor(key).getListenerType(listenerType).getListener(currentListenerName);
+  if (mc.exists(key))
+    listener=mc.getMonitor(key).getListenerType(listenerType).getListener(currentListenerName);
 
   if (listener==null)
     outputText="<div align='center'><br><br><b>Null listener returned. Ensure there is a listener for this monitor</b></div>";
@@ -225,7 +225,10 @@ function helpWin() {
 </div>
 
 <br><br>
-
+<div align="center">
+    Data Refreshed for '<%= mc.getInstanceName() %>' on: <%= mc.getDateCreated() %>
+</div>
+<br>
 <td><table border='0' align='center' width='25%'>
     <tr>
     <th nowrap><a href="http://www.jamonapi.com"><img src="images/jamon_small.jpg" id="monLink" border="0" /></a></th>

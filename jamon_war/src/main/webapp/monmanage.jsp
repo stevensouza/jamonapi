@@ -8,40 +8,43 @@ FormattedDataSet fds=new FormattedDataSet();
 
 // Assign request parameters to local variables.
 String action    = getValue(request.getParameter("monitormgmt"),"");
+MonitorComposite mc = (MonitorComposite) session.getAttribute("monitorComposite");
+//if (mc==null) {
+//    mc = MonitorFactory.getRootMonitor();
+//}
 MonKey key=null;
 
 int keyNum=0;
+// monKey is the previous key that the user picked in session.  i.e. they didn't come by clicking on jamonadmin.jsp
 if (request.getParameter("key")==null  && session.getAttribute("monKey")!=null) {
 //  keyNum=Integer.parseInt((String)session.getAttribute("keyNum"));
   key=(MonKey) session.getAttribute("monKey");
 } else if (request.getParameter("key")!=null) {
   keyNum=getNum(request.getParameter("key"), "1")-1;
-  key=getMonKey((MonitorComposite) session.getAttribute("monitorComposite"), keyNum);
+  key=getMonKey(mc, keyNum);
   session.setAttribute("monKey", key);
-} 
+}
+
 
 String listenerType = "value";
 if (request.getParameter("listenertype")==null  && session.getAttribute("listenerType")!=null)
   listenerType=(String)session.getAttribute("listenerType");
 else if (request.getParameter("listenertype")!=null) {
   listenerType=(String)request.getParameter("listenertype");
-} 
-  
- 
+}
 
-//session.setAttribute("keyNum",new Integer(keyNum).toString());
-//session.setAttribute("monKey", key);
 session.setAttribute("listenerType", listenerType);
-
-executeAction(action, key);
-addListeners(request, key);
-removeListeners(request, key);
+if (mc.isLocalInstance()) {
+    executeAction(action, key);
+    addListeners(request, key);
+    removeListeners(request, key);
+}
 
 Monitor mon=null;
 boolean hasListeners=false;
 boolean enabled=false;
-if (MonitorFactory.exists(key)) {
-  mon=MonitorFactory.getMonitor(key);
+if (mc.exists(key)) {
+  mon=mc.getMonitor(key);
   hasListeners=mon.hasListeners();
   enabled=mon.isEnabled();
 }
@@ -89,8 +92,6 @@ function helpWin() {
 <body>
 
 <div align="center">
-
-
 
 <table bgcolor='#DCE2E8'>
 <th>
@@ -145,7 +146,7 @@ Available:<br>
 
 <th>
 Current:<br>
-    <%=fds.getMultiSelectListBox(getCurrentListeners(key, listenerType) , new String[]{""}, 5)%>
+    <%=fds.getMultiSelectListBox(getCurrentListeners(mc, key, listenerType) , new String[]{""}, 5)%>
 <br>
 
 <input type="submit" name="displaylistener" title="Display Listener" value="Display" onClick="this.form.action='mondetail.jsp'; this.form.submit();" >
@@ -184,6 +185,11 @@ Current:<br>
 <br>
 <div align="left">
 Monitor: <%=mon%>
+</div>
+<br>
+<div align="center">
+    Data Refreshed for '<%= mc.getInstanceName() %>' on: <%= mc.getDateCreated() %>
+</div>
 <br>
 
 <br><br>
@@ -217,20 +223,19 @@ private String checked(String compareType, String listenerType) {
 }
 
 private MonKey getMonKey(MonitorComposite mc, int keyNum) {
-   if (mc==null)
-     return null;
+   if (mc==null) {
+       return null;
+   }
 
    Monitor[] monitors=mc.getMonitors();
-
-   if (monitors==null || monitors[keyNum]==null)
-     return null;
+   if (monitors==null || monitors[keyNum]==null) {
+       return null;
+   }
 
    return monitors[keyNum].getMonKey();
-
-   
 }
 
-private void addListeners(HttpServletRequest request, MonKey key) {
+private void addListeners(HttpServletRequest request,  MonKey key) {
   String addListener=request.getParameter("addlistener");
   String listenerType=request.getParameter("listenertype");
   if (addListener!=null && listenerType!=null) {
@@ -283,9 +288,9 @@ private ResultSetConverter getAvailableListeners() {
  
 }
 
-private ResultSetConverter getCurrentListeners(MonKey key, String listenerType) {
-   if (MonitorFactory.exists(key)  && MonitorFactory.getMonitor(key).hasListeners(listenerType)) {
-      return getCurrentListeners(MonitorFactory.getMonitor(key).getListenerType(listenerType).getListener());
+private ResultSetConverter getCurrentListeners(MonitorComposite mc, MonKey key, String listenerType) {
+   if (mc.exists(key)  && mc.getMonitor(key).hasListeners(listenerType)) {
+      return getCurrentListeners(mc.getMonitor(key).getListenerType(listenerType).getListener());
    }
    
    return new ResultSetConverter(new String[]{"none"}, new Object[][]{{"No Listeners"}}).execute("select col0 as currentlistener,col0 as currentlistenerdisp from array order by col0 asc");

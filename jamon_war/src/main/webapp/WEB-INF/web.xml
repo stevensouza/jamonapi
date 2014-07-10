@@ -8,13 +8,8 @@
 
 
     <context-param>
-        <param-name>distributedDataRefreshRate</param-name>
-        <param-value>55</param-value>
-    </context-param>
-
-    <context-param>
-        <param-name>distributedDataTimeToLive</param-name>
-        <param-value>120</param-value>
+        <param-name>distributedDataRefreshRateInMinutes</param-name>
+        <param-value>5</param-value>
     </context-param>
 
     <listener>

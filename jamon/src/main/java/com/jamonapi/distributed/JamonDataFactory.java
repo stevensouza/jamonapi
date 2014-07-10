@@ -10,23 +10,23 @@ import java.util.Timer;
 public class JamonDataFactory {
 
     // CHANGE FROM STATIC !!!!
-    private static JamonData jamonData;
-    private static Timer timer = new Timer();
-    public JamonData get() {
-        if (jamonData==null) {
-            initialize();
-        }
+    private static JamonDataFactory factory = new JamonDataFactory();
 
-       return jamonData;
+    private JamonDataFactory() {
     }
+    private JamonData jamonData;
+    public static JamonData get() {
+        if (factory.jamonData==null) {
+            factory.initialize();
+        }
+         return factory.jamonData;
+    }
+
 
     private void initialize() {
         jamonData =  create("com.jamonapi.distributed.DistributedJamonHazelcast");
         if (jamonData==null) {
-            jamonData = new LocalJamonData();
-            DistributedJamonTimerTask saveTask = new DistributedJamonTimerTask(jamonData);
-            timer.scheduleAtFixedRate(saveTask, 1000,60000); // start after 1 second, and every minute from there.
-          //  timer.cancel();
+           jamonData = new LocalJamonData();
         }
     }
 

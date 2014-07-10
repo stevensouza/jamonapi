@@ -22,7 +22,7 @@ public class LocalJamonData implements JamonData {
     }
     @Override
     public Map<String, MonitorComposite> getMap() {
-        put();
+        jamonData.put(INSTANCE, MonitorFactory.getRootMonitor());
         return jamonData;
     }
 
@@ -37,7 +37,6 @@ public class LocalJamonData implements JamonData {
      */
     @Override
     public void put() {
-        jamonData.put(INSTANCE, MonitorFactory.getRootMonitor());
     }
 
     @Override

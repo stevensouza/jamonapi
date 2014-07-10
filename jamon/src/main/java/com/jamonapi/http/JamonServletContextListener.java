@@ -1,35 +1,50 @@
 package com.jamonapi.http;
 
+import com.jamonapi.distributed.DistributedJamonTimerTask;
+import com.jamonapi.distributed.JamonData;
+import com.jamonapi.distributed.JamonDataFactory;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.util.Timer;
 
 /**
  * Created by stevesouza on 7/6/14.
  */
 public class JamonServletContextListener implements ServletContextListener  {
 
+    private static final int MINUTES = 60*1000;
+
     //Run this before web application is started
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        System.out.println("ServletContextListener started steve: "+event);
-
         ServletContext context = event.getServletContext();
         if (context != null) {
-            String refreshRate = context.getInitParameter("distributedDataRefreshRate");
-            // create timer
-            String timeToLive = context.getInitParameter("distributedDataTimeToLive");
-            System.out.println("*** it worked: refreshRate="+refreshRate+", timeToLive="+timeToLive);
+            DistributedJamonTimerTask saveTask = getDistributedJamonTimerTask();
+            Timer timer = new Timer();
+            int refreshRate = getRefreshRate(context);
+            // use refreshRate for 1st value:  when to start, and how long to wait until next one.
+            timer.scheduleAtFixedRate(saveTask, refreshRate, refreshRate);
         }
     }
 
-        @Override
-        public void contextDestroyed(ServletContextEvent event) {
+    DistributedJamonTimerTask getDistributedJamonTimerTask() {
+        return new DistributedJamonTimerTask(getJamonData());
+    }
 
-            System.out.println("ServletContextListener destroyed steve "+event);
+    JamonData getJamonData() {
+        return JamonDataFactory.get();
+    }
 
 
-        }
+    int getRefreshRate(ServletContext context) {
+        return MINUTES * Integer.valueOf(context.getInitParameter("distributedDataRefreshRateInMinutes"));
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent event) {
+    }
 
 
 

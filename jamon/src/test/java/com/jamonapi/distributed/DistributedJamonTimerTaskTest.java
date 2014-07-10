@@ -5,22 +5,20 @@ import org.junit.Test;
 import java.util.Timer;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class DistributedJamonTimerTaskTest {
 
+    private JamonData jamonData = mock(JamonData.class);
+
     @Test
     public void testTimer() throws InterruptedException {
-        DistributedJamonTimerTask task = new DistributedJamonTimerTask(new LocalJamonData());
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(task, 0, 500);
-        Thread.sleep(5000);
-      //  timer.cancel();
+        DistributedJamonTimerTask task = new DistributedJamonTimerTask(jamonData);
+        task.run();
+        verify(jamonData).put();
     }
 
-    @Test
-    public void testTimer2() throws InterruptedException {
-        System.out.println("in new method");
-        Thread.sleep(5000);
 
-    }
-    }
+}

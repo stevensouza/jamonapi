@@ -17,8 +17,7 @@ public class JamonDataFactoryTest {
 
     @Test
     public void testGet_WithHazelCast() throws Exception {
-        JamonDataFactory factory = new JamonDataFactory();
-        JamonData jamonData = factory.get();
+        JamonData jamonData = JamonDataFactory.get();
         assertThat(jamonData).isInstanceOf(DistributedJamonHazelcast.class);
         System.out.println(jamonData);
         ((DistributedJamonHazelcast)jamonData).shutDownHazelCast();

@@ -5,10 +5,7 @@ package com.jamonapi;
 import com.jamonapi.utils.DetailData;
 import com.jamonapi.utils.Misc;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Treats groups of monitors the same way you treat one monitor.  i.e. you can enable/disable/reset
@@ -17,18 +14,30 @@ import java.util.List;
 public class MonitorComposite extends Monitor implements DetailData  {
 
     private static final long serialVersionUID = -3449140252550908942L;
+    private static final String LOCAL="local";
 
     private final Monitor[] monitors;// the monitors in the composite
     private final int numRows; // rows in the composite
     private final static int TYPICAL_NUM_CHILDREN=200;// hopefully makes it so the monitor need not grow all the time
-
+    private Map<MonKey, Monitor> map;
     private final Date dateCreated;
+    private String instanceName=LOCAL;
 
     /** Creates a new instance of MonitorComposite */
     public MonitorComposite(Monitor[] monitors) {
         this.monitors = monitors;
         numRows = (monitors==null) ? 0 : monitors.length;
+        initializeForLookUps();
         dateCreated = new Date();
+    }
+
+    private void initializeForLookUps() {
+        map = new HashMap<MonKey, Monitor>();
+        if (monitors!=null) {
+            for (Monitor mon : monitors) {
+                map.put(mon.getMonKey(), mon);
+            }
+        }
     }
 
     MonitorComposite() {
@@ -63,10 +72,30 @@ public class MonitorComposite extends Monitor implements DetailData  {
     }
 
     public MonitorComposite filterByUnits(String units) {
-        return new MonitorComposite(getMonitorsWithUnits(units));
+        return new MonitorComposite(getMonitorsWithUnits(units)).setInstanceName(getInstanceName());
     }
 
+    public boolean exists(MonKey key) {
+       return map.containsKey(key);
+    }
 
+    public Monitor getMonitor(MonKey key) {
+        return map.get(key);
+    }
+
+    public String getInstanceName() {
+        return instanceName;
+    }
+
+    public MonitorComposite setInstanceName(String instanceName) {
+        this.instanceName = instanceName;
+        return this;
+    }
+
+    /** means is in this jvm and not data distributed from another machine */
+    public boolean isLocalInstance() {
+        return LOCAL.equalsIgnoreCase(instanceName);
+    }
 
     /** Pass in an array with col1=lables, and col2=units and then call methods */
     public static MonitorComposite getMonitors(String[][] labels) {

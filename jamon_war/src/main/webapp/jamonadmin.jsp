@@ -73,16 +73,10 @@ map.put("rootElement", "JAMonXML");
 
 
 String outputText;
-// need to make this something like 7/6/14
-//    MonitorComposite mc = MonitorFactory.getRootComposite();
-///   mc = mc.getComposite(rangeName);
-//    MonitorComposite mc=MonitorFactory.getComposite(rangeName);
-    // see    public MonitorComposite getComposite(String units) {
-  //  return new MonitorComposite(getMonitors(units));
- //   }
-JamonDataFactory jamonDataFactory = new JamonDataFactory();
-JamonData jamonData = jamonDataFactory.get();
-MonitorComposite mc =  jamonData.getMonitors(instanceName).filterByUnits(rangeName);
+JamonData jamonData = JamonDataFactory.get();
+MonitorComposite mc =  jamonData.getMonitors(instanceName);
+Date refreshDate = mc.getDateCreated();
+mc = mc.filterByUnits(rangeName);
 session.setAttribute("monitorComposite",mc);
 
 
@@ -219,6 +213,12 @@ function helpWin() {
 </table>
 
 </form>
+
+
+<br>
+<div align="center">
+    Data Refreshed for '<%= mc.getInstanceName() %>' on: <%= refreshDate %>
+</div>
 
 
 
