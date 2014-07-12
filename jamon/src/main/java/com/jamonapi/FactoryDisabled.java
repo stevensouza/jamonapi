@@ -66,6 +66,16 @@ public final class FactoryDisabled implements MonitorFactoryInterface {
         return nullMon;
     }
 
+    @Override
+    public Monitor addException(Monitor mon, Throwable throwable) {
+        return nullMon;
+    }
+
+    @Override
+    public Monitor addException(Throwable throwable) {
+        return nullMon;
+    }
+
     public Monitor getTimeMonitor(String label) {
         return nullMon;
     }

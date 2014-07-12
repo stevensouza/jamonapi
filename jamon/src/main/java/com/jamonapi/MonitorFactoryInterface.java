@@ -1,6 +1,8 @@
 package com.jamonapi;
 
 
+import com.jamonapi.utils.Misc;
+
 import java.util.Iterator;
 import java.util.Map;
 /**
@@ -65,6 +67,26 @@ public interface MonitorFactoryInterface {
     /** Get the time monitor associated with the passed in key.  It will be created if it doesn't exist.  The units
      * are in ms.*/
     public Monitor getTimeMonitor(MonKey key);
+
+    /** Add 2 exception monitors.  One for the specific exception and the other a catchall monitor for all exceptions.
+     * It will also put the stacktrace in the details for both of these monitors as well as for the monitor being passed in
+     * which would typically be the code associated with throwing the exception.  Passing in a null for mon is
+     * acceptable.
+     *
+     * @param mon optional monitor where we want to store the stack trace.
+     * @param throwable exception that we want to create a monitor for
+     * @return Returns only the monitor associated with the specific exception even though 2 monitors are created.
+     */
+    public Monitor addException(Monitor mon, Throwable throwable);
+
+
+    /** Track an exception except there is no other associated monitor to put the details in.  Equivalent to
+     * addException(null, throwable);
+     *
+     * @param throwable exception to create a monitor for.
+     * @return Returns only the monitor associated with the specific exception even though 2 monitors are created.
+     */
+    public Monitor addException(Throwable throwable);
 
     /** Remove the monitor associated with the passed in label and units */
     public void remove(String label, String units);

@@ -448,4 +448,27 @@ public class MonitorFactory {
         return factory.getMaxSqlSize();
     }
 
+    /** Add 2 exception monitors.  One for the specific exception and the other a catchall monitor for all exceptions.
+     * It will also put the stacktrace in the details for both of these monitors as well as for the monitor being passed in
+     * which would typically be the code associated with throwing the exception.  Passing in a null for mon is
+     * acceptable.
+     *
+     * @param mon optional monitor where we want to store the stack trace.
+     * @param throwable exception that we want to create a monitor for
+     * @return Returns only the monitor associated with the specific exception even though 2 monitors are created.
+     */
+    public Monitor addException(Monitor mon, Throwable throwable) {
+        return factory.addException(mon, throwable);
+    }
+
+    /** Track an exception except there is no other associated monitor to put the details in.  Equivalent to
+     * addException(null, throwable);
+     *
+     * @param throwable exception to create a monitor for.
+     * @return Returns only the monitor associated with the specific exception even though 2 monitors are created.
+     */
+    public static Monitor addException(Throwable throwable) {
+        return factory.addException(throwable);
+    }
+
 }

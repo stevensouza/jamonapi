@@ -127,6 +127,26 @@ public class FactoryEnabled implements MonitorFactoryInterface {
         return getTimeMonitor(key, NOT_PRIMARY);
     }
 
+    /** Note this creates 2 exception monitors and the more specific one is returned */
+    @Override
+    public Monitor addException(Monitor mon, Throwable throwable) {
+      String stackTtrace = new StringBuffer("stackTrace=")
+         .append(Misc.getExceptionTrace(throwable))
+         .toString();
+      if (mon!=null) {
+          MonKey key = mon.getMonKey();
+          key.setDetails(stackTtrace);
+      }
+      MonitorFactory.add(new MonKeyImp(throwable.getClass().getName(), stackTtrace, "Exception"), 1);
+      return MonitorFactory.add(new MonKeyImp(MonitorFactory.EXCEPTIONS_LABEL, stackTtrace, "Exception"), 1);
+    }
+
+    @Override
+    public Monitor addException(Throwable throwable) {
+        return addException(null, throwable);
+    }
+
+
     public Monitor getTimeMonitor(String label) {
         return getTimeMonitor(new MonKeyImp(label, "ms."), NOT_PRIMARY);
     }
