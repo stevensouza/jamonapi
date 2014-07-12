@@ -90,6 +90,35 @@ public class MonitorCompositeTest {
        assertThat(composite.filterByUnits("no_exist_units").getMonitors()).isNull();
     }
 
+    @Test
+    public void testMonitorExists() {
+        MonitorComposite composite = MonitorFactory.getRootMonitor();
+        assertThat(composite.exists(new MonKeyImp("mylabel", "count" ))).isTrue();
+        assertThat(composite.exists(new MonKeyImp("I_DO_NOT", "EXIST" ))).isFalse();
+    }
+
+    @Test
+    public void testGetMonitor() {
+        MonitorComposite composite = MonitorFactory.getRootMonitor();
+        assertThat(composite.getMonitor(new MonKeyImp("mylabel", "count" ))).isNotNull();
+        assertThat(composite.getMonitor(new MonKeyImp("I_DO_NOT", "EXIST" ))).isNull();
+    }
+
+    @Test
+    public void testGetInstanceName() {
+        MonitorComposite composite = MonitorFactory.getRootMonitor();
+        assertThat(composite.getInstanceName()).isEqualTo("local");
+        assertThat(composite.setInstanceName("newname").getInstanceName()).isEqualTo("newname");
+    }
+
+    @Test
+    public void testIsLocalInstance() {
+        MonitorComposite composite = MonitorFactory.getRootMonitor();
+        assertThat(composite.isLocalInstance()).isTrue();
+        assertThat(composite.setInstanceName("newname").isLocalInstance()).isFalse();
+    }
+
+
     private Monitor getMonitorWithListeners(MonitorComposite monitorComposite) {
         MonKey key = new MonKeyImp(EXCEPTION_METHOD, "ms.");
         for (Monitor mon : monitorComposite.getMonitors()) {
