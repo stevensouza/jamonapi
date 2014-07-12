@@ -12,28 +12,20 @@ import java.util.*;
  */
 public class LocalJamonData implements JamonData {
     public static final String INSTANCE = "local";
-    private final Map<String, MonitorComposite> jamonData;
-    private final Set<String> instances;
+    private final Map<String, Date> instances;
 
     public LocalJamonData() {
-        jamonData = new HashMap<String, MonitorComposite>();
-        instances = new TreeSet<String>();
-        instances.add(INSTANCE);
-    }
-    @Override
-    public Map<String, MonitorComposite> getMap() {
-        jamonData.put(INSTANCE, MonitorFactory.getRootMonitor());
-        return jamonData;
+        instances = new HashMap<String, Date>();
+        instances.put(INSTANCE, new Date());
     }
 
     @Override
     public Set<String> getInstances() {
-        return instances;
+        return instances.keySet();
     }
 
     /**
      *  This is a noop. The only key supproted is 'local' and the only data supported is MonitorFactory.getRootMonitor()
-
      */
     @Override
     public void put() {

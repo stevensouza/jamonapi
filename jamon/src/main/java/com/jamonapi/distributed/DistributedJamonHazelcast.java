@@ -3,9 +3,8 @@ package com.jamonapi.distributed;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
-import com.jamonapi.Monitor;
-import com.jamonapi.MonitorComposite;
-import com.jamonapi.MonitorFactory;
+import com.jamonapi.*;
+import com.jamonapi.utils.Misc;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -56,12 +55,20 @@ import java.util.concurrent.TimeUnit;
 //        192:     <th><%=fds.getDropDownListBox(instanceNameHeader, getInstanceData(jamonData.getInstances()), instanceName)%></th>
 // 3) tomcat error
     // 4) http://hazelcast.org/get-involved/
-    // 5) jmx
+    // 5) move startup of hazelcast to first put or get
     //  6) ticket on web console
     // 7) i hazelcast is not available don't have jamon fail
     // 8) do a cluster with 2 nodes test.
     // 9) test on vagrant
     // get rid of misc.delme(mc)
+    // 10) change serialid to versoin number 278
+    // documentation
+    // properties http://www.mkyong.com/java/java-properties-file-examples/
+// String library = System.getProperty("parser.library", "datapipeline");
+    //         System.out.println("  -Dparser.library=datapipeline (possible values: datapipeline or supercsv. datapipeline is the default)");
+// config file better.
+    // or can you set a system property.  do test program...
+
 /*
 14-07-09 23:59:47.932:WARN:oejs.ServletHandler:qtp957394696-17:
         org.apache.jasper.JasperException: An exception occurred processing JSP page /jamonadmin.jsp at line 78||75: String outputText;|76: JamonData jamonData = JamonDataFactory.get();|77: MonitorComposite mc =  jamonData.getMonitors(instanceName);|78: Date refreshDate = mc.getDateCreated();|79: mc = mc.filterByUnits(rangeName);|80: session.setAttribute("monitorComposite",mc);|81: |||Stacktrace:
@@ -94,6 +101,7 @@ import java.util.concurrent.TimeUnit;
         java.lang.NullPointerException
         at org.apache.jsp.jamonadmin_jsp._jspService(jamonadmin_jsp.java:468)
         at org.apache.jasper.runtime.HttpJspBase.service(HttpJspBase.java:70)
+
 
         Macintosh-c8bcc88febc6:webapp stevesouza$ grep MonitorFactory *.jsp
 x exceptions.jsp:    <th nowrap>JAMon <%=MonitorFactory.getVersion()%></th>
@@ -161,11 +169,6 @@ public class DistributedJamonHazelcast implements JamonData {
     }
 
     @Override
-    public IMap<String, MonitorComposite> getMap() {
-        return jamonDataMap;
-    }
-
-    @Override
     public Set<String> getInstances() {
         Set<String> allInstances = localJamonData.getInstances();
         allInstances.addAll(getHazelcastInstances());
@@ -184,10 +187,19 @@ public class DistributedJamonHazelcast implements JamonData {
                 String key = getInstance();
                 jamonDataMap.set(key, MonitorFactory.getRootMonitor().setInstanceName(key));
                 instances.set(key, new Date());
+            } catch(Throwable t) {
+                setException(mon, t);
             } finally {
                 mon.stop();
             }
         }
+    }
+
+    private void setException(Monitor mon, Throwable throwable) {
+        MonKey key = mon.getMonKey();
+        String stackTtrace = Misc.getExceptionTrace(throwable);
+        key.setDetails(stackTtrace);
+        MonitorFactory.add(new MonKeyImp(MonitorFactory.EXCEPTIONS_LABEL, stackTtrace, "Exception"), 1);
     }
 
     @Override

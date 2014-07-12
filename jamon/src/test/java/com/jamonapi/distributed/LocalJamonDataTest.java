@@ -23,12 +23,6 @@ public class LocalJamonDataTest {
     }
 
     @Test
-    public void testGetMap() throws Exception {
-        assertThat(localJamonData.getMap().size()).isEqualTo(1);
-        assertThat(localJamonData.getMap().containsKey("local")).isTrue();
-    }
-
-    @Test
     public void testGetInstances() throws Exception {
         assertThat(localJamonData.getInstances().size()).isEqualTo(1);
         assertThat(localJamonData.getInstances().contains(LocalJamonData.INSTANCE));
@@ -37,7 +31,7 @@ public class LocalJamonDataTest {
     @Test
     public void testPut() throws Exception {
         localJamonData.put();
-        assertThat(localJamonData.getMap().size()).isEqualTo(1);
+        assertThat(localJamonData.getMonitors(LocalJamonData.INSTANCE).getNumRows()).isEqualTo(1);
         assertThat(localJamonData.getInstances().size()).isEqualTo(1);
     }
 

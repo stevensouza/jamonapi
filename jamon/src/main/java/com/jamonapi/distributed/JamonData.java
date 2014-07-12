@@ -15,13 +15,6 @@ public interface JamonData {
 
     /**
      *
-     * @return Return a map that has the server instances being monitored as the key and the jamon
-     * data as the value.
-     */
-    public Map<String, MonitorComposite> getMap();
-
-    /**
-     *
      * @return Return a list of all the jvm server instances being tracked.
      */
     public Set<String> getInstances();
