@@ -20,7 +20,12 @@ public class LocalJamonData implements JamonData {
 
     @Override
     public Set<String> getInstances() {
-        return new HashSet<String>(instances.keySet());
+        return new TreeSet<String>(instances.keySet());
+    }
+
+    @Override
+    public String getInstance() {
+        return INSTANCE;
     }
 
     /**
@@ -31,12 +36,21 @@ public class LocalJamonData implements JamonData {
     }
 
     @Override
-    public MonitorComposite getMonitors(String instanceKey) {
+    public MonitorComposite get(String instanceKey) {
         if (INSTANCE.equalsIgnoreCase(instanceKey)) {
             return MonitorFactory.getRootMonitor();
         }
 
         return null;
     }
+
+    @Override
+    public void remove(String instanceKey) {
+        if (INSTANCE.equalsIgnoreCase(instanceKey)) {
+          MonitorFactory.reset();
+        }
+    }
+
+
 
 }

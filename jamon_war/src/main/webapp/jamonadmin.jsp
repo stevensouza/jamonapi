@@ -58,7 +58,7 @@ query+="&highlight="+highlightString;
 
 String outputText;
 JamonData jamonData = JamonDataFactory.get();
-MonitorComposite mc =  jamonData.getMonitors(instanceName);
+MonitorComposite mc =  jamonData.get(instanceName);
 Date refreshDate = mc.getDateCreated();
 mc = mc.filterByUnits(rangeName);
 session.setAttribute("monitorComposite",mc);
@@ -67,6 +67,9 @@ if (mc.isLocalInstance()) {
   enableMonProxy(monProxyAction);
 }
 
+if ("Reset".equals(action)) {
+  jamonData.remove(instanceName);
+}
 
 Map map=new HashMap();
 // used for html page
@@ -407,9 +410,7 @@ private static int getNum(String value, String defaultValue) {
 
 
 private static void executeAction(String action) {
- if ("Reset".equals(action))
-    MonitorFactory.reset();
- else if ("Enable".equals(action)) 
+ if ("Enable".equals(action))
     MonitorFactory.setEnabled(true);
  else if ("Disable".equals(action))  
     MonitorFactory.setEnabled(false);

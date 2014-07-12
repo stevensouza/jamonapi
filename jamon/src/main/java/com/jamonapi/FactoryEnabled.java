@@ -288,29 +288,6 @@ public class FactoryEnabled implements MonitorFactoryInterface {
     }
 
 
-//    private MonitorImp[] getMonitors(String units) {
-//        MonitorImp[] monitors=getMonitors();
-//        if (monitors==null || units==null)
-//            return null;
-//        else if ("AllMonitors".equalsIgnoreCase(units))
-//            return monitors;
-//
-//        List rows=new ArrayList(500);
-//
-//        int size=monitors.length;
-//        for (int i=0;i<size;i++) {
-//            // if units of range match units of this monitor then
-//            if (units.equalsIgnoreCase(monitors[i].getMonKey().getRangeKey()))
-//                rows.add(monitors[i]);
-//        }
-//
-//        if (rows.size()==0)
-//            return null;
-//        else
-//            return (MonitorImp[]) rows.toArray(new MonitorImp[0]);
-//
-//    }
-
     private Collection getAllMonitors() {
         Collection monitors=map.values();
         if (monitors==null || monitors.size()==0)

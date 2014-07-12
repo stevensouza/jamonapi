@@ -10,6 +10,7 @@ import com.jamonapi.MonitorFactory;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**  Class that interacts with HazelCast to save jamon data to it so data from any jvms in the hazelcast cluster
  * can be visible via the jamon web app.  Note in must cases hazelcast exceptions are not bubbled up in this class
@@ -49,7 +50,7 @@ public class DistributedJamonHazelcast implements JamonData {
 
     @Override
     public Set<String> getInstances() {
-        Set<String> allInstances = localJamonData.getInstances();
+        Set<String> allInstances = new TreeSet<String>(localJamonData.getInstances());
         allInstances.addAll(getHazelcastInstances());
         return allInstances;
     }
@@ -77,8 +78,8 @@ public class DistributedJamonHazelcast implements JamonData {
 
 
     @Override
-    public MonitorComposite getMonitors(String key) {
-        MonitorComposite monitorComposite = localJamonData.getMonitors(key);
+    public MonitorComposite get(String key) {
+        MonitorComposite monitorComposite = localJamonData.get(key);
         if (monitorComposite == null) {
             String label = DistributedJamonHazelcast.class.getCanonicalName() + ".get()";
             Monitor mon = MonitorFactory.start(label);
@@ -89,7 +90,7 @@ public class DistributedJamonHazelcast implements JamonData {
                 monitorComposite = jamonDataMap.get(key);
             } catch(Throwable t) {
                 MonitorFactory.addException(mon, t);
-                return localJamonData.getMonitors("local");
+                return localJamonData.get("local");
             } finally {
                 mon.stop();
             }
@@ -98,7 +99,28 @@ public class DistributedJamonHazelcast implements JamonData {
         return monitorComposite;
     }
 
-    private String getInstance() {
+    @Override
+    public void remove(String instanceKey) {
+        if (LocalJamonData.INSTANCE.equalsIgnoreCase(instanceKey)) {
+            localJamonData.remove(instanceKey);
+            return;
+        }
+
+        String label = DistributedJamonHazelcast.class.getCanonicalName() + ".remove()";
+        Monitor mon = MonitorFactory.start(label);
+        try {
+           intitialize();
+           instances.remove(instanceKey);
+           jamonDataMap.remove(instanceKey);
+        } catch(Throwable t) {
+           MonitorFactory.addException(mon, t);
+        } finally {
+           mon.stop();
+        }
+    }
+
+    @Override
+    public String getInstance() {
        try {
            intitialize();
            return hazelCast.getCluster().getLocalMember().toString();
@@ -108,6 +130,7 @@ public class DistributedJamonHazelcast implements JamonData {
 
         return null;
     }
+
 
     public void shutDownHazelCast() {
         try {

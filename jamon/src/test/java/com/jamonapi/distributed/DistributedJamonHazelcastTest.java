@@ -25,7 +25,7 @@ public class DistributedJamonHazelcastTest {
 
 
     @Test
-    public void joinCluster() throws InterruptedException {
+    public void putGetRemove() throws InterruptedException {
             DistributedJamonHazelcast jamonData = new DistributedJamonHazelcast();
             int i=0;
             while (true) {
@@ -41,15 +41,20 @@ public class DistributedJamonHazelcastTest {
                 }
             }
 
+          // rows should be 100 for the loop and 1 for the call to get = 101
+          assertThat(jamonData.get(jamonData.getInstance()).getNumRows()).isEqualTo(101);
+          jamonData.remove(jamonData.getInstance());
+          assertThat(jamonData.get(jamonData.getInstance())).isNull();
           jamonData.shutDownHazelCast();
-        }
+    }
+
 
     /** When hazelcast throws exceptions jamon should still work */
     @Test
     public void testHazelCastExceptions() {
         DistributedJamonHazelcast jamonData = new DistributedJamonHazelcast(null);
         assertThat(jamonData.getInstances()).hasSize(2);
-        MonitorComposite mc = jamonData.getMonitors("NO_EXIST");
+        MonitorComposite mc = jamonData.get("NO_EXIST");
         assertThat(mc.isLocalInstance()).isTrue();
         // no assertion for put, but shouldn't throw exception
         jamonData.put();
