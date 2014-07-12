@@ -54,11 +54,18 @@ query+="&outputTypeValue="+outputType;
 query+="&formatterValue="+java.net.URLEncoder.encode(formatter);
 query+="&ArraySQL="+java.net.URLEncoder.encode(arraySQL);
 query+="&TextSize="+textSize;
-query+="&highlight="+highlightString;   
+query+="&highlight="+highlightString;
 
-
-executeAction(action);
-enableMonProxy(monProxyAction);
+String outputText;
+JamonData jamonData = JamonDataFactory.get();
+MonitorComposite mc =  jamonData.getMonitors(instanceName);
+Date refreshDate = mc.getDateCreated();
+mc = mc.filterByUnits(rangeName);
+session.setAttribute("monitorComposite",mc);
+if (mc.isLocalInstance()) {
+  executeAction(action);
+  enableMonProxy(monProxyAction);
+}
 
 
 Map map=new HashMap();
@@ -72,15 +79,7 @@ map.put("imagesDir","images/");
 map.put("rootElement", "JAMonXML");
 
 
-String outputText;
-JamonData jamonData = JamonDataFactory.get();
-MonitorComposite mc =  jamonData.getMonitors(instanceName);
-Date refreshDate = mc.getDateCreated();
-mc = mc.filterByUnits(rangeName);
-session.setAttribute("monitorComposite",mc);
-
-
-if (!MonitorFactory.isEnabled())
+if (!MonitorFactory.isEnabled() && mc.isLocalInstance())
   outputText="<div align='center'><br><br><b>JAMon is currently disabled.  To enable monitoring you must select 'Enable'</b></div>";
 else if (!mc.hasData())
   outputText="<div align='center'><br><br><b>No data was returned</b></div>";

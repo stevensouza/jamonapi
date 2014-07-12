@@ -4,10 +4,7 @@ import org.junit.Test;
 
 import java.util.Timer;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class DistributedJamonTimerTaskTest {
 
@@ -16,8 +13,13 @@ public class DistributedJamonTimerTaskTest {
     @Test
     public void testTimer() throws InterruptedException {
         DistributedJamonTimerTask task = new DistributedJamonTimerTask(jamonData);
-        task.run();
-        verify(jamonData).put();
+        Timer timer = task.schedule(100);
+        Thread.sleep(1000);
+        // not sure that it would always be exact so giving the amount of times
+        // it is called a range.
+        verify(jamonData, atLeast(8)).put();
+        verify(jamonData, atMost(13)).put();
+        timer.cancel();
     }
 
 

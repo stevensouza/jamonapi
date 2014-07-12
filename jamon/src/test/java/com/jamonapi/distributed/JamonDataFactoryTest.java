@@ -2,7 +2,6 @@ package com.jamonapi.distributed;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class JamonDataFactoryTest {

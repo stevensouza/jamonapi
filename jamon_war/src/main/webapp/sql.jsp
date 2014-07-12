@@ -259,8 +259,7 @@ private static int getNum(String value, String defaultValue) {
 private static ResultSetConverter getResultSetConverter(String[] header, Object[][] data, String arraySQLExec) {      
   ArraySQL asql=new ArraySQL(header, arraySQLExec );       
   ResultSetConverter rsc = new ResultSetConverter(header, asql.execute(data));      
-  //MonitorFactory.add("cellCount","count",rsc.getColumnCount()*rsc.getRowCount());      
-  return rsc; 
+  return rsc;
 }    
 
 private static ArrayConverter getArrayConverter(int textSize, String highlightMe) {    

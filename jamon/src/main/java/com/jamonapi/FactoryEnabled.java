@@ -3,7 +3,10 @@ package com.jamonapi;
 import com.jamonapi.utils.DetailData;
 import com.jamonapi.utils.Misc;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 

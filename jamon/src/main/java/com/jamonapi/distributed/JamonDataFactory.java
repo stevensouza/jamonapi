@@ -1,15 +1,13 @@
 package com.jamonapi.distributed;
 
-import com.jamonapi.utils.Misc;
-
-import java.util.Timer;
-
 /**
+ * Class that instanciates the JamonData class.  Note this could be a local implementation or a distributed jamon intrface
+ * such as HazelCast.
+ *
  * Created by stevesouza on 7/6/14.
  */
 public class JamonDataFactory {
 
-    // CHANGE FROM STATIC !!!!
     private static JamonDataFactory factory = new JamonDataFactory();
 
     private JamonDataFactory() {

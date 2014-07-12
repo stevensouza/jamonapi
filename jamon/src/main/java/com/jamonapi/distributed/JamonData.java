@@ -2,7 +2,6 @@ package com.jamonapi.distributed;
 
 import com.jamonapi.MonitorComposite;
 
-import java.util.Map;
 import java.util.Set;
 
 /**

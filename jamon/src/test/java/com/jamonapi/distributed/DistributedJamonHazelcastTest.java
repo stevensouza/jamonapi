@@ -1,7 +1,5 @@
 package com.jamonapi.distributed;
 
-import com.jamonapi.MonKey;
-import com.jamonapi.MonKeyImp;
 import com.jamonapi.MonitorComposite;
 import com.jamonapi.MonitorFactory;
 import org.junit.After;
@@ -10,7 +8,6 @@ import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.*;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 

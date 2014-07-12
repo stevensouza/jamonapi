@@ -1,15 +1,13 @@
 package com.jamonapi.distributed;
 
-import com.jamonapi.distributed.DistributedJamonTimerTask;
-import com.jamonapi.distributed.JamonData;
-import com.jamonapi.distributed.JamonDataFactory;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.util.Timer;
 
 /**
+ * A timer is executed when the web container starts up.  The timer saves jamon data every N minutes per a config
+ * property in the web.xml file.
+ *
  * Created by stevesouza on 7/6/14.
  */
 public class JamonServletContextListener implements ServletContextListener  {
@@ -22,10 +20,8 @@ public class JamonServletContextListener implements ServletContextListener  {
         ServletContext context = event.getServletContext();
         if (context != null) {
             DistributedJamonTimerTask saveTask = getDistributedJamonTimerTask();
-            Timer timer = new Timer();
             int refreshRate = getRefreshRate(context);
-            // use refreshRate for 1st value:  when to start, and how long to wait until next one.
-            timer.scheduleAtFixedRate(saveTask, refreshRate, refreshRate);
+            saveTask.schedule(refreshRate);
         }
     }
 

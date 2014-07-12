@@ -9,9 +9,6 @@ FormattedDataSet fds=new FormattedDataSet();
 // Assign request parameters to local variables.
 String action    = getValue(request.getParameter("monitormgmt"),"");
 MonitorComposite mc = (MonitorComposite) session.getAttribute("monitorComposite");
-//if (mc==null) {
-//    mc = MonitorFactory.getRootMonitor();
-//}
 MonKey key=null;
 
 int keyNum=0;
