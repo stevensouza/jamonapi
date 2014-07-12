@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 public final class ListenerType implements DetailData, Serializable {
 
-    private static final long serialVersionUID = 4979897325006229408L;
+    private static final long serialVersionUID = 278L;
     private JAMonListener listener;
     // will lock on MonInternal to allow direct access to listener which improves performance.
     // This brought my TestPerformanceClass performance from about 600 ms. to 484 ms.

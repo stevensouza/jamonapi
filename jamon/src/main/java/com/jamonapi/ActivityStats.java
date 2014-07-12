@@ -11,7 +11,7 @@ import java.io.Serializable;
 
 final class ActivityStats implements Serializable {
 
-    private static final long serialVersionUID = 7556315032740339165L;
+    private static final long serialVersionUID = 278L;
 
     final Counter allActive;  // the number of monitors that are now running
     final Counter primaryActive;  // the number of monitors marked primary that are now running

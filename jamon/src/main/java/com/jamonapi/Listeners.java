@@ -19,7 +19,7 @@ final class Listeners implements Serializable {
     static final int MAX_LISTENER_INDEX=1;
     static final int MAXACTIVE_LISTENER_INDEX=2;
     static final int MIN_LISTENER_INDEX=3;
-    private static final long serialVersionUID = 8336728612747684904L;
+    private static final long serialVersionUID = 278L;
     private final ListenerType[] listenerArray=new ListenerType[4];
 
     Listeners(Object lockObj) {

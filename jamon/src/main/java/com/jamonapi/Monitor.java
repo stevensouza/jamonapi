@@ -15,7 +15,7 @@ import java.util.Date;
 // public abstract class Monitor extends BaseStatsImp implements MonitorInt {
 public abstract class Monitor implements MonitorInt, Serializable {
 
-	private static final long serialVersionUID = -1040490585063203451L;
+	private static final long serialVersionUID = 278L;
 	
 	// Internal data passed from monitor to monitor.
     MonInternals monData;

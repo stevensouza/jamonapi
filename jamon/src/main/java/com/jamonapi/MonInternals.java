@@ -14,7 +14,7 @@ import java.io.Serializable;
 
 final class MonInternals implements Serializable {
 
-	private static final long serialVersionUID = -1687353465350155034L;
+	private static final long serialVersionUID = 278L;
 	
 	/** seed value to ensure that the first value always sets the max */
     static final double MAX_DOUBLE = -Double.MAX_VALUE;

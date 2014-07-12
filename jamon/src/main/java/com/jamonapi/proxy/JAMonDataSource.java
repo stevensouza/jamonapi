@@ -34,7 +34,7 @@ public class JAMonDataSource implements DataSource, Referenceable, Serializable 
      * Not necessary to include in first version of the class, but
      * included here as a reminder of its importance.
      */
-    private static final long serialVersionUID = 0xABCDABC1;
+    private static final long serialVersionUID = 278L;
 
     public Connection getConnection() throws SQLException {
         return MonProxyFactory.monitor(realDataSource.getConnection());

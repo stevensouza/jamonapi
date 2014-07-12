@@ -10,7 +10,7 @@ import com.jamonapi.utils.BufferList;
  */
 public class JAMonArrayBufferListener extends JAMonBufferListener {
 
-    private static final long serialVersionUID = -176402447717833956L;
+    private static final long serialVersionUID = 278L;
 
     /**
      * Constructor that creates this object with its default name (the class

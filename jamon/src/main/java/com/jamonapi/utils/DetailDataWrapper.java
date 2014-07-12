@@ -2,7 +2,7 @@ package com.jamonapi.utils;
 
 public class DetailDataWrapper implements DetailData {
 
-    private static final long serialVersionUID = -8091761578448557595L;
+    private static final long serialVersionUID = 278L;
     private String[] header;
     private Object[][] data;
 

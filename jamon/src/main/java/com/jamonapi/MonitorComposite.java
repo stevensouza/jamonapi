@@ -13,7 +13,7 @@ import java.util.*;
  */
 public class MonitorComposite extends Monitor implements DetailData  {
 
-    private static final long serialVersionUID = -3449140252550908942L;
+    private static final long serialVersionUID = 278L;
     private static final String LOCAL="local";
 
     private final Monitor[] monitors;// the monitors in the composite

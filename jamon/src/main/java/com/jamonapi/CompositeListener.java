@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class CompositeListener implements JAMonListener, DetailData {
 
-    private static final long serialVersionUID = -7349122550109217046L;
+    private static final long serialVersionUID = 278L;
 
     // A variable that will hold the list of Listeners
     private List listenerList=new ArrayList(4);

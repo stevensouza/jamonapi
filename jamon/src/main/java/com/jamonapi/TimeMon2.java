@@ -3,7 +3,7 @@ package com.jamonapi;
 
 final class TimeMon2 extends TimeMon {
 
-    private static final long serialVersionUID = -9103685158230737504L;
+    private static final long serialVersionUID = 278L;
 
     public TimeMon2() {
         super(new MonKeyImp("timer","ms."),new MonInternals());

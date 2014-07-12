@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 public class AppBaseException extends java.lang.Exception {
-    private static final long serialVersionUID = -6623525030841072119L;
+    private static final long serialVersionUID = 278L;
     String errorIndicator="";
 
     public AppBaseException() {

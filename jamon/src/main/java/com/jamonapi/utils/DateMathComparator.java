@@ -12,7 +12,7 @@ import java.util.GregorianCalendar;
  * 
  */
 public class DateMathComparator extends JAMonComparator implements Serializable {
-    private static final long serialVersionUID = -3153772066240951517L;
+    private static final long serialVersionUID = 278L;
     private int dateField;
     private int dateToAdd;
 

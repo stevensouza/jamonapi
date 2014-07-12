@@ -14,7 +14,7 @@ import java.util.List;
  * @author steve souza
  */
 public final class JAMonDetailValue implements Serializable, ToArray {
-    private static final long serialVersionUID = 2210164449488502225L;
+    private static final long serialVersionUID = 278L;
     private final MonKey key;
     private final double value; // monitors lastValue
     private final long time;  // invocation time

@@ -16,7 +16,7 @@ import java.util.Comparator;
  */
 
 public class NExtremeArrayBufferHolder extends NExtremeBufferHolder {
-    private static final long serialVersionUID = -3681483160056861747L;
+    private static final long serialVersionUID = 278L;
 
     /** Constructor that takes a JAMonArrayComparator that can be used to determine
      * when values should be removed from  and added to the array.  This can be used to

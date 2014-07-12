@@ -24,7 +24,7 @@ import org.apache.log4j.spi.LoggingEvent;
  * 
  */
 public class Log4jBufferListener extends JAMonBufferListener {
-    private static final long serialVersionUID = 6685195367564737359L;
+    private static final long serialVersionUID = 278L;
     /* looks at data to determine if a key is log4j. if so header used to display details in
          * the JAMonBufferListener.
          */

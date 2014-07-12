@@ -12,7 +12,7 @@ import java.util.List;
 
 abstract class RangeImp implements Range, RowData, JAMonListener {
 
-    private static final long serialVersionUID = 5812704739600758635L;
+    private static final long serialVersionUID = 278L;
     protected FrequencyDistImp[] frequencyDist;
     protected RangeHolder rangeHolder;
     protected boolean isLessThan=false;

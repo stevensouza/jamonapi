@@ -47,7 +47,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Mon extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 278L;
     private static final String DEFAULT_UNITS="ms.";
     private static final String ERROR="Error";
     private static final String OK="OK";

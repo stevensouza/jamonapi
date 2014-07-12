@@ -61,7 +61,7 @@ import java.util.Iterator;
 public class HttpMonFactory implements HttpMonManage, Serializable {
 
     private static final String DEFAULT_SUMMARY="request.getRequestURI().ms as allPages, request.getRequestURI().value.ms as page";
-    private static final long serialVersionUID = -8725828974500201946L;
+    private static final long serialVersionUID = 278L;
 
     private String jamonSummaryLabels="default";// will do the above monitors if the word default is used in this variable.
 

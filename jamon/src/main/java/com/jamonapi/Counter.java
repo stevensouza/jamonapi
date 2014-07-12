@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 final class Counter implements Serializable {
 
-    private static final long serialVersionUID = -5334718713379221206L;
+    private static final long serialVersionUID = 278L;
     private double count;
     private boolean enabled=true;
 

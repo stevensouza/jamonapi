@@ -18,7 +18,7 @@ import java.util.List;
 
 public  class JAMonBufferListener implements JAMonListener, CopyJAMonListener {
 
-    private static final long serialVersionUID = -4896674302117076178L;
+    private static final long serialVersionUID = 278L;
     private BufferList list;
     private String name;
     static final String[] DEFAULT_HEADER=getDefaultHeaderInfo().getHeader();

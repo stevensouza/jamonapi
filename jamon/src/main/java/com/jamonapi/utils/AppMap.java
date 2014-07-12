@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class AppMap extends java.util.HashMap {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 278L;
 
     public AppMap() {
 

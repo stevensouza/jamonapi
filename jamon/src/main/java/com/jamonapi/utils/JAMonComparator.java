@@ -7,7 +7,7 @@ public class JAMonComparator implements Comparator, Serializable {
     private static final int LESSTHAN=-1;
     private static final int EQUALTO=0;
     private static final int GREATERTHAN=1;
-    private static final long serialVersionUID = -3900778549163179687L;
+    private static final long serialVersionUID = 278L;
     private boolean naturalOrder=true;
     private Comparator childComparator=null;// used if JAMonComparator is used as a decorator.
 

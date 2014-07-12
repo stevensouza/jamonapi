@@ -5,7 +5,7 @@ import java.util.Comparator;
 
 /** Maps a Comparator to a column number of an array starting at position 0.  Used by JAMonArrayComparator */
 class ArrayElementComparator implements Comparator, Serializable {
-    private static final long serialVersionUID = -7384609913720773053L;
+    private static final long serialVersionUID = 278L;
     // Used to compare elements of an array that reside within the same column.  The Object[][] array itself
     // will be sorted according to this algorithm.
 

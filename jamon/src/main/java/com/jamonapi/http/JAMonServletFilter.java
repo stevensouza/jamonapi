@@ -23,7 +23,7 @@ import java.io.IOException;
  * }</pre>
  */
 public class JAMonServletFilter extends HttpServlet implements HttpMonManage, Filter {
-    private static final long serialVersionUID = 27L;
+    private static final long serialVersionUID = 278L;
 
     private static final String PREFIX="com.jamonapi.http.JAMonServletFilter";
     private HttpMonFactory httpMonFactory=new HttpMonFactory(PREFIX);

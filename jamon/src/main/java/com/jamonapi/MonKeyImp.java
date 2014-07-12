@@ -26,7 +26,7 @@ import java.util.List;
 
 public class MonKeyImp implements MonKey {
 
-    private static final long serialVersionUID = -1919161014622719041L;
+    private static final long serialVersionUID = 278L;
     private final String summaryLabel; // pageHits for example.  A relatively unique key value to be used in a hash map
     private Object details; // The actual page name for the detail buffer.  pageHits for example
     private final String units; // ms. for example
