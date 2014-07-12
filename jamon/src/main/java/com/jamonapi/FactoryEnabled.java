@@ -137,8 +137,9 @@ public class FactoryEnabled implements MonitorFactoryInterface {
           MonKey key = mon.getMonKey();
           key.setDetails(stackTtrace);
       }
-      MonitorFactory.add(new MonKeyImp(throwable.getClass().getName(), stackTtrace, "Exception"), 1);
-      return MonitorFactory.add(new MonKeyImp(MonitorFactory.EXCEPTIONS_LABEL, stackTtrace, "Exception"), 1);
+
+      MonitorFactory.add(new MonKeyImp(MonitorFactory.EXCEPTIONS_LABEL, stackTtrace, "Exception"), 1);
+      return MonitorFactory.add(new MonKeyImp(throwable.getClass().getName(), stackTtrace, "Exception"), 1);
     }
 
     @Override

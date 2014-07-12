@@ -457,7 +457,7 @@ public class MonitorFactory {
      * @param throwable exception that we want to create a monitor for
      * @return Returns only the monitor associated with the specific exception even though 2 monitors are created.
      */
-    public Monitor addException(Monitor mon, Throwable throwable) {
+    public static Monitor addException(Monitor mon, Throwable throwable) {
         return factory.addException(mon, throwable);
     }
 

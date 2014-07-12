@@ -453,6 +453,43 @@ public class MonitorFactoryTest {
         assertMaxActiveListenerValues(mon);
     }
 
+    @Test
+    public void testTrackExceptionWithoutMon() {
+        Monitor mon = MonitorFactory.addException(new RuntimeException("my exception"));
+        assertThat(mon.getHits()).isEqualTo(1);
+        assertThat(mon.getMonKey().getLabel()).isEqualTo("java.lang.RuntimeException");
+        assertThat(mon.getMonKey().getDetails().toString()).contains("java.lang.RuntimeException");
+
+        mon = MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception");
+        assertThat(mon.getHits()).isEqualTo(1);
+        assertThat(mon.getMonKey().getLabel()).isEqualTo(MonitorFactory.EXCEPTIONS_LABEL);
+        assertThat(mon.getMonKey().getDetails().toString()).contains(MonitorFactory.EXCEPTIONS_LABEL);
+    }
+
+    @Test
+    public void testTrackExceptionWithMon() {
+        Monitor mon1 = MonitorFactory.start("anytimer").stop();
+        Monitor mon =  MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception");
+        // so we can see exception in general exception Monitor
+        mon.addListener("value", JAMonListenerFactory.get("FIFOBuffer"));
+        mon = MonitorFactory.addException(mon1, new RuntimeException("my exception"));
+
+        // ensure specific exception monitor is created and stacktrace is in details
+        assertThat(mon.getHits()).isEqualTo(1);
+        assertThat(mon.getMonKey().getLabel()).isEqualTo("java.lang.RuntimeException");
+        assertThat(mon.getMonKey().getDetails().toString()).contains("java.lang.RuntimeException");
+
+        // ensure general exception monitor is created and stacktrace is in details
+        mon = MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception");
+        assertThat(mon.getHits()).isEqualTo(1);
+        assertThat(mon.getMonKey().getLabel()).isEqualTo(MonitorFactory.EXCEPTIONS_LABEL);
+        JAMonBufferListener bufferListener = (JAMonBufferListener) mon.getListenerType("value").getListener("FIFOBuffer");
+        assertThat(bufferListener.getBufferList().getRowCount()).isEqualTo(1);
+
+        // ensure the timer monitor also has the stack trace in its details
+        assertThat(mon1.getMonKey().getDetails().toString()).contains("java.lang.RuntimeException");
+    }
+
     private void assertValueListenerIsNonDecreasing(Monitor mon) {
         Double previous=-1000.0;
         // value listener should be nondecreasing.
