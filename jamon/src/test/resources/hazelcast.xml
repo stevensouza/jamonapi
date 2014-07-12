@@ -33,12 +33,16 @@
             <ports>0</ports>
         </outbound-ports>
         <join>
-            <multicast enabled="true">
+            <multicast enabled="false">
                 <multicast-group>224.2.2.3</multicast-group>
                 <multicast-port>54327</multicast-port>
             </multicast>
-            <tcp-ip enabled="false">
-                <interface>127.0.0.1</interface>
+            <tcp-ip enabled="true">
+                <!--  <interface>127.0.0.1</interface> -->
+                <!-- my mac -->
+                <interface>macintosh-c8bcc88febc6.local</interface>
+                <!-- vagrant dev1 virtual host -->
+                <interface>192.168.33.10</interface>
             </tcp-ip>
             <aws enabled="false">
                 <access-key>my-access-key</access-key>
