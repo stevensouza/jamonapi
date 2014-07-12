@@ -14,7 +14,7 @@
 
     <listener>
         <listener-class>
-            com.jamonapi.http.JamonServletContextListener
+            com.jamonapi.distributed.JamonServletContextListener
         </listener-class>
     </listener>
 
