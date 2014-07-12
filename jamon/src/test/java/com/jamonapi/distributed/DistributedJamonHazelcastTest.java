@@ -40,6 +40,8 @@ public class DistributedJamonHazelcastTest {
                     break;
                 }
             }
+
+          jamonData.shutDownHazelCast();
         }
 
     /** When hazelcast throws exceptions jamon should still work */
