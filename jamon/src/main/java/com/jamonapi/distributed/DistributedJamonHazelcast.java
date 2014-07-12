@@ -12,7 +12,10 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.TimeUnit;
 
-/**
+/**  Class that interacts with HazelCast to save jamon data to it so data from any jvms in the hazelcast cluster
+ * can be visible via the jamon web app.  Note in must cases hazelcast exceptions are not bubbled up in this class
+ * as I would still like jamon to be availalbe even if HazelCast has issues.  The exceptions and stack traces can be
+ * seen in jamon however.
  * Created by stevesouza on 7/6/14.
  */
 
@@ -53,14 +56,11 @@ import java.util.concurrent.TimeUnit;
 //        190:     </tr>
 //        191:     <tr class="even">
 //        192:     <th><%=fds.getDropDownListBox(instanceNameHeader, getInstanceData(jamonData.getInstances()), instanceName)%></th>
-// 3) tomcat error
-    // 4) http://hazelcast.org/get-involved/
-    // 5) move startup of hazelcast to first put or get
-    //  6) ticket on web console
-    // 7) i hazelcast is not available don't have jamon fail
-    // 8) do a cluster with 2 nodes test.
-    // 9) test on vagrant
-    // get rid of misc.delme(mc)
+// x 3) tomcat error
+    // x 5) move startup of hazelcast to first put or get
+    // x 7) i hazelcast is not available don't have jamon fail
+    // x 8) do a cluster with 2 nodes test.
+    // x 9) test on vagrant
     // 10) change serialid to versoin number 278
     // documentation
     // properties http://www.mkyong.com/java/java-properties-file-examples/
@@ -70,6 +70,14 @@ import java.util.concurrent.TimeUnit;
     // or can you set a system property.  do test program...
 
 /*
+
+    //   MonitorComposite composite =  driver.getMonitors(nodeName);
+//                    System.out.println("****distributed mapsize: " + driver.getMap().size() + ", MonitorComposite rows: " + composite.getNumRows());
+//                    System.out.println("**** cluster members: " + driver.hazelCast.getCluster().getMembers());
+//                    System.out.println("****"+driver.hazelCast.getCluster().getLocalMember().toString());
+//                    System.out.println("****"+driver.hazelCast.getName());
+//                    System.out.println(driver.jamonDataMap.getLocalMapStats());
+
 14-07-09 23:59:47.932:WARN:oejs.ServletHandler:qtp957394696-17:
         org.apache.jasper.JasperException: An exception occurred processing JSP page /jamonadmin.jsp at line 78||75: String outputText;|76: JamonData jamonData = JamonDataFactory.get();|77: MonitorComposite mc =  jamonData.getMonitors(instanceName);|78: Date refreshDate = mc.getDateCreated();|79: mc = mc.filterByUnits(rangeName);|80: session.setAttribute("monitorComposite",mc);|81: |||Stacktrace:
         at org.apache.jasper.servlet.JspServletWrapper.handleJspException(JspServletWrapper.java:568)
@@ -159,13 +167,11 @@ public class DistributedJamonHazelcast implements JamonData {
     private LocalJamonData localJamonData = new LocalJamonData();
 
     public DistributedJamonHazelcast() {
-        this(Hazelcast.newHazelcastInstance());
+        hazelCast = Hazelcast.newHazelcastInstance();
     }
 
     public DistributedJamonHazelcast(HazelcastInstance hazelCast) {
         this.hazelCast = hazelCast;
-        jamonDataMap = hazelCast.getMap(MonitorComposite.class.getCanonicalName());
-        instances = hazelCast.getMap("com.jamonapi.instances");
     }
 
     @Override
@@ -184,23 +190,18 @@ public class DistributedJamonHazelcast implements JamonData {
         if (mon.getActive() < 1) {
             mon.start();
             try {
+                intitialize();
                 String key = getInstance();
                 jamonDataMap.set(key, MonitorFactory.getRootMonitor().setInstanceName(key));
                 instances.set(key, new Date());
             } catch(Throwable t) {
-                setException(mon, t);
+                MonitorFactory.addException(mon, t);
             } finally {
                 mon.stop();
             }
         }
     }
 
-    private void setException(Monitor mon, Throwable throwable) {
-        MonKey key = mon.getMonKey();
-        String stackTtrace = Misc.getExceptionTrace(throwable);
-        key.setDetails(stackTtrace);
-        MonitorFactory.add(new MonKeyImp(MonitorFactory.EXCEPTIONS_LABEL, stackTtrace, "Exception"), 1);
-    }
 
     @Override
     public MonitorComposite getMonitors(String key) {
@@ -209,9 +210,13 @@ public class DistributedJamonHazelcast implements JamonData {
             String label = DistributedJamonHazelcast.class.getCanonicalName() + ".get()";
             Monitor mon = MonitorFactory.start(label);
             try {
-                // done purely to ensure instance and data live the same ammount of time.
+                intitialize();
+                // done purely to ensure instance and data live the same amount of time.
                 instances.get(key);
                 monitorComposite = jamonDataMap.get(key);
+            } catch(Throwable t) {
+                MonitorFactory.addException(mon, t);
+                return localJamonData.getMonitors("local");
             } finally {
                 mon.stop();
             }
@@ -221,21 +226,42 @@ public class DistributedJamonHazelcast implements JamonData {
     }
 
     private String getInstance() {
-        return hazelCast.getCluster().getLocalMember().toString();
+       try {
+           intitialize();
+           return hazelCast.getCluster().getLocalMember().toString();
+       } catch (Throwable t) {
+          MonitorFactory.addException(t);
+       }
+
+        return null;
     }
 
     public void shutDownHazelCast() {
-        hazelCast.shutdown();
+        try {
+            intitialize();
+            hazelCast.shutdown();
+        } catch (Throwable t) {
+            MonitorFactory.addException(t);
+        }
     }
 
     // I don't ever want to not display data when there is a hazelcast error.
     private Set<String> getHazelcastInstances() {
         try {
+            intitialize();
             return instances.keySet();
         } catch (Throwable e) {
+            MonitorFactory.addException(e);
             Set<String> error=new HashSet<String>();
-            error.add("HazelcastDataUnavailable");
+            error.add("HazelcastExceptionThrown");
             return error;
+        }
+    }
+
+    private void intitialize() {
+        if (jamonDataMap == null) {
+            jamonDataMap = hazelCast.getMap(MonitorComposite.class.getCanonicalName());
+            instances = hazelCast.getMap("com.jamonapi.instances");
         }
     }
 

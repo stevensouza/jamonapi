@@ -1,5 +1,7 @@
 package com.jamonapi.distributed;
 
+import com.jamonapi.MonKey;
+import com.jamonapi.MonKeyImp;
 import com.jamonapi.MonitorComposite;
 import com.jamonapi.MonitorFactory;
 import org.junit.After;
@@ -9,12 +11,14 @@ import org.junit.Test;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
+import static org.fest.assertions.api.Assertions.assertThat;
+
 
 public class DistributedJamonHazelcastTest {
 
     @Before
     public void setUp() throws Exception {
-
+        MonitorFactory.reset();
     }
 
     @After
@@ -22,12 +26,6 @@ public class DistributedJamonHazelcastTest {
 
     }
 
-    //   MonitorComposite composite =  driver.getMonitors(nodeName);
-//                    System.out.println("****distributed mapsize: " + driver.getMap().size() + ", MonitorComposite rows: " + composite.getNumRows());
-//                    System.out.println("**** cluster members: " + driver.hazelCast.getCluster().getMembers());
-//                    System.out.println("****"+driver.hazelCast.getCluster().getLocalMember().toString());
-//                    System.out.println("****"+driver.hazelCast.getName());
-//                    System.out.println(driver.jamonDataMap.getLocalMapStats());
 
     @Test
     public void joinCluster() throws InterruptedException {
@@ -45,7 +43,17 @@ public class DistributedJamonHazelcastTest {
                     break;
                 }
             }
-
         }
+
+    /** When hazelcast throws exceptions jamon should still work */
+    @Test
+    public void testHazelCastExceptions() {
+        DistributedJamonHazelcast jamonData = new DistributedJamonHazelcast(null);
+        assertThat(jamonData.getInstances()).hasSize(2);
+        MonitorComposite mc = jamonData.getMonitors("NO_EXIST");
+        assertThat(mc.isLocalInstance()).isTrue();
+        // no assertion for put, but shouldn't throw exception
+        jamonData.put();
+    }
 
 }

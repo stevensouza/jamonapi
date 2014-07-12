@@ -21,7 +21,7 @@ public class LocalJamonData implements JamonData {
 
     @Override
     public Set<String> getInstances() {
-        return instances.keySet();
+        return new HashSet<String>(instances.keySet());
     }
 
     /**
