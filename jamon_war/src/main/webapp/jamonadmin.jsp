@@ -57,8 +57,8 @@ query+="&TextSize="+textSize;
 query+="&highlight="+highlightString;
 
 String outputText;
-JamonData jamonData = JamonDataFactory.get();
-MonitorComposite mc =  jamonData.get(instanceName);
+JamonData jamonDataPersister = JamonDataPersisterFactory.get();
+MonitorComposite mc =  jamonDataPersister.get(instanceName);
 Date refreshDate = mc.getDateCreated();
 mc = mc.filterByUnits(rangeName);
 session.setAttribute("monitorComposite",mc);
@@ -68,7 +68,7 @@ if (mc.isLocalInstance()) {
 }
 
 if ("Reset".equals(action)) {
-  jamonData.remove(instanceName);
+  jamonDataPersister.remove(instanceName);
 }
 
 Map map=new HashMap();
@@ -191,7 +191,7 @@ function helpWin() {
     <th align="right"><a href="javascript:helpWin();" style="color:#C5D4E4;">Help</a></th>
     </tr>
     <tr class="even">
-    <th><%=fds.getDropDownListBox(instanceNameHeader, getInstanceData(jamonData.getInstances()), instanceName)%></th>
+    <th><%=fds.getDropDownListBox(instanceNameHeader, getInstanceData(jamonDataPersister.getInstances()), instanceName)%></th>
     <th><%=fds.getDropDownListBox(actionHeader, actionBody, "")%></th>
     <th><%=fds.getDropDownListBox(monProxyHeader, getMonProxyBody() , "")%></th>
     <th><%=fds.getDropDownListBox(outputTypeHeader, outputTypeBody, outputType)%></th>

@@ -4,17 +4,17 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Task that starts a thread that will call the JamonData put method on a timer.  The put method persists jamon data
+ * Task that starts a thread that will call the JamonDataPersister put method on a timer.  The put method persists jamon data
  * (MonitorComposite which is serializable).  The JamonServletContextListener automatically starts this thread for
  * web applications.
  *
  * Created by stevesouza on 7/7/14.
  */
 public class DistributedJamonTimerTask extends TimerTask {
-    private final JamonData jamonData;
+    private final JamonDataPersister jamonDataPersister;
 
-    public DistributedJamonTimerTask(JamonData jamonData) {
-        this.jamonData = jamonData;
+    public DistributedJamonTimerTask(JamonDataPersister jamonDataPersister) {
+        this.jamonDataPersister = jamonDataPersister;
     }
 
     /** This method saves the jamon data.  Save is used loosely.  It can do anything it wants.  For example the
@@ -24,7 +24,7 @@ public class DistributedJamonTimerTask extends TimerTask {
      */
     @Override
     public void run() {
-        jamonData.put();
+        jamonDataPersister.put();
     }
 
     /** Start thread that will save jamon data (MonitorComposite).

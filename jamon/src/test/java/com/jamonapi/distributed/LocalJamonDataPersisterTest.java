@@ -8,12 +8,12 @@ import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-public class LocalJamonDataTest {
+public class LocalJamonDataPersisterTest {
 
-    private LocalJamonData localJamonData;
+    private LocalJamonDataPersister localJamonData;
     @Before
     public void setUp() {
-        localJamonData = new LocalJamonData();
+        localJamonData = new LocalJamonDataPersister();
         MonitorFactory.start("mytestmonitor").stop();
     }
 
@@ -31,19 +31,19 @@ public class LocalJamonDataTest {
     @Test
     public void testPut() throws Exception {
         localJamonData.put();
-        assertThat(localJamonData.get(LocalJamonData.INSTANCE).getNumRows()).isEqualTo(1);
+        assertThat(localJamonData.get(LocalJamonDataPersister.INSTANCE).getNumRows()).isEqualTo(1);
         assertThat(localJamonData.getInstances().size()).isEqualTo(1);
     }
 
     @Test
     public void testGet() throws Exception {
-        MonitorComposite monitorComposite = localJamonData.get(LocalJamonData.INSTANCE);
+        MonitorComposite monitorComposite = localJamonData.get(LocalJamonDataPersister.INSTANCE);
         assertThat(monitorComposite.getReport()).isEqualTo(MonitorFactory.getRootMonitor().getReport());
     }
 
     @Test
     public void testGetEmpty() throws Exception {
-        MonitorComposite monitorComposite = localJamonData.get(LocalJamonData.INSTANCE);
+        MonitorComposite monitorComposite = localJamonData.get(LocalJamonDataPersister.INSTANCE);
         assertThat(monitorComposite.getReport()).isEqualTo(MonitorFactory.getRootMonitor().getReport());
     }
 
@@ -55,8 +55,8 @@ public class LocalJamonDataTest {
 
     @Test
     public void testRemove() throws Exception {
-        localJamonData.remove(LocalJamonData.INSTANCE);
-        MonitorComposite monitorComposite = localJamonData.get(LocalJamonData.INSTANCE);
+        localJamonData.remove(LocalJamonDataPersister.INSTANCE);
+        MonitorComposite monitorComposite = localJamonData.get(LocalJamonDataPersister.INSTANCE);
         assertThat(monitorComposite.getMonitors()).isNull();
     }
 }

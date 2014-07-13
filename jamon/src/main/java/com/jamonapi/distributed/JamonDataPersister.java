@@ -10,7 +10,7 @@ import java.util.Set;
  * (for example: hostname:9809 or 111.222.333.4444:9878).  Because each host can have multiple instance names so make
  * sure each jvm is unique.  The value should be JAMon MonitorComposite data (i.e. MonitorFactory.getRootMoitor())
  */
-public interface JamonData {
+public interface JamonDataPersister {
 
     /**
      *

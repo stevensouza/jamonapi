@@ -29,8 +29,8 @@ public class JamonServletContextListener implements ServletContextListener  {
         return new DistributedJamonTimerTask(getJamonData());
     }
 
-    JamonData getJamonData() {
-        return JamonDataFactory.get();
+    JamonDataPersister getJamonData() {
+        return JamonDataPersisterFactory.get();
     }
 
 

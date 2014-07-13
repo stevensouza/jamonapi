@@ -9,11 +9,11 @@ import java.util.*;
  * Class that returns the static jamon data for the jvm as returned by MonitorFactory.getRootMonitor()
  *
  */
-public class LocalJamonData implements JamonData {
+public class LocalJamonDataPersister implements JamonDataPersister {
     public static final String INSTANCE = "local";
     private final Map<String, Date> instances;
 
-    public LocalJamonData() {
+    public LocalJamonDataPersister() {
         instances = new HashMap<String, Date>();
         instances.put(INSTANCE, new Date());
     }

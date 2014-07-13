@@ -19,8 +19,8 @@ import java.util.TreeSet;
  * Created by stevesouza on 7/6/14.
  */
 
-    // try jdk 1.6
-    //  also make sure jamon.jar works in jdk.  not sure if being generated for it or not
+    //x try jdk 1.6
+    // x also make sure jamon.jar works in jdk.  not sure if being generated for it or not
 
     // documentation
     // properties http://www.mkyong.com/java/java-properties-file-examples/
@@ -28,23 +28,25 @@ import java.util.TreeSet;
     //         System.out.println("  -Dparser.library=datapipeline (possible values: datapipeline or supercsv. datapipeline is the default)");
 // config file better.
     // or can you set a system property.  do test program...
-    // thread name shows up in visualvm
+    // x thread name shows up in visualvm
     // test without hazelcast i.e. normal version.
+    // test new remove method
+    //
 
-public class DistributedJamonHazelcast implements JamonData {
+public class DistributedJamonHazelcastPersister implements JamonDataPersister {
 
     // could be Map if we don't want the instance methods of hazelcast
     private IMap<String, MonitorComposite> jamonDataMap;
     // This should really be an ISet, but ISet doesn't support time-to-live methods
     private IMap<String, Date> instances;
     private HazelcastInstance hazelCast;
-    private LocalJamonData localJamonData = new LocalJamonData();
+    private LocalJamonDataPersister localJamonData = new LocalJamonDataPersister();
 
-    public DistributedJamonHazelcast() {
+    public DistributedJamonHazelcastPersister() {
         hazelCast = Hazelcast.newHazelcastInstance();
     }
 
-    public DistributedJamonHazelcast(HazelcastInstance hazelCast) {
+    public DistributedJamonHazelcastPersister(HazelcastInstance hazelCast) {
         this.hazelCast = hazelCast;
     }
 
@@ -58,7 +60,7 @@ public class DistributedJamonHazelcast implements JamonData {
     @Override
     /** Put jamon data into the hazelcast map */
     public void put() {
-        String label = DistributedJamonHazelcast.class.getCanonicalName()+".put()";
+        String label = DistributedJamonHazelcastPersister.class.getCanonicalName()+".put()";
         Monitor mon = MonitorFactory.getTimeMonitor(label);
         // only allow 1 process to put at the sametime.
         if (mon.getActive() < 1) {
@@ -81,7 +83,7 @@ public class DistributedJamonHazelcast implements JamonData {
     public MonitorComposite get(String key) {
         MonitorComposite monitorComposite = localJamonData.get(key);
         if (monitorComposite == null) {
-            String label = DistributedJamonHazelcast.class.getCanonicalName() + ".get()";
+            String label = DistributedJamonHazelcastPersister.class.getCanonicalName() + ".get()";
             Monitor mon = MonitorFactory.start(label);
             try {
                 intitialize();
@@ -101,12 +103,12 @@ public class DistributedJamonHazelcast implements JamonData {
 
     @Override
     public void remove(String instanceKey) {
-        if (LocalJamonData.INSTANCE.equalsIgnoreCase(instanceKey)) {
+        if (LocalJamonDataPersister.INSTANCE.equalsIgnoreCase(instanceKey)) {
             localJamonData.remove(instanceKey);
             return;
         }
 
-        String label = DistributedJamonHazelcast.class.getCanonicalName() + ".remove()";
+        String label = DistributedJamonHazelcastPersister.class.getCanonicalName() + ".remove()";
         Monitor mon = MonitorFactory.start(label);
         try {
            intitialize();
