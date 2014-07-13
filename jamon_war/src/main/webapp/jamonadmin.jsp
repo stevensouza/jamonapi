@@ -57,19 +57,23 @@ query+="&TextSize="+textSize;
 query+="&highlight="+highlightString;
 
 String outputText;
-JamonData jamonDataPersister = JamonDataPersisterFactory.get();
-MonitorComposite mc =  jamonDataPersister.get(instanceName);
-Date refreshDate = mc.getDateCreated();
-mc = mc.filterByUnits(rangeName);
-session.setAttribute("monitorComposite",mc);
-if (mc.isLocalInstance()) {
+
+if ("local".equalsIgnoreCase(instanceName)) {
   executeAction(action);
   enableMonProxy(monProxyAction);
 }
 
+JamonDataPersister jamonDataPersister = JamonDataPersisterFactory.get();
+
 if ("Reset".equals(action)) {
   jamonDataPersister.remove(instanceName);
+  instanceName = "local";
 }
+
+MonitorComposite mc =  jamonDataPersister.get(instanceName);
+Date refreshDate = mc.getDateCreated();
+mc = mc.filterByUnits(rangeName);
+session.setAttribute("monitorComposite",mc);
 
 Map map=new HashMap();
 // used for html page
@@ -220,6 +224,10 @@ function helpWin() {
 <br>
 <div align="center">
     Data Refreshed for '<%= mc.getInstanceName() %>' on: <%= refreshDate %>
+    <br>
+    JAMon configuration properties: <%= JamonDataPersisterFactory.getJamonProperties() %>
+    <br>
+    JamonDataPersister being used: <%= JamonDataPersisterFactory.get().getClass().getCanonicalName()  %>
 </div>
 
 

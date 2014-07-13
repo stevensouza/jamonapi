@@ -186,6 +186,10 @@ Monitor: <%=mon%>
 <br>
 <div align="center">
     Data Refreshed for '<%= mc.getInstanceName() %>' on: <%= mc.getDateCreated() %>
+    <br>
+    JAMon configuration properties: <%= JamonDataPersisterFactory.getJamonProperties() %>
+    <br>
+    JamonDataPersister being used: <%= JamonDataPersisterFactory.get().getClass().getCanonicalName()  %>
 </div>
 <br>
 

@@ -13,14 +13,15 @@ import java.util.Properties;
 public class JamonDataPersisterFactory {
 
     private static JamonDataPersisterFactory factory = new JamonDataPersisterFactory();
+    private JamonDataPersister jamonDataPersister;
     private String jamonDataPersisterName;
+    private Properties jamonProperties;
 
     private JamonDataPersisterFactory() {
-        Properties properties = new JamonPropertiesLoader().getJamonProperties();
-        jamonDataPersisterName = properties.getProperty("jamonDataPersister");
+        jamonProperties = new JamonPropertiesLoader().getJamonProperties();
+        jamonDataPersisterName = jamonProperties.getProperty("jamonDataPersister");
     }
 
-    private JamonDataPersister jamonDataPersister;
     public static JamonDataPersister get() {
         if (factory.jamonDataPersister ==null) {
             factory.initialize();
@@ -28,6 +29,9 @@ public class JamonDataPersisterFactory {
          return factory.jamonDataPersister;
     }
 
+    public static Properties getJamonProperties() {
+        return factory.jamonProperties;
+    }
 
     private void initialize() {
         jamonDataPersister =  create(jamonDataPersisterName);
@@ -43,4 +47,6 @@ public class JamonDataPersisterFactory {
         }
         return null;
     }
+
+
 }

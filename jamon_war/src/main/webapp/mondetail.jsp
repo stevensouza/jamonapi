@@ -227,6 +227,10 @@ function helpWin() {
 <br><br>
 <div align="center">
     Data Refreshed for '<%= mc.getInstanceName() %>' on: <%= mc.getDateCreated() %>
+    <br>
+    JAMon configuration properties: <%= JamonDataPersisterFactory.getJamonProperties() %>
+    <br>
+    JamonDataPersister being used: <%= JamonDataPersisterFactory.get().getClass().getCanonicalName()  %>
 </div>
 <br>
 <td><table border='0' align='center' width='25%'>
