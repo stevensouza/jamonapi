@@ -1,5 +1,9 @@
 package com.jamonapi.distributed;
 
+import com.jamonapi.JamonPropertiesLoader;
+
+import java.util.Properties;
+
 /**
  * Class that instanciates the JamonDataPersister class.  Note this could be a local implementation or a distributed jamon intrface
  * such as HazelCast.
@@ -9,9 +13,13 @@ package com.jamonapi.distributed;
 public class JamonDataPersisterFactory {
 
     private static JamonDataPersisterFactory factory = new JamonDataPersisterFactory();
+    private String jamonDataPersisterName;
 
     private JamonDataPersisterFactory() {
+        Properties properties = new JamonPropertiesLoader().getJamonProperties();
+        jamonDataPersisterName = properties.getProperty("jamonDataPersister");
     }
+
     private JamonDataPersister jamonDataPersister;
     public static JamonDataPersister get() {
         if (factory.jamonDataPersister ==null) {
@@ -22,7 +30,7 @@ public class JamonDataPersisterFactory {
 
 
     private void initialize() {
-        jamonDataPersister =  create("com.jamonapi.distributed.DistributedJamonHazelcastPersister");
+        jamonDataPersister =  create(jamonDataPersisterName);
         if (jamonDataPersister ==null) {
            jamonDataPersister = new LocalJamonDataPersister();
         }

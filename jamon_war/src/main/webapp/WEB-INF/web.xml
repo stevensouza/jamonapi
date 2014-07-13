@@ -6,12 +6,6 @@
 
 <web-app>
 
-
-    <context-param>
-        <param-name>distributedDataRefreshRateInMinutes</param-name>
-        <param-value>5</param-value>
-    </context-param>
-
     <listener>
         <listener-class>
             com.jamonapi.distributed.JamonServletContextListener

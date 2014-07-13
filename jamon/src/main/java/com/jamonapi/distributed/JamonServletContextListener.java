@@ -1,8 +1,11 @@
 package com.jamonapi.distributed;
 
+import com.jamonapi.JamonPropertiesLoader;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.util.Properties;
 
 /**
  * A timer is executed when the web container starts up.  The timer saves jamon data every N minutes per a config
@@ -20,7 +23,7 @@ public class JamonServletContextListener implements ServletContextListener  {
         ServletContext context = event.getServletContext();
         if (context != null) {
             DistributedJamonTimerTask saveTask = getDistributedJamonTimerTask();
-            int refreshRate = getRefreshRate(context);
+            int refreshRate = getRefreshRate();
             saveTask.schedule(refreshRate);
         }
     }
@@ -34,8 +37,9 @@ public class JamonServletContextListener implements ServletContextListener  {
     }
 
 
-    int getRefreshRate(ServletContext context) {
-        return MINUTES * Integer.valueOf(context.getInitParameter("distributedDataRefreshRateInMinutes"));
+    int getRefreshRate() {
+        Properties properties = new JamonPropertiesLoader().getJamonProperties();
+        return MINUTES * Integer.valueOf(properties.getProperty("distributedDataRefreshRateInMinutes"));
     }
 
     @Override

@@ -19,14 +19,8 @@ import java.util.TreeSet;
  * Created by stevesouza on 7/6/14.
  */
 
-    //x try jdk 1.6
-    // x also make sure jamon.jar works in jdk.  not sure if being generated for it or not
-
     // documentation
-    // properties http://www.mkyong.com/java/java-properties-file-examples/
-// String library = System.getProperty("parser.library", "datapipeline");
-    //         System.out.println("  -Dparser.library=datapipeline (possible values: datapipeline or supercsv. datapipeline is the default)");
-// config file better.
+
     // or can you set a system property.  do test program...
     // x thread name shows up in visualvm
     // test without hazelcast i.e. normal version.
