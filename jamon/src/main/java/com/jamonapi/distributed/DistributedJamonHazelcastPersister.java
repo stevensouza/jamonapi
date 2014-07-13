@@ -20,11 +20,6 @@ import java.util.TreeSet;
  * Created by stevesouza on 7/6/14.
  */
 
-    // documentation
-    // video
-    // test without hazelcast i.e. normal version.
-    // actual persist class at bottom of pages
-
 public class DistributedJamonHazelcastPersister implements JamonDataPersister {
 
     // could be Map if we don't want the instance methods of hazelcast
