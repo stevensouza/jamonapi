@@ -16,12 +16,18 @@ public class DistributedJamonTimerTask extends TimerTask {
     public DistributedJamonTimerTask(JamonData jamonData) {
         this.jamonData = jamonData;
     }
+
+    /** This method saves the jamon data.  Save is used loosely.  It can do anything it wants.  For example the
+     * HazelCast implementation sends the data to the HazelCast cluster, but it is not saved to disk.  Other
+     * implementations could save to other clustered environments such as Reddis, or Hadoop.  The data saved
+     * could replace previously saved data or make additional copies (for example append)
+     */
     @Override
     public void run() {
         jamonData.put();
     }
 
-    /** Start thread that will save jamon data (MonitorComposite). 
+    /** Start thread that will save jamon data (MonitorComposite).
      *
      * @param refreshRateInMs frequency save should be executed.
      * @return The scheduled timer.
