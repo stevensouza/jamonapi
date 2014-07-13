@@ -18,7 +18,7 @@ public class DistributedJamonTimerTask extends TimerTask {
     }
 
     public Timer schedule(int refreshRateInMs) {
-        Timer timer = new Timer(DistributedJamonTimerTask.class.getSimpleName());
+        Timer timer = new Timer(DistributedJamonTimerTask.class.getSimpleName()+"-saveJamonData");
         // use refreshRate for 1st value:  when to start, and how long to wait until next one.
         timer.scheduleAtFixedRate(this, refreshRateInMs, refreshRateInMs);
         return timer;
