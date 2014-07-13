@@ -2,6 +2,7 @@ package com.jamonapi;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -37,6 +38,10 @@ public class JamonPropertiesLoader {
         Properties jamonProps = new Properties(defaults);
         jamonProps.putAll(userProvided);
         return jamonProps;
+    }
+
+    public URL getPropertiesDirectory() {
+        return getClass().getClassLoader().getResource(".");
     }
 
     private  Properties propertyLoader(String fileName)  {
