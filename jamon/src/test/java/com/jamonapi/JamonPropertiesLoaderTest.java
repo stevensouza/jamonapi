@@ -26,4 +26,11 @@ public class JamonPropertiesLoaderTest {
         assertThat(props.getProperty("distributedDataRefreshRateInMinutes")).isEqualTo("2");
         assertThat(props.getProperty("jamonDataPersister")).isEqualTo("com.jamonapi.distributed.DistributedJamonHazelcastPersister2");
     }
+
+
+    @Test
+    public void configDirectory() {
+        JamonPropertiesLoader loader = new JamonPropertiesLoader("jamonapi2.properties");
+        assertThat(loader.getPropertiesDirectory().toString()).contains("file:/");
+    }
 }
