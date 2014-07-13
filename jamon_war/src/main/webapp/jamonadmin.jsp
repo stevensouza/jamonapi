@@ -200,7 +200,7 @@ function helpWin() {
     <th><%=fds.getDropDownListBox(formatHeader, formatBody, formatter)%></th>
     <th><input type='text' name='ArraySQL' value="<%=arraySQL%>" size="45"></th>
     <th><input type='text' name='highlight' value="<%=highlightString%>" size="20"></th>     
-    <th><input type='text' name='TextSize' value="<%=(textSize<=0) ? "" : ""+textSize%>" size="15"></th>
+    <th><input type='text' name='TextSize' value="<%=(textSize<=0) ? "" : ""+textSize%>" size="10"></th>
     <td><input type="submit" name="actionSbmt" value="Go !" ></td>
     </tr>
 </table></td>
