@@ -29,13 +29,29 @@
 
 
 <!-- START JAMON SPECIFIC HTML -->
+<p>JAMon comes with several ways to monitor your application that require no application code changes.
+    Usually all that is required is to add a line to an xml file, and put the jamon jar file in your classpath.
+    You could be monitoring your code in a few minutes.
+</p>
+
+<ul> <li> Some examples of what you can monitor follow:</li>
+    <ul>
+        <li><a href="http_monitoring.html">HTTP Monitoring</a> - Monitor requests/responses to Tomcat, Jetty, JBoss or any other JAVA web container. Track page execution times, status codes,
+            bytes sent, exceptions thrown and more.</li>
+        <li><a href="spring_aop_monitoring.html">Spring</a> - Monitor any Spring bean.  Track method invocations, arguments passed to methods, and  exceptions thrown.</li>
+        <li><a href="#monitoringsqlcommands">JDBC/SQL monitoring</a> - via the JAMon JDBC proxy driver (works with any other JDBC driver). Track SQL called, JDBC method calls, exceptions thrown and more.</li>
+        <li><a href="log4j_jamonappender.html">Log4j</a> -  Monitor via the JAMon log4j Appender.  Track counts for ERROR, INFO, WARNING etc.  'Tail' the Log4j log from the JAMon web application</li>
+        <li><a href="#ejbmonitoring">EJB3</a> - Monitor EJBs using the JAMon EJB interceptor.</li>
+    </ul>
+</ul>
+
+<p>You can also <a href="distributed_jamon.html">view all the data from your organizations applications</a> from a central monitoring web application (the JAMon web application).</p>
 
 <table border="0" width="80%" align="center">
 <tr>
 </tr>
 <tr align="left">
 <th><ol>
-	<li><a href="#Introduction">JAMon Introduction</a></li>
     <li>JAMon is now on Maven.  The Maven pom dependency follows (substitute the appropriate version):</li>
     
     <pre>
@@ -57,7 +73,7 @@
 	<li>Quick Links</li>
 		<ol type="a">
 		<li><a href="http://sourceforge.net/project/showfiles.php?group_id=96550">Download JAMon</a></li>
-                <li><a href="http://sourceforge.net/forum/forum.php?forum_id=334830">Get support for JAMon</a></li>
+        <li><a href="http://sourceforge.net/forum/forum.php?forum_id=334830">Get support for JAMon</a></li>
 		<li><a href="javadoc/index.html">JAMon JavaDocs</a></li>
 		<li><a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/">JAMon Source Code</a></li>
 		<li><a href="presentation/jamon.htm">JAMon Slides (html)</a></li>

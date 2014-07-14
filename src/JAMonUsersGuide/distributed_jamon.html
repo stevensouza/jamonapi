@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <meta name="keywords" lang="en-us" content="spring, aop, jamonaspect, java, performance tuning, jamonlistener, log4j, jboss, appender, JAMonAppender, listener, monitor, bottleneck, scale, scalability, monitoring tools, page hits, page counter, currentTimeMillis, benchmark, jamonapi, free, freeware, shareware, open source, measure, fdsapi, http, valve, tomcat, jetty, jboss, appserver, webserver, formatteddataset, servlet filter">
+    <meta name="description" content="The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.">
+    <title>Monitoring Spring with Jamon</title>
+</head>
+<body bgcolor="#FFFFFF">
+
+<div align="center">
+    <script type="text/javascript"><!--
+    google_ad_client = "pub-2677015225815089";
+    google_ad_width = 728;
+    google_ad_height = 90;
+    google_ad_format = "728x90_as";
+    google_ad_type = "text_image";
+    google_ad_channel ="";
+    google_color_border = "336699";
+    google_color_bg = "FFFFFF";
+    google_color_link = "0000FF";
+    google_color_url = "008000";
+    google_color_text = "000000";
+    //--></script>
+    <script type="text/javascript"
+            src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+    </script>
+</div>
+
+<hr>
+
+
+<p align="center">
+    <img src="jamon1.jpg" id="fdsbanner1" border="0" /></a>
+</p>
+
+<h2 align='center'>Monitoring Spring with Jamon (using AOP)</h2>
+
+
+<!-- START JAMON SPECIFIC HTML -->
+
+<table border="0" width="80%" align="center">
+    <tr>
+    </tr>
+    <tr align="left">
+        <th><ol>
+            <li><a href="#intro">Introduction</a></li>
+            <li><a href="#howdoesitwork">How does it work?</a></li>
+            <li><a href="#whatdoesitlooklike">What does it look like?</a></li>
+        </ol>
+
+
+
+        </th>
+    </tr>
+    <tr>
+        <td><br><br></td>
+    </tr>
+</table>
+
+<table border="0" width="80%" align="center">
+
+
+    <tr>
+        <th align="left"><h2><a name="intro">1. Introduction</a></h2></th>
+    </tr>
+    <tr>
+        <td>
+
+            <p>Modern software is often distributed.  An application might have multiple web servers, message brokers, a distributed file system and more.
+                This makes detecting performance problems and determining application health difficult.
+                JAMon 2.78 has improvements that make monitoring distributed applications easier.</p>
+
+
+               <p> With previous versions of JAMon it was only possible to view JAMon statistics separately for each on each host where JAMon was installed.
+                   JAMon now allows developers to centrally view the JAMon data of ALL JVMs from any JAMon web application.
+                   The ability to view statistics of  a distributed application or applications from a central location is invaluable.</p>
+
+                <p>JAMon implements this capability with a new interface (<a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/jamon/src/main/java/com/jamonapi/distributed/JamonDataPersister.java">JamonDataPersister</a>) which is called from a timer.
+                    A <a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/jamon/src/main/java/com/jamonapi/distributed/JamonDataPersister.java">JamonDataPersister</a> implementation enables a developer to do anything they want with
+                    the serializable JAMon data (<a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/jamon/src/main/java/com/jamonapi/MonitorComposite.java">MonitorComposite</a>).
+                    </p>
+
+                <p>JAMon ships with the ability to save the monitoring data to a distributed <a href="http://hazelcast.org/">HazelCast Map</a>. By default the data will be saved every 5 minutes.</p>
+
+                <p>The <a href="http://hazelcast.org/">HazelCast</a> implementation will automatically be called if the HazelCast jar is found in the classpath
+                    (The java class that implements this is  <a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/jamon/src/main/java/com/jamonapi/distributed/DistributedJamonHazelcastPersister.java">DistributedJamonHazelcastPersister</a>).
+                    This implementation puts a serialized version of JAMon data into a HazelCast distributed HashMap.
+                    The server hostname/port will be the key, and the JAMon data as the value.
+                    The JAMon web application can display data from any host by selecting the servers key from a select box from jamonadmin.jsp.</p>
+
+
+
+            <ul>
+                <li><b>Track Specific Exceptions</b> - If the method you are monitoring throws an exception, JamonAspect counts the specific exception (i.e. java.io.FileNotFoundException) </li>
+                <li><b>Track General Exceptions</b> - JamonAspect also keeps a total count for all exceptions thrown (the label is com.jamonapi.Exceptions)</li>
+                <li><b>View stacktraces</b> - By default JamonAspect lets you view the 50 most recent stacktraces (configurable) that have occured in your application via the JAMon webapp viewer.
+                    It can also be configured to view the stack traces of specific exceptions (i.e. java.io.FileNotFoundException).</li>
+                <li><b>View method parameters</b> - JamonAspect can be configured to display the method parameters used in the invoked method. This is particularly useful in a development or staging environment.
+                    This is disabled by default.</li>
+                <li><b>View method parameters when exceptions are thrown</b> - JamonAspect can be configured to display the method parameters when a method  throws and exception. This is also disabled by default.</li>
+            </ul>
+
+            <p>Note1: It should be noted that it would be easy to change the code in JamonPerformanceMonitorInterceptor to perform all of the above. In the future, I will try to
+                work with the Spring team to get them to enhance their code.
+            </p>
+
+            <p>Note2: Spring may use the <a href="http://docs.spring.io/spring/docs/3.0.0.M3/reference/html/ch08s06.html"> CGLIB proxy mechanism</a>. If so, any class being monitored
+                requires a noarg constructor.  The constructor can be private however.  It also requires
+                setters for any of the variables that the actual constructor takes (say a 2 arg constructor).  These setters may also be private.</p>
+
+        </td>
+    </tr>
+
+    <tr>
+        <td><br><br></td>
+    </tr>
+
+
+    <tr>
+        <th align="left"><h2><a name="howdoesitwork">2. How does it work?</a></h2></th>
+    </tr>
+    <tr>
+        <td>
+
+
+            <p>There are various ways to configure the JamonAspect to monitor your spring beans.  AspectJ's pointcut language is very powerful and flexible.  It allows you to associate
+                an aspect to all classes in a given package, all classes with a given annotation, classes that match a pattern and much more.  You can also choose not to monitor the whole class, and
+                instead monitor select methods.  To learn more about aop and AspectJ's pointcuts see <a href="http://docs.spring.io/spring/docs/3.2.x/spring-framework-reference/html/aop.html">Spring aop</a>
+            </p>
+
+            <p>See <a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/jamon/src/test/resources/minimalApplicationContext.xml">minimalAppplicationContext.xml</a> for a simple example
+                of how to monitor a spring bean using a bean name.  See <a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/jamon/src/test/resources/applicationContext.xml">applicationContext.xml</a>
+                for more examples of how to use aop and Spring together.  This file has a number of other ways to define pointcuts that are commented out.  By looking at the file you may see some
+                options that might fit your use case.  <a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/jamon/src/test/java/com/jamonapi/aop/spring/JamonAspectTest.java">JamonAspectTest</a> test class show how these files are used in Spring. </p>
+
+            <p>The next section shows JAMon data generated by executed the test method JamonAspectTest.testMethodsAreMonitored(). </p>
+    <tr>
+        <td><br><br></td>
+    </tr>
+
+    <tr>
+        <th align="left"><h2><a name="whatdoesitlooklike">3. What does it look like?</a></h2></th>
+    </tr>
+    <tr>
+        <td>
+
+            <p>Representative data collected by JamonAspect follows. The screen snapshot was taken from a jamonadmin.jsp in jamon.war.
+                Review  <a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/jamon/src/test/resources/applicationContext.xml">applicationContext.xml</a>
+                to see how all methods were selected for monitoring. Note as mentioned in the introduction exceptions are being tracked (com.jamonapi.Exceptions, and java.io.FileNotFoundException).
+                All methods were called 10 times (hits).</p>
+
+            <p><img src="jamon_spring_aop.jpg" border="1"> </p>
+            <br/>
+
+            <p>Here is an example of how it might look like if your application had thrown a wider variety of exceptions.  Note this screen was filtered to only view exceptions.</p>
+
+            <p><img src="spring_aop_exceptions.png" border="1"> </p>
+            <br/>
+
+            <p>If the 'modify' icon is clicked for 'com.jamaonapi.Exceptions' you can view the 'FIFOBuffer' which contains the stacktraces.</p>
+            <p><img src="jamon_exception_modify.jpg" > </p>
+            <br/>
+
+            <p>The following screen snapshot shows what it might look like if exception
+                arguments tracking was also enabled. You can see the stacktrace, the method that threw the exception as well as the arguments passed to the method (in this case 1 argument was passed and it
+                was a filename: arguments.txt).
+            </p>
+
+            <p><img src="jamon_exception_details_aop.png" > </p>
+
+
+
+
+        </td>
+    </tr>
+
+    <tr>
+        <td><br><br></td>
+    </tr>
+
+
+</table>
+
+
+
+<p align="center">
+    <a href="http://www.fdsapi.com"><img src="fds_logo_fulltext_blue2_150.jpg"
+                                         id="fdsbanner" border="1" /></a>
+    <a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=96550&amp;type=4" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a>
+    <a href="http://www.jamonapi.com"><img src="jamon_banner3.jpg"
+                                           id="jamonbanner" border="1" /></a>
+</p>
+
+<!-- END JAMON SPECIFIC HTML -->
+
+</body>
+</html>
