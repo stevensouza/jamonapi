@@ -12,10 +12,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**  Class that interacts with HazelCast to save jamon data to it so data from any jvms in the hazelcast cluster
- * can be visible via the jamon web app.  Note in must cases hazelcast exceptions are not bubbled up in this class
- * as I would still like jamon to be availalbe even if HazelCast has issues.  The exceptions and stack traces can be
- * seen in jamon however.
+/**  Decorator class for HazelCast persister. The decorate class interacts with HazelCast and the decorator monitors
+ * these interactions with jamon and tracks any exceptions thrown.
  *
  * Created by stevesouza on 7/6/14.
  */
