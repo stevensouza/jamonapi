@@ -18,7 +18,7 @@ public interface JamonDataPersister {
      */
     public Set<String> getInstances();
 
-    /** get this instance name */
+    /** get this instance name.  i.e. the key that identifies this host, application or jvm */
     public String getInstance();
 
     /**
