@@ -3,14 +3,11 @@ package com.jamonapi.distributed;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.core.IMap;
-import com.jamonapi.Monitor;
 import com.jamonapi.MonitorComposite;
 import com.jamonapi.MonitorFactory;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**  Class that interacts with HazelCast to save jamon data to it so data from any jvms in the hazelcast cluster
  * can be visible via the jamon web app.  Note in must cases hazelcast exceptions are not bubbled up in this class
