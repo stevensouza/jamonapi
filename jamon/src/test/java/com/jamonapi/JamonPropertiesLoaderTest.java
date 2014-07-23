@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import java.util.Properties;
 
-import static org.junit.Assert.*;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 // also try to test by putting arguments in the command line.  They should take precedence over the config file:

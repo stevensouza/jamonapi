@@ -1,14 +1,18 @@
 package com.jamonapi;
 
 import com.jamonapi.utils.Misc;
-import org.apache.commons.lang3.SerializationUtils;
+import com.jamonapi.utils.SerializationUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+
+//import org.apache.commons.lang3.SerializationUtils;
 
 
 public class MonitorCompositeTest {
@@ -46,12 +50,25 @@ public class MonitorCompositeTest {
         // Reset JAMon after each test method.  The Monitors are static and so would otherwise stick around
         MonitorFactory.reset();
     }
+
+    /*
+      @Test
+    public void testSerialization() throws Throwable {
+        String message = "serialize/deserialize me steve";
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        com.jamonapi.utils.SerializationUtils.serialize(message, outputStream);
+        String answer = com.jamonapi.utils.SerializationUtils.deserialize(new ByteArrayInputStream(outputStream.toByteArray()));
+        assertThat(answer).isEqualTo(message);
+    }
+
+     */
     @Test
-    public void testSerialization() {
+    public void testSerialization() throws Throwable {
         // serialize and deserialize monitors
         MonitorComposite original = MonitorFactory.getRootMonitor();
-        byte[] bytes = SerializationUtils.serialize(original);
-        MonitorComposite deserialized = SerializationUtils.deserialize(bytes);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        SerializationUtils.serialize(original, outputStream);
+        MonitorComposite deserialized = SerializationUtils.deserialize(new ByteArrayInputStream(outputStream.toByteArray()));
 
         // Do a deep comparison to see if the arrays are equal.
         // Note getData flattens the data to return any ranges also.  It doesn't however return
@@ -79,6 +96,7 @@ public class MonitorCompositeTest {
         }
 
     }
+
 
     @Test
     public void testGetMonitorWithUnits() {
