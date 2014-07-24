@@ -19,8 +19,6 @@ import java.util.*;
 public class HazelcastMapStore implements MapStore<String, Serializable> {
 
     private static final String FILE_EXT = ".ser";
-    // regex ending with $ means - ends with
-    private static final String FILE_EXT_REGEX =  FILE_EXT+"$";
 
     private String mapName="jamonapi";
     private JamonPropertiesLoader jamonPropertiesLoader = new JamonPropertiesLoader();
@@ -89,7 +87,7 @@ public class HazelcastMapStore implements MapStore<String, Serializable> {
 
     @Override
     public Set<String> loadAllKeys() {
-        File[] files = FileUtils.listFiles(getDirectoryName(), FILE_EXT_REGEX);
+        File[] files = FileUtils.listFiles(getDirectoryName(), FILE_EXT);
         if(files == null || files.length == 0) {
             return new HashSet<String>();
         }
@@ -117,7 +115,7 @@ public class HazelcastMapStore implements MapStore<String, Serializable> {
     static Set<String> replaceFileExtenstion(File[] files) {
         Set<String> keys = new HashSet<String>();
         for (File file : files) {
-           keys.add(file.getName().replaceAll(FILE_EXT_REGEX, ""));
+           keys.add(file.getName().replace(FILE_EXT, ""));
         }
         return keys;
     }

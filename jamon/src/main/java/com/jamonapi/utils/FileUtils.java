@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /** Reusable Utilities used for File manipulations such as reading a file as a String.  **/
-public class FileUtils extends java.lang.Object {
+public class FileUtils  {
     /**
      * Read text files contents in as a String.
      * 
@@ -73,11 +73,11 @@ public class FileUtils extends java.lang.Object {
     }
 
 
-    public static File[] listFiles(String directory, final String filterRegex) {
+    public static File[] listFiles(String directory, final String endsWithString) {
         FilenameFilter filter = new FilenameFilter() {
             @Override
             public boolean accept(File file, String fileName) {
-                return fileName.matches(filterRegex);
+                return fileName.endsWith(endsWithString);
             }
         };
 
