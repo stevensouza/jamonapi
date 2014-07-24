@@ -44,10 +44,14 @@ public class DistributedJamonHazelcastPersisterImp implements JamonDataPersister
     @Override
     /** Put jamon data into the hazelcast map */
     public void put() {
-      intitialize();
-      String key = getInstance();
-      jamonDataMap.set(key, MonitorFactory.getRootMonitor().setInstanceName(key));
-      instances.set(key, new Date());
+      put(getInstance());
+    }
+
+    @Override
+    public void put(String key) {
+        intitialize();
+        jamonDataMap.set(key, MonitorFactory.getRootMonitor().setInstanceName(key));
+        instances.set(key, new Date());
     }
 
 

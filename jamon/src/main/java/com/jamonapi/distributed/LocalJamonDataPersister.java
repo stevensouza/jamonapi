@@ -35,6 +35,14 @@ public class LocalJamonDataPersister implements JamonDataPersister {
     public void put() {
     }
 
+    /**
+     *  This is a noop. The only key supproted is 'local' and the only data supported is MonitorFactory.getRootMonitor()
+     */
+    @Override
+    public void put(String instanceKey) {
+
+    }
+
     @Override
     public MonitorComposite get(String instanceKey) {
         if (INSTANCE.equalsIgnoreCase(instanceKey)) {

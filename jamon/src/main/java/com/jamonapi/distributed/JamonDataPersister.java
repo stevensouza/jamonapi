@@ -27,6 +27,11 @@ public interface JamonDataPersister {
     public void put();
 
     /**
+     * Puts the default data (MonitorFactory.getRootMonitor()) in with the specified key (For example 'jetty-local')
+     */
+    public void put(String instanceKey);
+
+    /**
      *
      * @param instanceKey identifier of jvm server instance being monitored
      * @return jamon data for the server

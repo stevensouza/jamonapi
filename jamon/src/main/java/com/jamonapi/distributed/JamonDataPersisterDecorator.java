@@ -3,6 +3,7 @@ package com.jamonapi.distributed;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorComposite;
 import com.jamonapi.MonitorFactory;
+import com.jamonapi.utils.FileUtils;
 
 import java.util.HashSet;
 import java.util.Properties;
@@ -40,12 +41,21 @@ public class JamonDataPersisterDecorator implements JamonDataPersister {
     @Override
     /** Put jamon data into the hazelcast map */
     public void put() {
+        put(getInstance());
+    }
+
+    @Override
+    public void put(String instanceKey) {
         Monitor mon = MonitorFactory.getTimeMonitor(getJamonLabel(".put()"));
         // only allow 1 process to put at the sametime.
         if (mon.getActive() < 1) {
             mon.start();
             try {
-                jamonDataPersister.put();
+                if (instanceKey==null) {
+                    jamonDataPersister.put();
+                } else {
+                    jamonDataPersister.put(instanceKey);
+                }
             } catch(Throwable t) {
                 MonitorFactory.addException(mon, t);
             } finally {
@@ -99,7 +109,7 @@ public class JamonDataPersisterDecorator implements JamonDataPersister {
                label = jamonDataPersister.getInstance();
            }
 
-           return prefix+label;
+           return FileUtils.makeValidFileName(prefix+label);
        } catch (Throwable t) {
           MonitorFactory.addException(t);
        }
