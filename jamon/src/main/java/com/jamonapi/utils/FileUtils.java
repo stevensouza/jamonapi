@@ -44,5 +44,16 @@ public class FileUtils extends java.lang.Object {
         return fileContents.toString();
 
     }
+
+    /** Replace all invalid file characters with valid ones.  example: himom(*).txt becomes himom---.txt
+     * Note some characters that will be replaced wouldn't really be invalid (' ' for example) but a
+     * conservative approach is taken.
+     *
+     * @param fileName
+     * @return
+     */
+    public static String makeValidFileName(String fileName) {
+        return fileName.replaceAll("[^a-zA-Z0-9_\\-\\.]", "-");
+    }
 }
 
