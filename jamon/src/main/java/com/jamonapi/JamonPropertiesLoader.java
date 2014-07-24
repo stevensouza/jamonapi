@@ -87,7 +87,7 @@ public class JamonPropertiesLoader {
         defaults.put("jamonDataPersister", "com.jamonapi.distributed.DistributedJamonHazelcastPersister");
         defaults.put("jamonDataPersister.label", "");
         defaults.put("jamonDataPersister.label.prefix", "");
-
+        defaults.put("jamonDataPersister.directory", "jamondata");
         return defaults;
     }
 

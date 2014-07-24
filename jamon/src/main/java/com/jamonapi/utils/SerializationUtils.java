@@ -8,6 +8,7 @@ import java.io.*;
  */
 public class SerializationUtils {
 
+    /** note object should be serializable **/
     public static void serialize(Serializable object, OutputStream outputStream) throws IOException {
         ObjectOutputStream out = null;
         try {

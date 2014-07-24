@@ -3,10 +3,9 @@ package com.jamonapi.utils;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /** Reusable Utilities used for File manipulations such as reading a file as a String.  **/
 public class FileUtils extends java.lang.Object {
@@ -54,6 +53,48 @@ public class FileUtils extends java.lang.Object {
      */
     public static String makeValidFileName(String fileName) {
         return fileName.replaceAll("[^a-zA-Z0-9_\\-\\.]", "-");
+    }
+
+    public static boolean mkdirs(String directoryName) {
+        return new File(directoryName).mkdirs();
+    }
+
+    public static boolean exists(String fileOrDirectoryName) {
+        File fileOrDirectory = new File(fileOrDirectoryName);
+        return fileOrDirectory.exists();
+    }
+
+    public static boolean delete(String fileOrDirectoryName) {
+        File file = new File(fileOrDirectoryName);
+        if (file.exists()) {
+          return file.delete();
+        }
+        return false;
+    }
+
+
+    public static File[] listFiles(String directory, final String filterRegex) {
+        FilenameFilter filter = new FilenameFilter() {
+            @Override
+            public boolean accept(File file, String fileName) {
+                return fileName.matches(filterRegex);
+            }
+        };
+
+        return new File(directory).listFiles(filter);
+    }
+
+
+    public static OutputStream getOutputStream(String fileName) throws IOException {
+        OutputStream file = new FileOutputStream(fileName);
+        file = new BufferedOutputStream(file);
+        return file;
+    }
+
+    public static InputStream getInputStream(String fileName) throws IOException  {
+        InputStream file = new FileInputStream(fileName);
+        file = new BufferedInputStream(file);
+        return file;
     }
 }
 
