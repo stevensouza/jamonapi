@@ -1,5 +1,6 @@
 package com.jamonapi;
 
+import com.jamonapi.distributed.DistributedJamonHazelcastPersister;
 import org.junit.Test;
 
 import java.util.Properties;
@@ -18,6 +19,7 @@ public class JamonPropertiesLoaderTest {
         assertThat(props.getProperty("jamonDataPersister")).isEqualTo("com.jamonapi.distributed.DistributedJamonHazelcastPersister");
         assertThat(props.getProperty("jamonDataPersister.label")).isEqualTo("");
         assertThat(props.getProperty("jamonDataPersister.label.prefix")).isEqualTo("");
+        assertThat(props.getProperty("jamonDataPersister.directory")).isEqualTo("jamondata");
     }
 
     @Test
@@ -28,6 +30,7 @@ public class JamonPropertiesLoaderTest {
         assertThat(props.getProperty("jamonDataPersister")).isEqualTo("com.jamonapi.distributed.DistributedJamonHazelcastPersister2");
         assertThat(props.getProperty("jamonDataPersister.label")).isEqualTo("myapplication name");
         assertThat(props.getProperty("jamonDataPersister.label.prefix")).isEqualTo("myprefix:");
+        assertThat(props.getProperty("jamonDataPersister.directory")).isEqualTo("persistence/jamondata");
     }
 
 

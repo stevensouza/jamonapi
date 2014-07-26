@@ -34,7 +34,7 @@ public class FileUtilsTest {
 
     @Test
     public void testMkdirs1() {
-        String dir = folder.getRoot()+ File.separator+"dir1";
+        String dir = folder.getRoot()+File.separator+"dir1";
         boolean success = FileUtils.mkdirs(dir);
         assertThat(success).isTrue();
         assertThat(new File(dir)).exists();
