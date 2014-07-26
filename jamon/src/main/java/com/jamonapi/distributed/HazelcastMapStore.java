@@ -53,7 +53,7 @@ public class HazelcastMapStore implements MapStore<String, Serializable> {
      */
     @Override
     public void storeAll(Map<String, Serializable> map) {
-        for(Map.Entry<String, Serializable> entry : map.entrySet()) {
+        for (Map.Entry<String, Serializable> entry : map.entrySet()) {
             store(entry.getKey(), entry.getValue());
         }
     }
@@ -83,9 +83,14 @@ public class HazelcastMapStore implements MapStore<String, Serializable> {
     @Override
     public Serializable load(String key) {
         try {
-            InputStream inputStream = FileUtils.getInputStream(getFileName(key));
-            Serializable serializable = SerializationUtils.deserialize(inputStream);
-            return serializable;
+            String fileName = getFileName(key);
+            if (FileUtils.exists(fileName)) {
+                InputStream inputStream = FileUtils.getInputStream(fileName);
+                Serializable serializable = SerializationUtils.deserialize(inputStream);
+                return serializable;
+            } else {
+                return null;
+            }
         } catch (Throwable e) {
             throw new RuntimeException("HazelCast exception while trying to load jamondata", e);
         }
