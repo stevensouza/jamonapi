@@ -62,6 +62,8 @@ public class HazelcastMapStoreTest {
         assertThat(mc.exists(new MonKeyImp("goodbyeworld2", "ms."))).isTrue();
         assertThat(mc.exists(new MonKeyImp("goodbyeworld3", "ms."))).isTrue();
 
+        mapStore.delete("jvm1");
+        assertThat(mapStore.loadAllKeys()).containsOnly("jvm2");
     }
 
     // mimic populating a map  with jamon data from 2 different jvm instances.
