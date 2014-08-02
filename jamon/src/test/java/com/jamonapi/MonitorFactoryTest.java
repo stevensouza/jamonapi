@@ -174,6 +174,16 @@ public class MonitorFactoryTest {
     }
 
     @Test
+    public void testStartNano() throws InterruptedException {
+        Monitor mon=MonitorFactory.startNano("mynanotimer");
+        Thread.sleep(10);
+        mon.stop();
+        // test for bug: https://sourceforge.net/p/jamonapi/bugs/16/
+        assertThat(mon.getHits()).isEqualTo(1);
+        assertThat(mon.getLastValue()).isGreaterThanOrEqualTo(10*TimeMonNano.NANOSECS_PER_MILLISEC);
+    }
+
+    @Test
     public void testActive() {
         Monitor mon=MonitorFactory.start("himom");
         assertThat(mon.getActive()).isEqualTo(1);
