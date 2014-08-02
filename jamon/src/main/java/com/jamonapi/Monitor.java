@@ -14,7 +14,6 @@ import java.util.Date;
 // to go to jamon 2.0. I had originally tried to make Monitor an interface.
 // public abstract class Monitor extends BaseStatsImp implements MonitorInt {
 public abstract class Monitor implements MonitorInt, Serializable {
-
 	private static final long serialVersionUID = 278L;
 	
 	// Internal data passed from monitor to monitor.
@@ -146,7 +145,6 @@ public abstract class Monitor implements MonitorInt, Serializable {
     }
 
     public double getStdDev() {
-
         if (monData.enabled) {
             synchronized (monData) {
                 double stdDeviation = 0;
@@ -336,12 +334,9 @@ public abstract class Monitor implements MonitorInt, Serializable {
 
     public Monitor start() {
         if (monData.enabled) {
-
             synchronized (monData) {
-
                 monData.incrementActivity();
                 active=monData.incrementThisActive();
-
                 // The only way activity tracking need be done is if start has
                 // been entered.
                 if (!monData.startHasBeenCalled) {
@@ -349,10 +344,8 @@ public abstract class Monitor implements MonitorInt, Serializable {
                     if (monData.trackActivity && monData.range != null)
                         monData.range.setActivityTracking(true);
                 }
-
             } // end synchronized
         } // end enabled
-
         return this;
 
     }
@@ -363,34 +356,26 @@ public abstract class Monitor implements MonitorInt, Serializable {
             synchronized (monData) {
                 monData.skip();
             }
-
         }
 
         return this;
-
     }
 
     public Monitor stop() {
         if (monData.enabled) {
             synchronized (monData) {
-
                 // moved into stop section to support skip.  i.e. shouldn't affect avgactive or maxactive if skip is called.
                 // before this was done in start which occurred before skip.
                 if (active >= monData.maxActive) {
                     monData.maxActive = active;
-
                     if (monData.hasListener(Listeners.MAXACTIVE_LISTENER_INDEX) && active>1)
                         monData.getListener(Listeners.MAXACTIVE_LISTENER_INDEX).processEvent(this);
                 }
-
                 // being as avgactive needs hits to calculate we don't calculate totalActive till stop is called
                 // hits are tallied in add as it is common behavior to all monitors.
-
                 monData.stop(active);
             }
-
         }
-
         return this;
     }
 
@@ -406,27 +391,21 @@ public abstract class Monitor implements MonitorInt, Serializable {
 
                 // most recent value
                 monData.lastValue = value;
-
                 // calculate hits i.e. n
                 monData.hits++;
-
                 // calculate total i.e. sumofX's
                 monData.total += value;
-
                 // used in std deviation
                 monData.sumOfSquares += value * value;
-
                 /* tracking activity is only done if start was called on the monitor there is no need to synchronize
                  * and perform activity tracking  if this  monitor doesn't have a start and stop called.
                  */
                 monData.updateActivity();
-
                 /* calculate min. note saving min if it is a tie so listener will be called and checking to see if
                  * the new min was less than the current min seemed to cost more. Same for max below
                  */
                 if (value <= monData.min) {
                     monData.min = value;
-
                     if (monData.hasListener(Listeners.MIN_LISTENER_INDEX))
                         monData.getListener(Listeners.MIN_LISTENER_INDEX).processEvent(this);
 
@@ -435,7 +414,6 @@ public abstract class Monitor implements MonitorInt, Serializable {
                 // calculate max
                 if (value >= monData.max) {
                     monData.max = value;
-
                     if (monData.hasListener(Listeners.MAX_LISTENER_INDEX))
                         monData.getListener(Listeners.MAX_LISTENER_INDEX).processEvent(this);
                 }
@@ -445,13 +423,9 @@ public abstract class Monitor implements MonitorInt, Serializable {
 
                 if (monData.range != null)
                     monData.range.processEvent(this);
-
             }
-
         }
-
         return this;
-
     }
 
     public Range getRange() {
@@ -550,7 +524,6 @@ public abstract class Monitor implements MonitorInt, Serializable {
             return getUnits();
         else
             return null;
-
     }
 
 
