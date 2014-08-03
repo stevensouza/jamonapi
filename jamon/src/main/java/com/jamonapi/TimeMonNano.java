@@ -8,7 +8,7 @@ package com.jamonapi;
  * <p>Note due to the fact that when start is called it resets the startTime instance
  * variable and different threads can call start() before one of the threads calls
  * stop this object when used BY ITSELF would not be thread safe.  However, when
- * not reused i.e. when TimeMon's are always taken from MonitorFactory it is threadsafe.</p>
+ * not reused i.e. when it is taken from MonitorFactory it is threadsafe.</p>
  *
  * <p>I didn't attempt to make this thread safe as even if it was having two threads
  * subsequently call start, start before a stop would reset the startTime and so
@@ -17,10 +17,10 @@ package com.jamonapi;
  * <p>Note this class is a thin wrapper that adds time capabilities to the basic Monitor
  * class </p>
  */
-
-class TimeMonNano extends TimeMon {
-    private static final long NANOSECS_PER_MILLISEC=1000000;
-    private static final long serialVersionUID = 278L;
+class TimeMonNano extends DecoMon {
+    static final long NANOSECS_PER_MILLISEC=1000000;
+    private static final long serialVersionUID = 279L;
+    protected long startTime;
 
     public TimeMonNano(MonKey key, MonInternals monData) {
         super(key, monData);
@@ -30,7 +30,6 @@ class TimeMonNano extends TimeMon {
     public Monitor start() {
         super.start();
         startTime=System.nanoTime();
-
         return this;
     }
 
@@ -43,4 +42,18 @@ class TimeMonNano extends TimeMon {
         return this;
     }
 
+    @Override
+    public Object getValue(String key) {
+        if ("starttime".equalsIgnoreCase(key)) {
+            return new Long(startTime);
+        } else {
+            return super.getValue(key);
+        }
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        startTime=0;
+    }
 }

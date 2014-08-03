@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.offset;
 
 public class MonitorFactoryTest {
 
@@ -174,13 +175,17 @@ public class MonitorFactoryTest {
     }
 
     @Test
-    public void testStartNano() throws InterruptedException {
+    public void testTimeMonNano() throws InterruptedException {
         Monitor mon=MonitorFactory.startNano("mynanotimer");
+        long nanoTime = System.nanoTime();
         Thread.sleep(10);
         mon.stop();
         // test for bug: https://sourceforge.net/p/jamonapi/bugs/16/
         assertThat(mon.getHits()).isEqualTo(1);
-        assertThat(mon.getLastValue()).isGreaterThanOrEqualTo(10*TimeMonNano.NANOSECS_PER_MILLISEC);
+        assertThat(mon.getLastValue()).isEqualTo(10*TimeMonNano.NANOSECS_PER_MILLISEC, offset(3.0*TimeMonNano.NANOSECS_PER_MILLISEC));
+        assertThat((Long)mon.getValue("starttime")).isLessThan(new Long(nanoTime));
+        mon.reset();
+        assertThat((Long)mon.getValue("starttime")).isEqualTo(0);
     }
 
     @Test
