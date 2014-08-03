@@ -21,7 +21,6 @@ package com.jamonapi;
  */
 
 class TimeMon extends DecoMon {
-
     private static final long serialVersionUID = 278L;
     protected long startTime;
 
