@@ -55,6 +55,11 @@ public class FileUtils  {
         return fileName.replaceAll("[^a-zA-Z0-9_\\-\\.]", "-");
     }
 
+    /** Create directory including any non existing parent directories in the the passed in path
+     *
+     * @param directoryName
+     * @return true if the directory or directories were created.
+     */
     public static boolean mkdirs(String directoryName) {
         return new File(directoryName).mkdirs();
     }
