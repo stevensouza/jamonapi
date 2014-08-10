@@ -12,6 +12,7 @@ import java.util.*;
  * HazelCast class that you implement to persist your map data.  This is used to persist jamon MonitorComposite data
  * as well as the instances map.  This allows the jamon data to be viewable in between boots.
  *
+ * @deprecated This class currently won't save the map properly.
  * Created by stevesouza on 7/23/14.
  */
 public class HazelcastMapStore implements MapStore<String, Serializable> {

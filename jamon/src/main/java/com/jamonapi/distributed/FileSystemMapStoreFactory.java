@@ -8,6 +8,8 @@ import java.util.Properties;
 
 /**
  * Created by stevesouza on 7/24/14.
+ *
+ * @deprecated This class currently won't save the map properly.
  */
 public class FileSystemMapStoreFactory implements MapStoreFactory<String, Serializable> {
 
