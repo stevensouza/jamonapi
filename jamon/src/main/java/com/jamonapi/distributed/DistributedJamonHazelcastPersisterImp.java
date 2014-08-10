@@ -23,7 +23,6 @@ public class DistributedJamonHazelcastPersisterImp implements JamonDataPersister
     // could be Map if we don't want the instance methods of hazelcast
     private IMap<String, MonitorComposite> jamonDataMap;
     private HazelcastInstance hazelCast;
-    private LocalJamonDataPersister localJamonData = new LocalJamonDataPersister();
 
     public DistributedJamonHazelcastPersisterImp() {
         hazelCast = Hazelcast.newHazelcastInstance();

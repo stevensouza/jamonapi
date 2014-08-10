@@ -265,14 +265,12 @@ public class MonitorComposite extends Monitor implements DetailData  {
         List row=new ArrayList(TYPICAL_NUM_CHILDREN);
         mon.getRowData(row);
         return row.toArray();
-
     }
 
     private Object[] getBasicRowData(MonitorImp mon) {
         List row=new ArrayList();
         mon.getBasicRowData(row);
         return row.toArray();
-
     }
 
 
@@ -280,7 +278,6 @@ public class MonitorComposite extends Monitor implements DetailData  {
         List row=new ArrayList(TYPICAL_NUM_CHILDREN);
         mon.getRowDisplayData(row);
         return row.toArray();
-
     }
 
 
