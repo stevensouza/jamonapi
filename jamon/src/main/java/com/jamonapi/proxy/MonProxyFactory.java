@@ -14,7 +14,12 @@ import java.util.List;
 
 public class MonProxyFactory {
 
-    private static final MonProxyFactoryImp proxyFactory=new MonProxyFactoryImp();
+    private static MonProxyFactoryImp proxyFactory = new MonProxyFactoryImp();
+
+    /** reset everything to defaults and clear out any data */
+    public static void reset() {
+        proxyFactory = new MonProxyFactoryImp();
+    }
 
     public static void setLabelFactory(MonProxyLabelerInt factory) {
         proxyFactory.setLabelFactory(factory);
@@ -24,23 +29,17 @@ public class MonProxyFactory {
         return proxyFactory.getLabelFactory();
     }
 
-
     public static MonProxy getMonProxy(Proxy proxy) {
         return proxyFactory.getMonProxy(proxy);
     }
-
-
 
     public static Object monitor(Object object) {
         return proxyFactory.monitor(object);
     }
 
-
     public static Object monitor(Object object, Class[] interfaces) {
         return proxyFactory.monitor(object, interfaces);
     }
-
-
 
     public static Object monitor(Object object, Class iface) {
         return proxyFactory.monitor(object, iface);
@@ -54,7 +53,6 @@ public class MonProxyFactory {
         return proxyFactory.monitor(rs);
     }
 
-
     public static Statement monitor(Statement statement) {
         return proxyFactory.monitor(statement);
     }
@@ -67,18 +65,13 @@ public class MonProxyFactory {
         return proxyFactory.monitor(statement);
     }
 
-
     static Object monitorJDBC(Object object) {
         return proxyFactory.monitorJDBC(object);
     }
 
-
     public static Class[] getInterfaces(Class cls) {
         return proxyFactory.getInterfaces(cls);
     }
-
-
-
 
     public static int getExceptionBufferSize() {
         return proxyFactory.getExceptionBufferSize();
@@ -92,8 +85,6 @@ public class MonProxyFactory {
         proxyFactory.resetExceptionDetail();
     }
 
-
-
     public static boolean isInterfaceEnabled() {
         return proxyFactory.isInterfaceEnabled();
     }
@@ -101,8 +92,6 @@ public class MonProxyFactory {
     public static void enableInterface(boolean enable) {
         proxyFactory.enableInterface(enable);
     }
-
-
 
     public static boolean isExceptionSummaryEnabled() {
         return proxyFactory.isExceptionSummaryEnabled();
@@ -119,11 +108,7 @@ public class MonProxyFactory {
 
     public static void enableExceptionDetail(boolean enable) {
         proxyFactory.enableExceptionDetail(enable);
-
     }
-
-
-
 
     public static boolean isSQLSummaryEnabled() {
         return proxyFactory.isSQLSummaryEnabled();
@@ -133,8 +118,6 @@ public class MonProxyFactory {
         proxyFactory.enableSQLSummary(enable);
     }
 
-
-
     public static boolean isSQLDetailEnabled() {
         return proxyFactory.isSQLDetailEnabled();
     }
@@ -143,21 +126,17 @@ public class MonProxyFactory {
         proxyFactory.enableSQLDetail(enable);
     }
 
-
     public static boolean isResultSetEnabled() {
         return proxyFactory.isResultSetEnabled();
     }
-
 
     public static void enableResultSet(boolean enable) {
         proxyFactory.enableResultSet(enable);
     }
 
-
     public static boolean isEnabled() {
         return proxyFactory.isEnabled();
     }
-
 
     public static void enableAll(boolean enable) {
         proxyFactory.enableAll(enable);
@@ -167,7 +146,6 @@ public class MonProxyFactory {
         return proxyFactory.isAllEnabled();
     }
 
-
     public static void enable(boolean enable) {
         proxyFactory.enable(enable);
     }
@@ -176,38 +154,29 @@ public class MonProxyFactory {
         return proxyFactory.getParams();
     }
 
-
-
     public static String[] getExceptionDetailHeader() {
         return proxyFactory.getExceptionDetailHeader();
     }
-
 
     public static Object[][] getExceptionDetail() {
         return proxyFactory.getExceptionDetail();
     }
 
-
-
     public static int getSQLBufferSize() {
         return proxyFactory.getSQLBufferSize();
     }
-
 
     public static void setSQLBufferSize(int sqlBufferSize) {
         proxyFactory.setSQLBufferSize(sqlBufferSize);
     }
 
-
     public static void resetSQLDetail() {
         proxyFactory.resetSQLDetail();
     }
 
-
     public static String[] getSQLDetailHeader() {
         return proxyFactory.getSQLDetailHeader();
     }
-
 
     public static Object[][] getSQLDetail() {
         return proxyFactory.getSQLDetail();
@@ -216,7 +185,6 @@ public class MonProxyFactory {
     public static List getMatchStrings() {
         return proxyFactory.getMatchStrings();
     }
-
 
     public static void setMatchStrings(List ms) {
         proxyFactory.setMatchStrings(ms);

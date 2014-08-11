@@ -23,9 +23,8 @@ public class MonProxyTest {
 
     @Before
     public void setUp() throws Exception {
+        MonProxyFactory.reset();
         // Reset JAMon before each test method.  The Monitors are static and so would otherwise stick around
-        MonProxyFactory.resetSQLDetail();
-        MonProxyFactory.resetExceptionDetail();
         MonitorFactory.reset();
     }
 
