@@ -11,16 +11,15 @@ import java.util.*;
  */
 public class LocalJamonDataPersister implements JamonDataPersister {
     public static final String INSTANCE = "local";
-    private final Map<String, Date> instances;
+    protected final Set<String> instances = new TreeSet<String>();
 
     public LocalJamonDataPersister() {
-        instances = new HashMap<String, Date>();
-        instances.put(INSTANCE, new Date());
+        instances.add(INSTANCE);
     }
 
     @Override
     public Set<String> getInstances() {
-        return new TreeSet<String>(instances.keySet());
+        return instances;
     }
 
     @Override
