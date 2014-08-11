@@ -72,8 +72,9 @@ public class LocalJamonFilePersister extends LocalJamonDataPersister {
     @Override
     public void remove(String instanceKey) {
         super.remove(instanceKey);
-        if (FileUtils.exists(instanceKey)) {
-            FileUtils.delete(getFileName(instanceKey));
+        String fileName = getFileName(instanceKey);
+        if (FileUtils.exists(fileName)) {
+            FileUtils.delete(fileName);
         }
     }
 
