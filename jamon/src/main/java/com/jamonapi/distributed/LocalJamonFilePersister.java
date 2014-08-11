@@ -8,24 +8,18 @@ import com.jamonapi.utils.FileUtils;
 import com.jamonapi.utils.SerializationUtils;
 
 import java.io.*;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /** Persist/serialize jamon data (MonitorComposite) to a local file.
  *
  * Created by stevesouza on 8/10/14.
  */
-public class LocalJamonFilePersister implements JamonDataPersister {
+public class LocalJamonFilePersister extends LocalJamonDataPersister {
     private static final String FILE_EXT = ".ser";
-    private String fileName;
     private JamonPropertiesLoader jamonPropertiesLoader = new JamonPropertiesLoader();
+    private Map<String, String> fileNameMap=new HashMap<String, String>();
 
-
-    public LocalJamonFilePersister(String fileName) {
-        this.fileName = fileName;
-    }
-
+    /** Get instances by looking in directory for any saved files and also add local in memory instance */
     @Override
     public Set<String> getInstances() {
         File[] files = FileUtils.listFiles(getDirectoryName(), FILE_EXT);
@@ -33,17 +27,13 @@ public class LocalJamonFilePersister implements JamonDataPersister {
             return new HashSet<String>();
         }
         Set<String> keys = removeFileExtenstion(files);
+        keys.addAll(super.getInstances());
         return keys;
     }
 
     @Override
-    public String getInstance() {
-        return null;
-    }
-
-    @Override
     public void put() {
-        put("notsurewhatfilenametouseherekey");
+        put(INSTANCE+"-saved");
     }
 
     @Override
@@ -51,7 +41,8 @@ public class LocalJamonFilePersister implements JamonDataPersister {
         try {
             createDirectory();
             OutputStream outputStream = FileUtils.getOutputStream(getFileName(instanceKey));
-            SerializationUtils.serialize(MonitorFactory.getRootMonitor(), outputStream);
+            MonitorComposite monitorComposite = MonitorFactory.getRootMonitor();
+            SerializationUtils.serialize(monitorComposite, outputStream);
         } catch (IOException e) {
             throw new RuntimeException("Exception while trying to save jamondata", e);
         }
@@ -60,10 +51,15 @@ public class LocalJamonFilePersister implements JamonDataPersister {
     @Override
     public MonitorComposite get(String instanceKey) {
         try {
+            MonitorComposite monitorComposite = super.get(instanceKey);
+            if (monitorComposite!=null) {
+                return monitorComposite;
+            }
+
             String fileName = getFileName(instanceKey);
             if (FileUtils.exists(fileName)) {
                 InputStream inputStream = FileUtils.getInputStream(fileName);
-                MonitorComposite monitorComposite = SerializationUtils.deserialize(inputStream);
+                monitorComposite = SerializationUtils.deserialize(inputStream);
                 return monitorComposite;
             } else {
                 return null;
@@ -75,11 +71,10 @@ public class LocalJamonFilePersister implements JamonDataPersister {
 
     @Override
     public void remove(String instanceKey) {
-        FileUtils.delete(getFileName(instanceKey));
-    }
-
-    public String getFileName() {
-        return fileName;
+        super.remove(instanceKey);
+        if (FileUtils.exists(instanceKey)) {
+            FileUtils.delete(getFileName(instanceKey));
+        }
     }
 
     /**
