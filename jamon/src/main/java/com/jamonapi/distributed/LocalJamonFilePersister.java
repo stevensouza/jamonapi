@@ -18,22 +18,24 @@ public class LocalJamonFilePersister extends LocalJamonDataPersister {
     private static final String FILE_EXT = ".ser";
     private JamonPropertiesLoader jamonPropertiesLoader = new JamonPropertiesLoader();
     private Map<String, String> fileNameMap=new HashMap<String, String>();
+    static final String JAMON_FILE_NAME = INSTANCE+"-saved";
 
     /** Get instances by looking in directory for any saved files and also add local in memory instance */
     @Override
     public Set<String> getInstances() {
+        Set<String> keys = new TreeSet<String>();
+        keys.addAll(super.getInstances());
         File[] files = FileUtils.listFiles(getDirectoryName(), FILE_EXT);
         if(files == null || files.length == 0) {
-            return new HashSet<String>();
+            return keys;
         }
-        Set<String> keys = removeFileExtenstion(files);
-        keys.addAll(super.getInstances());
+        keys.addAll(removeFileExtenstion(files));
         return keys;
     }
 
     @Override
     public void put() {
-        put(INSTANCE+"-saved");
+        put(JAMON_FILE_NAME);
     }
 
     @Override
@@ -94,6 +96,9 @@ public class LocalJamonFilePersister extends LocalJamonDataPersister {
      */
     protected String getDirectoryName() {
         String rootDir  = jamonPropertiesLoader.getJamonProperties().getProperty("jamonDataPersister.directory");
+        if (rootDir.endsWith(File.separator)) {
+          return rootDir;
+        }
         return rootDir+File.separator;
     }
 
