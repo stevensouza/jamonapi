@@ -509,7 +509,7 @@ public class MonitorFactoryTest {
     @Test
     public void testTrackExceptionWithMon_fromProperties() {
         List<JamonPropertiesLoader.JamonListener> listeners = new JamonPropertiesLoader("jamonapi2.properties").getListeners();
-        assertThat(listeners).hasSize(2);
+        assertThat(listeners).hasSize(3);
         MonitorFactory.addListeners(listeners);
         Monitor mon1 = MonitorFactory.start("anytimer").stop();
         Monitor mon = MonitorFactory.addException(mon1, new RuntimeException("my exception"));
