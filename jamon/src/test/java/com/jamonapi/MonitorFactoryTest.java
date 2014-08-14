@@ -489,6 +489,7 @@ public class MonitorFactoryTest {
         mon.addListener("value", JAMonListenerFactory.get("FIFOBuffer"));
         mon = MonitorFactory.addException(mon1, new RuntimeException("my exception"));
 
+        assertThat(MonitorFactory.getRootMonitor().hasListeners()).isTrue();
         // ensure specific exception monitor is created and stacktrace is in details
         assertThat(mon.getHits()).isEqualTo(1);
         assertThat(mon.getMonKey().getLabel()).isEqualTo("java.lang.RuntimeException");
@@ -499,6 +500,38 @@ public class MonitorFactoryTest {
         assertThat(mon.getHits()).isEqualTo(1);
         assertThat(mon.getMonKey().getLabel()).isEqualTo(MonitorFactory.EXCEPTIONS_LABEL);
         JAMonBufferListener bufferListener = (JAMonBufferListener) mon.getListenerType("value").getListener("FIFOBuffer");
+        assertThat(bufferListener.getBufferList().getRowCount()).isEqualTo(1);
+
+        // ensure the timer monitor also has the stack trace in its details
+        assertThat(mon1.getMonKey().getDetails().toString()).contains("java.lang.RuntimeException");
+    }
+
+    @Test
+    public void testTrackExceptionWithMon_fromProperties() {
+        List<JamonPropertiesLoader.JamonListener> listeners = new JamonPropertiesLoader("jamonapi2.properties").getListeners();
+        assertThat(listeners).hasSize(2);
+        MonitorFactory.addListeners(listeners);
+        Monitor mon1 = MonitorFactory.start("anytimer").stop();
+        Monitor mon = MonitorFactory.addException(mon1, new RuntimeException("my exception"));
+
+        assertThat(MonitorFactory.getRootMonitor().hasListeners()).isTrue();
+        // ensure specific exception monitor is created and stacktrace is in details
+        assertThat(mon.getHits()).isEqualTo(1);
+        assertThat(mon.getMonKey().getLabel()).isEqualTo("java.lang.RuntimeException");
+        assertThat(mon.getMonKey().getDetails().toString()).contains("java.lang.RuntimeException");
+
+        // ensure general exception monitor is created and stacktrace is in details
+        mon = MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception");
+        assertThat(mon.getHits()).isEqualTo(1);
+        assertThat(mon.getMonKey().getLabel()).isEqualTo(MonitorFactory.EXCEPTIONS_LABEL);
+        JAMonBufferListener bufferListener = (JAMonBufferListener) mon.getListenerType("value").getListener("FIFOBuffer");
+        assertThat(bufferListener.getBufferList().getRowCount()).isEqualTo(1);
+
+        // ensure java.lang.RuntimeException monitor is created and stacktrace is in details
+        mon = MonitorFactory.getMonitor("java.lang.RuntimeException", "Exception");
+        assertThat(mon.getHits()).isEqualTo(1);
+        assertThat(mon.getMonKey().getLabel()).isEqualTo("java.lang.RuntimeException");
+        bufferListener = (JAMonBufferListener) mon.getListenerType("value").getListener("FIFOBuffer");
         assertThat(bufferListener.getBufferList().getRowCount()).isEqualTo(1);
 
         // ensure the timer monitor also has the stack trace in its details

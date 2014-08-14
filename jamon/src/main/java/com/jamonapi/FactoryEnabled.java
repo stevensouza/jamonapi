@@ -3,10 +3,7 @@ package com.jamonapi;
 import com.jamonapi.utils.DetailData;
 import com.jamonapi.utils.Misc;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -505,6 +502,16 @@ public class FactoryEnabled implements MonitorFactoryInterface {
 
     public int getMaxSqlSize() {
         return maxSqlSize;
+    }
+
+    @Override
+    public void addListeners(List<JamonPropertiesLoader.JamonListener> listeners) {
+        Iterator<JamonPropertiesLoader.JamonListener> iter = listeners.iterator();
+        while (iter.hasNext()) {
+            JamonPropertiesLoader.JamonListener listenerInfo = iter.next();
+            Monitor mon =  MonitorFactory.getMonitor(listenerInfo.getLabel(), listenerInfo.getUnits());
+            mon.addListener(listenerInfo.getListenerType(), JAMonListenerFactory.get(listenerInfo.getListenerName()));
+        }
     }
 
     public void setMaxSqlSize(int size) {

@@ -1,6 +1,7 @@
 package com.jamonapi.distributed;
 
 import com.jamonapi.JamonPropertiesLoader;
+import com.jamonapi.MonitorFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -22,10 +23,16 @@ public class JamonServletContextListener implements ServletContextListener  {
     public void contextInitialized(ServletContextEvent event) {
         ServletContext context = event.getServletContext();
         if (context != null) {
+            addListeners();
             DistributedJamonTimerTask saveTask = getDistributedJamonTimerTask();
             int refreshRate = getRefreshRate();
             saveTask.schedule(refreshRate);
         }
+    }
+
+    private void addListeners() {
+        JamonPropertiesLoader loader = new JamonPropertiesLoader();
+        MonitorFactory.addListeners(loader.getListeners());
     }
 
     DistributedJamonTimerTask getDistributedJamonTimerTask() {

@@ -3,6 +3,8 @@ package com.jamonapi;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -16,6 +18,8 @@ import java.util.Properties;
 public class JamonPropertiesLoader {
 
     private String fileName;
+    private Properties jamonProps;
+    private List<JamonListener> listenerList = new ArrayList<JamonListener>();
 
     public JamonPropertiesLoader() {
         this("jamonapi.properties");
@@ -35,13 +39,19 @@ public class JamonPropertiesLoader {
         Properties defaults = getDefaults();
         Properties userProvided = propertyLoader(fileName);
         replaceWithCommandLineProps(userProvided, defaults);
-        Properties jamonProps = new Properties(defaults);
+        jamonProps = new Properties(defaults);
         jamonProps.putAll(userProvided);
+        addListeners();
         return jamonProps;
     }
 
     public URL getPropertiesDirectory() {
         return getClass().getClassLoader().getResource(".");
+    }
+
+    public List<JamonListener> getListeners() {
+        getJamonProperties();
+        return listenerList;
     }
 
     private  Properties propertyLoader(String fileName)  {
@@ -88,7 +98,63 @@ public class JamonPropertiesLoader {
         defaults.put("jamonDataPersister.label", "");
         defaults.put("jamonDataPersister.label.prefix", "");
         defaults.put("jamonDataPersister.directory", "jamondata");
+        defaults.put("jamonListener.type", "value");
+        defaults.put("jamonListener.name", "FIFOBuffer");
+        defaults.put("jamonListener.size", "50");
         return defaults;
+    }
+
+    private void addListeners() {
+        int size = Integer.valueOf(jamonProps.getProperty("jamonListener.size"));
+        for (int i=0; i<=size; i++) {
+            String keyPrefix = getKeyPrefix(i);
+            String listener = jamonProps.getProperty(keyPrefix+"key");
+            if (listener!=null) {
+                listenerList.add(new JamonListener(keyPrefix));
+            }
+        }
+    }
+
+    private String getKeyPrefix(int i) {
+        return "jamonListener["+i+"].";
+    }
+
+    // Simple value object that holds the values for a listener read in from the properties file
+    public class JamonListener {
+        private String keyPrefix;
+
+        private JamonListener(String keyPrefix) {
+            this.keyPrefix = keyPrefix;
+        }
+
+        private String[] split(String keyInfo) {
+            String[] key = keyInfo.split(",");
+            key[0] = key[0].trim();
+            key[1] = key[1].trim();
+            return key;
+        }
+
+        /** example: com.jamonapi.Exceptions */
+        public String getLabel() {
+            return split(jamonProps.getProperty(keyPrefix + "key"))[0];
+        }
+
+        /** example: Exception */
+        public String getUnits() {
+            return split(jamonProps.getProperty(keyPrefix + "key"))[1];
+        }
+
+        /** example: value, maxactive, ... */
+        public String getListenerType() {
+            String defaultProp = jamonProps.getProperty("jamonListener.type");
+            return jamonProps.getProperty(keyPrefix + "type", defaultProp).trim();
+        }
+
+        /** example: FIFOBuffer */
+        public String getListenerName() {
+            String defaultProp = jamonProps.getProperty("jamonListener.name");
+            return jamonProps.getProperty(keyPrefix + "name", defaultProp).trim();
+        }
     }
 
 }

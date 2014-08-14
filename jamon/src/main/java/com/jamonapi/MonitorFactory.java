@@ -1,5 +1,6 @@
 package com.jamonapi;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -471,4 +472,16 @@ public class MonitorFactory {
         return factory.addException(throwable);
     }
 
-}
+    /**
+     * Add listeners.  These can be read from a properties file (@see JamonPropertiesLoader).  It should
+     * be done as part of application startup. One use is to ensure that exceptions details are tracked at
+     * application startup.  The @see JamonServletContextListener automatically reads the values from the properties
+     * file if there are any of them.
+     *
+     * @since 2.79
+     */
+    public static void addListeners(List<JamonPropertiesLoader.JamonListener> listeners) {
+        factory.addListeners(listeners);
+    }
+
+    }

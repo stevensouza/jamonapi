@@ -2,6 +2,7 @@ package com.jamonapi;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -175,6 +176,11 @@ public final class FactoryDisabled implements MonitorFactoryInterface {
 
     public int getMaxSqlSize() {
         return 0;
+    }
+
+    @Override
+    public void addListeners(List<JamonPropertiesLoader.JamonListener> listeners) {
+
     }
 
     public void setMaxSqlSize(int size) {

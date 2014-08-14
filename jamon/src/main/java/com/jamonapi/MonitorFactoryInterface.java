@@ -2,6 +2,7 @@ package com.jamonapi;
 
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 /**
  * Interface used to create Monitors.  It is implemented by both FactoryEnabled and FactoryDisabled
@@ -190,6 +191,16 @@ public interface MonitorFactoryInterface {
      * @return the max size that the sql is allowed to be before being truncated.
      */
     public int getMaxSqlSize();
+
+    /**
+     * Add listeners.  These can be read from a properties file (@see JamonPropertiesLoader).  It should
+     * be done as part of application startup. One use is to ensure that exceptions details are tracked at
+     * application startup.  The @see JamonServletContextListener automatically reads the values from the properties
+     * file if there are any of them.
+     *
+     * @since 2.79
+     */
+    public void addListeners(List<JamonPropertiesLoader.JamonListener> listeners);
 
 
 }
