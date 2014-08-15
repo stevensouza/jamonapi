@@ -78,4 +78,15 @@ public class JamonPropertiesLoaderTest {
         assertThat(listener.getListenerType()).isEqualTo("value");
         assertThat(listener.getListenerName()).isEqualTo("FIFOBuffer");
     }
+
+    @Test
+    public void shouldResetListeners() {
+        // test for bug where running multiple calls to getListeners didn't first remove old listeners.
+        // so wasn't indempotent
+        JamonPropertiesLoader loader = new JamonPropertiesLoader("jamonapi2.properties");
+        loader.getListeners();
+        List<JamonPropertiesLoader.JamonListener> listeners = loader.getListeners();
+
+        assertThat(listeners).hasSize(3);
+    }
 }

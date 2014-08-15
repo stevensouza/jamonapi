@@ -19,7 +19,7 @@ public class JamonPropertiesLoader {
 
     private String fileName;
     private Properties jamonProps;
-    private List<JamonListener> listenerList = new ArrayList<JamonListener>();
+    private List<JamonListener> listenerList;
 
     public JamonPropertiesLoader() {
         this("jamonapi.properties");
@@ -41,7 +41,6 @@ public class JamonPropertiesLoader {
         replaceWithCommandLineProps(userProvided, defaults);
         jamonProps = new Properties(defaults);
         jamonProps.putAll(userProvided);
-        addListeners();
         return jamonProps;
     }
 
@@ -51,6 +50,8 @@ public class JamonPropertiesLoader {
 
     public List<JamonListener> getListeners() {
         getJamonProperties();
+        addListeners();
+
         return listenerList;
     }
 
@@ -105,6 +106,7 @@ public class JamonPropertiesLoader {
     }
 
     private void addListeners() {
+        listenerList= new ArrayList<JamonListener>();
         int size = Integer.valueOf(jamonProps.getProperty("jamonListener.size"));
         for (int i=0; i<=size; i++) {
             String keyPrefix = getKeyPrefix(i);
