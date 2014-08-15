@@ -35,13 +35,19 @@ public class JamonPropertiesLoader {
      * @throws IOException
      */
     public Properties getJamonProperties() {
+        if (jamonProps==null) {
+            initialize();
+        }
+        return jamonProps;
+    }
+
+    void initialize() {
         // note precedence is -D properties, then from the file, then defaults.
         Properties defaults = getDefaults();
         Properties userProvided = propertyLoader(fileName);
         replaceWithCommandLineProps(userProvided, defaults);
         jamonProps = new Properties(defaults);
         jamonProps.putAll(userProvided);
-        return jamonProps;
     }
 
     public URL getPropertiesDirectory() {
@@ -49,9 +55,12 @@ public class JamonPropertiesLoader {
     }
 
     public List<JamonListener> getListeners() {
-        getJamonProperties();
-        addListeners();
-
+        if (jamonProps==null) {
+            initialize();
+        }
+        if (listenerList==null) {
+            addListeners();
+        }
         return listenerList;
     }
 
@@ -106,14 +115,14 @@ public class JamonPropertiesLoader {
     }
 
     private void addListeners() {
-        listenerList= new ArrayList<JamonListener>();
+        listenerList = new ArrayList<JamonListener>();
         int size = Integer.valueOf(jamonProps.getProperty("jamonListener.size"));
-        for (int i=0; i<=size; i++) {
-            String keyPrefix = getKeyPrefix(i);
-            String listener = jamonProps.getProperty(keyPrefix+"key");
-            if (listener!=null) {
-                listenerList.add(new JamonListener(keyPrefix));
-            }
+        for (int i = 0; i <= size; i++) {
+           String keyPrefix = getKeyPrefix(i);
+           String listener = jamonProps.getProperty(keyPrefix + "key");
+           if (listener != null) {
+              listenerList.add(new JamonListener(keyPrefix));
+           }
         }
     }
 
