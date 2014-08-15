@@ -17,17 +17,12 @@ import java.util.TreeSet;
  */
 
 public class JamonDataPersisterDecorator implements JamonDataPersister {
-
     private LocalJamonDataPersister localJamonData;
     private JamonDataPersister jamonDataPersister;
     private Properties jamonProperties;
 
     public JamonDataPersisterDecorator() {
         this(null, new LocalJamonDataPersister());
-    }
-
-    public JamonDataPersisterDecorator(JamonDataPersister persister) {
-        this(persister, new LocalJamonDataPersister());
     }
 
     JamonDataPersisterDecorator(JamonDataPersister persister, LocalJamonDataPersister localJamonData) {

@@ -9,12 +9,17 @@ package com.jamonapi.distributed;
 public class DistributedJamonHazelcastPersister extends JamonDataPersisterDecorator {
 
     public DistributedJamonHazelcastPersister() {
-        this(new DistributedJamonHazelcastPersisterImp());
+        this(new DistributedJamonHazelcastPersisterImp(), new LocalJamonDataPersister());
     }
 
-    public DistributedJamonHazelcastPersister(DistributedJamonHazelcastPersisterImp hazelcastPersisterImp) {
-        super(hazelcastPersisterImp);
+    DistributedJamonHazelcastPersister(DistributedJamonHazelcastPersisterImp hazelcastPersisterImp) {
+        super(hazelcastPersisterImp, new LocalJamonDataPersister());
     }
+
+    DistributedJamonHazelcastPersister(JamonDataPersister persister, LocalJamonDataPersister localJamonData) {
+        super(persister, localJamonData);
+    }
+
 
     public void shutDownHazelCast() {
         ((DistributedJamonHazelcastPersisterImp) getJamonDataPersister()).shutDownHazelCast();
