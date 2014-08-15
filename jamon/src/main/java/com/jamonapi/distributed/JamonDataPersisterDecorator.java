@@ -18,16 +18,21 @@ import java.util.TreeSet;
 
 public class JamonDataPersisterDecorator implements JamonDataPersister {
 
-    private LocalJamonDataPersister localJamonData = new LocalJamonDataPersister();
+    private LocalJamonDataPersister localJamonData;
     private JamonDataPersister jamonDataPersister;
     private Properties jamonProperties;
 
     public JamonDataPersisterDecorator() {
-        jamonProperties = JamonDataPersisterFactory.getJamonProperties();
+        this(null, new LocalJamonDataPersister());
     }
 
     public JamonDataPersisterDecorator(JamonDataPersister persister) {
+        this(persister, new LocalJamonDataPersister());
+    }
+
+    JamonDataPersisterDecorator(JamonDataPersister persister, LocalJamonDataPersister localJamonData) {
         this.jamonDataPersister = persister;
+        this.localJamonData = localJamonData;
         jamonProperties = JamonDataPersisterFactory.getJamonProperties();
     }
 
@@ -41,6 +46,7 @@ public class JamonDataPersisterDecorator implements JamonDataPersister {
     @Override
     /** Put jamon data into the hazelcast map */
     public void put() {
+        localJamonData.put();
         put(getInstance());
     }
 
@@ -51,10 +57,8 @@ public class JamonDataPersisterDecorator implements JamonDataPersister {
         if (mon.getActive() < 1) {
             mon.start();
             try {
-                if (instanceKey==null) {
-                    jamonDataPersister.put();
-                } else {
-                    jamonDataPersister.put(instanceKey);
+                if (instanceKey!=null) {
+                  jamonDataPersister.put(instanceKey);
                 }
             } catch(Throwable t) {
                 MonitorFactory.addException(mon, t);
@@ -85,11 +89,7 @@ public class JamonDataPersisterDecorator implements JamonDataPersister {
 
     @Override
     public void remove(String instanceKey) {
-        if (LocalJamonDataPersister.INSTANCE.equalsIgnoreCase(instanceKey)) {
-            localJamonData.remove(instanceKey);
-            return;
-        }
-
+        localJamonData.remove(instanceKey);
         Monitor mon = MonitorFactory.start(getJamonLabel(".remove()"));
         try {
            jamonDataPersister.remove(instanceKey);

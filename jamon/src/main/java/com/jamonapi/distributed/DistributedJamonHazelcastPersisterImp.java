@@ -61,7 +61,7 @@ public class DistributedJamonHazelcastPersisterImp implements JamonDataPersister
     @Override
     public void remove(String instanceKey) {
        intitialize();
-       jamonDataMap.remove(instanceKey);
+       jamonDataMap.delete(instanceKey);
     }
 
     @Override
