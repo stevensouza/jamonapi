@@ -82,6 +82,7 @@ public class LocalJamonFilePersisterTest {
         persister.put();
         MonitorComposite expected = MonitorFactory.getRootMonitor();
         MonitorComposite fileData = persister.get(LocalJamonFilePersister.JAMON_FILE_NAME);
+        assertThat(fileData.getInstanceName()).isEqualTo(LocalJamonFilePersister.JAMON_FILE_NAME);
         assertThat(fileData.getReport()).isEqualTo(expected.getReport());
     }
 
