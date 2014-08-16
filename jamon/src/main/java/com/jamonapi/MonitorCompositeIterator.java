@@ -57,6 +57,9 @@ import java.util.*;
         return currentMonitorComposite;
     }
 
+    public MonitorComposite toMonitorComposite() {
+        return new MonitorComposite(toList().toArray(new Monitor[]{}));
+    }
     /** Return all the MonitorComposites passed into the constructor as one List */
     public List<Monitor> toList() {
         List<Monitor> list = new ArrayList<Monitor>();

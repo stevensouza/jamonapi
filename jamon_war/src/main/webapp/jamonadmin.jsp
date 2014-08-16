@@ -12,7 +12,8 @@ FormattedDataSet fds=new FormattedDataSet();
 LocaleContext.setLocale(request.getLocale());
 
 // Assign request parameters to local variables.
-String instanceName    = getValue(request.getParameter("instanceName"),"local");
+List<String> instanceName    = getParatemersAsList(request.getParameterValues("instanceName"),"local");
+
 String action    = getValue(request.getParameter("action"),"Refresh");
 String monProxyAction = getValue(request.getParameter("monProxyAction"),"No Action");
 
@@ -47,7 +48,8 @@ arraySQLExec = (arraySQLExec.trim().toLowerCase().startsWith("select")) ? arrayS
 
 // Build the request parameter query string that will be part of every clickable column.
 String query="";
-query+="&instanceName="+instanceName;
+
+query+=toRequestFormat("instanceName", request.getParameterValues("instanceName"));
 query+="&displayTypeValue="+displayType;
 query+="&RangeName="+rangeName;
 query+="&outputTypeValue="+outputType;
@@ -58,7 +60,7 @@ query+="&highlight="+highlightString;
 
 String outputText;
 
-if ("local".equalsIgnoreCase(instanceName)) {
+if (isLocal(instanceName)) {
   executeAction(action);
   enableMonProxy(monProxyAction);
 }
@@ -66,11 +68,12 @@ if ("local".equalsIgnoreCase(instanceName)) {
 JamonDataPersister jamonDataPersister = JamonDataPersisterFactory.get();
 
 if ("Reset".equals(action)) {
-  jamonDataPersister.remove(instanceName);
-  instanceName = "local";
+  new JamonDataPersisterCombiner(jamonDataPersister).remove(instanceName.toArray(new String[0]));
+  instanceName = getParatemersAsList(null, "local");
 }
 
-MonitorComposite mc =  jamonDataPersister.get(instanceName);
+
+MonitorComposite mc =  new JamonDataPersisterCombiner(jamonDataPersister).get(instanceName.toArray(new String[0]));
 Date refreshDate = mc.getDateCreated();
 mc = mc.filterByUnits(rangeName);
 session.setAttribute("monitorComposite",mc);
@@ -182,7 +185,7 @@ function helpWin() {
 <tr>
 <td><table class="layoutmain" border="0" cellpadding="4" cellspacing="0" width="750" align="left">
     <tr class="sectHead">
-    <th>Instance</th>
+    <th>Instances</th>
     <th>JAMon Action</th>
     <th>Mon Proxy Action</th>
     <th>Output</th>
@@ -195,7 +198,7 @@ function helpWin() {
     <th align="right"><a href="javascript:helpWin();" style="color:#C5D4E4;">Help</a></th>
     </tr>
     <tr class="even">
-    <th><%=fds.getDropDownListBox(instanceNameHeader, getInstanceData(jamonDataPersister.getInstances()), instanceName)%></th>
+    <th><%=fds.getMultiSelectListBox(instanceNameHeader, getInstanceData(jamonDataPersister.getInstances()), instanceName.toArray(new String[0]), 4)%></th>
     <th><%=fds.getDropDownListBox(actionHeader, actionBody, "")%></th>
     <th><%=fds.getDropDownListBox(monProxyHeader, getMonProxyBody() , "")%></th>
     <th><%=fds.getDropDownListBox(outputTypeHeader, outputTypeBody, outputType)%></th>
@@ -542,6 +545,32 @@ private static Object[][] getRangeNames() {
 
 }
 
+    private static List<String> getParatemersAsList(String[] params, String defaultValue) {
+        if (params==null) {
+            List<String> list = new ArrayList<String>();
+            list.add(defaultValue);
+            return list;
+        }
+        return Arrays.asList(params);
+    }
+
+    private static String toRequestFormat(String paramName, String[] requestParamArray) {
+        if (requestParamArray==null) {
+            return "";
+        }
+
+        String paramString = "";
+        for (int i=0; i<requestParamArray.length; i++) {
+            paramString+= "&"+paramName+"=" + requestParamArray[i];
+        }
+
+        return paramString;
+
+    }
+
+    private static boolean isLocal(List list) {
+        return (list.size()==1 && list.contains("local"));
+    }
 
 public static class TruncateString extends ConverterBase {
     Pattern pattern;
