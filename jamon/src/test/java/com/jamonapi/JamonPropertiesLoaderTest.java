@@ -17,7 +17,7 @@ public class JamonPropertiesLoaderTest {
         JamonPropertiesLoader loader = new JamonPropertiesLoader("I_DO_NOT_EXIT.properties");
         Properties props = loader.getJamonProperties();
         assertThat(props.getProperty("distributedDataRefreshRateInMinutes")).isEqualTo("5");
-        assertThat(props.getProperty("jamonDataPersister")).isEqualTo("com.jamonapi.distributed.DistributedJamonHazelcastPersister");
+        assertThat(props.getProperty("jamonDataPersister")).isEqualTo("com.jamonapi.distributed.DistributedJamonHazelcastFilePersister");
         assertThat(props.getProperty("jamonDataPersister.label")).isEqualTo("");
         assertThat(props.getProperty("jamonDataPersister.label.prefix")).isEqualTo("");
         assertThat(props.getProperty("jamonDataPersister.directory")).isEqualTo("jamondata");
