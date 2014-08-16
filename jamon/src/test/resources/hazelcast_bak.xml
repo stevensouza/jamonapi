@@ -184,13 +184,6 @@
 
     </map>
 
-<map name="com.jamonapi.*">
-<map-store enabled="true">
-  <factory-class-name>com.jamonapi.distributed.FileSystemMapStoreFactory</factory-class-name>
-  <write-delay-seconds>5</write-delay-seconds>
-</map-store>
-</map>
-
     <multimap name="default">
         <backup-count>1</backup-count>
         <value-collection-type>SET</value-collection-type>
