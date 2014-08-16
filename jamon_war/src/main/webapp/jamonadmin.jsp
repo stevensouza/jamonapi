@@ -350,7 +350,7 @@ String[] outputTypeHeader={"outputTypeValue","outputType"};
 Object[][] outputTypeBody={
                  {"html", "HTML"}, 
                  {"xml", "XML"}, 
-                 {"csv", "Comma Separated"}, 
+                 {"csv", "CSV"},
 	             {"excel","MS Excel"}, 
                 };
 
