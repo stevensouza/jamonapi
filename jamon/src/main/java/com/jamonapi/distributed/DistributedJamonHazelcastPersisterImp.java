@@ -20,7 +20,7 @@ import java.util.TreeSet;
 
 public class DistributedJamonHazelcastPersisterImp implements JamonDataPersister {
 
-    // could be Map if we don't want the instance methods of hazelcast
+    // could be Map if we don't want the instance methods of hazelcast such as delete, and set
     private IMap<String, MonitorComposite> jamonDataMap;
     private HazelcastInstance hazelCast;
 
@@ -34,7 +34,6 @@ public class DistributedJamonHazelcastPersisterImp implements JamonDataPersister
 
     @Override
     public Set<String> getInstances() {
-      // I don't ever want to not display data when there is a hazelcast error.
       intitialize();
       return new TreeSet<String>(jamonDataMap.keySet());
     }
@@ -50,7 +49,6 @@ public class DistributedJamonHazelcastPersisterImp implements JamonDataPersister
         intitialize();
         jamonDataMap.set(key, MonitorFactory.getRootMonitor().setInstanceName(key));
     }
-
 
     @Override
     public MonitorComposite get(String key) {
@@ -70,13 +68,10 @@ public class DistributedJamonHazelcastPersisterImp implements JamonDataPersister
         return hazelCast.getCluster().getLocalMember().toString();
     }
 
-
     public void shutDownHazelCast() {
         intitialize();
         hazelCast.shutdown();
     }
-
-
 
     private void intitialize() {
         if (jamonDataMap == null) {

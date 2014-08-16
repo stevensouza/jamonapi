@@ -38,7 +38,7 @@ public class JamonDataPersisterFactory {
     private void initialize() {
         jamonDataPersister =  create(jamonDataPersisterName);
         if (jamonDataPersister ==null) {
-           jamonDataPersister = new LocalJamonDataPersister();
+           jamonDataPersister = new LocalJamonFilePersister();
         }
     }
 
@@ -49,6 +49,5 @@ public class JamonDataPersisterFactory {
         }
         return null;
     }
-
 
 }

@@ -63,7 +63,6 @@ public class JamonDataPersisterDecorator implements JamonDataPersister {
         }
     }
 
-
     @Override
     public MonitorComposite get(String key) {
         MonitorComposite monitorComposite = localJamonData.get(key);
@@ -119,8 +118,6 @@ public class JamonDataPersisterDecorator implements JamonDataPersister {
     public JamonDataPersister getJamonDataPersister() {
         return jamonDataPersister;
     }
-
-
 
     // I don't ever want to not display data when there is a hazelcast error.
     private Set<String> getDecoratedInstances() {
