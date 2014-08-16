@@ -45,15 +45,6 @@ public class JamonPropertiesLoaderTest {
     }
 
     @Test
-    public void shouldHaveListenerValues() {
-        JamonPropertiesLoader loader = new JamonPropertiesLoader("jamonapi.properties");
-        Properties props = loader.getJamonProperties();
-        assertThat(props.getProperty("jamonListener[1].type")).contains("value");
-        assertThat(props.getProperty("jamonListener[1].name")).contains("FIFOBuffer");
-        assertThat(props.getProperty("jamonListener[1].key")).contains("com.jamonapi.Exceptions, Exception");
-    }
-
-    @Test
     public void shouldReturnListeners() {
         JamonPropertiesLoader loader = new JamonPropertiesLoader("jamonapi2.properties");
         List<JamonPropertiesLoader.JamonListener> listeners = loader.getListeners();
