@@ -4,8 +4,6 @@ import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 
 import java.io.*;
-import java.util.HashSet;
-import java.util.Set;
 
 /** Reusable Utilities used for File manipulations such as reading a file as a String.  **/
 public class FileUtils  {

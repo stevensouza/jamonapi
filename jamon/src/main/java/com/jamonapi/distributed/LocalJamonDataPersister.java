@@ -3,7 +3,8 @@ package com.jamonapi.distributed;
 import com.jamonapi.MonitorComposite;
 import com.jamonapi.MonitorFactory;
 
-import java.util.*;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Class that returns the static jamon data for the jvm as returned by MonitorFactory.getRootMonitor()

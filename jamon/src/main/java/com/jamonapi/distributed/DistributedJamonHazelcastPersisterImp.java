@@ -6,7 +6,6 @@ import com.hazelcast.core.IMap;
 import com.jamonapi.MonitorComposite;
 import com.jamonapi.MonitorFactory;
 
-import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 

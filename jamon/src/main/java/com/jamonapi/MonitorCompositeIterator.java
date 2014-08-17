@@ -1,6 +1,9 @@
 package com.jamonapi;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Class that allows for iterating a collection that contains multiple instances of MonitorComposites and iterates

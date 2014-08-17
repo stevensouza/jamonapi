@@ -1,6 +1,5 @@
 package com.jamonapi.distributed;
 
-import com.jamonapi.Mon;
 import com.jamonapi.MonitorComposite;
 import com.jamonapi.MonitorFactory;
 import com.jamonapi.utils.FileUtils;
@@ -13,7 +12,6 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 import java.util.Set;
 
-import static org.junit.Assert.*;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 public class LocalJamonFilePersisterTest {

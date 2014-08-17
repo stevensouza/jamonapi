@@ -1,6 +1,5 @@
 package com.jamonapi;
 
-import com.jamonapi.distributed.DistributedJamonHazelcastPersister;
 import org.junit.Test;
 
 import java.util.List;

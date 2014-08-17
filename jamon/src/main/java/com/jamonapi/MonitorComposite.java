@@ -6,9 +6,6 @@ import com.jamonapi.utils.DetailData;
 import com.jamonapi.utils.Misc;
 import com.jamonapi.utils.SerializationUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.*;
 
 /**
