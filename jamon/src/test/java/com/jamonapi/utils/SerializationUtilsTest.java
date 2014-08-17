@@ -19,5 +19,12 @@ public class SerializationUtilsTest {
         assertThat(answer).isEqualTo(message);
     }
 
+    @Test
+    public void testDeepCopy() throws Throwable {
+        String message = "serialize/deserialize me steve";
+        String answer = SerializationUtils.deepCopy(message);
+        assertThat(answer).isEqualTo(message);
+    }
+
 
 }
