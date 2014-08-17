@@ -24,6 +24,7 @@ public class MonitorCompositeTest {
 
     @Before
     public void setUp() throws Exception {
+        MonitorFactory.reset();
         // Add every possible listener type to ensure that they are all serialized/deserialized
         Monitor mon = MonitorFactory.getMonitor("mymethodexception", "ms.");
         for (Object[] listenerType : possibleListeners) {
@@ -51,17 +52,7 @@ public class MonitorCompositeTest {
         MonitorFactory.reset();
     }
 
-    /*
-      @Test
-    public void testSerialization() throws Throwable {
-        String message = "serialize/deserialize me steve";
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        com.jamonapi.utils.SerializationUtils.serialize(message, outputStream);
-        String answer = com.jamonapi.utils.SerializationUtils.deserialize(new ByteArrayInputStream(outputStream.toByteArray()));
-        assertThat(answer).isEqualTo(message);
-    }
 
-     */
     @Test
     public void testSerialization() throws Throwable {
         // serialize and deserialize monitors
@@ -69,32 +60,15 @@ public class MonitorCompositeTest {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         SerializationUtils.serialize(original, outputStream);
         MonitorComposite deserialized = SerializationUtils.deserialize(new ByteArrayInputStream(outputStream.toByteArray()));
+        deepComparisonAssertions(original, deserialized);
+    }
 
-        // Do a deep comparison to see if the arrays are equal.
-        // Note getData flattens the data to return any ranges also.  It doesn't however return
-        // Listener buffer data.  A following check looks at that.
-        assertThat(Arrays.deepEquals(original.getData(), deserialized.getData())).isTrue();
-        assertThat(original.getReport()).isEqualTo(deserialized.getReport());
-
-        // One of the monitors was given all current listener types.  Each of them should have 50 rows of data
-        Monitor mon = getMonitorWithListeners(deserialized);
-        CompositeListener compositeListener = (CompositeListener) mon.getListenerType("value").getListener();
-        assertThat(compositeListener.getRowCount()).isEqualTo(possibleListeners.length);
-
-        for (Object[] listenerType : compositeListener.getData()) {
-            JAMonBufferListener bufferListener = (JAMonBufferListener) mon.getListenerType("value").getListener(listenerType[0].toString());
-            // each should have 50 rows of data.
-            assertThat(bufferListener.getRowCount()).isEqualTo(BUFFER_SIZE);
-            Object[][] data = bufferListener.getDetailData().getData();
-            // each row should have a stacktrace in it.  We look for "My ExceptionN"
-            // and RuntimeException
-            for (int i=0; i < data.length; i++) {
-                String stackTrace = data[i][0].toString();
-                assertThat(stackTrace).contains(EXCEPTION_NAME + i);
-                assertThat(stackTrace).contains("RuntimeException");
-            }
-        }
-
+    @Test
+    public void testDeepCopy() throws Throwable {
+        // do a deep copy of the object.
+        MonitorComposite original = MonitorFactory.getRootMonitor();
+        MonitorComposite deserialized = original.copy();
+        deepComparisonAssertions(original, deserialized);
     }
 
 
@@ -153,6 +127,35 @@ public class MonitorCompositeTest {
         MonKey key = new MonKeyImp(EXCEPTION_METHOD, Misc.getExceptionTrace(exception), "ms.");
         MonitorFactory.start(key).stop();
     }
+
+    private void deepComparisonAssertions(MonitorComposite original, MonitorComposite copy) {
+        // Do a deep comparison to see if the arrays are equal.
+        // Note getData flattens the data to return any ranges also.  It doesn't however return
+        // Listener buffer data.  A following check looks at that.
+        assertThat(Arrays.deepEquals(original.getData(), copy.getData())).isTrue();
+        assertThat(original.getReport()).isEqualTo(copy.getReport());
+
+        // One of the monitors was given all current listener types.  Each of them should have 50 rows of data
+        Monitor mon = getMonitorWithListeners(copy);
+        CompositeListener compositeListener = (CompositeListener) mon.getListenerType("value").getListener();
+        assertThat(compositeListener.getRowCount()).isEqualTo(possibleListeners.length);
+
+        for (Object[] listenerType : compositeListener.getData()) {
+            JAMonBufferListener bufferListener = (JAMonBufferListener) mon.getListenerType("value").getListener(listenerType[0].toString());
+            // each should have 50 rows of data.
+            assertThat(bufferListener.getRowCount()).isEqualTo(BUFFER_SIZE);
+            Object[][] data = bufferListener.getDetailData().getData();
+            // each row should have a stacktrace in it.  We look for "My ExceptionN"
+            // and RuntimeException
+            for (int i=0; i < data.length; i++) {
+                String stackTrace = data[i][0].toString();
+                assertThat(stackTrace).contains(EXCEPTION_NAME + i);
+                assertThat(stackTrace).contains("RuntimeException");
+            }
+        }
+    }
+
+
 
 
 
