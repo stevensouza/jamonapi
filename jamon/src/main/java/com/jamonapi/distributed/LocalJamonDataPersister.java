@@ -45,7 +45,9 @@ public class LocalJamonDataPersister implements JamonDataPersister {
     @Override
     public MonitorComposite get(String instanceKey) {
         if (INSTANCE.equalsIgnoreCase(instanceKey)) {
-            return MonitorFactory.getRootMonitor();
+            // note not returning the root monitor directly.  If you do it won't the data can't be cached. I.e. it
+            // will always be tied to the live jamon data.
+            return MonitorFactory.getRootMonitor().copy();
         }
 
         return null;
