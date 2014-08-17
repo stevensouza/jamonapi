@@ -27,11 +27,18 @@ public class JamonDataPersisterCombiner  {
         }
 
         Map<String, MonitorComposite> map = new HashMap<String, MonitorComposite>();
+        Date previousDate = null;
+        Date finalDate = null; // assign the date of all the results as the most recent of all monitorComposite dates
         for (int i=0;i<instanceKeys.length;i++) {
-            map.put(instanceKeys[i], persister.get(instanceKeys[i]));
+            MonitorComposite mc = persister.get(instanceKeys[i]);
+            map.put(instanceKeys[i], mc);
+            if (previousDate == null || mc.getDateCreated().after(previousDate)) {
+                finalDate = mc.getDateCreated();
+            }
+            previousDate = mc.getDateCreated();
         }
 
-        MonitorComposite mc = new MonitorCompositeIterator(map.values()).toMonitorComposite();
+        MonitorComposite mc = new MonitorCompositeIterator(map.values()).toMonitorComposite().setDateCreated(finalDate);
         return mc.setInstanceName(Misc.getAsString(instanceKeys));
     }
 
@@ -48,5 +55,7 @@ public class JamonDataPersisterCombiner  {
     public static void main(String [] arga) {
         String d="hello my name is        select        *       from    array    ";
         System.out.println(d.replaceAll("\\s{2,}", " "));
+        Date date = new Date();
+        System.out.println(date.before(new Date(date.getTime()+1000)));
     }
 }
