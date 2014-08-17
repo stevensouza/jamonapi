@@ -80,6 +80,12 @@ public class MonitorComposite extends Monitor implements DetailData  {
         return new MonitorComposite(getMonitorsWithUnits(units)).setInstanceName(getInstanceName()).setDateCreated(getDateCreated());
     }
 
+    /** Note this works with Local, however when it is put into the map by combining multiple MonitorComposites that have
+     * the same key (for example on different instances) it does not currently work.
+     *
+     * @param key
+     * @return
+     */
     public boolean exists(MonKey key) {
        return map.containsKey(key);
     }

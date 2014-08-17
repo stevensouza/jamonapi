@@ -146,10 +146,18 @@ Available:<br>
     <input type="submit" name="removelistener" title="Remove Listener" value="<---" onClick="this.form.action='monmanage.jsp'; this.form.submit();">
 </th>
 
+<%
+    String currentListenersHtml = "";
+    if (mc.isLocalInstance()) {
+        currentListenersHtml = fds.getMultiSelectListBox(getCurrentListeners(mc, key, listenerType) , new String[]{""}, 5);
+    } else {
+        currentListenersHtml = fds.getMultiSelectListBox(getCurrentListeners(mon, listenerType) , new String[]{""}, 5);
+    }
 
+%>
 <th>
 Current:<br>
-    <%=fds.getMultiSelectListBox(getCurrentListeners(mc, key, listenerType) , new String[]{""}, 5)%>
+    <%=currentListenersHtml%>
 <br>
 
 <input type="submit" name="displaylistener" title="Display Listener" value="Display" onClick="this.form.action='mondetail.jsp'; this.form.submit();" >
@@ -302,6 +310,14 @@ private ResultSetConverter getCurrentListeners(MonitorComposite mc, MonKey key, 
    
    return new ResultSetConverter(new String[]{"none"}, new Object[][]{{"No Listeners"}}).execute("select col0 as currentlistener,col0 as currentlistenerdisp from array order by col0 asc");
  
+}
+
+private ResultSetConverter getCurrentListeners( Monitor mon, String listenerType) {
+   if (mon.hasListeners(listenerType)) {
+            return getCurrentListeners(mon.getListenerType(listenerType).getListener());
+   }
+
+   return new ResultSetConverter(new String[]{"none"}, new Object[][]{{"No Listeners"}}).execute("select col0 as currentlistener,col0 as currentlistenerdisp from array order by col0 asc");
 }
 
 private ResultSetConverter getCurrentListeners(JAMonListener listener) {
