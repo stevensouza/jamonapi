@@ -8,7 +8,14 @@
 
 FormattedDataSet fds=new FormattedDataSet();
 MonitorComposite mc = (MonitorComposite) session.getAttribute("monitorComposite");
-MonKey key=(MonKey)session.getAttribute("monKey");
+    MonKey key=null;
+    Integer keyNum = null;
+    if (mc.isLocalInstance()) {
+        key = (MonKey) session.getAttribute("monKey");
+    } else {
+        keyNum = (Integer) session.getAttribute("keyNum");
+    }
+
 String listenerType = "value";
 
 if (request.getParameter("listenertype")==null  && session.getAttribute("listenerType")!=null)
@@ -72,14 +79,19 @@ map.put("rootElement", "JAMonXML");
 String outputText="";
 
 
-if (key==null)
-  outputText="<div align='center'><br><br><b>A Monitor was not specified.  Select one from jamonadmin.jsp</b></div>";
-else {
+  if ( (key==null && mc.isLocalInstance()) || (keyNum==null && !mc.isLocalInstance()) ) {
+    outputText="<div align='center'><br><br><b>A Monitor was not specified.  Select one from jamonadmin.jsp</b></div>";
+  } else {
 
   JAMonListener listener=null;
 
-  if (mc.exists(key))
+  if (mc.isLocalInstance() && mc.exists(key))
     listener=mc.getMonitor(key).getListenerType(listenerType).getListener(currentListenerName);
+  else {
+    Monitor mon = mc.getMonitors()[keyNum];
+    key = mon.getMonKey();
+    listener=mon.getListenerType(listenerType).getListener(currentListenerName);
+   }
 
   if (listener==null)
     outputText="<div align='center'><br><br><b>Null listener returned. Ensure there is a listener for this monitor</b></div>";
@@ -90,7 +102,7 @@ else {
     setBufferSize((JAMonBufferListener) listener, bufferSize);
 
     DetailData detailData=((JAMonBufferListener)listener).getDetailData();
-    ResultSetConverter rsc=getResultSetConverter(detailData.getHeader(), detailData.getData(),arraySQLExec);
+    ResultSetConverter rsc=getResultSetConverter(detailData.getHeader(), detailData.getData(), arraySQLExec);
 
     if (rsc.isEmpty())
      outputText="<div align='center'><br><br><b>No data was returned</b></div>";

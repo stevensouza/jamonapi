@@ -20,6 +20,7 @@ if (request.getParameter("key")==null  && session.getAttribute("monKey")!=null) 
   keyNum=getNum(request.getParameter("key"), "1")-1;
   key=getMonKey(mc, keyNum);
   session.setAttribute("monKey", key);
+  session.setAttribute("keyNum", keyNum);
 }
 
 
@@ -40,10 +41,14 @@ if (mc.isLocalInstance()) {
 Monitor mon=null;
 boolean hasListeners=false;
 boolean enabled=false;
-if (mc.exists(key)) {
+if (mc.isLocalInstance() && mc.exists(key)) {
   mon=mc.getMonitor(key);
   hasListeners=mon.hasListeners();
   enabled=mon.isEnabled();
+} else if (!mc.isLocalInstance()) {
+    mon=mc.getMonitors()[keyNum];
+    hasListeners=mon.hasListeners();
+    enabled=mon.isEnabled();
 }
 
 %>

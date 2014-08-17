@@ -16,7 +16,7 @@ List<String> instanceName    = getParatemersAsList(request.getParameterValues("i
 
 String action    = getValue(request.getParameter("action"),"Refresh");
 String monProxyAction = getValue(request.getParameter("monProxyAction"),"No Action");
-
+String cache    = getValue(request.getParameter("cache"),"false");
 String outputType= getValue(request.getParameter("outputTypeValue"),"html");
 String formatter = getValue(request.getParameter("formatterValue"), "#,###");
 String arraySQL  = getValue(request.getParameter("ArraySQL"),"");
@@ -57,6 +57,8 @@ query+="&formatterValue="+java.net.URLEncoder.encode(formatter);
 query+="&ArraySQL="+java.net.URLEncoder.encode(arraySQL);
 query+="&TextSize="+textSize;
 query+="&highlight="+highlightString;
+query+="&cache="+cache;
+
 
 String outputText;
 
@@ -72,8 +74,15 @@ if ("Reset".equals(action)) {
   instanceName = getParatemersAsList(null, "local");
 }
 
+MonitorComposite mc = (MonitorComposite) session.getAttribute("monitorComposite");
+List<String> prevInstanceName = (List<String>) session.getAttribute("prevInstanceName");
+// the way html works is if cache is false it is not passed in hence the not true check on cache.
+if (mc==null || !"true".equalsIgnoreCase(cache) || prevInstanceName==null || !prevInstanceName.equals(instanceName) ) {
+    mc = new JamonDataPersisterCombiner(jamonDataPersister).get(instanceName.toArray(new String[0]));
+    prevInstanceName = instanceName;
+    session.setAttribute("prevInstanceName", prevInstanceName);
+}
 
-MonitorComposite mc =  new JamonDataPersisterCombiner(jamonDataPersister).get(instanceName.toArray(new String[0]));
 Date refreshDate = mc.getDateCreated();
 mc = mc.filterByUnits(rangeName);
 session.setAttribute("monitorComposite",mc);
@@ -173,7 +182,6 @@ function helpWin() {
 
 </head>
 <body>
-
 <!-- arraySQLExec=<%=arraySQLExec%>-->
 
 <form action="jamonadmin.jsp" method="post">
@@ -185,7 +193,9 @@ function helpWin() {
 <tr>
 <td><table class="layoutmain" border="0" cellpadding="4" cellspacing="0" width="750" align="left">
     <tr class="sectHead">
+    <th>Submit</th>
     <th>Instances</th>
+    <th>Cache Results</th>
     <th>JAMon Action</th>
     <th>Mon Proxy Action</th>
     <th>Output</th>
@@ -198,7 +208,9 @@ function helpWin() {
     <th align="right"><a href="javascript:helpWin();" style="color:#C5D4E4;">Help</a></th>
     </tr>
     <tr class="even">
+    <td><input type="submit" name="actionSbmt" value="Go !" ></td>
     <th><%=fds.getMultiSelectListBox(instanceNameHeader, getInstanceData(jamonDataPersister.getInstances()), instanceName.toArray(new String[0]), 4)%></th>
+    <th><input type="checkbox" name="cache" value="true" <%="true".equalsIgnoreCase(cache) ? "checked" : ""%>></th>
     <th><%=fds.getDropDownListBox(actionHeader, actionBody, "")%></th>
     <th><%=fds.getDropDownListBox(monProxyHeader, getMonProxyBody() , "")%></th>
     <th><%=fds.getDropDownListBox(outputTypeHeader, outputTypeBody, outputType)%></th>
@@ -208,7 +220,7 @@ function helpWin() {
     <th><input type='text' name='ArraySQL' value="<%=arraySQL%>" size="45"></th>
     <th><input type='text' name='highlight' value="<%=highlightString%>" size="20"></th>     
     <th><input type='text' name='TextSize' value="<%=(textSize<=0) ? "" : ""+textSize%>" size="10"></th>
-    <td><input type="submit" name="actionSbmt" value="Go !" ></td>
+    <th></th>
     </tr>
 </table></td>
 </tr>
@@ -429,8 +441,6 @@ private static void executeAction(String action) {
      MonitorFactory.enableActivityTracking(true);
  else if ("Disable Activity Tracking".equals(action))  
      MonitorFactory.enableActivityTracking(false);
- 
-
 }
 
 // Enable/Disable jamon summary stats for MonProxyFactory
