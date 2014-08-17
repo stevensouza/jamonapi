@@ -32,6 +32,7 @@ else if (request.getParameter("listenertype")!=null) {
 }
 
 session.setAttribute("listenerType", listenerType);
+// note can't work on key if there is more than
 if (mc.isLocalInstance()) {
     executeAction(action, key);
     addListeners(request, key);
@@ -45,7 +46,7 @@ if (mc.isLocalInstance() && mc.exists(key)) {
   mon=mc.getMonitor(key);
   hasListeners=mon.hasListeners();
   enabled=mon.isEnabled();
-} else if (!mc.isLocalInstance()) {
+} else  {
     mon=mc.getMonitors()[keyNum];
     hasListeners=mon.hasListeners();
     enabled=mon.isEnabled();

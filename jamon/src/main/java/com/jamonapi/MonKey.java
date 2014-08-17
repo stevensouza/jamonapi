@@ -7,8 +7,8 @@ package com.jamonapi;
  */
 
 public interface MonKey extends RowData, MonKeyItem {
-    final String LABEL_HEADER="Label";
-    final String UNITS_HEADER="Units";
+    static final String LABEL_HEADER="Label";
+    static final String UNITS_HEADER="Units";
 
     /** return any value associated with the key.
      * new MonKey(label, units).  would return the value associated with label

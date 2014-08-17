@@ -10,9 +10,10 @@ package com.jamonapi;
  *
  */
 public class MonKeyItemBase implements MonKeyItem {
-    private static final long serialVersionUID = 278L;
+    private static final long serialVersionUID = 279L;
     private Object summaryLabel;
     private Object details;
+    private String instanceName=DEFAULT_INSTANCE_NAME;
 
     public MonKeyItemBase(Object summaryLabel) {
         this.summaryLabel=(summaryLabel==null) ? "" : summaryLabel;
@@ -59,5 +60,14 @@ public class MonKeyItemBase implements MonKeyItem {
         return summaryLabel.hashCode();
     }
 
+    @Override
+    public void setInstanceName(String instanceName) {
+        this.instanceName = instanceName;
+    }
+
+    @Override
+    public String getInstanceName() {
+        return instanceName;
+    }
 
 }

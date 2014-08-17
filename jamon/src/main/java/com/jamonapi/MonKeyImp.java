@@ -19,18 +19,14 @@ import java.util.List;
  * 
  */
 
-
-
-//import java.util.Collection;
-
-
 public class MonKeyImp implements MonKey {
 
-    private static final long serialVersionUID = 278L;
+    private static final long serialVersionUID = 279L;
     private final String summaryLabel; // pageHits for example.  A relatively unique key value to be used in a hash map
     private Object details; // The actual page name for the detail buffer.  pageHits for example
     private final String units; // ms. for example
     private Object param;
+    private String instanceName=DEFAULT_INSTANCE_NAME;
 
     public MonKeyImp(String summaryLabel, String units) {
         this(summaryLabel, summaryLabel, units);
@@ -70,6 +66,16 @@ public class MonKeyImp implements MonKey {
 
     }
 
+    @Override
+    public void setInstanceName(String instanceName) {
+        this.instanceName = instanceName;
+    }
+
+    @Override
+    public String getInstanceName() {
+        return instanceName;
+    }
+
     /** Returns any object that has a named key.  In this keys case
      * 'label' and 'units' makes sense, but any values are acceptible.
      */
@@ -82,6 +88,8 @@ public class MonKeyImp implements MonKey {
             return getParam();
         else if ("details".equalsIgnoreCase(key))
             return getDetails();
+        else if ("instanceName".equalsIgnoreCase(key))
+            return getInstanceName();
         else
             return null;
 
@@ -126,6 +134,7 @@ public class MonKeyImp implements MonKey {
     }
 
     public List getBasicHeader(List header) {
+        header.add(INSTANCE_HEADER);
         header.add(LABEL_HEADER);
         return header;
     }
@@ -136,18 +145,21 @@ public class MonKeyImp implements MonKey {
     }
 
     public List getHeader(List header) {
+        header.add(INSTANCE_HEADER);
         header.add(LABEL_HEADER);
         header.add(UNITS_HEADER);
         return header;
     }
 
     public List getBasicRowData(List rowData) {
+        rowData.add(getInstanceName());
         rowData.add(getLabel()+", "+getUnits());
         return rowData;
     }
 
 
     public List getRowData(List rowData) {
+        rowData.add(getInstanceName());
         rowData.add(getLabel());
         rowData.add(getUnits());
 

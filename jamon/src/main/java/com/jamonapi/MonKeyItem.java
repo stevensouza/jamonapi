@@ -17,7 +17,20 @@ import java.io.Serializable;
  */
 
 public interface MonKeyItem extends Serializable {
-    public Object getDetails();
+    static final long serialVersionUID = 279L;
+    static final String INSTANCE_HEADER = "Instance";
+    static final String DEFAULT_INSTANCE_NAME = "local";
 
+    public Object getDetails();
     public void setDetails(Object details);
+
+    /** Now that jamon can track data on multiple vm's we need a way to better identify the keys.  A typical
+     * value for this might be: myapp_jetty9_production.  It is not part of the key used for aggregation (in the map)
+     * but is used for informational purposes in the jamon report
+     *
+     * @param instanceName
+     */
+    public void setInstanceName(String instanceName);
+    public String getInstanceName();
+
 }

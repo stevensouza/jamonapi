@@ -9,7 +9,7 @@ import java.util.List;
 
 class MonitorImp extends Monitor implements RowData  {
 
-    private static final long serialVersionUID = 278L;
+    private static final long serialVersionUID = 279L;
 
     MonitorImp(MonInternals monData) {
         super(monData);
@@ -145,7 +145,7 @@ class MonitorImp extends Monitor implements RowData  {
 
     private static class NullMonKey implements MonKey {
 
-        private static final long serialVersionUID = 278L;
+        private static final long serialVersionUID = 279L;
 
         public String getLabel() {
             return "";
@@ -189,6 +189,16 @@ class MonitorImp extends Monitor implements RowData  {
 
         public void setDetails(Object details) {
 
+        }
+
+        @Override
+        public void setInstanceName(String instanceName) {
+
+        }
+
+        @Override
+        public String getInstanceName() {
+            return DEFAULT_INSTANCE_NAME;
         }
 
         public int getSize() {

@@ -49,14 +49,14 @@ public class MonKeyBaseTest {
         assertThat(steveMonKey.getRangeKey()).isEqualTo("Steves Range");
 
         // header assertions
-        assertThat(steveMonKey.getBasicHeader(new ArrayList())).containsOnly("Label");
-        assertThat(steveMonKey.getHeader(new ArrayList())).containsExactly("fn","ln","age");
-        assertThat(steveMonKey.getDisplayHeader(new ArrayList())).containsExactly("fn","ln","age");
+        assertThat(steveMonKey.getBasicHeader(new ArrayList())).containsOnly("Instance", "Label");
+        assertThat(steveMonKey.getHeader(new ArrayList())).containsExactly("Instance", "fn","ln","age");
+        assertThat(steveMonKey.getDisplayHeader(new ArrayList())).containsExactly("Instance", "fn","ln","age");
 
         // data assertions
-        assertThat(steveMonKey.getBasicRowData(new ArrayList()).get(0).toString()).isEqualTo("steve summary, souza, 44");
-        assertThat(steveMonKey.getRowData(new ArrayList())).containsExactly(new MonKeyItemBase("steve summary","steve detail"),"souza",new Long(44));
-        assertThat(steveMonKey.getRowDisplayData(new ArrayList())).containsExactly(new MonKeyItemBase("steve summary","detail doesn't need to match"),"souza",new Long(44));
+        assertThat(steveMonKey.getBasicRowData(new ArrayList()).get(1).toString()).isEqualTo("steve summary, souza, 44");
+        assertThat(steveMonKey.getRowData(new ArrayList())).containsExactly("local", new MonKeyItemBase("steve summary","steve detail"),"souza",new Long(44));
+        assertThat(steveMonKey.getRowDisplayData(new ArrayList())).containsExactly("local", new MonKeyItemBase("steve summary","detail doesn't need to match"),"souza",new Long(44));
         assertThat(steveMonKey.getDetails().toString()).isEqualTo("[steve detail, souza, 44]");
     }
 

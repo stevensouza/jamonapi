@@ -13,7 +13,7 @@ import java.util.*;
  */
 public class MonKeyBase implements MonKey {
 
-    private static final long serialVersionUID = 278L;
+    private static final long serialVersionUID = 279L;
 
     /**
      * A key implmentation for label, and units type monitors.
@@ -21,6 +21,7 @@ public class MonKeyBase implements MonKey {
     private Map keyMap;
     private String rangeKeyStr;
     private Object details;
+    private String instanceName=DEFAULT_INSTANCE_NAME;
 
     /** Calls the other constructor.  The keyMap will be used to create the range name */
     public MonKeyBase(LinkedHashMap keyMap) {
@@ -44,6 +45,8 @@ public class MonKeyBase implements MonKey {
             return getLabel();
         else if ("details".equalsIgnoreCase(key))
             return getDetails();
+        else if ("instanceName".equalsIgnoreCase(key))
+            return getInstanceName();
         else
             return keyMap.get(key);
     }
@@ -82,8 +85,19 @@ public class MonKeyBase implements MonKey {
         return keyMap;
     }
 
+    @Override
+    public void setInstanceName(String instanceName) {
+        this.instanceName = instanceName;
+    }
+
+    @Override
+    public String getInstanceName() {
+        return instanceName;
+    }
+
     /** Puts the word 'Label' into the list.  Used in the basic JAMon report */
     public List getBasicHeader(List header) {
+        header.add(INSTANCE_HEADER);
         header.add(LABEL_HEADER);
         return header;
     }
@@ -95,6 +109,7 @@ public class MonKeyBase implements MonKey {
 
     /** Returns each key in the map as a header element in the list */
     public List getHeader(List header) {
+        header.add(INSTANCE_HEADER);
         Iterator iter=keyMap.keySet().iterator();
         while(iter.hasNext()) {
             header.add(iter.next());
@@ -109,6 +124,7 @@ public class MonKeyBase implements MonKey {
      * steve, souza, 44 would be returned
      */
     public List getBasicRowData(List rowData) {
+        rowData.add(getInstanceName());
         Collection row=keyMap.values();
         int currentElement=1;
         int lastElement=row.size();
@@ -133,6 +149,7 @@ public class MonKeyBase implements MonKey {
     /** Add each value from the map at an element to the list.
      */
     public List getRowData(List rowData) {
+        rowData.add(getInstanceName());
         Collection row=keyMap.values();
         Iterator iter=row.iterator();
         // loop through elements creating a comma delimeted list of the values

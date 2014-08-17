@@ -4,8 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -39,22 +38,33 @@ public class MonitorCompositeIteratorTest {
     public void testWorksWithMultipleComposites() throws Exception {
         MonitorFactory.start("hello").stop();
         MonitorFactory.start("world").stop();
-        MonitorComposite monitorComposite1 = MonitorFactory.getRootMonitor();
+        MonitorComposite monitorComposite1 = MonitorFactory.getRootMonitor().copy().setInstanceName("mc1");
         MonitorFactory.reset();
 
         MonitorFactory.start("hello").stop();
         MonitorFactory.start("world").stop();
         MonitorFactory.add("page", "counter", 1);
-        MonitorComposite monitorComposite2 = MonitorFactory.getRootMonitor();
+        MonitorComposite monitorComposite2 = MonitorFactory.getRootMonitor().copy().setInstanceName("mc2");
 
         Set<MonitorComposite> set = new HashSet<MonitorComposite>();
         set.add(monitorComposite1);
         set.add(monitorComposite2);
 
-        MonitorCompositeIterator iter = new MonitorCompositeIterator(set);
-        int size = iter.toList().size();
+        MonitorCompositeIterator compositeIterator = new MonitorCompositeIterator(set);
+        List<Monitor> list = compositeIterator.toList();
+        int size = list.size();
 
         assertThat(size).isEqualTo(monitorComposite1.getNumRows()+monitorComposite2.getNumRows());
+        assertThat(instanceNames(list)).containsOnly("mc1","mc2");
+    }
+
+    private Set<String> instanceNames(List<Monitor> list) {
+        Iterator<Monitor> iter = list.iterator();
+        Set<String> set = new HashSet<String>();
+        while (iter.hasNext()) {
+            set.add(iter.next().getMonKey().getInstanceName());
+        }
+        return set;
     }
 
 }

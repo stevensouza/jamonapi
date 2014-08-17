@@ -21,11 +21,8 @@ public class JamonDataPersisterCombiner  {
         return query(ALL_DATA, instanceKeys);
     }
 
-    public MonitorComposite query(String arraySql, String... instanceKeys) {
-        if (instanceKeys.length==1) {
-            return persister.get(instanceKeys[0]);
-        }
 
+    private MonitorComposite query(String arraySql, String... instanceKeys) {
         Map<String, MonitorComposite> map = new HashMap<String, MonitorComposite>();
         Date previousDate = null;
         Date finalDate = null; // assign the date of all the results as the most recent of all monitorComposite dates
@@ -48,14 +45,4 @@ public class JamonDataPersisterCombiner  {
         }
     }
 
-    private static String removeExtraSpaces(String str) {
-        return str.replaceAll("\\s{2,}", " ").trim();
-    }
-
-    public static void main(String [] arga) {
-        String d="hello my name is        select        *       from    array    ";
-        System.out.println(d.replaceAll("\\s{2,}", " "));
-        Date date = new Date();
-        System.out.println(date.before(new Date(date.getTime()+1000)));
-    }
 }

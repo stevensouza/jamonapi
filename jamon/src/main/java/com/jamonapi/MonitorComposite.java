@@ -19,6 +19,7 @@ public class MonitorComposite extends Monitor implements DetailData  {
 
     private static final long serialVersionUID = 279L;
     private static final String LOCAL="local";
+    private static final String INSTANCE_NAME_HEADER = "Instance";
 
     private final Monitor[] monitors;// the monitors in the composite
     private final int numRows; // rows in the composite
@@ -26,7 +27,6 @@ public class MonitorComposite extends Monitor implements DetailData  {
     private Map<MonKey, Monitor> map;
     private Date dateCreated;
     private String instanceName=LOCAL;
-    private boolean includeInstanceName;
 
     /** Creates a new instance of MonitorComposite */
     public MonitorComposite(Monitor[] monitors) {
@@ -167,7 +167,6 @@ public class MonitorComposite extends Monitor implements DetailData  {
         } else
             return null;
     }
-
 
 
     // Various get data methods (for all data, basic data, and display data
@@ -667,9 +666,9 @@ public class MonitorComposite extends Monitor implements DetailData  {
      * @since  2.79
      * @return whether or not the instanceName should be included in any of the header and data methods.
      */
-    public boolean isInstanceNameIncluded() {
-        return includeInstanceName;
-    }
+//    public boolean isInstanceNameIncluded() {
+//        return includeInstanceName;
+//    }
 
     /**
      * Sets whether or not the instanceName should be included in any of the header and data methods.
@@ -677,10 +676,10 @@ public class MonitorComposite extends Monitor implements DetailData  {
      * @since  2.79
      * @return this object
      */
-    public MonitorComposite setIncludeInstanceName(boolean includeInstanceName) {
-        this.includeInstanceName = includeInstanceName;
-        return this;
-    }
+//    public MonitorComposite setIncludeInstanceName(boolean includeInstanceName) {
+//        this.includeInstanceName = includeInstanceName;
+//        return this;
+//    }
 
 
 }

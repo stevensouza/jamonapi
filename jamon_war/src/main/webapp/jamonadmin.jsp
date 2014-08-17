@@ -42,9 +42,9 @@ if (arraySQLExec.trim().toLowerCase().startsWith("select"))
 else if (arraySQLExec.trim().toLowerCase().startsWith("where")) 
    arraySQLExec="select * from array "+arraySQL;// where clause entered:  where hits>100 and total<50000
 else
-   arraySQLExec="select * from array where col1 like '"+arraySQL+"'";
+   arraySQLExec="select * from array where label like '"+arraySQL+"'";
 
-arraySQLExec = (arraySQLExec.trim().toLowerCase().startsWith("select")) ? arraySQLExec : "select * from array where col1 like '"+arraySQL+"'";
+arraySQLExec = (arraySQLExec.trim().toLowerCase().startsWith("select")) ? arraySQLExec : "select * from array where label like '"+arraySQL+"'";
 
 // Build the request parameter query string that will be part of every clickable column.
 String query="";
@@ -81,6 +81,13 @@ if (mc==null || !"true".equalsIgnoreCase(cache) || prevInstanceName==null || !pr
     mc = new JamonDataPersisterCombiner(jamonDataPersister).get(instanceName.toArray(new String[0]));
     prevInstanceName = instanceName;
     session.setAttribute("prevInstanceName", prevInstanceName);
+}
+
+    // If the request contains local data and it is cached we make a copy so we don't see live new jamon data each time
+    // screen is refreshed.  Not having local cache should let the user view and manage the live jamon monitors.  No
+    // other instance name allows for realtime and management of the monitors.
+if (instanceName.contains("local") && "true".equalsIgnoreCase(cache)) {
+    mc = mc.copy();
 }
 
 Date refreshDate = mc.getDateCreated();

@@ -110,6 +110,15 @@ public class MonitorCompositeTest {
         assertThat(composite.setInstanceName("newname").isLocalInstance()).isFalse();
     }
 
+    @Test
+    public void shouldReturnInstanceNameInData() {
+        MonitorComposite composite = MonitorFactory.getRootMonitor();
+        int NUM_COLUMNS = 17;
+        assertThat(composite.getBasicHeader().length).isEqualTo(NUM_COLUMNS);
+        Object data = composite.getBasicData();
+        assertThat(composite.getBasicData()[0].length).isEqualTo(NUM_COLUMNS);
+    }
+
 
     private Monitor getMonitorWithListeners(MonitorComposite monitorComposite) {
         MonKey key = new MonKeyImp(EXCEPTION_METHOD, "ms.");

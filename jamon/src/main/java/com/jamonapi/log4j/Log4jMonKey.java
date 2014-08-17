@@ -15,7 +15,7 @@ import org.apache.log4j.spi.LoggingEvent;
  */
 public class Log4jMonKey extends MonKeyImp {
 
-    private static final long serialVersionUID = 278L;
+    private static final long serialVersionUID = 279L;
 
     /** Constructor for building jamon key for log4j */
     public Log4jMonKey(String summaryLabel, String detailLabel, String units,

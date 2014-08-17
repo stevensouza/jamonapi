@@ -268,7 +268,7 @@ public class MonitorFactoryTest {
     @Test
     public void testGetBasicHeader() {
         MonitorFactory.start("test");
-        assertThat(MonitorFactory.getRootMonitor().getBasicHeader().length).isEqualTo(16);
+        assertThat(MonitorFactory.getRootMonitor().getBasicHeader().length).isEqualTo(17);
     }
 
 
