@@ -4,7 +4,11 @@ package com.jamonapi;
 
 import com.jamonapi.utils.DetailData;
 import com.jamonapi.utils.Misc;
+import com.jamonapi.utils.SerializationUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -13,15 +17,16 @@ import java.util.*;
  */
 public class MonitorComposite extends Monitor implements DetailData  {
 
-    private static final long serialVersionUID = 278L;
+    private static final long serialVersionUID = 279L;
     private static final String LOCAL="local";
 
     private final Monitor[] monitors;// the monitors in the composite
     private final int numRows; // rows in the composite
     private final static int TYPICAL_NUM_CHILDREN=200;// hopefully makes it so the monitor need not grow all the time
     private Map<MonKey, Monitor> map;
-    private final Date dateCreated;
+    private Date dateCreated;
     private String instanceName=LOCAL;
+    private boolean includeInstanceName;
 
     /** Creates a new instance of MonitorComposite */
     public MonitorComposite(Monitor[] monitors) {
@@ -72,7 +77,7 @@ public class MonitorComposite extends Monitor implements DetailData  {
     }
 
     public MonitorComposite filterByUnits(String units) {
-        return new MonitorComposite(getMonitorsWithUnits(units)).setInstanceName(getInstanceName());
+        return new MonitorComposite(getMonitorsWithUnits(units)).setInstanceName(getInstanceName()).setDateCreated(getDateCreated());
     }
 
     public boolean exists(MonKey key) {
@@ -362,6 +367,14 @@ public class MonitorComposite extends Monitor implements DetailData  {
         return dateCreated;
     }
 
+    /**
+      @since 2.79
+     */
+    public MonitorComposite setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+        return this;
+    }
+
 
     @Override
     public double getHits() {
@@ -642,6 +655,32 @@ public class MonitorComposite extends Monitor implements DetailData  {
 
     }
 
+    /**
+     * @since  2.79
+     * @return a deep copy of this object
+     */
+    public MonitorComposite copy() {
+        return SerializationUtils.deepCopy(this);
+    }
+
+    /**
+     * @since  2.79
+     * @return whether or not the instanceName should be included in any of the header and data methods.
+     */
+    public boolean isInstanceNameIncluded() {
+        return includeInstanceName;
+    }
+
+    /**
+     * Sets whether or not the instanceName should be included in any of the header and data methods.
+     *
+     * @since  2.79
+     * @return this object
+     */
+    public MonitorComposite setIncludeInstanceName(boolean includeInstanceName) {
+        this.includeInstanceName = includeInstanceName;
+        return this;
+    }
 
 
 }
