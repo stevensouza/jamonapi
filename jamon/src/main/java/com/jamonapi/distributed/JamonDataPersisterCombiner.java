@@ -12,7 +12,6 @@ import java.util.Map;
  * Created by stevesouza on 8/16/14.
  */
 public class JamonDataPersisterCombiner  {
-    private final String ALL_DATA = "select * from array";
     private JamonDataPersister persister;
 
     public JamonDataPersisterCombiner(JamonDataPersister persister) {
@@ -20,11 +19,6 @@ public class JamonDataPersisterCombiner  {
     }
 
     public MonitorComposite get(String... instanceKeys) {
-        return query(ALL_DATA, instanceKeys);
-    }
-
-
-    private MonitorComposite query(String arraySql, String... instanceKeys) {
         Map<String, MonitorComposite> map = new HashMap<String, MonitorComposite>();
         Date previousDate = null;
         Date finalDate = null; // assign the date of all the results as the most recent of all monitorComposite dates
