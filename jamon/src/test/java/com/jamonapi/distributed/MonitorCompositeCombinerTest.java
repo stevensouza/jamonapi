@@ -47,7 +47,6 @@ public class MonitorCompositeCombinerTest {
         assertThat(monitorComposite.getNumRows()).isEqualTo(9);
     }
 
-
     @Test
     public void testCombine() throws Exception {
         MonitorFactory.start("hello").stop();
