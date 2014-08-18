@@ -10,8 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class MonitorCompositeCombinerTest {
 
@@ -65,4 +64,16 @@ public class MonitorCompositeCombinerTest {
         MonitorComposite monitorComposite = MonitorCompositeCombiner.combine(list);
         assertThat(monitorComposite.getNumRows()).isEqualTo(9);
     }
+
+    @Test
+    public void testRemove() throws Exception {
+        JamonDataPersister persister = mock(JamonDataPersister.class);
+        MonitorCompositeCombiner mcc = new MonitorCompositeCombiner(persister);
+        mcc.remove("local1", "local2", "local3");
+        verify(persister).remove("local1");
+        verify(persister).remove("local1");
+        verify(persister).remove("local1");
+        verify(persister, times(3)).remove(anyString());
+    }
+
 }
