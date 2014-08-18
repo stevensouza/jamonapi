@@ -70,7 +70,7 @@ if (isLocal(instanceName)) {
 JamonDataPersister jamonDataPersister = JamonDataPersisterFactory.get();
 
 if ("Reset".equals(action)) {
-  new JamonDataPersisterCombiner(jamonDataPersister).remove(instanceName.toArray(new String[0]));
+  new MonitorCompositeCombiner(jamonDataPersister).remove(instanceName.toArray(new String[0]));
   instanceName = getParatemersAsList(null, "local");
 }
 
@@ -78,7 +78,7 @@ MonitorComposite mc = (MonitorComposite) session.getAttribute("monitorComposite"
 List<String> prevInstanceName = (List<String>) session.getAttribute("prevInstanceName");
 // the way html works is if cache is false it is not passed in hence the not true check on cache.
 if (mc==null || !"true".equalsIgnoreCase(cache) || prevInstanceName==null || !prevInstanceName.equals(instanceName) ) {
-    mc = new JamonDataPersisterCombiner(jamonDataPersister).get(instanceName.toArray(new String[0]));
+    mc = new MonitorCompositeCombiner(jamonDataPersister).get(instanceName.toArray(new String[0]));
     prevInstanceName = instanceName;
     session.setAttribute("prevInstanceName", prevInstanceName);
 }
