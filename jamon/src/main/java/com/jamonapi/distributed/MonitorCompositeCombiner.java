@@ -9,15 +9,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Combines multiple MonitorComposite objects into one by getting them from the @link JamonDataPersister.
+ *
  * Created by stevesouza on 8/16/14.
  */
-public class JamonDataPersisterCombiner  {
+public class MonitorCompositeCombiner {
     private JamonDataPersister persister;
 
-    public JamonDataPersisterCombiner(JamonDataPersister persister) {
+    public MonitorCompositeCombiner(JamonDataPersister persister) {
         this.persister = persister;
     }
 
+    /**
+     * Combine MonitorComposites returned by each of the instanceKeys into 1 MonitorComposite.
+     *
+     * @param instanceKeys
+     * @return MonitorComposite
+     */
     public MonitorComposite get(String... instanceKeys) {
         Map<String, MonitorComposite> map = new HashMap<String, MonitorComposite>();
         Date previousDate = null;
@@ -35,6 +43,12 @@ public class JamonDataPersisterCombiner  {
         return mc.setInstanceName(Misc.getAsString(instanceKeys));
     }
 
+    /**
+     * Remove any of the MonitorComposites associated with the key.  This data could be in memory,  on HazelCast
+     * or in a file for example.
+     *
+     * @param instanceKey
+     */
     public void remove(String... instanceKey) {
         for (int i=0;i<instanceKey.length;i++) {
             persister.remove(instanceKey[i]);

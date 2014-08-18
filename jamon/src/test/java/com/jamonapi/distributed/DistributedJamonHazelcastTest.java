@@ -26,7 +26,7 @@ public class DistributedJamonHazelcastTest {
 
     @Test
     public void putGetRemove() throws InterruptedException {
-            DistributedJamonHazelcastPersister jamonData = new DistributedJamonHazelcastPersister();
+            HazelcastPersister jamonData = new HazelcastPersister();
             int i=0;
             while (true) {
                 i++;
@@ -52,7 +52,7 @@ public class DistributedJamonHazelcastTest {
     /** When hazelcast throws exceptions jamon should still work */
     @Test
     public void testHazelCastExceptions() {
-        DistributedJamonHazelcastPersister jamonData = new DistributedJamonHazelcastPersister(null);
+        HazelcastPersister jamonData = new HazelcastPersister(null);
         assertThat(jamonData.getInstances()).hasSize(2);
         MonitorComposite mc = jamonData.get("NO_EXIST");
         assertThat(mc.isLocalInstance()).isTrue();

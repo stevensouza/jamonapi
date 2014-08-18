@@ -8,10 +8,10 @@ package com.jamonapi.distributed;
  * Created by stevesouza on 7/6/14.
  */
 
-public class DistributedJamonHazelcastFilePersister extends DistributedJamonHazelcastPersister {
+public class HazelcastFilePersister extends HazelcastPersister {
 
-    public DistributedJamonHazelcastFilePersister() {
-        super(new DistributedJamonHazelcastPersisterImp(), new LocalJamonFilePersister());
+    public HazelcastFilePersister() {
+        super(new HazelcastPersisterImp(), new LocalJamonFilePersister());
     }
 
 }

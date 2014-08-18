@@ -17,17 +17,17 @@ import java.util.TreeSet;
  * Created by stevesouza on 7/6/14.
  */
 
-public class DistributedJamonHazelcastPersisterImp implements JamonDataPersister {
+public class HazelcastPersisterImp implements JamonDataPersister {
 
     // could be Map if we don't want the instance methods of hazelcast such as delete, and set
     private IMap<String, MonitorComposite> jamonDataMap;
     private HazelcastInstance hazelCast;
 
-    public DistributedJamonHazelcastPersisterImp() {
+    public HazelcastPersisterImp() {
         hazelCast = Hazelcast.newHazelcastInstance();
     }
 
-    public DistributedJamonHazelcastPersisterImp(HazelcastInstance hazelCast) {
+    public HazelcastPersisterImp(HazelcastInstance hazelCast) {
         this.hazelCast = hazelCast;
     }
 

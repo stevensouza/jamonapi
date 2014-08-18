@@ -6,13 +6,13 @@ import java.util.Timer;
 
 import static org.mockito.Mockito.*;
 
-public class DistributedJamonTimerTaskTest {
+public class JamonDataPersisterTimerTaskTest {
 
     private JamonDataPersister jamonDataPersister = mock(JamonDataPersister.class);
 
     @Test
     public void testTimer() throws InterruptedException {
-        DistributedJamonTimerTask task = new DistributedJamonTimerTask(jamonDataPersister);
+        JamonDataPersisterTimerTask task = new JamonDataPersisterTimerTask(jamonDataPersister);
         Timer timer = task.schedule(100);
         Thread.sleep(1000);
         // not sure that it would always be exact so giving the amount of times

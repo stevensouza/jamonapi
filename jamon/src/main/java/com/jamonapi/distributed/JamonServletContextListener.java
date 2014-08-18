@@ -24,7 +24,7 @@ public class JamonServletContextListener implements ServletContextListener  {
         ServletContext context = event.getServletContext();
         if (context != null) {
             addListeners();
-            DistributedJamonTimerTask saveTask = getDistributedJamonTimerTask();
+            JamonDataPersisterTimerTask saveTask = getDistributedJamonTimerTask();
             int refreshRate = getRefreshRate();
             saveTask.schedule(refreshRate);
         }
@@ -35,8 +35,8 @@ public class JamonServletContextListener implements ServletContextListener  {
         MonitorFactory.addListeners(loader.getListeners());
     }
 
-    DistributedJamonTimerTask getDistributedJamonTimerTask() {
-        return new DistributedJamonTimerTask(getJamonData());
+    JamonDataPersisterTimerTask getDistributedJamonTimerTask() {
+        return new JamonDataPersisterTimerTask(getJamonData());
     }
 
     JamonDataPersister getJamonData() {

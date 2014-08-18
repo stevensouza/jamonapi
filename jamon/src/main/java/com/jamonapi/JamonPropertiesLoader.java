@@ -104,7 +104,7 @@ public class JamonPropertiesLoader {
     Properties getDefaults() {
         Properties defaults = new Properties();
         defaults.put("distributedDataRefreshRateInMinutes", "5");
-        defaults.put("jamonDataPersister", "com.jamonapi.distributed.DistributedJamonHazelcastFilePersister");
+        defaults.put("jamonDataPersister", "com.jamonapi.distributed.HazelcastFilePersister");
         defaults.put("jamonDataPersister.label", "");
         defaults.put("jamonDataPersister.label.prefix", "");
         defaults.put("jamonDataPersister.directory", "jamondata");

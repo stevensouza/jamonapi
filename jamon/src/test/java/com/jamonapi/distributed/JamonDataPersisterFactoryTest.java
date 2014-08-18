@@ -9,8 +9,8 @@ public class JamonDataPersisterFactoryTest {
     @Test
     public void testGet_WithHazelCast() throws Exception {
         JamonDataPersister jamonDataPersister = JamonDataPersisterFactory.get();
-        assertThat(jamonDataPersister).isInstanceOf(DistributedJamonHazelcastPersister.class);
+        assertThat(jamonDataPersister).isInstanceOf(HazelcastPersister.class);
         System.out.println(jamonDataPersister);
-        ((DistributedJamonHazelcastPersister) jamonDataPersister).shutDownHazelCast();
+        ((HazelcastPersister) jamonDataPersister).shutDownHazelCast();
     }
 }
