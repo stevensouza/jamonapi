@@ -1,7 +1,6 @@
 package com.jamonapi.distributed;
 
-/**  Decorator class for HazelCast persister. The decorate class interacts with HazelCast and the decorator monitors
- * these interactions with jamon and tracks any exceptions thrown.
+/**  Wrapper for HazelCast persister that provides other services such as monitoring.
  *
  * Created by stevesouza on 7/6/14.
  */

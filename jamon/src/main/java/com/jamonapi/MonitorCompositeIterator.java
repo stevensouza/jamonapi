@@ -7,7 +7,8 @@ import java.util.List;
 
 /**
  * Class that allows for iterating a collection that contains multiple instances of MonitorComposites and iterates
- * through them as if they were one MonitorComposite.  A sort of composite/collection of MonitorComposites.
+ * through them as if they were one MonitorComposite.  Each iteration returns one Monitor until all have been iterated.
+ * Returns  sort of composite/collection of MonitorComposites.
  *
  * Created by stevesouza on 8/16/14.
  * @since  2.79
@@ -60,10 +61,14 @@ import java.util.List;
         return currentMonitorComposite;
     }
 
+    /**
+     *
+     * @return return the combined MonitorComposite
+     */
     public MonitorComposite toMonitorComposite() {
         return new MonitorComposite(toList().toArray(new Monitor[]{}));
     }
-    /** Return all the MonitorComposites passed into the constructor as one List */
+    /** @return Return all the MonitorComposites passed into the constructor as one List */
     public List<Monitor> toList() {
         List<Monitor> list = new ArrayList<Monitor>();
         while (hasNext()) {

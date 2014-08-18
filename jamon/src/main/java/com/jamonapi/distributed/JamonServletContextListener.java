@@ -10,7 +10,7 @@ import java.util.Properties;
 
 /**
  * A timer is executed when the web container starts up.  The timer saves jamon data every N minutes per a config
- * property in the web.xml file.
+ * property in the jamonapi.properties file.
  *
  * Created by stevesouza on 7/6/14.
  */

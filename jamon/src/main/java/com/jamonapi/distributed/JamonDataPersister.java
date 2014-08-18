@@ -5,10 +5,11 @@ import com.jamonapi.MonitorComposite;
 import java.util.Set;
 
 /**
- * Interface that supports saving different jamon data sets in a clustered environment. The key should be
+ * Interface that supports saving different jamon data sets. The key should be
  * a uniquely identifiable jvm instance name (i.e. server) that has meaning to you
- * (for example: hostname:9809 or 111.222.333.4444:9878).  Because each host can have multiple instance names so make
- * sure each jvm is unique.  The value should be JAMon MonitorComposite data (i.e. MonitorFactory.getRootMoitor())
+ * (for example: hostname:9809 or 111.222.333.4444:9878, myapp_jetty_production).
+ * Because each host can have multiple instance names so make  sure each jvm is unique.
+ * The value saved is JAMon's MonitorComposite data (i.e. MonitorFactory.getRootMonitor())
  */
 public interface JamonDataPersister {
 

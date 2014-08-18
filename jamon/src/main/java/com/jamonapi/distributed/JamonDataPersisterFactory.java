@@ -5,9 +5,9 @@ import com.jamonapi.JamonPropertiesLoader;
 import java.util.Properties;
 
 /**
- * Class that instanciates the JamonDataPersister class.  Note this could be a local implementation or a distributed jamon intrface
- * such as HazelCast.  By default it tries to use HazelCast if it is in the classpath, or else it falls back to the local
- * implementation
+ * Class that instanciates the JamonDataPersister class.  Note this could be a local implementation or a distributed implementation
+ * such as HazelCast.  By default it tries to use HazelCast if the HazelCast jar is in the classpath,
+ * or else it falls back to the local implementation
  *
  * Created by stevesouza on 7/6/14.
  */
