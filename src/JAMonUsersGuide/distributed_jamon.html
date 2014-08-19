@@ -63,7 +63,7 @@
                     By default the data will be saved every 5 minutes.</p>
 
                 <p>The <a href="http://hazelcast.org/">HazelCast</a> implementation will automatically be called if the HazelCast jar is found in the classpath
-                    (The java class that implements this is  <a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/jamon/src/main/java/com/jamonapi/distributed/DistributedJamonHazelcastPersister.java">DistributedJamonHazelcastPersister</a>).
+                    (The java class that implements this is  <a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/jamon/src/main/java/com/jamonapi/distributed/HazelcastPersister.java">DistributedJamonHazelcastPersister</a>).
                     This implementation puts a serialized version of JAMon data into a HazelCast distributed HashMap.
                     The server hostname/port will be the key, and the serializable JAMon data as the value.
                     The JAMon web application can display data from any host by selecting the servers key from a select box from jamonadmin.jsp.</p>
@@ -72,7 +72,7 @@
                  <li>Persist the data to a distributed NOSQL database, or file store such as Cassandra, or Hadoop.</li>
                  <li>Persist the data to an in-memory key/value database such Reddis.</li>
                  <li>Persist the data to a flat file, so in the even of a server crash JAMon data is still available.</li>
-                <li>The DistributedJamonHazelcastPersister class replaces each servers saved data each time the 'put()' method is called.
+                <li>The HazelcastPersister class replaces each servers saved data each time the 'put()' method is called.
                     This isn't required though.  Another option would be to keep snapshots (i.e. not just one copy of the data).</li>
             </ul></p>
 
