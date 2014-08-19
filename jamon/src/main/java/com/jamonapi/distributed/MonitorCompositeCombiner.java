@@ -27,7 +27,10 @@ public class MonitorCompositeCombiner {
     public MonitorComposite get(String... instanceKeys) {
         List<MonitorComposite> monitorCompositeList = new ArrayList<MonitorComposite>();
         for (int i=0;i<instanceKeys.length;i++) {
-            monitorCompositeList.add(persister.get(instanceKeys[i]));
+            MonitorComposite monitorComposite = persister.get(instanceKeys[i]);
+            if (monitorComposite!=null) {
+                monitorCompositeList.add(monitorComposite);
+            }
         }
 
         return combine(monitorCompositeList);
