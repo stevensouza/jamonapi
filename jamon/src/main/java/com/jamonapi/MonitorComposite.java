@@ -665,24 +665,5 @@ public class MonitorComposite extends Monitor implements DetailData  {
         return SerializationUtils.deepCopy(this);
     }
 
-    /**
-     * @since  2.79
-     * @return whether or not the instanceName should be included in any of the header and data methods.
-     */
-//    public boolean isInstanceNameIncluded() {
-//        return includeInstanceName;
-//    }
-
-    /**
-     * Sets whether or not the instanceName should be included in any of the header and data methods.
-     *
-     * @since  2.79
-     * @return this object
-     */
-//    public MonitorComposite setIncludeInstanceName(boolean includeInstanceName) {
-//        this.includeInstanceName = includeInstanceName;
-//        return this;
-//    }
-
 
 }
