@@ -73,8 +73,9 @@ google_color_text = "000000";
     <p>It should only take a few minutes to start monitoring all your Spring beans.</p>
 
     <p>Spring comes with the <a href="http://docs.spring.io/spring/docs/3.0.x/api/org/springframework/aop/interceptor/JamonPerformanceMonitorInterceptor.html">JamonPerformanceMonitorInterceptor</a>
-    which also allows you to monitor your Spring beans with JAMon.  Feel free to use it if you wish.  However, <a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/jamon/src/main/java/com/jamonapi/aop/spring/JamonAspect.java">JamonAspect</a> has a few advantages over
-    JamonPerformanceMonitorInterceptor</p>
+    which also allows you to monitor your Spring beans with JAMon.  Feel free to use it if you wish.  The two approaches both do about the same thing. The only difference in the collected data is
+    that the <a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/jamon/src/main/java/com/jamonapi/aop/spring/JamonAspect.java">JamonAspect</a> also allows you to track the
+    parameters that were past to the method.</p>
    
     <ul>
         <li><b>Track Specific Exceptions</b> - If the method you are monitoring throws an exception, JamonAspect counts the specific exception (i.e. java.io.FileNotFoundException) </li>
