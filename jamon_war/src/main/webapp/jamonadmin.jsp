@@ -75,12 +75,16 @@ if ("Reset".equals(action)) {
 }
 
 MonitorComposite mc = (MonitorComposite) session.getAttribute("monitorComposite");
+Object[][] instanceNamesSelectBoxData = (Object[][]) session.getAttribute("instanceNamesSelectBoxData");
 List<String> prevInstanceName = (List<String>) session.getAttribute("prevInstanceName");
+
 // the way html works is if cache is false it is not passed in hence the not true check on cache.
 if (mc==null || !"true".equalsIgnoreCase(cache) || prevInstanceName==null || !prevInstanceName.equals(instanceName) ) {
     mc = new MonitorCompositeCombiner(jamonDataPersister).get(instanceName.toArray(new String[0]));
     prevInstanceName = instanceName;
     session.setAttribute("prevInstanceName", prevInstanceName);
+    instanceNamesSelectBoxData = getInstanceData(jamonDataPersister.getInstances());
+    session.setAttribute("instanceNamesSelectBoxData", instanceNamesSelectBoxData);
 }
 
     // If the request contains local data and it is cached we make a copy so we don't see live new jamon data each time
@@ -216,7 +220,7 @@ function helpWin() {
     </tr>
     <tr class="even">
     <td><input type="submit" name="actionSbmt" value="Go !" ></td>
-    <th><%=fds.getMultiSelectListBox(instanceNameHeader, getInstanceData(jamonDataPersister.getInstances()), instanceName.toArray(new String[0]), 4)%></th>
+    <th><%=fds.getMultiSelectListBox(instanceNameHeader, instanceNamesSelectBoxData, instanceName.toArray(new String[0]), 4)%></th>
     <th><input type="checkbox" name="cache" value="true" <%="true".equalsIgnoreCase(cache) ? "checked" : ""%>></th>
     <th><%=fds.getDropDownListBox(actionHeader, actionBody, "")%></th>
     <th><%=fds.getDropDownListBox(monProxyHeader, getMonProxyBody() , "")%></th>
