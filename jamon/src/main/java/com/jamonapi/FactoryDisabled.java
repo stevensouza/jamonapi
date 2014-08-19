@@ -1,5 +1,7 @@
 package com.jamonapi;
 
+import com.jamonapi.utils.SerializationUtils;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -11,6 +13,8 @@ import java.util.Map;
  */
 
 public final class FactoryDisabled implements MonitorFactoryInterface {
+    private static final long serialVersionUID = 279L;
+
     private Monitor nullMon=new NullMonitor();
     private MonitorComposite compositeMon=new MonitorComposite();
     private MonitorFactoryInterface factoryEnabled;
@@ -185,6 +189,11 @@ public final class FactoryDisabled implements MonitorFactoryInterface {
 
     public void setMaxSqlSize(int size) {
 
+    }
+
+    @Override
+    public FactoryDisabled copy() {
+        return SerializationUtils.deepCopy(this);
     }
 
 }

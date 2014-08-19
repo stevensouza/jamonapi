@@ -1,6 +1,7 @@
 package com.jamonapi;
 
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Map;
  * does.</p>
  */
 
-public interface MonitorFactoryInterface {
+public interface MonitorFactoryInterface extends Serializable {
 
     public static final String VERSION="2.79";
 
@@ -201,6 +202,12 @@ public interface MonitorFactoryInterface {
      * @since 2.79
      */
     public void addListeners(List<JamonPropertiesLoader.JamonListener> listeners);
+
+    /**
+     * @since  2.79
+     * @return a deep copy of this object
+     */
+    public MonitorFactoryInterface copy();
 
 
 }

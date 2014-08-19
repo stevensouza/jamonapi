@@ -22,6 +22,11 @@ public class SerializationUtils {
         }
     }
 
+    public static void serializeToFile(Serializable object, String fileName) throws IOException {
+        OutputStream outputStream = FileUtils.getOutputStream(fileName);
+        serialize(object, outputStream);
+    }
+
     public static <T> T deserialize(InputStream inputStream) throws Throwable {
         ObjectInputStream in = null;
         try {
@@ -33,6 +38,11 @@ public class SerializationUtils {
              in.close();
            }
         }
+    }
+
+    public static <T> T deserializeFromFile(String fileName) throws Throwable {
+        InputStream inputStream = FileUtils.getInputStream(fileName);
+        return deserialize(inputStream);
     }
 
     /** Create a deep copy/clone of any serializable object */

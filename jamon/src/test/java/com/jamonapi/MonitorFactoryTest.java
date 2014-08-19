@@ -21,11 +21,14 @@ public class MonitorFactoryTest {
 
     @Before
     public void setUp() throws Exception {
+        MonitorFactory.setEnabled(true);
+        MonitorFactory.reset();
     }
 
     @After
     public void tearDown() throws Exception {
         // Reset JAMon after each test method.  The Monitors are static and so would otherwise stick around
+        MonitorFactory.setEnabled(true);
         MonitorFactory.reset();
     }
 
@@ -536,6 +539,32 @@ public class MonitorFactoryTest {
 
         // ensure the timer monitor also has the stack trace in its details
         assertThat(mon1.getMonKey().getDetails().toString()).contains("java.lang.RuntimeException");
+    }
+
+    @Test
+    public void testFactoryDisabledSerialization() {
+        MonitorFactory.setEnabled(false);
+        MonitorFactoryInterface factory = MonitorFactory.getFactory();
+        factory.start("hi").stop();
+        MonitorFactoryInterface copy = factory.copy();
+        assertThat(copy.getNumRows()).isEqualTo(0);
+        assertThat(copy.getNumRows()).isEqualTo(factory.getNumRows());
+    }
+
+    @Test
+    public void testFactoryEnabledSerialization() {
+        MonitorFactoryInterface factory = MonitorFactory.getFactory();
+        factory.start("hi").stop();
+        factory.add("filesize1", "mb", 100);
+        MonitorFactoryInterface copy = factory.copy();
+
+        assertThat(copy.getRootMonitor().getReport()).isEqualTo(factory.getRootMonitor().getReport());
+        assertThat(copy.getMonitor("hi", "ms.").getHits()).isEqualTo(1);
+
+        copy.start("hi").stop();
+        copy.add("filesize2", "mb", 100);
+        assertThat(copy.getNumRows()).isEqualTo(3);
+        assertThat(copy.getMonitor("hi", "ms.").getHits()).isEqualTo(2);
     }
 
     private void assertValueListenerIsNonDecreasing(Monitor mon) {

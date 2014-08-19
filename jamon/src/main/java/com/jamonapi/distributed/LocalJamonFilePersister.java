@@ -8,8 +8,6 @@ import com.jamonapi.utils.SerializationUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -47,9 +45,9 @@ public class LocalJamonFilePersister extends LocalJamonDataPersister {
     public void put(String instanceKey) {
         try {
             createDirectory();
-            OutputStream outputStream = FileUtils.getOutputStream(getFileName(instanceKey));
+            String fileName = getFileName(instanceKey);
             MonitorComposite monitorComposite = MonitorFactory.getRootMonitor().setInstanceName(instanceKey);
-            SerializationUtils.serialize(monitorComposite, outputStream);
+            SerializationUtils.serializeToFile(monitorComposite, fileName);
         } catch (IOException e) {
             throw new RuntimeException("Exception while trying to save jamondata", e);
         }
@@ -65,8 +63,7 @@ public class LocalJamonFilePersister extends LocalJamonDataPersister {
 
             String fileName = getFileName(instanceKey);
             if (FileUtils.exists(fileName)) {
-                InputStream inputStream = FileUtils.getInputStream(fileName);
-                monitorComposite = SerializationUtils.deserialize(inputStream);
+                monitorComposite = SerializationUtils.deserializeFromFile(fileName);
                 return monitorComposite;
             } else {
                 return null;

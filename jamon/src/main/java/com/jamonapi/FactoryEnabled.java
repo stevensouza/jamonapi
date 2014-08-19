@@ -2,7 +2,9 @@ package com.jamonapi;
 
 import com.jamonapi.utils.DetailData;
 import com.jamonapi.utils.Misc;
+import com.jamonapi.utils.SerializationUtils;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -16,6 +18,8 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 
 public class FactoryEnabled implements MonitorFactoryInterface {
+
+    private static final long serialVersionUID = 279L;
 
     /** Creates a new instance of MonFactoryEnabled.  Also initializes the standard
      * JAMon time monitor range (ms.)
@@ -370,10 +374,7 @@ public class FactoryEnabled implements MonitorFactoryInterface {
             }
         }
 
-
     }
-
-
 
 
     /** Wipe out existing jamon data.  Same as instantiating a new FactoryEnabled object. */
@@ -424,7 +425,6 @@ public class FactoryEnabled implements MonitorFactoryInterface {
 
     public void setMaxNumMonitors(int maxMonitors) {
         this.maxMonitors=maxMonitors;
-
     }
 
     // returns a monitor indicating the max number of monitors has been reached if the threshold has been reached.
@@ -432,9 +432,9 @@ public class FactoryEnabled implements MonitorFactoryInterface {
         return (maxMonitors>0 && map.size()>=maxMonitors);
     }
 
-
     // class used to get data from a ConcurrentHashMap need not be synchronized
-    private class GetMonitor {
+    private class GetMonitor implements Serializable {
+        private static final long serialVersionUID = 279L;
 
         protected MonitorImp getMon(MonKey key, boolean isPrimary, boolean isTimeMonitor) {
             // note using MonKey over String concatenation doubled the speed
@@ -465,6 +465,7 @@ public class FactoryEnabled implements MonitorFactoryInterface {
     // Note the method must be synchronized due to the use of a regular map.  It is better to use the
     // concurrentMap implementation above.
     private class GetMonitorMap extends GetMonitor {
+        private static final long serialVersionUID = 279L;
 
         @Override
         protected synchronized  MonitorImp getMon(MonKey key, boolean isPrimary, boolean isTimeMonitor) {
@@ -512,6 +513,11 @@ public class FactoryEnabled implements MonitorFactoryInterface {
             Monitor mon =  MonitorFactory.getMonitor(listenerInfo.getLabel(), listenerInfo.getUnits());
             mon.addListener(listenerInfo.getListenerType(), JAMonListenerFactory.get(listenerInfo.getListenerName()));
         }
+    }
+
+    @Override
+    public FactoryEnabled copy() {
+        return SerializationUtils.deepCopy(this);
     }
 
     public void setMaxSqlSize(int size) {
