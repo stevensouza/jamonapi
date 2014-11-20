@@ -1,10 +1,15 @@
 package com.jamonapi.jmx;
 
+import javax.management.ObjectName;
+
 /**
- * Created by stevesouza on 11/19/14.
+ * MXBean that exposes jamon log4j metrics.
  */
 public class Log4jMXBeanImp implements Log4jMXBean {
     private static final String UNITS = "log4j";
+    public static ObjectName getObjectName() {
+       return JmxUtils.getObjectName(Log4jMXBeanImp.class.getPackage().getName() + ":type=current,name=log4j");
+    }
 
     @Override
     public long getTRACE() {
@@ -42,6 +47,6 @@ public class Log4jMXBeanImp implements Log4jMXBean {
     }
 
     private long getCount(String label) {
-       return Utils.getCount(label, UNITS);
+       return JmxUtils.getCount(label, UNITS);
     }
 }
