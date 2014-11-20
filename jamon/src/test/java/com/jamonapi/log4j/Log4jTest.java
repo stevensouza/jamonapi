@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import java.util.Properties;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /** Tests that show that log4j properly calls the log4j {@code JAMonAppender} to aggregate calls and
  * generalize and aggregate individual messages.

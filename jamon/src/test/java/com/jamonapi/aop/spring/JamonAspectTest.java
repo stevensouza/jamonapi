@@ -8,7 +8,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.FileNotFoundException;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class JamonAspectTest {
     private static final String JAMON_EXCEPTION=MonitorFactory.EXCEPTIONS_LABEL;

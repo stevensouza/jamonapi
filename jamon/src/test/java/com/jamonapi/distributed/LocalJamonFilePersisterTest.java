@@ -12,7 +12,7 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 import java.util.Set;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LocalJamonFilePersisterTest {
 

@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.util.List;
 import java.util.Properties;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 // also try to test by putting arguments in the command line.  They should take precedence over the config file:
 // -DdistributedDataRefreshRateInMinutes=20 -DjamonDataPersister=MYPERSISTER

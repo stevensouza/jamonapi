@@ -9,7 +9,7 @@ import org.junit.Test;
 import java.sql.*;
 import java.util.*;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 /** Class that tests the various JAMon proxy classes via the main method */
