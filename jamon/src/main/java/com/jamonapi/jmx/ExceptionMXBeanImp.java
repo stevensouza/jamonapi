@@ -4,6 +4,7 @@ import com.jamonapi.JAMonBufferListener;
 import com.jamonapi.JAMonDetailValue;
 import com.jamonapi.JAMonListener;
 import com.jamonapi.MonitorFactory;
+import com.jamonapi.utils.DetailData;
 
 import javax.management.ObjectName;
 
@@ -13,6 +14,7 @@ import javax.management.ObjectName;
 public class ExceptionMXBeanImp implements ExceptionMXBean {
     private static final String LABEL = "com.jamonapi.Exceptions";
     private static final String UNITS = "Exception";
+    private static final int STACKTRACE = 0;
 
     public static ObjectName getObjectName() {
         return JmxUtils.getObjectName(ExceptionMXBean.class.getPackage().getName() + ":type=current,name=Exceptions");
@@ -33,13 +35,18 @@ public class ExceptionMXBeanImp implements ExceptionMXBean {
             return "There are no stacktraces";
         }
 
-        JAMonBufferListener bufferListener = (JAMonBufferListener) listener;
-        int lastElement = bufferListener.getRowCount()-1;
-        return ((JAMonDetailValue)bufferListener.getBufferList().getCollection().get(lastElement)).toArray()[0].toString();
+        return getMostRecentStacktrace((JAMonBufferListener) listener);
+        //return ((JAMonDetailValue)bufferListener.getBufferList().getCollection().get(lastElement)).toArray()[0].toString();
     }
 
     @Override
     public long getExceptionCount() {
         return JmxUtils.getCount(LABEL, UNITS);
+    }
+
+    private static String getMostRecentStacktrace(JAMonBufferListener listener) {
+        Object[][] stackTraces = listener.getDetailData().getData();
+        int mostRecent = stackTraces.length-1;
+        return stackTraces[mostRecent][STACKTRACE].toString();
     }
 }
