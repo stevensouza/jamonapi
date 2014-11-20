@@ -11,7 +11,7 @@ public class Utils {
     public static long getCount(String label, String units) {
         if (MonitorFactory.exists(label, units)) {
             Monitor mon = MonitorFactory.getMonitor(label, units);
-            return new Double(mon.getHits()).longValue();
+            return (long) mon.getHits();
         }
 
         return 0;
