@@ -8,7 +8,7 @@ import javax.management.ObjectName;
 public class Log4jMXBeanImp implements Log4jMXBean {
     private static final String UNITS = "log4j";
     public static ObjectName getObjectName() {
-       return JmxUtils.getObjectName(Log4jMXBeanImp.class.getPackage().getName() + ":type=current,name=log4j");
+       return JmxUtils.getObjectName(Log4jMXBeanImp.class.getPackage().getName() + ":type=current,name=Log4j");
     }
 
     @Override
