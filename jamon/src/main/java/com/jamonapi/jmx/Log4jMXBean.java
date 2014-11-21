@@ -1,11 +1,9 @@
 package com.jamonapi.jmx;
 
 /**
- * Created by stevesouza on 11/19/14.
+ * MxBean that counts how many times each of the various log4j logging methods is called.
  */
 public interface Log4jMXBean {
-    public static final String NAME = "sandbox.jamonapi:name=Log4j";
-
     public long getTRACE();
     public long getDEBUG();
     public long getWARN();
