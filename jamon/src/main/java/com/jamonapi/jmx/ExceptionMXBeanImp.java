@@ -28,15 +28,12 @@ public class ExceptionMXBeanImp implements ExceptionMXBean {
         if (!MonitorFactory.getMonitor(LABEL, UNITS).hasListener("value", "FIFOBuffer")) {
             return "Exception Stacktrace tracking is not enabled.";
         }
-
-
         JAMonListener listener = MonitorFactory.getMonitor(LABEL, UNITS).getListenerType("value").getListener("FIFOBuffer");
         if (!(listener instanceof JAMonBufferListener) || ((JAMonBufferListener) listener).isEmpty()) {
             return "There are no stacktraces";
         }
 
         return getMostRecentStacktrace((JAMonBufferListener) listener);
-        //return ((JAMonDetailValue)bufferListener.getBufferList().getCollection().get(lastElement)).toArray()[0].toString();
     }
 
     @Override
