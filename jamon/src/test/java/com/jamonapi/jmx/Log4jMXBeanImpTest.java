@@ -24,36 +24,36 @@ public class Log4jMXBeanImpTest {
 
     @Test
     public void testGetTRACE() throws Exception {
-        assertThat(bean.getTRACE()).isEqualTo(1);
+        assertThat(bean.getTrace()).isEqualTo(1);
     }
 
     @Test
     public void testGetDEBUG() throws Exception {
-        assertThat(bean.getDEBUG()).isEqualTo(2);
+        assertThat(bean.getDebug()).isEqualTo(2);
     }
 
     @Test
     public void testGetINFO() throws Exception {
-        assertThat(bean.getINFO()).isEqualTo(3);
+        assertThat(bean.getInfo()).isEqualTo(3);
     }
 
     @Test
     public void testGetWARN() throws Exception {
-        assertThat(bean.getWARN()).isEqualTo(4);
+        assertThat(bean.getWarn()).isEqualTo(4);
     }
 
     @Test
     public void testGetERROR() throws Exception {
-        assertThat(bean.getERROR()).isEqualTo(5);
+        assertThat(bean.getError()).isEqualTo(5);
     }
 
     @Test
     public void testGetFATAL() throws Exception {
-        assertThat(bean.getFATAL()).isEqualTo(6);
+        assertThat(bean.getFatal()).isEqualTo(6);
     }
 
     @Test
     public void testGetTOTAL() throws Exception {
-        assertThat(bean.getTOTAL()).isEqualTo(21);
+        assertThat(bean.getTotal()).isEqualTo(21);
     }
 }

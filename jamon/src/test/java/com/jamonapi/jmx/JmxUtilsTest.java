@@ -41,7 +41,7 @@ public class JmxUtilsTest {
     public void testRegisterMbeans() throws Exception {
         JmxUtils.registerMbeans();
         Log4jMXBean log4jProxy = JMX.newMXBeanProxy(mBeanServer, Log4jMXBeanImp.getObjectName(), Log4jMXBean.class);
-        assertThat(log4jProxy.getDEBUG()).isEqualTo(0);
+        assertThat(log4jProxy.getDebug()).isEqualTo(0);
         JmxUtils.unregisterMbeans();
     }
 
@@ -50,7 +50,7 @@ public class JmxUtilsTest {
         JmxUtils.registerMbeans();
         JmxUtils.unregisterMbeans();
         Log4jMXBean log4jProxy = JMX.newMXBeanProxy(mBeanServer, Log4jMXBeanImp.getObjectName(), Log4jMXBean.class);
-        log4jProxy.getDEBUG();
+        log4jProxy.getDebug();
     }
 
 }

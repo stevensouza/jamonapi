@@ -5,6 +5,7 @@ import com.jamonapi.JAMonDetailValue;
 import com.jamonapi.JAMonListener;
 import com.jamonapi.MonitorFactory;
 import com.jamonapi.utils.DetailData;
+import com.jamonapi.utils.NumberDelta;
 
 import javax.management.ObjectName;
 
@@ -15,6 +16,8 @@ public class ExceptionMXBeanImp implements ExceptionMXBean {
     private static final String LABEL = "com.jamonapi.Exceptions";
     private static final String UNITS = "Exception";
     private static final int STACKTRACE = 0;
+
+    private NumberDelta delta = new NumberDelta();
 
     public static ObjectName getObjectName() {
         return JmxUtils.getObjectName(ExceptionMXBean.class.getPackage().getName() + ":type=current,name=Exceptions");
@@ -39,6 +42,12 @@ public class ExceptionMXBeanImp implements ExceptionMXBean {
     @Override
     public long getExceptionCount() {
         return JmxUtils.getCount(LABEL, UNITS);
+    }
+
+    @Override
+    public long getExceptionCountDelta() {
+        long count = getExceptionCount();
+        return (long) delta.setValue(count).getDelta();
     }
 
     private static String getMostRecentStacktrace(JAMonBufferListener listener) {

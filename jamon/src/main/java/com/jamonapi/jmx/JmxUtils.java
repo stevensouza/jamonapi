@@ -4,7 +4,6 @@ import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 
 import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.util.Date;

@@ -17,4 +17,11 @@ public interface ExceptionMXBean {
      * @return number of exceptions thrown
      */
     public long getExceptionCount();
+
+    /**
+     * Difference between the exception count and the previous exception count.
+     *
+     * @return number of exceptions thrown
+     */
+    public long getExceptionCountDelta();
 }

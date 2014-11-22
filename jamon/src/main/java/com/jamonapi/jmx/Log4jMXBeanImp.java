@@ -12,37 +12,37 @@ public class Log4jMXBeanImp implements Log4jMXBean {
     }
 
     @Override
-    public long getTRACE() {
+    public long getTrace() {
         return getCount("com.jamonapi.log4j.JAMonAppender.TRACE");
     }
 
     @Override
-    public long getDEBUG() {
+    public long getDebug() {
         return getCount("com.jamonapi.log4j.JAMonAppender.DEBUG");
     }
 
     @Override
-    public long getWARN() {
+    public long getWarn() {
         return getCount("com.jamonapi.log4j.JAMonAppender.WARN");
     }
 
     @Override
-    public long getINFO() {
+    public long getInfo() {
         return getCount("com.jamonapi.log4j.JAMonAppender.INFO");
     }
 
     @Override
-    public long getERROR() {
+    public long getError() {
         return getCount("com.jamonapi.log4j.JAMonAppender.ERROR");
     }
 
     @Override
-    public long getFATAL() {
+    public long getFatal() {
         return getCount("com.jamonapi.log4j.JAMonAppender.FATAL");
     }
 
     @Override
-    public long getTOTAL() {
+    public long getTotal() {
         return getCount("com.jamonapi.log4j.JAMonAppender.TOTAL");
     }
 
