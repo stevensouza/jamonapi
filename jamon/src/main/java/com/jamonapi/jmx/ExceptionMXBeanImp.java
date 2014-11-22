@@ -13,8 +13,6 @@ import javax.management.ObjectName;
  * Created by stevesouza on 11/19/14.
  */
 public class ExceptionMXBeanImp implements ExceptionMXBean {
-    private static final String LABEL = "com.jamonapi.Exceptions";
-    private static final String UNITS = "Exception";
     private static final int STACKTRACE = 0;
 
     private NumberDelta delta = new NumberDelta();
@@ -42,12 +40,6 @@ public class ExceptionMXBeanImp implements ExceptionMXBean {
     @Override
     public long getExceptionCount() {
         return JmxUtils.getCount(LABEL, UNITS);
-    }
-
-    @Override
-    public long getExceptionCountDelta() {
-        long count = getExceptionCount();
-        return (long) delta.setValue(count).getDelta();
     }
 
     private static String getMostRecentStacktrace(JAMonBufferListener listener) {

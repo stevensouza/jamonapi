@@ -63,22 +63,10 @@ import java.util.Date;
         }
     }
 
-    /**
-     * Register all jamon related mbeans
-     */
-    public static void unregisterMbeans() {
-        MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-        try {
-            mBeanServer.unregisterMBean(Log4jMXBeanImp.getObjectName());
-            mBeanServer.unregisterMBean(ExceptionMXBeanImp.getObjectName());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 
     /**
-     *  unregister all jamon related mbeans
+     *  register all jamon related mbeans
      */
     public static  void registerMbeans() {
         MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
@@ -86,6 +74,9 @@ import java.util.Date;
         try {
             mBeanServer.registerMBean(new Log4jMXBeanImp(), Log4jMXBeanImp.getObjectName());
             mBeanServer.registerMBean(new ExceptionMXBeanImp(), ExceptionMXBeanImp.getObjectName());
+            mBeanServer.registerMBean(new ExceptionDeltaMXBeanImp(), ExceptionDeltaMXBeanImp.getObjectName());
+            mBeanServer.registerMBean(new Log4jDeltaMXBeanImp(), Log4jDeltaMXBeanImp.getObjectName());
+
             mxBeanImp = new MonitorMXBeanImp("mylabel", "myunits");
             mBeanServer.registerMBean(mxBeanImp, MonitorMXBeanImp.getObjectName(mxBeanImp));
             mxBeanImp = new MonitorMXBeanImp("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages", "ms.");
@@ -96,5 +87,21 @@ import java.util.Date;
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * unRegister all jamon related mbeans
+     */
+    public static void unregisterMbeans() {
+        MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+        try {
+            mBeanServer.unregisterMBean(Log4jMXBeanImp.getObjectName());
+            mBeanServer.unregisterMBean(ExceptionMXBeanImp.getObjectName());
+            mBeanServer.unregisterMBean(ExceptionDeltaMXBeanImp.getObjectName());
+            mBeanServer.unregisterMBean(Log4jDeltaMXBeanImp.getObjectName());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 }

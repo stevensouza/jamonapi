@@ -5,6 +5,8 @@ package com.jamonapi.jmx;
  * most recent exception thrown.
  */
 public interface ExceptionMXBean {
+    static final String LABEL = "com.jamonapi.Exceptions";
+    static final String UNITS = "Exception";
     /**
      * Get the stacktrace in string format of the most recently thrown exception.
      * @return stacktrace
@@ -17,11 +19,4 @@ public interface ExceptionMXBean {
      * @return number of exceptions thrown
      */
     public long getExceptionCount();
-
-    /**
-     * Difference between the exception count and the previous exception count.
-     *
-     * @return number of exceptions thrown
-     */
-    public long getExceptionCountDelta();
 }
