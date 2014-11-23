@@ -64,12 +64,17 @@ import java.util.Date;
     }
 
 
-
     /**
      *  register all jamon related mbeans
      */
     public static  void registerMbeans() {
-        MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+        registerMbeans(ManagementFactory.getPlatformMBeanServer());
+    }
+
+     /**
+     *  register all jamon related mbeans
+     */
+    public static  void registerMbeans(MBeanServer mBeanServer) {
         MonitorMXBeanImp mxBeanImp = null;
         try {
             mBeanServer.registerMBean(new Log4jMXBeanImp(), Log4jMXBeanImp.getObjectName());
@@ -77,12 +82,12 @@ import java.util.Date;
             mBeanServer.registerMBean(new ExceptionDeltaMXBeanImp(), ExceptionDeltaMXBeanImp.getObjectName());
             mBeanServer.registerMBean(new Log4jDeltaMXBeanImp(), Log4jDeltaMXBeanImp.getObjectName());
 
-            mxBeanImp = new MonitorMXBeanImp("mylabel", "myunits");
-            mBeanServer.registerMBean(mxBeanImp, MonitorMXBeanImp.getObjectName(mxBeanImp));
-            mxBeanImp = new MonitorMXBeanImp("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages", "ms.");
-            mBeanServer.registerMBean(mxBeanImp, MonitorMXBeanImp.getObjectName(mxBeanImp));
-            mxBeanImp = new MonitorMXBeanImp("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages", "ms.", "HttpPageRequests");
-            mBeanServer.registerMBean(mxBeanImp, MonitorMXBeanImp.getObjectName(mxBeanImp));
+//            mxBeanImp = new MonitorMXBeanImp("mylabel", "myunits");
+//            mBeanServer.registerMBean(mxBeanImp, MonitorMXBeanImp.getObjectName(mxBeanImp));
+//            mxBeanImp = new MonitorMXBeanImp("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages", "ms.");
+//            mBeanServer.registerMBean(mxBeanImp, MonitorMXBeanImp.getObjectName(mxBeanImp));
+//            mxBeanImp = new MonitorMXBeanImp("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages", "ms.", "HttpPageRequests");
+//            mBeanServer.registerMBean(mxBeanImp, MonitorMXBeanImp.getObjectName(mxBeanImp));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -92,7 +97,14 @@ import java.util.Date;
      * unRegister all jamon related mbeans
      */
     public static void unregisterMbeans() {
-        MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+        unregisterMbeans(ManagementFactory.getPlatformMBeanServer());
+    }
+
+
+    /**
+     * unRegister all jamon related mbeans
+     */
+    public static void unregisterMbeans(MBeanServer mBeanServer) {
         try {
             mBeanServer.unregisterMBean(Log4jMXBeanImp.getObjectName());
             mBeanServer.unregisterMBean(ExceptionMXBeanImp.getObjectName());
