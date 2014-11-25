@@ -185,7 +185,7 @@ public class MonitorFactoryTest {
         mon.stop();
         // test for bug: https://sourceforge.net/p/jamonapi/bugs/16/
         assertThat(mon.getHits()).isEqualTo(1);
-        assertThat(mon.getLastValue()).isEqualTo(10*TimeMonNano.NANOSECS_PER_MILLISEC, offset(3.0*TimeMonNano.NANOSECS_PER_MILLISEC));
+        assertThat(mon.getLastValue()).isEqualTo(10*TimeMonNano.NANOSECS_PER_MILLISEC, offset(50.0*TimeMonNano.NANOSECS_PER_MILLISEC));
         assertThat((Long)mon.getValue("starttime")).isLessThan(new Long(nanoTime));
         mon.reset();
         assertThat((Long)mon.getValue("starttime")).isEqualTo(0);
