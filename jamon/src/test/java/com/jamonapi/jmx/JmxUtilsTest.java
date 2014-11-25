@@ -9,6 +9,7 @@ import javax.management.JMX;
 import javax.management.MBeanServer;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -17,12 +18,12 @@ public class JmxUtilsTest {
 
     @Before
     public void setUp() throws Exception {
-
+        MonitorFactory.reset();
     }
 
     @After
     public void tearDown() throws Exception {
-
+        MonitorFactory.reset();
     }
 
     @Test
@@ -38,6 +39,19 @@ public class JmxUtilsTest {
     }
 
     @Test
+    public void getDate() throws Exception  {
+        MonitorFactory.start("I_EXIST").stop();
+        assertThat(JmxUtils.getDate("I_EXIST","ms.","lastaccess")).isBeforeOrEqualsTo(new Date());
+    }
+
+    @Test
+    public void getDouble() throws Exception  {
+        MonitorFactory.start("I_EXIST").stop();
+        assertThat(JmxUtils.getDouble("I_EXIST","ms.","hits")).isEqualTo(1);
+    }
+
+
+        @Test
     public void testRegisterMbeans() throws Exception {
         JmxUtils.registerMbeans();
         Log4jMXBean log4jProxy = JMX.newMXBeanProxy(mBeanServer, Log4jMXBeanImp.getObjectName(), Log4jMXBean.class);
