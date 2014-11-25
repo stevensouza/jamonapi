@@ -3,7 +3,6 @@ package com.jamonapi.jmx;
 import com.jamonapi.JAMonListenerFactory;
 import com.jamonapi.MonKeyImp;
 import com.jamonapi.MonitorFactory;
-import com.jamonapi.utils.Log4jUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -2,12 +2,8 @@ package com.jamonapi.log4j;
 
 import com.jamonapi.MonitorFactory;
 import com.jamonapi.utils.Log4jUtils;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

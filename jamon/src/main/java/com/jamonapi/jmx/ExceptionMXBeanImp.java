@@ -1,11 +1,8 @@
 package com.jamonapi.jmx;
 
 import com.jamonapi.JAMonBufferListener;
-import com.jamonapi.JAMonDetailValue;
 import com.jamonapi.JAMonListener;
 import com.jamonapi.MonitorFactory;
-import com.jamonapi.utils.DetailData;
-import com.jamonapi.utils.NumberDelta;
 
 import javax.management.ObjectName;
 
