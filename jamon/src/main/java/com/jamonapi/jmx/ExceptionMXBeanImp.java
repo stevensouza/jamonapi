@@ -14,9 +14,6 @@ import javax.management.ObjectName;
  */
 public class ExceptionMXBeanImp implements ExceptionMXBean {
     private static final int STACKTRACE = 0;
-
-    private NumberDelta delta = new NumberDelta();
-
     public static ObjectName getObjectName() {
         return JmxUtils.getObjectName(ExceptionMXBean.class.getPackage().getName() + ":type=current,name=Exceptions");
     }
