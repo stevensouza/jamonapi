@@ -1,5 +1,6 @@
 package com.jamonapi.jmx;
 
+import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import org.junit.After;
 import org.junit.Before;
@@ -32,5 +33,16 @@ public class ExceptionDeltaMXBeanImpTest {
         // following should return 1.
         MonitorFactory.add(ExceptionMXBean.LABEL, ExceptionMXBean.UNITS, 1);
         assertThat(bean.getExceptionCount()).isEqualTo(1);
+    }
+
+    @Test
+    public void testGetExceptionCount_NoExist() throws Exception {
+        assertThat(bean.getExceptionCount()).isEqualTo(0);
+    }
+
+    @Test
+    public void testGetExceptionCount_StartedNotStopped() throws Exception {
+        Monitor mon = MonitorFactory.start(ExceptionMXBean.LABEL);
+        assertThat(bean.getExceptionCount()).isEqualTo(0);
     }
 }
