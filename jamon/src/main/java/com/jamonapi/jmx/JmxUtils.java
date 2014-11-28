@@ -4,9 +4,12 @@ import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 
 import javax.management.MBeanServer;
+import javax.management.NotificationListener;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by stevesouza on 11/19/14.
@@ -82,6 +85,9 @@ import java.util.Date;
             mBeanServer.registerMBean(new ExceptionDeltaMXBeanImp(), ExceptionDeltaMXBeanImp.getObjectName());
             mBeanServer.registerMBean(new Log4jDeltaMXBeanImp(), Log4jDeltaMXBeanImp.getObjectName());
 
+            // gcMXBean gets notificaitons from gc events and saves results in jamon.
+            registerGcMXBean(mBeanServer);
+
 //            mxBeanImp = new MonitorMXBeanImp("mylabel", "myunits");
 //            mBeanServer.registerMBean(mxBeanImp, MonitorMXBeanImp.getObjectName(mxBeanImp));
 //            mxBeanImp = new MonitorMXBeanImp("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages", "ms.");
@@ -92,6 +98,8 @@ import java.util.Date;
             throw new RuntimeException(e);
         }
     }
+
+
 
     /**
      * unRegister all jamon related mbeans
@@ -110,8 +118,30 @@ import java.util.Date;
             mBeanServer.unregisterMBean(ExceptionMXBeanImp.getObjectName());
             mBeanServer.unregisterMBean(ExceptionDeltaMXBeanImp.getObjectName());
             mBeanServer.unregisterMBean(Log4jDeltaMXBeanImp.getObjectName());
+            mBeanServer.unregisterMBean(GcMXBeanImp.getObjectName());
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static Set<ObjectName> getGarbageCollectionMbeans(MBeanServer mBeanServer) throws Exception {
+        Set<ObjectName> mbeans = mBeanServer.queryNames(null, null);
+        Set<ObjectName> gcMbeans = new HashSet<ObjectName>();
+
+        for (ObjectName objectInstance : mbeans) {
+            if (objectInstance.toString().contains("type=GarbageCollector")) {
+                gcMbeans.add(objectInstance);
+            }
+        }
+        return gcMbeans;
+    }
+
+    private static void registerGcMXBean(MBeanServer mBeanServer) throws Exception {
+        GcMXBean gcMXBean = new GcMXBeanImp();
+        mBeanServer.registerMBean(gcMXBean, GcMXBeanImp.getObjectName());
+        Set<ObjectName> gcMbeans = getGarbageCollectionMbeans(mBeanServer);
+        for (ObjectName name : gcMbeans) {
+            mBeanServer.addNotificationListener(name, (NotificationListener) gcMXBean, null, null);
         }
     }
 

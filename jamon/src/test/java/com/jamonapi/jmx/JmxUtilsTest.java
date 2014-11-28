@@ -4,6 +4,7 @@ import com.jamonapi.MonitorFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import sun.jvm.hotspot.memory.Space;
 
 import javax.management.JMX;
 import javax.management.MBeanServer;
@@ -51,7 +52,7 @@ public class JmxUtilsTest {
     }
 
 
-        @Test
+    @Test
     public void testRegisterMbeans() throws Exception {
         JmxUtils.registerMbeans();
 
@@ -70,12 +71,23 @@ public class JmxUtilsTest {
         JmxUtils.unregisterMbeans();
     }
 
-    @Test(expected = UndeclaredThrowableException.class)
+    @Test(expected = RuntimeException.class)
     public void testUnregisterMbeans() throws Exception {
         JmxUtils.registerMbeans();
         JmxUtils.unregisterMbeans();
         Log4jMXBean log4jProxy = JMX.newMXBeanProxy(mBeanServer, Log4jMXBeanImp.getObjectName(), Log4jMXBean.class);
         log4jProxy.getDebug();
+    }
+
+    @Test
+    public void shouldFireGcNotification() throws Exception {
+        JmxUtils.registerMbeans();
+        System.gc();
+        // sleep to ensure notification is called.
+        Thread.sleep(3000);
+        GcMXBean gcProxy = JMX.newMXBeanProxy(mBeanServer, GcMXBeanImp.getObjectName(), GcMXBean.class);
+        assertThat(gcProxy.getGcInfo()).contains("Name","Cause","Action","Duration","Sequence","When","BeforeGc","AfterGc");
+        JmxUtils.unregisterMbeans();
     }
 
 }
