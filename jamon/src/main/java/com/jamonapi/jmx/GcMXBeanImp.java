@@ -3,7 +3,6 @@ package com.jamonapi.jmx;
 import com.jamonapi.MonKey;
 import com.jamonapi.MonKeyImp;
 import com.jamonapi.MonitorFactory;
-import com.jamonapi.utils.NumberDelta;
 import com.sun.management.GarbageCollectionNotificationInfo;
 import com.sun.management.GcInfo;
 
@@ -52,32 +51,24 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
         // create jamon gc monitors
         MonKey key = new MonKeyImp(labelPrefix, details, "ms.");
         MonitorFactory.add(key, duration); // ms. duration of gc
-        monitorReclaimedMemory(labelPrefix, gcInfo, details);
+        monitorUsedMemory(labelPrefix, gcInfo, details);
     }
 
     /**
-     * Loop through different memory pools and determine how much of their memory has been reclaimed (bytes) in this
+     * Loop through different memory pools and determine how much memory is used (bytes) after this
      * gc firing.   Example data follows:
      *
      *  before: PS Survivor Space=... used = 1589320(1552K)...,
      *  after: PS Survivor Space=... used = 0(0K)...
      *
-     *  So a jamon monitor would be created for PS Survivor Space and its value would be 1589320.
-     *  Note a positive value means that the pool now consumes less space (i.e. it is the reclaimed memory).
-     *  A negative number means the pool now consumes more space than before the gc.
-     *
      * @param labelPrefix
      * @param gcInfo
      * @param details
      */
-    private void monitorReclaimedMemory(String labelPrefix, GcInfo gcInfo, String details) {
+    private void monitorUsedMemory(String labelPrefix, GcInfo gcInfo, String details) {
         for (Map.Entry<String, MemoryUsage> entry : gcInfo.getMemoryUsageAfterGc().entrySet()) {
-            NumberDelta gcReclaimedMem = new NumberDelta();
-            MemoryUsage afterMemoryUsage = entry.getValue();
-            MemoryUsage beforeMemoryUsage = gcInfo.getMemoryUsageBeforeGc().get(entry.getKey());
-            gcReclaimedMem.setValue(afterMemoryUsage.getUsed()).setValue(beforeMemoryUsage.getUsed());
-            MonKey key = new MonKeyImp(labelPrefix+".reclaimedMemory."+entry.getKey(), details, "bytes");
-            MonitorFactory.add(key, gcReclaimedMem.getDelta()); // reclaimed memory
+            MonKey key = new MonKeyImp(labelPrefix+".usedMemory."+entry.getKey(), details, "bytes");
+            MonitorFactory.add(key, entry.getValue().getUsed()); // memory used in pool.
         }
     }
 
