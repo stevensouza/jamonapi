@@ -4,12 +4,10 @@ import com.jamonapi.MonitorFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import sun.jvm.hotspot.memory.Space;
 
 import javax.management.JMX;
 import javax.management.MBeanServer;
 import java.lang.management.ManagementFactory;
-import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
