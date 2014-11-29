@@ -18,9 +18,12 @@ import java.util.Date;
  */
 public class GcMXBeanImp implements GcMXBean, NotificationListener {
     private String gcInfoString="";
+    private long duration;
+    private Date when;
+    private static final String PREFIX = GcMXBeanImp.class.getPackage().getName();
 
     public static ObjectName getObjectName() {
-        return JmxUtils.getObjectName(GcMXBeanImp.class.getPackage().getName() + ":type=current,name=GcInfo");
+        return JmxUtils.getObjectName( PREFIX + ":type=current,name=GcInfo");
     }
 
     public void handleNotification(Notification notification, Object handback) {
@@ -39,10 +42,12 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
         // http://docs.oracle.com/javase/7/docs/jre/api/management/extension/com/sun/management/GcInfo.html
         // count times fired for each type, duration for each type, and delta between firings for each type.
         GcInfo gcInfo = gcNotifyInfo.getGcInfo();
+        duration = gcInfo.getDuration();
+        when = new Date();
         String details = toString(gcNotifyInfo);
         String gcName = gcNotifyInfo.getGcName();
 
-        MonKey key = new MonKeyImp(gcName, details, "ms.");
+        MonKey key = new MonKeyImp(PREFIX + ".gc." + gcName, details, "ms.");
         MonitorFactory.add(key, gcInfo.getDuration()); // ms. of gc
 
 
@@ -88,8 +93,8 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
         sb.append("Action: ").append(gcNotifyInfo.getGcAction()).append("\n");
         sb.append("Duration: ").append(gcInfo.getDuration()).append("\n");
         sb.append("Sequence: ").append(gcInfo.getId()).append("\n");
-        sb.append("When: ").append(new Date()).append("\n");
-        sb.append("BeforeGc: ").append(gcInfo.getMemoryUsageBeforeGc()).append("\n");
+        sb.append("When: ").append(when).append("\n\n");
+        sb.append("BeforeGc: ").append(gcInfo.getMemoryUsageBeforeGc()).append("\n\n");
         sb.append("AfterGc: ").append(gcInfo.getMemoryUsageAfterGc()).append("\n");
         gcInfoString = sb.toString();
         return gcInfoString;
@@ -98,5 +103,15 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
     @Override
     public String getGcInfo() {
         return gcInfoString;
+    }
+
+    @Override
+    public Date getWhen() {
+        return when;
+    }
+
+    @Override
+    public long getDuration() {
+        return duration;
     }
 }
