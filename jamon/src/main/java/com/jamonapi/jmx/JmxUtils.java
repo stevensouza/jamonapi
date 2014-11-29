@@ -3,9 +3,7 @@ package com.jamonapi.jmx;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 
-import javax.management.MBeanServer;
-import javax.management.NotificationListener;
-import javax.management.ObjectName;
+import javax.management.*;
 import java.lang.management.ManagementFactory;
 import java.util.Date;
 import java.util.HashSet;
@@ -118,7 +116,7 @@ import java.util.Set;
             mBeanServer.unregisterMBean(ExceptionMXBeanImp.getObjectName());
             mBeanServer.unregisterMBean(ExceptionDeltaMXBeanImp.getObjectName());
             mBeanServer.unregisterMBean(Log4jDeltaMXBeanImp.getObjectName());
-            mBeanServer.unregisterMBean(GcMXBeanImp.getObjectName());
+            unregisterGcMXBean(mBeanServer);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -127,7 +125,6 @@ import java.util.Set;
     public static Set<ObjectName> getGarbageCollectionMbeans(MBeanServer mBeanServer) throws Exception {
         Set<ObjectName> mbeans = mBeanServer.queryNames(null, null);
         Set<ObjectName> gcMbeans = new HashSet<ObjectName>();
-
         for (ObjectName objectInstance : mbeans) {
             if (objectInstance.toString().contains("type=GarbageCollector")) {
                 gcMbeans.add(objectInstance);
@@ -136,14 +133,27 @@ import java.util.Set;
         return gcMbeans;
     }
 
-    private static void registerGcMXBean(MBeanServer mBeanServer) throws Exception {
-        GcMXBean gcMXBean = new GcMXBeanImp();
-        mBeanServer.registerMBean(gcMXBean, GcMXBeanImp.getObjectName());
-        Set<ObjectName> gcMbeans = getGarbageCollectionMbeans(mBeanServer);
-        for (ObjectName name : gcMbeans) {
-            mBeanServer.addNotificationListener(name, (NotificationListener) gcMXBean, null, null);
+    // Note the garbage collector mxbean was introduced in jdk 1.7 so it may fail for earlier versions of
+    // the jdk.  Creating a GcMXBean will throw a class not found exception in these earlier versions.
+    // The approach i am taking below is to fail silently as it isn't crucial that gc is monitored.
+    private static void registerGcMXBean(MBeanServer mBeanServer)  {
+        try {
+          GcMXBean gcMXBean = new GcMXBeanImp();
+          mBeanServer.registerMBean(gcMXBean, GcMXBeanImp.getObjectName());
+          Set<ObjectName> gcMbeans = getGarbageCollectionMbeans(mBeanServer);
+          for (ObjectName name : gcMbeans) {
+             mBeanServer.addNotificationListener(name, (NotificationListener) gcMXBean, null, null);
+          }
+        } catch (Throwable e) {
         }
     }
 
+    // same reason as note for registerGcMXBean
+    private static void unregisterGcMXBean(MBeanServer mBeanServer)  {
+        try {
+          mBeanServer.unregisterMBean(GcMXBeanImp.getObjectName());
+        } catch (Throwable e) {
+        }
+    }
 
 }

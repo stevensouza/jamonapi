@@ -3,6 +3,7 @@ package com.jamonapi.jmx;
 import com.jamonapi.MonKey;
 import com.jamonapi.MonKeyImp;
 import com.jamonapi.MonitorFactory;
+import com.jamonapi.utils.NumberDelta;
 import com.sun.management.GarbageCollectionNotificationInfo;
 import com.sun.management.GcInfo;
 
@@ -10,11 +11,14 @@ import javax.management.Notification;
 import javax.management.NotificationListener;
 import javax.management.ObjectName;
 import javax.management.openmbean.CompositeData;
+import java.lang.management.MemoryUsage;
 import java.util.Date;
+import java.util.Map;
 
 /**
- * Class that can listen to any jmx notifications.  It is a good place to see how gc notifications work. I also register and
- * send my own notification.  See MyMXBean.setAttrib1(...)
+ * Class that can listen to any jmx notifications. It listens to gc collections from a sun jvm post 1.7 only it seems.
+ *
+ * http://www.fasterj.com/articles/gcnotifs.shtml
  */
 public class GcMXBeanImp implements GcMXBean, NotificationListener {
     private String gcInfoString="";
@@ -34,8 +38,6 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
             GarbageCollectionNotificationInfo gcNotifyInfo = GarbageCollectionNotificationInfo.from(cd);
             monitor(gcNotifyInfo);
         }
-
-
     }
 
     private void monitor(GarbageCollectionNotificationInfo gcNotifyInfo) {
@@ -45,30 +47,38 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
         duration = gcInfo.getDuration();
         when = new Date();
         String details = toString(gcNotifyInfo);
-        String gcName = gcNotifyInfo.getGcName();
+        String labelPrefix = PREFIX + ".gc." + gcNotifyInfo.getGcName();
 
-        MonKey key = new MonKeyImp(PREFIX + ".gc." + gcName, details, "ms.");
-        MonitorFactory.add(key, gcInfo.getDuration()); // ms. of gc
+        // create jamon gc monitors
+        MonKey key = new MonKeyImp(labelPrefix, details, "ms.");
+        MonitorFactory.add(key, duration); // ms. duration of gc
+        monitorReclaimedMemory(labelPrefix, gcInfo, details);
+    }
 
-
-//        System.out.println("xxxxGarbageCollectionNotificationInfo:");
-//        System.out.println("  getGcAction:"+gcNotifyInfo.getGcAction());
-//        System.out.println("  getGcCause:"+gcNotifyInfo.getGcCause());
-//        System.out.println("  getGcName:"+gcNotifyInfo.getGcName());
-//        System.out.println("  gcInfo:");
-//
-//        // http://docs.oracle.com/javase/7/docs/jre/api/management/extension/com/sun/management/GcInfo.html
-//        // count times fired for each type, duration for each type, and delta between firings for each type.
-//        System.out.println("    gcInfo.getStartTime:"+gcInfo.getStartTime()); // ms since server started
-//        System.out.println("    gcInfo.getEndTime:"+gcInfo.getEndTime());  // ms since server started
-//        System.out.println("    gcInfo.getDuration (ms):"+gcInfo.getDuration()); // simple math of above
-//        System.out.println("    gcInfo.getId:"+gcInfo.getId()); // number of times this collector has fired since startup
-//        // probably for jamon use the following for each of the following maps.  not sure what yet, but used looks good and maybe deltas
-//        // http://docs.oracle.com/javase/7/docs/api/java/lang/management/MemoryUsage.html
-//        System.out.println("    gcInfo.getMemoryUsageBeforeGc:"+gcInfo.getMemoryUsageBeforeGc()); // Map<String,MemoryUsage>
-//        System.out.println("    gcInfo.getMemoryUsageAfterGc:"+gcInfo.getMemoryUsageAfterGc()); // Map<String,MemoryUsage>
-//        System.out.println("    gcInfo.values:"+gcInfo.values());
-
+    /**
+     * Loop through different memory pools and determine how much of their memory has been reclaimed (bytes) in this
+     * gc firing.   Example data follows:
+     *
+     *  before: PS Survivor Space=... used = 1589320(1552K)...,
+     *  after: PS Survivor Space=... used = 0(0K)...
+     *
+     *  So a jamon monitor would be created for PS Survivor Space and its value would be 1589320.
+     *  Note a positive value means that the pool now consumes less space (i.e. it is the reclaimed memory).
+     *  A negative number means the pool now consumes more space than before the gc.
+     *
+     * @param labelPrefix
+     * @param gcInfo
+     * @param details
+     */
+    private void monitorReclaimedMemory(String labelPrefix, GcInfo gcInfo, String details) {
+        for (Map.Entry<String, MemoryUsage> entry : gcInfo.getMemoryUsageAfterGc().entrySet()) {
+            NumberDelta gcReclaimedMem = new NumberDelta();
+            MemoryUsage afterMemoryUsage = entry.getValue();
+            MemoryUsage beforeMemoryUsage = gcInfo.getMemoryUsageBeforeGc().get(entry.getKey());
+            gcReclaimedMem.setValue(afterMemoryUsage.getUsed()).setValue(beforeMemoryUsage.getUsed());
+            MonKey key = new MonKeyImp(labelPrefix+".reclaimedMemory."+entry.getKey(), details, "bytes");
+            MonitorFactory.add(key, gcReclaimedMem.getDelta()); // reclaimed memory
+        }
     }
 
     /**
