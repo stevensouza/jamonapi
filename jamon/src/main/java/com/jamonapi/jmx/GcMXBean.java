@@ -3,10 +3,22 @@ package com.jamonapi.jmx;
 import java.util.Date;
 
 /**
- * Created by stevesouza on 11/28/14.
+ * MxBean that gives information about the most recent gc firing.  This could be a major or minor collection.
  */
 public interface GcMXBean {
+    /**
+     * @return String containing detailed information about the most recent gc firing.
+     */
     public String getGcInfo();
+
+    /**
+     *
+     * @return date of the most recent gc firing.
+     */
     public Date getWhen();
+
+    /**
+     * @return duration of the most recent gc firing in ms.
+     */
     public long getDuration();
 }
