@@ -82,6 +82,7 @@ import java.util.Set;
             mBeanServer.registerMBean(new ExceptionMXBeanImp(), ExceptionMXBeanImp.getObjectName());
             mBeanServer.registerMBean(new ExceptionDeltaMXBeanImp(), ExceptionDeltaMXBeanImp.getObjectName());
             mBeanServer.registerMBean(new Log4jDeltaMXBeanImp(), Log4jDeltaMXBeanImp.getObjectName());
+            mBeanServer.registerMBean(new JAMonVersionMXBeanImp(), JAMonVersionMXBeanImp.getObjectName());
 
             // gcMXBean gets notificaitons from gc events and saves results in jamon.
             registerGcMXBean(mBeanServer);
@@ -121,6 +122,7 @@ import java.util.Set;
             mBeanServer.unregisterMBean(ExceptionMXBeanImp.getObjectName());
             mBeanServer.unregisterMBean(ExceptionDeltaMXBeanImp.getObjectName());
             mBeanServer.unregisterMBean(Log4jDeltaMXBeanImp.getObjectName());
+            mBeanServer.unregisterMBean(JAMonVersionMXBeanImp.getObjectName());
             unregisterGcMXBean(mBeanServer);
         } catch (Exception e) {
             throw new RuntimeException(e);
