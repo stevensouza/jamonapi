@@ -1,11 +1,12 @@
 package com.jamonapi.jmx;
 
-import com.jamonapi.JAMonListenerFactory;
 import com.jamonapi.JamonPropertiesLoader;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 
-import javax.management.*;
+import javax.management.MBeanServer;
+import javax.management.NotificationListener;
+import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.util.*;
 

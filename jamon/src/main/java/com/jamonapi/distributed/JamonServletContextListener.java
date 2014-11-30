@@ -7,7 +7,6 @@ import com.jamonapi.jmx.JmxUtils;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.lang.management.ManagementFactory;
 import java.util.Properties;
 
 /**
