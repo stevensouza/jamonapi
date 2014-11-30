@@ -20,6 +20,7 @@ public class JamonPropertiesLoader {
     private String fileName;
     private Properties jamonProps;
     private List<JamonListener> listenerList;
+    private List<String> jamonMxBeanList;
 
     public JamonPropertiesLoader() {
         this("jamonapi.properties");
@@ -63,6 +64,18 @@ public class JamonPropertiesLoader {
         }
         return listenerList;
     }
+
+    public List<String> getMxBeans() {
+        if (jamonProps==null) {
+            initialize();
+        }
+        if (jamonMxBeanList==null) {
+            addJamonMxBeans();
+        }
+
+        return jamonMxBeanList;
+    }
+
 
     private  Properties propertyLoader(String fileName)  {
         Properties properties = new Properties();
@@ -124,6 +137,13 @@ public class JamonPropertiesLoader {
               listenerList.add(new JamonListener(keyPrefix));
            }
         }
+    }
+
+
+    private void addJamonMxBeans() {
+        jamonMxBeanList = new ArrayList<String>();
+        jamonMxBeanList.add("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages, ms.");
+        jamonMxBeanList.add("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages, ms., HttpPageRequests");
     }
 
     private String getKeyPrefix(int i) {
