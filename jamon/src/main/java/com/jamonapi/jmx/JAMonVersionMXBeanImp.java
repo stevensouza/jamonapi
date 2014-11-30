@@ -5,7 +5,7 @@ import com.jamonapi.MonitorFactory;
 import javax.management.ObjectName;
 
 /**
- * Created by stevesouza on 11/30/14.
+ * MXBean that simply displays jamons version.
  */
 public class JAMonVersionMXBeanImp implements JAMonVersionMXBean {
 
