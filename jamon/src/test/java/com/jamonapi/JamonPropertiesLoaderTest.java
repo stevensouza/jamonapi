@@ -1,6 +1,5 @@
 package com.jamonapi;
 
-import com.jamonapi.proxy.MonProxy;
 import org.junit.Test;
 
 import java.util.List;
@@ -92,7 +91,7 @@ public class JamonPropertiesLoaderTest {
         JamonPropertiesLoader.JamonJmxBean mxBean = mxBeans.get(0);
         assertThat(mxBean.getLabel()).isEqualTo("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages");
         assertThat(mxBean.getUnits()).isEqualTo("ms.");
-        assertThat(mxBean.getName()).isEqualTo("HttpPageRequests");
+        assertThat(mxBean.getName()).isEqualTo("JettyPageRequests");
 
         mxBean = mxBeans.get(1);
         assertThat(mxBean.getLabel()).isEqualTo("MonProxy-SQL-Type: All");
