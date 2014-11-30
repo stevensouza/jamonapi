@@ -15,7 +15,8 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Class that can listen to any jmx notifications. It listens to gc collections from a sun jvm post 1.7 only it seems.
+ * Class that can listen to any jmx notifications. It listens to gc collections from a sun jvm post 1.7 unfortunately.
+ * JAMon monitors are created for gc duration as well as memory used in each of the memory pools after the gc has fired.
  *
  * http://www.fasterj.com/articles/gcnotifs.shtml
  */
@@ -29,6 +30,7 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
         return JmxUtils.getObjectName( PREFIX + ":type=current,name=GcInfo");
     }
 
+    /** This is called automatically when a gc is fired */
     public void handleNotification(Notification notification, Object handback) {
         String notifyType = notification.getType();
         if (notifyType.equals(GarbageCollectionNotificationInfo.GARBAGE_COLLECTION_NOTIFICATION)) {
@@ -42,7 +44,7 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
     /* This method is visible for testing purposes */
     void monitor(GarbageCollectionNotificationInfo gcNotifyInfo) {
         // http://docs.oracle.com/javase/7/docs/jre/api/management/extension/com/sun/management/GcInfo.html
-        // count times fired for each type, duration for each type, and delta between firings for each type.
+        // for each type count times fired, duration, and used memory
         GcInfo gcInfo = gcNotifyInfo.getGcInfo();
         duration = gcInfo.getDuration();
         when = new Date();
