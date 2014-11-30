@@ -1,13 +1,13 @@
 package com.jamonapi.jmx;
 
+import com.jamonapi.JAMonListenerFactory;
+import com.jamonapi.JamonPropertiesLoader;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 
 import javax.management.*;
 import java.lang.management.ManagementFactory;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by stevesouza on 11/19/14.
@@ -73,7 +73,7 @@ import java.util.Set;
     }
 
      /**
-     *  register all jamon related mbeans
+     *  register all jamon related mbeans except those related to jamon specific monitors taken from jamonapi.properties file
      */
     public static  void registerMbeans(MBeanServer mBeanServer) {
         MonitorMXBeanImp mxBeanImp = null;
@@ -86,23 +86,23 @@ import java.util.Set;
 
             // gcMXBean gets notificaitons from gc events and saves results in jamon.
             registerGcMXBean(mBeanServer);
-
-//            mxBeanImp = new MonitorMXBeanImp("mylabel", "myunits");
-//            mBeanServer.registerMBean(mxBeanImp, MonitorMXBeanImp.getObjectName(mxBeanImp));
-//            mxBeanImp = new MonitorMXBeanImp("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages", "ms.");
-//            mBeanServer.registerMBean(mxBeanImp, MonitorMXBeanImp.getObjectName(mxBeanImp));
-//            mxBeanImp = new MonitorMXBeanImp("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages", "ms.", "HttpPageRequests");
-//            mBeanServer.registerMBean(mxBeanImp, MonitorMXBeanImp.getObjectName(mxBeanImp));
+            registerMbeansFromPropsFile(mBeanServer);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    static void registerMbean(MBeanServer mBeanServer, String label, String units, String name) throws Exception {
-        MonitorMXBeanImp mXbean = MonitorMXBeanImp.create(label, units, name);
-        mBeanServer.registerMBean(mXbean, MonitorMXBeanImp.getObjectName(mXbean));
-    }
+    private static  void registerMbeansFromPropsFile(MBeanServer mBeanServer) throws Exception {
+        JamonPropertiesLoader loader = new JamonPropertiesLoader();
+        List<JamonPropertiesLoader.JamonJmxBean> jamonJmxBeans = loader.getMxBeans();
+        Iterator<JamonPropertiesLoader.JamonJmxBean> iter = jamonJmxBeans.iterator();
 
+        while (iter.hasNext()) {
+          JamonPropertiesLoader.JamonJmxBean beanInfo = iter.next();
+          MonitorMXBeanImp mXbean = MonitorMXBeanImp.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
+          mBeanServer.registerMBean(mXbean, MonitorMXBeanImp.getObjectName(mXbean));
+        }
+    }
 
 
     /**
@@ -124,8 +124,21 @@ import java.util.Set;
             mBeanServer.unregisterMBean(Log4jDeltaMXBeanImp.getObjectName());
             mBeanServer.unregisterMBean(JAMonVersionMXBeanImp.getObjectName());
             unregisterGcMXBean(mBeanServer);
+            unregisterMbeansFromPropsFile(mBeanServer);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static  void unregisterMbeansFromPropsFile(MBeanServer mBeanServer) throws Exception {
+        JamonPropertiesLoader loader = new JamonPropertiesLoader();
+        List<JamonPropertiesLoader.JamonJmxBean> jamonJmxBeans = loader.getMxBeans();
+        Iterator<JamonPropertiesLoader.JamonJmxBean> iter = jamonJmxBeans.iterator();
+
+        while (iter.hasNext()) {
+            JamonPropertiesLoader.JamonJmxBean beanInfo = iter.next();
+            MonitorMXBeanImp mXbean = MonitorMXBeanImp.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
+            mBeanServer.unregisterMBean(MonitorMXBeanImp.getObjectName(mXbean));
         }
     }
 

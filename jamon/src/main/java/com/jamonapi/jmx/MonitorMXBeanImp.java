@@ -29,10 +29,10 @@ public class MonitorMXBeanImp implements MonitorMXBean {
 
     public static MonitorMXBeanImp create(String label, String units, String name) {
         MonitorMXBeanImp bean = null;
-        if (name == null || "".equals(name.trim())) {
-            bean = new MonitorMXBeanImp(label.trim(), units.trim());
+        if (name == null || "".equals(name)) {
+            bean = new MonitorMXBeanImp(label, units);
         } else {
-            bean = new MonitorMXBeanImp(label.trim(), units.trim(), name.trim());
+            bean = new MonitorMXBeanImp(label, units, name);
         }
 
         return bean;

@@ -7,6 +7,7 @@ import com.jamonapi.jmx.JmxUtils;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.lang.management.ManagementFactory;
 import java.util.Properties;
 
 /**
@@ -25,7 +26,7 @@ public class JamonServletContextListener implements ServletContextListener  {
         ServletContext context = event.getServletContext();
         if (context != null) {
             addListeners();
-            JmxUtils.registerMbeans();
+            addJmxBeans();
             JamonDataPersisterTimerTask saveTask = getDistributedJamonTimerTask();
             int refreshRate = getRefreshRate();
             saveTask.schedule(refreshRate);
@@ -35,6 +36,10 @@ public class JamonServletContextListener implements ServletContextListener  {
     private void addListeners() {
         JamonPropertiesLoader loader = new JamonPropertiesLoader();
         MonitorFactory.addListeners(loader.getListeners());
+    }
+
+    private void addJmxBeans() {
+       JmxUtils.registerMbeans();
     }
 
     JamonDataPersisterTimerTask getDistributedJamonTimerTask() {
