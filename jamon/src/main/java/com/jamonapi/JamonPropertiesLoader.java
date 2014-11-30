@@ -20,7 +20,7 @@ public class JamonPropertiesLoader {
     private String fileName;
     private Properties jamonProps;
     private List<JamonListener> listenerList;
-    private List<String> jamonMxBeanList;
+    private List<JamonJmxBean> jamonMxBeanList;
 
     public JamonPropertiesLoader() {
         this("jamonapi.properties");
@@ -65,7 +65,7 @@ public class JamonPropertiesLoader {
         return listenerList;
     }
 
-    public List<String> getMxBeans() {
+    public List<JamonJmxBean> getMxBeans() {
         if (jamonProps==null) {
             initialize();
         }
@@ -124,6 +124,7 @@ public class JamonPropertiesLoader {
         defaults.put("jamonListener.type", "value");
         defaults.put("jamonListener.name", "FIFOBuffer");
         defaults.put("jamonListener.size", "50");
+        defaults.put("jamonJmxBean.size", "50");
         return defaults;
     }
 
@@ -131,7 +132,7 @@ public class JamonPropertiesLoader {
         listenerList = new ArrayList<JamonListener>();
         int size = Integer.valueOf(jamonProps.getProperty("jamonListener.size"));
         for (int i = 0; i <= size; i++) {
-           String keyPrefix = getKeyPrefix(i);
+           String keyPrefix = getKeyPrefix("jamonListener", i);
            String listener = jamonProps.getProperty(keyPrefix + "key");
            if (listener != null) {
               listenerList.add(new JamonListener(keyPrefix));
@@ -139,26 +140,32 @@ public class JamonPropertiesLoader {
         }
     }
 
-
     private void addJamonMxBeans() {
-        jamonMxBeanList = new ArrayList<String>();
-        jamonMxBeanList.add("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages, ms.");
-        jamonMxBeanList.add("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages, ms., HttpPageRequests");
+        jamonMxBeanList = new ArrayList<JamonJmxBean>();
+        int size = Integer.valueOf(jamonProps.getProperty("jamonJmxBean.size"));
+        for (int i = 0; i <= size; i++) {
+            String keyPrefix = getKeyPrefix("jamonJmxBean", i);
+            String listener = jamonProps.getProperty(keyPrefix + "key");
+            if (listener != null) {
+                jamonMxBeanList.add(new JamonJmxBean(keyPrefix));
+            }
+        }
     }
 
-    private String getKeyPrefix(int i) {
-        return "jamonListener["+i+"].";
+    private String getKeyPrefix(String key, int i) {
+        return key+"["+i+"].";
     }
+
 
     // Simple value object that holds the values for a listener read in from the properties file
     public class JamonListener {
-        private String keyPrefix;
+        protected String keyPrefix;
 
-        private JamonListener(String keyPrefix) {
+        protected JamonListener(String keyPrefix) {
             this.keyPrefix = keyPrefix;
         }
 
-        private String[] split(String keyInfo) {
+        protected String[] split(String keyInfo) {
             String[] key = keyInfo.split(",");
             key[0] = key[0].trim();
             key[1] = key[1].trim();
@@ -186,6 +193,36 @@ public class JamonPropertiesLoader {
             String defaultProp = jamonProps.getProperty("jamonListener.name");
             return jamonProps.getProperty(keyPrefix + "name", defaultProp).trim();
         }
+    }
+
+    // Simple value object that holds the values for a jamon jmx bean read in from the properties file
+    public class JamonJmxBean {
+
+        // use JamonListener as a helper class implementation detail.
+        private JamonListener listener;
+        protected JamonJmxBean(String keyPrefix) {
+            listener = new JamonListener(keyPrefix);
+        }
+
+        /** example: com.jamonapi.Exceptions */
+        public String getLabel() {
+            return listener.getLabel();
+        }
+
+        /** example: Exception */
+        public String getUnits() {
+            return listener.getUnits();
+        }
+
+        /** Return logical name to be used instead of label, or empty string if it doesn't exist. */
+        public String getName() {
+            String[] values = listener.split(jamonProps.getProperty(listener.keyPrefix + "key"));
+            if (values.length==3) {
+                return values[2].trim();
+            }
+            return "";
+        }
+
     }
 
 }

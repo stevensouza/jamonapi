@@ -1,5 +1,6 @@
 package com.jamonapi;
 
+import com.jamonapi.proxy.MonProxy;
 import org.junit.Test;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class JamonPropertiesLoaderTest {
         assertThat(props.getProperty("jamonListener.type")).isEqualTo("value");
         assertThat(props.getProperty("jamonListener.name")).isEqualTo("FIFOBuffer");
         assertThat(props.getProperty("jamonListener.size")).isEqualTo("50");
+        assertThat(props.getProperty("jamonJmxBean.size")).isEqualTo("50");
     }
 
     @Test
@@ -78,5 +80,28 @@ public class JamonPropertiesLoaderTest {
         List<JamonPropertiesLoader.JamonListener> listeners = loader.getListeners();
 
         assertThat(listeners).hasSize(3);
+    }
+
+    @Test
+    public void shouldReturnJmxBeans() {
+        JamonPropertiesLoader loader = new JamonPropertiesLoader("jamonapi2.properties");
+        List<JamonPropertiesLoader.JamonJmxBean> mxBeans = loader.getMxBeans();
+
+        assertThat(mxBeans).hasSize(3);
+
+        JamonPropertiesLoader.JamonJmxBean mxBean = mxBeans.get(0);
+        assertThat(mxBean.getLabel()).isEqualTo("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages");
+        assertThat(mxBean.getUnits()).isEqualTo("ms.");
+        assertThat(mxBean.getName()).isEqualTo("HttpPageRequests");
+
+        mxBean = mxBeans.get(1);
+        assertThat(mxBean.getLabel()).isEqualTo("MonProxy-SQL-Type: All");
+        assertThat(mxBean.getUnits()).isEqualTo("ms.");
+        assertThat(mxBean.getName()).isEqualTo("Sql");
+
+        mxBean = mxBeans.get(2);
+        assertThat(mxBean.getLabel()).isEqualTo("MonProxy-SQL-Type: All");
+        assertThat(mxBean.getUnits()).isEqualTo("ms.");
+        assertThat(mxBean.getName()).isEqualTo("");
     }
 }
