@@ -39,7 +39,8 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
         }
     }
 
-    private void monitor(GarbageCollectionNotificationInfo gcNotifyInfo) {
+    /* This method is visible for testing purposes */
+    void monitor(GarbageCollectionNotificationInfo gcNotifyInfo) {
         // http://docs.oracle.com/javase/7/docs/jre/api/management/extension/com/sun/management/GcInfo.html
         // count times fired for each type, duration for each type, and delta between firings for each type.
         GcInfo gcInfo = gcNotifyInfo.getGcInfo();
@@ -49,9 +50,13 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
         String labelPrefix = PREFIX + ".gc." + gcNotifyInfo.getGcName();
 
         // create jamon gc monitors
+        monitorDuration(labelPrefix, details);
+        monitorUsedMemory(labelPrefix, gcInfo, details);
+    }
+
+    private void monitorDuration(String labelPrefix, String details) {
         MonKey key = new MonKeyImp(labelPrefix+".time", details, "ms.");
         MonitorFactory.add(key, duration); // ms. duration of gc
-        monitorUsedMemory(labelPrefix, gcInfo, details);
     }
 
     /**
