@@ -85,6 +85,7 @@ public class JmxUtilsTest {
         Thread.sleep(3000);
         GcMXBean gcProxy = JMX.newMXBeanProxy(mBeanServer, GcMXBeanImp.getObjectName(), GcMXBean.class);
         assertThat(gcProxy.getGcInfo()).contains("Name","Cause","Action","Duration","Sequence","When","BeforeGc","AfterGc");
+        assertThat(gcProxy.getDuration()).isGreaterThan(0);
         JmxUtils.unregisterMbeans();
     }
 
