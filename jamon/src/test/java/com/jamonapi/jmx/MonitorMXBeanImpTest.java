@@ -109,4 +109,27 @@ public class MonitorMXBeanImpTest {
     public void testGetAvgActive() throws Exception {
         assertThat(bean.getAvgActive()).isEqualTo(1.5);
     }
+
+    @Test
+    public void testCreate() {
+        MonitorMXBeanImp bean = MonitorMXBeanImp.create(LABEL, "units", null);
+        assertThat(bean.getLabel()).isEqualTo(LABEL);
+        assertThat(bean.getUnits()).isEqualTo("units");
+        assertThat(bean.getName()).isEqualTo(LABEL);
+
+        bean = MonitorMXBeanImp.create(LABEL, "units", "   ");
+        assertThat(bean.getLabel()).isEqualTo(LABEL);
+        assertThat(bean.getUnits()).isEqualTo("units");
+        assertThat(bean.getName()).isEqualTo(LABEL);
+
+        bean = MonitorMXBeanImp.create(LABEL, "units", "");
+        assertThat(bean.getLabel()).isEqualTo(LABEL);
+        assertThat(bean.getUnits()).isEqualTo("units");
+        assertThat(bean.getName()).isEqualTo(LABEL);
+
+        bean = MonitorMXBeanImp.create(LABEL, "units", "name");
+        assertThat(bean.getLabel()).isEqualTo(LABEL);
+        assertThat(bean.getUnits()).isEqualTo("units");
+        assertThat(bean.getName()).isEqualTo("name");
+    }
 }

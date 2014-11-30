@@ -27,6 +27,17 @@ public class MonitorMXBeanImp implements MonitorMXBean {
     private static final String ACTIVE = "active";
     private static final String AVGACTIVE = "avgactive";
 
+    public static MonitorMXBeanImp create(String label, String units, String name) {
+        MonitorMXBeanImp bean = null;
+        if (name == null || "".equals(name.trim())) {
+            bean = new MonitorMXBeanImp(label, units);
+        } else {
+            bean = new MonitorMXBeanImp(label, units, name);
+        }
+
+        return bean;
+    }
+
     public MonitorMXBeanImp(String label, String units) {
         this(label, units, label);
     }

@@ -97,6 +97,11 @@ import java.util.Set;
         }
     }
 
+    static void registerMbean(MBeanServer mBeanServer, String label, String units, String name) throws Exception {
+        MonitorMXBeanImp mXbean = MonitorMXBeanImp.create(label, units, name);
+        mBeanServer.registerMBean(mXbean, MonitorMXBeanImp.getObjectName(mXbean));
+    }
+
 
 
     /**
