@@ -49,7 +49,7 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
         String labelPrefix = PREFIX + ".gc." + gcNotifyInfo.getGcName();
 
         // create jamon gc monitors
-        MonKey key = new MonKeyImp(labelPrefix+".duration", details, "ms.");
+        MonKey key = new MonKeyImp(labelPrefix+".time", details, "ms.");
         MonitorFactory.add(key, duration); // ms. duration of gc
         monitorUsedMemory(labelPrefix, gcInfo, details);
     }
