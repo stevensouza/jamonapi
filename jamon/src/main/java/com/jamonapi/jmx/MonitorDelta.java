@@ -45,29 +45,29 @@ class MonitorDelta {
     }
 
     /**
-     * Take a previous monitors values and subtract the passed in values from it.  If the monitors are of the same
+     * Take the current monitors values and subtract the passed in values from it.  If the monitors are of the same
      * concept then change will be measured.
      *
-     * @param current
+     * @param previous
      * @return
      */
-    public MonitorDelta minus(MonitorDelta current) {
+    public MonitorDelta delta(MonitorDelta previous) {
         MonitorDelta delta = new MonitorDelta();
-        delta.label = current.getLabel();
-        delta.units = current.getUnits();
-        delta.hits = current.getHits() - hits;
-        delta.total = current.getTotal() - total;
-        double currentAverage = (current.getHits()>hits) ? (current.getTotal() - total)/(current.getHits() - hits) : avg;
-        delta.avg = currentAverage - avg;
-        delta.min = current.getMin() - min;
-        delta.max = current.getMax() - max;
-        delta.stdDev = current.getStdDev() - stdDev;
-        delta.firstAccess = current.getFirstAccess();
-        delta.lastAccess = current.getLastAccess();
-        delta.lastValue = current.getLastValue();
-        delta.active = current.getActive() - active;
-        delta.maxActive = current.getMaxActive() - maxActive;
-        delta.avgActive = current.getAvgActive() - avgActive;
+        delta.label = label;
+        delta.units = units;
+        delta.hits = hits - previous.getHits();
+        delta.total = total - previous.getTotal();
+        double currentAverage = (hits>previous.getHits()) ? (total - previous.getTotal())/(hits - previous.getHits()) : previous.getAvg();
+        delta.avg = currentAverage;
+        delta.min = min - previous.getMin();
+        delta.max = max - previous.getMax();
+        delta.stdDev = stdDev - previous.getStdDev();
+        delta.firstAccess = firstAccess;
+        delta.lastAccess = lastAccess;
+        delta.lastValue = lastValue;
+        delta.active = active - previous.getActive();
+        delta.maxActive = maxActive - previous.getMaxActive();
+        delta.avgActive = avgActive - previous.getAvgActive();
 
         return delta;
     }

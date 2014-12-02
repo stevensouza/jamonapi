@@ -6,8 +6,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Date;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MonitorDeltaTest {
@@ -24,9 +22,10 @@ public class MonitorDeltaTest {
 
     @Test
     public void testFirstMonitorDeltaCorrect() throws Exception {
-        MonitorDelta delta = new MonitorDelta();
+        MonitorDelta previous = new MonitorDelta();
         Monitor mon = MonitorFactory.add("label","units", 100).start().stop();
-        delta = delta.minus(new MonitorDelta(mon));
+        MonitorDelta current = new MonitorDelta(mon);
+        MonitorDelta delta = current.delta(previous);
 
         assertThat(delta.getLabel()).isEqualTo(mon.getLabel());
         assertThat(delta.getUnits()).isEqualTo(mon.getUnits());
@@ -47,17 +46,17 @@ public class MonitorDeltaTest {
     @Test
     public void testSecondMonitorDeltaCorrect() throws Exception {
         Monitor mon = MonitorFactory.add("label","units", 100).start().stop();
-        MonitorDelta prevMonValue = new MonitorDelta(mon);
+        MonitorDelta previous = new MonitorDelta(mon);
         MonitorFactory.add("label","units", 150).start().start().start().stop();
         mon = MonitorFactory.add("label","units", 150).start().stop();
-        MonitorDelta currentDelta = new MonitorDelta(mon);
-        MonitorDelta displayDelta = prevMonValue.minus(currentDelta);
+        MonitorDelta current = new MonitorDelta(mon);
+        MonitorDelta displayDelta = current.delta(previous);
 
         // remember the following show deltas
         assertThat(displayDelta.getLabel()).isEqualTo(mon.getLabel());
         assertThat(displayDelta.getUnits()).isEqualTo(mon.getUnits());
         assertThat(displayDelta.getTotal()).isEqualTo(300);
-        assertThat(displayDelta.getAvg()).isEqualTo(50);
+        assertThat(displayDelta.getAvg()).isEqualTo(150);
         assertThat(displayDelta.getMin()).isEqualTo(0);
         assertThat(displayDelta.getMax()).isEqualTo(50);
         assertThat(displayDelta.getHits()).isEqualTo(2);
@@ -73,17 +72,17 @@ public class MonitorDeltaTest {
     @Test
     public void testSecondMonitorDeltaNegativeCorrect() throws Exception {
         Monitor mon = MonitorFactory.add("label","units", 100).start().stop();
-        MonitorDelta prevMonValue = new MonitorDelta(mon);
-        MonitorFactory.add("label","units", -150).start().stop();
+        MonitorDelta previous = new MonitorDelta(mon);
+        MonitorFactory.add("label", "units", -150).start().stop();
         mon = MonitorFactory.add("label","units", -150).start().stop();
-        MonitorDelta currentDelta = new MonitorDelta(mon);
-        MonitorDelta displayDelta = prevMonValue.minus(currentDelta);
+        MonitorDelta current = new MonitorDelta(mon);
+        MonitorDelta displayDelta = current.delta(previous);
 
         // remember the following show deltas
         assertThat(displayDelta.getLabel()).isEqualTo(mon.getLabel());
         assertThat(displayDelta.getUnits()).isEqualTo(mon.getUnits());
         assertThat(displayDelta.getTotal()).isEqualTo(-300);
-        assertThat(displayDelta.getAvg()).isEqualTo(-250);
+        assertThat(displayDelta.getAvg()).isEqualTo(-150);
         assertThat(displayDelta.getMin()).isEqualTo(-250);
         assertThat(displayDelta.getMax()).isEqualTo(0);
         assertThat(displayDelta.getHits()).isEqualTo(2);

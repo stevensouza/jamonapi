@@ -8,9 +8,9 @@ import java.util.Date;
  */
 public class MonitorMXBeanImp implements MonitorMXBean {
 
-    private final String label;
-    private final String units;
-    private final String name;
+    protected final String label;
+    protected final String units;
+    protected final String name;
 
     // see MonitorInt for values.  I didn't use those values as it is package private data and I didn't want
     // to change that at this time.
