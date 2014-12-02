@@ -166,6 +166,7 @@ import java.util.*;
              mBeanServer.addNotificationListener(name, (NotificationListener) gcMXBean, null, null);
           }
         } catch (Throwable e) {
+            // fail silently
         }
     }
 
@@ -174,6 +175,7 @@ import java.util.*;
         try {
           mBeanServer.unregisterMBean(GcMXBeanImp.getObjectName());
         } catch (Throwable e) {
+            // fail silently
         }
     }
 
