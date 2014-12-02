@@ -9,6 +9,8 @@ import java.util.Date;
 */
 class MonitorDelta {
 
+    private String label;
+    private String units;
     private double total;
     private double hits;
     private double avg;
@@ -26,6 +28,8 @@ class MonitorDelta {
     }
 
     public MonitorDelta(Monitor mon) {
+        label = mon.getLabel();
+        units = mon.getUnits();
         hits = mon.getHits();
         total = mon.getTotal();
         avg = mon.getAvg();
@@ -44,24 +48,36 @@ class MonitorDelta {
      * Take a previous monitors values and subtract the passed in values from it.  If the monitors are of the same
      * concept then change will be measured.
      *
-     * @param values
+     * @param current
      * @return
      */
-    public MonitorDelta minus(MonitorDelta values) {
+    public MonitorDelta minus(MonitorDelta current) {
         MonitorDelta delta = new MonitorDelta();
-        delta.hits = hits - values.getHits();
-        delta.total = total - values.getTotal();
-        delta.avg = avg - values.getAvg();
-        delta.min = min - values.getMin();
-        delta.max = max - values.getMax();
-        delta.stdDev = stdDev - values.getStdDev();
-        delta.firstAccess = values.getFirstAccess();
-        delta.lastAccess = values.getLastAccess();
-        delta.lastValue = values.getLastValue();
-        delta.active = active - values.getActive();
-        delta.maxActive = maxActive - values.getMaxActive();
-        delta.avgActive = avgActive - values.getAvgActive();
+        delta.label = current.getLabel();
+        delta.units = current.getUnits();
+        delta.hits = current.getHits() - hits;
+        delta.total = current.getTotal() - total;
+        double currentAverage = (current.getHits()>hits) ? (current.getTotal() - total)/(current.getHits() - hits) : avg;
+        delta.avg = currentAverage - avg;
+        delta.min = current.getMin() - min;
+        delta.max = current.getMax() - max;
+        delta.stdDev = current.getStdDev() - stdDev;
+        delta.firstAccess = current.getFirstAccess();
+        delta.lastAccess = current.getLastAccess();
+        delta.lastValue = current.getLastValue();
+        delta.active = current.getActive() - active;
+        delta.maxActive = current.getMaxActive() - maxActive;
+        delta.avgActive = current.getAvgActive() - avgActive;
+
         return delta;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public String getUnits() {
+        return units;
     }
 
     public double getTotal() {
