@@ -411,7 +411,7 @@ public class MonProxyTest {
 
     private static void mainTestMethod(String name, Connection conn, int times, Params params, FactoryEnabled mf) throws Exception {
         testCounter++;
-        System.out.println("\n\n\n" + testCounter + ") " + name + "** "+ params);
+        //System.out.println("\n\n\n" + testCounter + ") " + name + "** "+ params);
 
         Monitor mon = mf.start(testCounter + ") " + name + " ** "+ params.toString());
         Monitor monTotal = mf.start("totalTime");

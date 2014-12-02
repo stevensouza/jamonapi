@@ -102,6 +102,8 @@ import java.util.*;
           JamonPropertiesLoader.JamonJmxBean beanInfo = iter.next();
           MonitorMXBeanImp mXbean = MonitorMXBeanImp.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
           mBeanServer.registerMBean(mXbean, MonitorMXBeanImp.getObjectName(mXbean));
+          MonitorDeltaMXBeanImp  mXbeanDelta = MonitorDeltaMXBeanImp.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
+          mBeanServer.registerMBean(mXbeanDelta, MonitorDeltaMXBeanImp.getObjectName(mXbeanDelta));
         }
     }
 
@@ -140,6 +142,8 @@ import java.util.*;
             JamonPropertiesLoader.JamonJmxBean beanInfo = iter.next();
             MonitorMXBeanImp mXbean = MonitorMXBeanImp.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
             mBeanServer.unregisterMBean(MonitorMXBeanImp.getObjectName(mXbean));
+            MonitorDeltaMXBeanImp  mXbeanDelta = MonitorDeltaMXBeanImp.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
+            mBeanServer.unregisterMBean(MonitorDeltaMXBeanImp.getObjectName(mXbeanDelta));
         }
     }
 
@@ -163,7 +167,7 @@ import java.util.*;
           mBeanServer.registerMBean(gcMXBean, GcMXBeanImp.getObjectName());
           Set<ObjectName> gcMbeans = getGarbageCollectionMbeans(mBeanServer);
           for (ObjectName name : gcMbeans) {
-             mBeanServer.addNotificationListener(name, (NotificationListener) gcMXBean, null, null);
+              mBeanServer.addNotificationListener(name, GcMXBeanImp.getObjectName(), null, null);
           }
         } catch (Throwable e) {
             // fail silently
@@ -173,6 +177,11 @@ import java.util.*;
     // same reason as note for registerGcMXBean
     private static void unregisterGcMXBean(MBeanServer mBeanServer)  {
         try {
+          Set<ObjectName> gcMbeans = getGarbageCollectionMbeans(mBeanServer);
+          for (ObjectName name : gcMbeans) {
+             mBeanServer.removeNotificationListener(name, GcMXBeanImp.getObjectName());
+          }
+          // above must remove before unregistering
           mBeanServer.unregisterMBean(GcMXBeanImp.getObjectName());
         } catch (Throwable e) {
             // fail silently
