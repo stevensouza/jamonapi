@@ -3,6 +3,7 @@ package com.jamonapi.proxy;
 import com.jamonapi.FactoryEnabled;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,6 +29,13 @@ public class MonProxyTest {
         MonitorFactory.reset();
     }
 
+
+    @After
+    public void tearDown() throws Exception {
+        MonProxyFactory.reset();
+        // Reset JAMon before each test method.  The Monitors are static and so would otherwise stick around
+        MonitorFactory.reset();
+    }
 
     @Test
     public void testSqlNoProxy() throws Exception {
@@ -427,8 +435,8 @@ public class MonProxyTest {
 
         monTotal.stop();
         String message = name + " execution time: " + mon.stop().getLastValue();
-        System.out.println(message);
-        System.out.println(MonitorFactory.getReport());
+        //System.out.println(message);
+        //System.out.println(MonitorFactory.getReport());
     }
 
 
