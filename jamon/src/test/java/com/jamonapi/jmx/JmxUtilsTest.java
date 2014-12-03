@@ -66,7 +66,7 @@ public class JmxUtilsTest {
         ExceptionMXBean exceptionMXBeanDeltaImp = JMX.newMXBeanProxy(mBeanServer, ExceptionDeltaMXBeanImp.getObjectName(), ExceptionMXBean.class);
         assertThat(exceptionMXBeanDeltaImp.getExceptionCount()).isEqualTo(0);
 
-        JAMonVersionMXBean versionMxBeanImp = JMX.newMXBeanProxy(mBeanServer, JAMonVersionMXBeanImp.getObjectName(), JAMonVersionMXBean.class);
+        JamonMXBean versionMxBeanImp = JMX.newMXBeanProxy(mBeanServer, JamonMXBeanImp.getObjectName(), JamonMXBean.class);
         assertThat(versionMxBeanImp.getVersion()).isEqualTo(MonitorFactory.getVersion());
 
         JmxUtils.unregisterMbeans();

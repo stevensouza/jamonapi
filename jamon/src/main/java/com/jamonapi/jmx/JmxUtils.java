@@ -5,7 +5,6 @@ import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 
 import javax.management.MBeanServer;
-import javax.management.NotificationListener;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.util.*;
@@ -83,7 +82,7 @@ import java.util.*;
             mBeanServer.registerMBean(new ExceptionMXBeanImp(), ExceptionMXBeanImp.getObjectName());
             mBeanServer.registerMBean(new ExceptionDeltaMXBeanImp(), ExceptionDeltaMXBeanImp.getObjectName());
             mBeanServer.registerMBean(new Log4jDeltaMXBeanImp(), Log4jDeltaMXBeanImp.getObjectName());
-            mBeanServer.registerMBean(new JAMonVersionMXBeanImp(), JAMonVersionMXBeanImp.getObjectName());
+            mBeanServer.registerMBean(new JamonMXBeanImp(), JamonMXBeanImp.getObjectName());
 
             // gcMXBean gets notificaitons from gc events and saves results in jamon.
             registerGcMXBean(mBeanServer);
@@ -131,7 +130,7 @@ import java.util.*;
             mBeanServer.unregisterMBean(ExceptionMXBeanImp.getObjectName());
             mBeanServer.unregisterMBean(ExceptionDeltaMXBeanImp.getObjectName());
             mBeanServer.unregisterMBean(Log4jDeltaMXBeanImp.getObjectName());
-            mBeanServer.unregisterMBean(JAMonVersionMXBeanImp.getObjectName());
+            mBeanServer.unregisterMBean(JamonMXBeanImp.getObjectName());
             unregisterGcMXBean(mBeanServer);
             unregisterMbeansFromPropsFile(mBeanServer);
         } catch (Exception e) {
