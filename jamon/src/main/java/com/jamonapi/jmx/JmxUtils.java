@@ -88,11 +88,6 @@ import java.util.*;
             // gcMXBean gets notificaitons from gc events and saves results in jamon.
             registerGcMXBean(mBeanServer);
             registerMbeansFromPropsFile(mBeanServer);
-
-            System.out.println("******");
-            MonitorMsMXBeanImp mXbean = MonitorMsMXBeanImp.create("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages", "ms.", "delmemsrange");
-            mBeanServer.registerMBean(mXbean, MonitorMsMXBeanImp.getObjectName(mXbean));
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -106,8 +101,13 @@ import java.util.*;
         // register both the mxbean and the delta mxbean that displays diffs from when the bean was last called.
         while (iter.hasNext()) {
           JamonPropertiesLoader.JamonJmxBean beanInfo = iter.next();
-          MonitorMXBeanImp mXbean = MonitorMXBeanImp.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
-          mBeanServer.registerMBean(mXbean, MonitorMXBeanImp.getObjectName(mXbean));
+          if ("ms.".equals(beanInfo.getUnits())) {
+              MonitorMsMXBeanImp mXbean = MonitorMsMXBeanImp.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
+              mBeanServer.registerMBean(mXbean, MonitorMsMXBeanImp.getObjectName(mXbean));
+          } else {
+              MonitorMXBeanImp mXbean = MonitorMXBeanImp.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
+              mBeanServer.registerMBean(mXbean, MonitorMXBeanImp.getObjectName(mXbean));
+          }
           MonitorDeltaMXBeanImp  mXbeanDelta = MonitorDeltaMXBeanImp.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
           mBeanServer.registerMBean(mXbeanDelta, MonitorDeltaMXBeanImp.getObjectName(mXbeanDelta));
         }
