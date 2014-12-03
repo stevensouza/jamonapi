@@ -1,6 +1,5 @@
 package com.jamonapi.jmx;
 
-import javax.management.ObjectName;
 import java.util.Date;
 
 /**

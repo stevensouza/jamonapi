@@ -3,7 +3,6 @@ package com.jamonapi.jmx;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 
-import javax.management.ObjectName;
 import java.util.Date;
 
 /**

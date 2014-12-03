@@ -5,8 +5,6 @@ import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import com.jamonapi.Range;
 
-import javax.management.ObjectName;
-
 /**
  * MxBean used for ms. time monitors as it also includes counts for each range.  Note it will work with any
  * monitor (for example bytes) however the ranges will have no meaning and so are set to 0.
