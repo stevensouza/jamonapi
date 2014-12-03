@@ -1,5 +1,7 @@
 package com.jamonapi;
 
+import com.jamonapi.proxy.MonProxy;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -73,8 +75,13 @@ public class JamonPropertiesLoader {
             addJamonMxBeans();
         }
 
+        if (jamonMxBeanList.isEmpty()) {
+            loadDefaultJamonMxBeans();
+        }
+
         return jamonMxBeanList;
     }
+
 
 
     private  Properties propertyLoader(String fileName)  {
@@ -126,6 +133,19 @@ public class JamonPropertiesLoader {
         defaults.put("jamonListener.size", "50");
         defaults.put("jamonJmxBean.size", "50");
         return defaults;
+    }
+
+    // These defaults are only used if NO jamon jmx beans are listed in the properties file.  If even
+    // 1 is created in the properties file then none of these are created.  This allows a user to override
+    // these defaults for example if they don't use 'delete' statements.
+    private void loadDefaultJamonMxBeans() {
+        jamonMxBeanList.add(new JamonJmxBeanDefault("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages", "ms.", "PageRequests.Jetty"));
+        jamonMxBeanList.add(new JamonJmxBeanDefault("com.jamonapi.http.JAMonTomcatValve.request.allPages", "ms.", "PageRequests.Tomcat"));
+        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: All", "ms.", "Sql.All"));
+        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: select", "ms.", "Sql.Select"));
+        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: update", "ms.", "Sql.Update"));
+        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: delete", "ms.", "Sql.Delete"));
+        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: insert", "ms.", "Sql.Insert"));
     }
 
     private void addListeners() {
@@ -200,6 +220,10 @@ public class JamonPropertiesLoader {
 
         // use JamonListener as a helper class implementation detail.
         private JamonListener listener;
+
+        protected JamonJmxBean() {
+        }
+
         protected JamonJmxBean(String keyPrefix) {
             listener = new JamonListener(keyPrefix);
         }
@@ -224,5 +248,34 @@ public class JamonPropertiesLoader {
         }
 
     }
+
+     class JamonJmxBeanDefault extends JamonJmxBean {
+         private final String label;
+         private final String units;
+         private final String name;
+
+         public JamonJmxBeanDefault(String label, String units, String name) {
+             this.label = label;
+             this.units = units;
+             this.name = name;
+         }
+
+        /** example: com.jamonapi.Exceptions */
+        public String getLabel() {
+            return label;
+        }
+
+        /** example: Exception */
+        public String getUnits() {
+            return units;
+        }
+
+        /** Return logical name to be used instead of label, or empty string if it doesn't exist. */
+        public String getName() {
+            return name;
+        }
+
+    }
+
 
 }
