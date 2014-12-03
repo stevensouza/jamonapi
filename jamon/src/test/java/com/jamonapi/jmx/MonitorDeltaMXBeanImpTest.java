@@ -23,7 +23,7 @@ public class MonitorDeltaMXBeanImpTest {
 
     @Test
     public void testFirstMonitorDeltaCorrect() throws Exception {
-        MonitorDeltaMXBeanImp bean = MonitorDeltaMXBeanImp.create("label", "units", "label");
+        MonitorMXBean bean = MonitorMXBeanFactory.createDelta("label", "units", "label");
         Monitor mon = MonitorFactory.add("label","units", 100).start().stop();
 
         assertThat(bean.getLabel()).isEqualTo(mon.getLabel());
@@ -44,7 +44,7 @@ public class MonitorDeltaMXBeanImpTest {
 
     @Test
     public void testSecondMonitorDeltaCorrect() throws Exception {
-        MonitorDeltaMXBeanImp bean = MonitorDeltaMXBeanImp.create("label", "units", "label");
+        MonitorMXBean bean = MonitorMXBeanFactory.createDelta("label", "units", "label");
         Monitor mon = MonitorFactory.add("label","units", 100).start().stop();
 
         // call to reset to current state as the baseline
@@ -74,7 +74,7 @@ public class MonitorDeltaMXBeanImpTest {
 
     @Test
     public void testSecondMonitorDeltaNegativeCorrect() throws Exception {
-        MonitorDeltaMXBeanImp bean = MonitorDeltaMXBeanImp.create("label", "units", "label");
+        MonitorMXBean bean = MonitorMXBeanFactory.createDelta("label", "units", "label");
         Monitor mon = MonitorFactory.add("label","units", 100).start().stop();
         resetToCurrent(bean);
         MonitorFactory.add("label","units", -150).start().stop();
@@ -98,7 +98,7 @@ public class MonitorDeltaMXBeanImpTest {
     }
 
     // resets the deltas to be based on the current monitor
-    private void resetToCurrent(MonitorDeltaMXBeanImp bean) {
+    private void resetToCurrent(MonitorMXBean bean) {
         bean.getTotal();
         bean.getAvg();
         bean.getMin();

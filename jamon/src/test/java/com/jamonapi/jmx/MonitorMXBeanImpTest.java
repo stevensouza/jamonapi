@@ -112,22 +112,22 @@ public class MonitorMXBeanImpTest {
 
     @Test
     public void testCreate() {
-        MonitorMXBeanImp bean = MonitorMXBeanImp.create(LABEL, "units", null);
+        MonitorMXBean bean = MonitorMXBeanFactory.create(LABEL, "units", null);
         assertThat(bean.getLabel()).isEqualTo(LABEL);
         assertThat(bean.getUnits()).isEqualTo("units");
         assertThat(bean.getName()).isEqualTo(LABEL);
 
-        bean = MonitorMXBeanImp.create(LABEL, "units", "   ");
+        bean = MonitorMXBeanFactory.create(LABEL, "units", "   ");
         assertThat(bean.getLabel()).isEqualTo(LABEL);
         assertThat(bean.getUnits()).isEqualTo("units");
         assertThat(bean.getName()).isEqualTo(LABEL);
 
-        bean = MonitorMXBeanImp.create(LABEL, "units", "");
+        bean = MonitorMXBeanFactory.create(LABEL, "units", "");
         assertThat(bean.getLabel()).isEqualTo(LABEL);
         assertThat(bean.getUnits()).isEqualTo("units");
         assertThat(bean.getName()).isEqualTo(LABEL);
 
-        bean = MonitorMXBeanImp.create(LABEL, "units", "name");
+        bean = MonitorMXBeanFactory.create(LABEL, "units", "name");
         assertThat(bean.getLabel()).isEqualTo(LABEL);
         assertThat(bean.getUnits()).isEqualTo("units");
         assertThat(bean.getName()).isEqualTo("name");

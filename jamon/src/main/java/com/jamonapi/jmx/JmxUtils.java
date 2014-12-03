@@ -100,15 +100,12 @@ import java.util.*;
         // register both the mxbean and the delta mxbean that displays diffs from when the bean was last called.
         while (iter.hasNext()) {
           JamonPropertiesLoader.JamonJmxBean beanInfo = iter.next();
-          if ("ms.".equals(beanInfo.getUnits())) {
-              MonitorMsMXBeanImp mXbean = MonitorMsMXBeanImp.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
-              mBeanServer.registerMBean(mXbean, MonitorMsMXBeanImp.getObjectName(mXbean));
-          } else {
-              MonitorMXBeanImp mXbean = MonitorMXBeanImp.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
-              mBeanServer.registerMBean(mXbean, MonitorMXBeanImp.getObjectName(mXbean));
-          }
-          MonitorDeltaMXBeanImp  mXbeanDelta = MonitorDeltaMXBeanImp.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
-          mBeanServer.registerMBean(mXbeanDelta, MonitorDeltaMXBeanImp.getObjectName(mXbeanDelta));
+
+          MonitorMXBean mXbean = MonitorMXBeanFactory.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
+          mBeanServer.registerMBean(mXbean, MonitorMXBeanFactory.getObjectName(mXbean));
+
+          MonitorMXBean  mXbeanDelta = MonitorMXBeanFactory.createDelta(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
+          mBeanServer.registerMBean(mXbeanDelta, MonitorMXBeanFactory.getDeltaObjectName(mXbeanDelta));
         }
     }
 
@@ -145,10 +142,12 @@ import java.util.*;
 
         while (iter.hasNext()) {
             JamonPropertiesLoader.JamonJmxBean beanInfo = iter.next();
-            MonitorMXBeanImp mXbean = MonitorMXBeanImp.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
-            mBeanServer.unregisterMBean(MonitorMXBeanImp.getObjectName(mXbean));
-            MonitorDeltaMXBeanImp  mXbeanDelta = MonitorDeltaMXBeanImp.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
-            mBeanServer.unregisterMBean(MonitorDeltaMXBeanImp.getObjectName(mXbeanDelta));
+
+            MonitorMXBean mXbean = MonitorMXBeanFactory.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
+            mBeanServer.unregisterMBean(MonitorMXBeanFactory.getObjectName(mXbean));
+
+            MonitorMXBean  mXbeanDelta = MonitorMXBeanFactory.createDelta(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
+            mBeanServer.unregisterMBean(MonitorMXBeanFactory.getDeltaObjectName(mXbeanDelta));
         }
     }
 

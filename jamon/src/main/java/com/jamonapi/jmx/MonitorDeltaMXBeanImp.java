@@ -7,7 +7,9 @@ import javax.management.ObjectName;
 import java.util.Date;
 
 /**
- * Calculate the delta since the last time the methods were called for a given jamon monitor key
+ * Calculate the delta since the last time the methods were called for a given jamon monitor key.
+ * Note any of the delta objects only reset the specific method when called.  This works out ok if the use case
+ * is to call all methods at the same time as would happen in jconsole.
  */
 public class MonitorDeltaMXBeanImp extends MonitorMXBeanImp {
 
@@ -25,21 +27,6 @@ public class MonitorDeltaMXBeanImp extends MonitorMXBeanImp {
     private MonitorDelta prevAvgActive = new MonitorDelta();
 
     private MonitorDelta prevMon;
-
-    public static MonitorDeltaMXBeanImp create(String label, String units, String name) {
-        MonitorDeltaMXBeanImp bean = null;
-        if (name == null || "".equals(name.trim())) {
-            bean = new MonitorDeltaMXBeanImp(label.trim(), units.trim());
-        } else {
-            bean = new MonitorDeltaMXBeanImp(label.trim(), units.trim(), name.trim());
-        }
-
-        return bean;
-    }
-
-    public static ObjectName getObjectName(MonitorDeltaMXBeanImp beanImp) {
-        return JmxUtils.getObjectName(MonitorMXBean.class.getPackage().getName() + ":type=delta,name="+beanImp.getName());
-    }
 
     public MonitorDeltaMXBeanImp(String label, String units) {
         this(label, units, label);

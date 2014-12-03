@@ -13,20 +13,6 @@ import javax.management.ObjectName;
  */
 public class MonitorMsMXBeanImp extends MonitorMXBeanImp implements MonitorMsMXBean {
 
-    public static MonitorMsMXBeanImp create(String label, String units, String name) {
-        MonitorMsMXBeanImp bean = null;
-        if (name == null || "".equals(name.trim())) {
-            bean = new MonitorMsMXBeanImp(label.trim(), units.trim());
-        } else {
-            bean = new MonitorMsMXBeanImp(label.trim(), units.trim(), name.trim());
-        }
-
-        return bean;
-    }
-
-    public static ObjectName getObjectName(MonitorMsMXBeanImp beanImp) {
-        return JmxUtils.getObjectName(MonitorMXBean.class.getPackage().getName() + ":type=current,name="+beanImp.getName());
-    }
     public MonitorMsMXBeanImp(String label, String units) {
         super(label, units);
     }

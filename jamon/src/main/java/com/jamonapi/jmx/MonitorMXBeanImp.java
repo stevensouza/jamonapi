@@ -27,17 +27,6 @@ public class MonitorMXBeanImp implements MonitorMXBean {
     private static final String ACTIVE = "active";
     private static final String AVGACTIVE = "avgactive";
 
-    public static MonitorMXBeanImp create(String label, String units, String name) {
-        MonitorMXBeanImp bean = null;
-        if (name == null || "".equals(name.trim())) {
-            bean = new MonitorMXBeanImp(label.trim(), units.trim());
-        } else {
-            bean = new MonitorMXBeanImp(label.trim(), units.trim(), name.trim());
-        }
-
-        return bean;
-    }
-
     public MonitorMXBeanImp(String label, String units) {
         this(label, units, label);
     }
@@ -46,10 +35,6 @@ public class MonitorMXBeanImp implements MonitorMXBean {
         this.label = label;
         this.units = units;
         this.name = name;
-    }
-
-    public static ObjectName getObjectName(MonitorMXBeanImp beanImp) {
-        return JmxUtils.getObjectName(MonitorMXBean.class.getPackage().getName() + ":type=current,name="+beanImp.getName());
     }
 
     @Override
@@ -62,6 +47,7 @@ public class MonitorMXBeanImp implements MonitorMXBean {
         return units;
     }
 
+    @Override
     public String getName() {
         return name;
     }

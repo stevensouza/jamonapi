@@ -15,7 +15,7 @@ public class MonitorMsMXBeanImpTest {
     @Before
     public void setUp() throws Exception {
         MonitorFactory.reset();
-        bean = MonitorMsMXBeanImp.create(LABEL, UNITS, LABEL);
+        bean = (MonitorMsMXBeanImp) MonitorMXBeanFactory.create(LABEL, UNITS, LABEL);
         assertThat(bean.getAvg()).isEqualTo(0);
     }
 

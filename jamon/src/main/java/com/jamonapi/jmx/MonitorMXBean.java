@@ -20,4 +20,5 @@ public interface MonitorMXBean {
         public double getAvgActive();
         public String getLabel();
         public String getUnits();
+        public String getName();
 }
