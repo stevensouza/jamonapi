@@ -63,7 +63,7 @@ public class MonitorDeltaMXBeanImpTest {
         assertThat(bean.getStdDev()).isEqualTo(mon.getStdDev());
         assertThat(bean.getFirstAccess()).isEqualTo(mon.getFirstAccess());
         assertThat(bean.getLastAccess()).isEqualTo(mon.getLastAccess());
-        assertThat(bean.getLastValue()).isEqualTo(150);
+        assertThat(bean.getLastValue()).isEqualTo(50);
         assertThat(bean.getActive()).isEqualTo(2);
         assertThat(bean.getMaxActive()).isEqualTo(2);
         assertThat(bean.getAvgActive()).isBetween(1d,2d);
@@ -90,7 +90,7 @@ public class MonitorDeltaMXBeanImpTest {
         assertThat(bean.getStdDev()).isEqualTo(mon.getStdDev());
         assertThat(bean.getFirstAccess()).isEqualTo(mon.getFirstAccess());
         assertThat(bean.getLastAccess()).isEqualTo(mon.getLastAccess());
-        assertThat(bean.getLastValue()).isEqualTo(-150);
+        assertThat(bean.getLastValue()).isEqualTo(-250);
         assertThat(bean.getActive()).isEqualTo(0);
         assertThat(bean.getMaxActive()).isEqualTo(0);
         assertThat(bean.getAvgActive()).isEqualTo(0);

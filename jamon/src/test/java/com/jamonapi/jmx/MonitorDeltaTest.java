@@ -63,7 +63,7 @@ public class MonitorDeltaTest {
         assertThat(displayDelta.getStdDev()).isEqualTo(mon.getStdDev());
         assertThat(displayDelta.getFirstAccess()).isEqualTo(mon.getFirstAccess());
         assertThat(displayDelta.getLastAccess()).isEqualTo(mon.getLastAccess());
-        assertThat(displayDelta.getLastValue()).isEqualTo(150);
+        assertThat(displayDelta.getLastValue()).isEqualTo(50);
         assertThat(displayDelta.getActive()).isEqualTo(2);
         assertThat(displayDelta.getMaxActive()).isEqualTo(2);
         assertThat(displayDelta.getAvgActive()).isBetween(1d,2d);
@@ -89,7 +89,7 @@ public class MonitorDeltaTest {
         assertThat(displayDelta.getStdDev()).isEqualTo(mon.getStdDev());
         assertThat(displayDelta.getFirstAccess()).isEqualTo(mon.getFirstAccess());
         assertThat(displayDelta.getLastAccess()).isEqualTo(mon.getLastAccess());
-        assertThat(displayDelta.getLastValue()).isEqualTo(-150);
+        assertThat(displayDelta.getLastValue()).isEqualTo(-250);
         assertThat(displayDelta.getActive()).isEqualTo(0);
         assertThat(displayDelta.getMaxActive()).isEqualTo(0);
         assertThat(displayDelta.getAvgActive()).isEqualTo(0);

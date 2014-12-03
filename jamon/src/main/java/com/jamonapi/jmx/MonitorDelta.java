@@ -57,14 +57,14 @@ class MonitorDelta {
         delta.units = units;
         delta.hits = hits - previous.getHits();
         delta.total = total - previous.getTotal();
-        double currentAverage = (hits>previous.getHits()) ? (total - previous.getTotal())/(hits - previous.getHits()) : previous.getAvg();
+        double currentAverage = (hits>previous.getHits()) ? (total - previous.getTotal())/(hits - previous.getHits()) : 0;
         delta.avg = currentAverage;
         delta.min = min - previous.getMin();
         delta.max = max - previous.getMax();
         delta.stdDev = stdDev - previous.getStdDev();
         delta.firstAccess = firstAccess;
         delta.lastAccess = lastAccess;
-        delta.lastValue = lastValue;
+        delta.lastValue = lastValue - previous.getLastValue();
         delta.active = active - previous.getActive();
         delta.maxActive = maxActive - previous.getMaxActive();
         delta.avgActive = avgActive - previous.getAvgActive();

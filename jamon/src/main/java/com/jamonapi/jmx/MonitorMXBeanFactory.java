@@ -29,7 +29,7 @@ public class MonitorMXBeanFactory {
         }
 
         if ("ms.".equals(units)) {
-            bean = new MonitorDeltaMXBeanImp(label.trim(), units.trim(), name.trim());
+            bean = new MonitorDeltaMsMXBeanImp(label.trim(), units.trim(), name.trim());
         } else {
             bean = new MonitorDeltaMXBeanImp(label.trim(), units.trim(), name.trim());
         }
