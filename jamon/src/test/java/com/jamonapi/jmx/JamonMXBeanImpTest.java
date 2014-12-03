@@ -42,11 +42,15 @@ public class JamonMXBeanImpTest {
         assertThat(MonitorFactory.getNumRows()).isEqualTo(1);
 
         bean.setEnabled(false);
+        MonitorFactory.add("mymonitor", "units", 100);
         assertThat(bean.getEnabled()).isEqualTo(false);
         assertThat(MonitorFactory.getNumRows()).isEqualTo(0);
 
         bean.setEnabled(true);
+        MonitorFactory.add("mymonitor", "units", 100);
         assertThat(bean.getEnabled()).isEqualTo(true);
         assertThat(MonitorFactory.getNumRows()).isEqualTo(1);
+        assertThat(MonitorFactory.getMonitor("mymonitor", "units").getHits()).isEqualTo(2);
+
     }
 }
