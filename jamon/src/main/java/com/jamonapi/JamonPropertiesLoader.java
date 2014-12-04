@@ -139,13 +139,13 @@ public class JamonPropertiesLoader {
     // 1 is created in the properties file then none of these are created.  This allows a user to override
     // these defaults for example if they don't use 'delete' statements.
     private void loadDefaultJamonMxBeans() {
-        jamonMxBeanList.add(new JamonJmxBeanDefault("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages", "ms.", "Mon.PageRequests.Jetty"));
-        jamonMxBeanList.add(new JamonJmxBeanDefault("com.jamonapi.http.JAMonTomcatValve.request.allPages", "ms.", "Mon.PageRequests.Tomcat"));
-        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: All", "ms.", "Mon.Sql.All"));
-        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: select", "ms.", "Mon.Sql.Select"));
-        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: update", "ms.", "Mon.Sql.Update"));
-        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: delete", "ms.", "Mon.Sql.Delete"));
-        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: insert", "ms.", "Mon.Sql.Insert"));
+        jamonMxBeanList.add(new JamonJmxBeanDefault("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages", "ms.", "Jamon.PageRequests.Jetty"));
+        jamonMxBeanList.add(new JamonJmxBeanDefault("com.jamonapi.http.JAMonTomcatValve.request.allPages", "ms.", "Jamon.PageRequests.Tomcat"));
+        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: All", "ms.", "Jamon.Sql.All"));
+        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: select", "ms.", "Jamon.Sql.Select"));
+        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: update", "ms.", "Jamon.Sql.Update"));
+        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: delete", "ms.", "Jamon.Sql.Delete"));
+        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: insert", "ms.", "Jamon.Sql.Insert"));
     }
 
     private void addListeners() {
