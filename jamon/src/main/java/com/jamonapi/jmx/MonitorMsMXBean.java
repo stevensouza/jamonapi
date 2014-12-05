@@ -1,7 +1,7 @@
 package com.jamonapi.jmx;
 
 /**
- * Created by stevesouza on 12/2/14.
+ * Interface that tracks range counts for 'ms.' based jamon monitors
  */
 public interface MonitorMsMXBean extends MonitorMXBean {
     public long get_Count00_LessThan_0ms();

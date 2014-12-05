@@ -15,8 +15,10 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Class that can listen to any jmx notifications. It listens to gc collections from a sun jvm post 1.7 unfortunately.
- * JAMon monitors are created for gc duration as well as memory used in each of the memory pools after the gc has fired.
+ * Class that can listen to any jmx notifications. It listens to gc collections from a sun jvm only and that is
+ * only versions at 1.7 and after (unfortunately). JAMon monitors are created for <br>
+ *     * gc duration as well as...<br>
+ *     * memory used in each of the memory pools after the gc has fired.<br><br>
  *
  * http://www.fasterj.com/articles/gcnotifs.shtml
  */
@@ -44,7 +46,7 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
     /* This method is visible for testing purposes */
     void monitor(GarbageCollectionNotificationInfo gcNotifyInfo) {
         // http://docs.oracle.com/javase/7/docs/jre/api/management/extension/com/sun/management/GcInfo.html
-        // for each type count times fired, duration, and used memory
+        // for each type count: times fired, duration, and used memory
         GcInfo gcInfo = gcNotifyInfo.getGcInfo();
         duration = gcInfo.getDuration();
         when = new Date();
@@ -80,6 +82,8 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
     }
 
     /**
+     * This will be placed in the details part of the MonKey which is used for display in the mondetails.jsp page.
+     *
      * Sample returned string:
      *  Name: PS MarkSweep
      *  Cause: System.gc()

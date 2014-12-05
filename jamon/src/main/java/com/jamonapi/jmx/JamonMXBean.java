@@ -1,7 +1,7 @@
 package com.jamonapi.jmx;
 
 /**
- * MXBean that allows you to manage jamon
+ * MXBean that allows for basic management of jamon
  */
 public interface JamonMXBean {
     public String getVersion();

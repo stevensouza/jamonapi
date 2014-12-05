@@ -5,7 +5,7 @@ import com.jamonapi.utils.NumberDelta;
 import javax.management.ObjectName;
 
 /**
- * Created by stevesouza on 11/19/14.
+ * Implementation that tracks exceptions deltas/changes between calls of the number of exceptions caught by jamon.
  */
 public class ExceptionDeltaMXBeanImp extends ExceptionMXBeanImp {
     private NumberDelta delta = new NumberDelta();

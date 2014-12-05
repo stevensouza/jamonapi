@@ -7,8 +7,10 @@ import java.util.Date;
 
 /**
  * Calculate the delta since the last time the methods were called for a given jamon monitor key.
- * Note any of the delta objects only reset the specific method when called.  This works out ok if the use case
- * is to call all methods at the same time as would happen in jconsole.
+ * Note any of the delta objects only reset numbers for the specific method being called.
+ * This works out ok if the use case is to call all methods at the same time as would happen in jconsole.
+ * In this case all methods are called and so all are reset at the same time.  If only 1 method is called
+ * then the deltas could get out of sync.
  */
 public class MonitorDeltaMXBeanImp extends MonitorMXBeanImp {
 

@@ -5,7 +5,9 @@ import com.jamonapi.utils.NumberDelta;
 import javax.management.ObjectName;
 
 /**
- * MXBean that exposes jamon log4j metrics deltas.
+ * MXBean that exposes jamon log4j metrics deltas.  It tracks counts in between invocations for the log4j log
+ * levels such as DEBUG, WARN,FATAL, ERROR,...
+ *
  */
 public class Log4jDeltaMXBeanImp extends Log4jMXBeanImp {
     private NumberDelta traceDelta = new NumberDelta();

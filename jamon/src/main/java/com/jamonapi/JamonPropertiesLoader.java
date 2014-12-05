@@ -218,7 +218,7 @@ public class JamonPropertiesLoader {
     // Simple value object that holds the values for a jamon jmx bean read in from the properties file
     public class JamonJmxBean {
 
-        // use JamonListener as a helper class implementation detail.
+        // use JamonListener as a helper class implementation detail (using delegation) as it can read from the properties file.
         private JamonListener listener;
 
         protected JamonJmxBean() {
@@ -249,6 +249,8 @@ public class JamonPropertiesLoader {
 
     }
 
+     // This class is used to load default jamon jmx configurable beans when none are defined in the properties file.
+     // It is a simple value object.
      class JamonJmxBeanDefault extends JamonJmxBean {
          private final String label;
          private final String units;

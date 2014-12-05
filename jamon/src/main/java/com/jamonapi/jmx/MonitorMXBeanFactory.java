@@ -3,7 +3,9 @@ package com.jamonapi.jmx;
 import javax.management.ObjectName;
 
 /**
- * Created by stevesouza on 12/3/14.
+ * Factory for creating configurable jamon jmx mbeans.  It will create jmx bean with time ranges for monitors with
+ * units 'ms.'. With any other units these ranges won't be added to the mbean.  It can also create delta jmx
+ * mbeans.  The user can create their own configurable jmx mbeans by configuring the jamonapi.properties file.
  */
 public class MonitorMXBeanFactory {
 

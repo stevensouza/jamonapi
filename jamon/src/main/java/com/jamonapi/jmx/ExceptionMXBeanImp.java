@@ -7,7 +7,7 @@ import com.jamonapi.MonitorFactory;
 import javax.management.ObjectName;
 
 /**
- * Created by stevesouza on 11/19/14.
+ * Track exceptions caught by jamon.
  */
 public class ExceptionMXBeanImp implements ExceptionMXBean {
     private static final int STACKTRACE = 0;

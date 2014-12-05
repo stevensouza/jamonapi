@@ -5,7 +5,9 @@ import com.jamonapi.Monitor;
 import java.util.Date;
 
 /**
-* Simple struct like class to measure changes in 2 Monitors i.e. Deltas
+* Simple struct like class to measure changes between 2 Monitors i.e. Deltas.  The 2 monitors are typically
+ * the same monitor key.  Jamon usually accumulates metrics over time. This class allows you to check how
+ * much the monitor has changed (monitor2) since a previous time (monitor1)
 */
 class MonitorDelta {
 
@@ -45,8 +47,8 @@ class MonitorDelta {
     }
 
     /**
-     * Take the current monitors values and subtract the passed in values from it.  If the monitors are of the same
-     * concept then change will be measured.
+     * Take the current monitors values and subtract the previous monitors values from it.
+     * If the monitors are of the same key then delta/change will be measured.
      *
      * @param previous
      * @return

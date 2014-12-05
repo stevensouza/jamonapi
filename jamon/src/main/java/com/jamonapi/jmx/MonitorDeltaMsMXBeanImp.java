@@ -4,7 +4,7 @@ import com.jamonapi.utils.NumberDelta;
 
 /**
  * In addition to tracking the normal jamon aggregates this also displays counts for the time ranges for ms. based
- * monitors.
+ * monitors. i.e. 0_10ms, 10_20ms etc.
  */
 public class MonitorDeltaMsMXBeanImp extends MonitorDeltaMXBeanImp implements MonitorMsMXBean {
     private static final int NUM_RANGES=14;

@@ -3,7 +3,7 @@ package com.jamonapi.jmx;
 import java.util.Date;
 
 /**
- * Created by stevesouza on 11/21/14.
+ * Interface for configurable jamon jmx beans.  Essentially it exposes the values of a monitor.
  */
 public interface MonitorMXBean {
         public double getTotal();

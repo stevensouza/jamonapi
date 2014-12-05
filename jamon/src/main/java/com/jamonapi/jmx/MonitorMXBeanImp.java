@@ -3,7 +3,7 @@ package com.jamonapi.jmx;
 import java.util.Date;
 
 /**
- * Created by stevesouza on 11/21/14.
+ * Base class for jamon configurable mbeans.  It exposes jamon metrics such as avg, hits, total etc.
  */
 public class MonitorMXBeanImp implements MonitorMXBean {
 

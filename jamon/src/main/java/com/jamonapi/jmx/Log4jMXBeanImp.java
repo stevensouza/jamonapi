@@ -3,7 +3,9 @@ package com.jamonapi.jmx;
 import javax.management.ObjectName;
 
 /**
- * MXBean that exposes jamon log4j metrics.
+ * MXBean that exposes jamon log4j metrics. Note jamon log4j tracking must be enabled. It tracks counts
+ * for each of the log levels (DEBUG, INFO,...)
+ *
  */
 public class Log4jMXBeanImp implements Log4jMXBean {
     public static ObjectName getObjectName() {

@@ -10,7 +10,8 @@ import java.lang.management.ManagementFactory;
 import java.util.*;
 
 /**
- * Created by stevesouza on 11/19/14.
+ * Class that creates and destroys jamon jmx monitors.  It also provides some utility functions used in the other
+ * jamon jmx classes.
  */
  public class JmxUtils {
 
@@ -47,6 +48,13 @@ import java.util.*;
         return 0.0;
     }
 
+    /**
+     *
+     * @param label jamon label
+     * @param units jamon units
+     * @param value string representing the metric to return i.e. avg, hits etc.
+     * @return The date assosiated with the jamon monitor
+     */
     static Date getDate(String label, String units, String value) {
         if (MonitorFactory.exists(label, units)) {
             Monitor mon = MonitorFactory.getMonitor(label, units);
@@ -56,6 +64,11 @@ import java.util.*;
         return null;
     }
 
+    /**
+     * Create a jmx ObjectName out of the passed in String
+     * @param name
+     * @return ObjectName
+     */
     static ObjectName getObjectName(String name) {
         try {
             return new ObjectName(name);
@@ -73,7 +86,7 @@ import java.util.*;
     }
 
      /**
-     *  register all jamon related mbeans except those related to jamon specific monitors taken from jamonapi.properties file
+     *  Register all jamon related mbeans with the passed in MBeanServer
      */
     public static  void registerMbeans(MBeanServer mBeanServer) {
         MonitorMXBeanImp mxBeanImp = null;
@@ -84,7 +97,7 @@ import java.util.*;
             mBeanServer.registerMBean(new Log4jDeltaMXBeanImp(), Log4jDeltaMXBeanImp.getObjectName());
             mBeanServer.registerMBean(new JamonMXBeanImp(), JamonMXBeanImp.getObjectName());
 
-            // gcMXBean gets notificaitons from gc events and saves results in jamon.
+            // gcMXBean gets notifications from gc events and saves results in jamon.
             registerGcMXBean(mBeanServer);
             registerMbeansFromPropsFile(mBeanServer);
         } catch (Exception e) {
@@ -92,6 +105,11 @@ import java.util.*;
         }
     }
 
+    /**
+     * Load jamon configurable jmx monitors from the jamon properties file.
+     * If there are no configurable monitors taken from the file then a set of default
+     * ones will be created (pageHits, sql).
+     */
     private static  void registerMbeansFromPropsFile(MBeanServer mBeanServer) throws Exception {
         JamonPropertiesLoader loader = new JamonPropertiesLoader();
         List<JamonPropertiesLoader.JamonJmxBean> jamonJmxBeans = loader.getMxBeans();
@@ -135,6 +153,13 @@ import java.util.*;
         }
     }
 
+    /**
+     * Read the properties file and unregister its configurable jamon jmx beans.  Note if the file has changed
+     * since the server was brought up the beans unregistered might not match those that were loaded.
+     *
+     * @param mBeanServer
+     * @throws Exception
+     */
     private static  void unregisterMbeansFromPropsFile(MBeanServer mBeanServer) throws Exception {
         JamonPropertiesLoader loader = new JamonPropertiesLoader();
         List<JamonPropertiesLoader.JamonJmxBean> jamonJmxBeans = loader.getMxBeans();
@@ -151,6 +176,13 @@ import java.util.*;
         }
     }
 
+    /**
+     * Get a list of the garbage collector mbeans.  This is used primarily to regsiter jamon to listen for gc notifications.
+     *
+     * @param mBeanServer
+     * @return Set of ObjectNames for gc jmx objects
+     * @throws Exception
+     */
     public static Set<ObjectName> getGarbageCollectionMbeans(MBeanServer mBeanServer) throws Exception {
         Set<ObjectName> mbeans = mBeanServer.queryNames(null, null);
         Set<ObjectName> gcMbeans = new HashSet<ObjectName>();
