@@ -112,7 +112,7 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
         return gcInfoString;
     }
 
-    String replaceComma(Map map) {
+    private String replaceComma(Map map) {
         String str = map.toString();
         return str.replace(",", ",\n");
     }
