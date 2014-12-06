@@ -106,10 +106,15 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
         sb.append("Duration: ").append(gcInfo.getDuration()).append("\n");
         sb.append("Sequence: ").append(gcInfo.getId()).append("\n");
         sb.append("When: ").append(when).append("\n\n");
-        sb.append("BeforeGc: ").append(gcInfo.getMemoryUsageBeforeGc()).append("\n\n");
-        sb.append("AfterGc: ").append(gcInfo.getMemoryUsageAfterGc()).append("\n");
+        sb.append("BeforeGc: ").append(replaceComma(gcInfo.getMemoryUsageBeforeGc())).append("\n\n");
+        sb.append("AfterGc: ").append(replaceComma(gcInfo.getMemoryUsageAfterGc())).append("\n");
         gcInfoString = sb.toString();
         return gcInfoString;
+    }
+
+    String replaceComma(Map map) {
+        String str = map.toString();
+        return str.replace(",", ",\n");
     }
 
     @Override
