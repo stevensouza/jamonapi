@@ -20,6 +20,10 @@ public class MonitorMsMXBeanImp extends MonitorMXBeanImp implements MonitorMsMXB
     }
 
     private long getCount(int i) {
+        if (!MonitorFactory.exists(label, units)) {
+          return 0;
+        }
+
         Monitor mon = MonitorFactory.getMonitor(label, units);
         Range range = mon.getRange();
         if (range==null) {
