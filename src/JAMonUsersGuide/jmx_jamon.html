@@ -42,7 +42,7 @@
             <p>The Java Management Extensions (JMX) technology is a standard part of the Java Platform.  With JMX developers can expose and manage their application
             via any JMX enabled console (Examples of these consoles are jconsole and visualvm).  As of release 2.80 JAMon exposes the following through JMX:</p>
 
-            <p>As of release 2.80 JAMon exposes the following through JMX:</p>
+            <p>As of release 2.80 JAMon exposes the following through JMX (note all data is also viewable via the JAMon war):</p>
             <ol>
                 <li><a href="#log4j">Log4j</a> - Counts for calls at the various log levels: TRACE, DEBUG, WARNING, INFO, ERROR, FATAL,...</li>
                 <li><a href="#pagerequests">Page Requests</a> - Metrics for page hits in a web application.  Metrics include count, average time, total time, max time, min time and more.</li>
@@ -71,7 +71,7 @@
     must be enabled.</li>
     <li>If the web container is Jetty then the the JMX labeled 'Jamon.PageRequests.Jetty' will have metrics in it, and if Tomcat is the container then 'Jamon.PageRequests.Tomcat'
     will be the label.  Note: If you are using a different web container you can still track page request metrics by using <a href="#custommetrics">JAMon Custom Metrics</a>.</li>
-    <li>As you can see below hits, average execution time, max distribution time and all the other standard metrics are tracked.  '_Count08_640_1280ms'
+    <li>As you can see below the following are tracked for the page requests: hits, average execution time, max execution time and all the other standard JAMon metrics.  '_Count08_640_1280ms'
     contains the count of page hits that took between 640 and 1280 ms.  The same principal applies to the other similarly named fields.</li>
     </ul>
 </p>
@@ -80,15 +80,63 @@
 
 <h2><a name="sql">3. SQL Executions</a></h2>
 
+<p> This section represents any SQL commands executed by the application.
+<ul>
+    <li>To enable this capability <a href="index.html#WhatsNew22">SQL monitoring</a>
+        must be enabled.</li>
+    <li>There will be a JMX entry for each of the following SQL commands: select, insert, update, delete.  There is also one for 'All' which aggregates all SQL commands. </li>
+    <li>As you can see below the following are tracked: hits, average execution time, max execution time and all the other standard JAMon metrics.  '_Count08_640_1280ms'
+        contains the number of SQL commands that took between 640 and 1280 ms.  The same principal applies to the other similarly named fields.</li>
+</ul>
+</p>
     <p><img src="jamon_jmx_sql.png" border="1"></p>
 
 <h2><a name="exceptions">4. Exceptions</a></h2>
-
+<p> This section represents any Exceptions thrown by the application.
+<ul>
+    <li>To enable this capability one of the JAMon capbilities that tracks exceptions must be enabled.  This includes SQL, HTTP Page Request, interface monitoring, or Sring AOP monitoring.</li>
+    <li>As you can see below the count of exceptions as well as the most recent stack trace are tracked.</li>
+</ul>
     <p><img src="jamon_jmx_exceptions.png" border="1"></p>
 
 <h2><a name="gc">5. Garbage Collection info</a></h2>
+<p> This section represents information associated with garbage collection invocations.
+<ul>
+    <li>This capability only works for the Oracle JVM</li>
+    <li>As you can below the following metrics are tracked for the most recent GC firing: duration in ms., when the invocation occured, metadata associated with he GC firing.</li>
+</ul>
 
-    <p><img src="jamon_jmx_gc.png" border="1"></p>
+<p><img src="jamon_jmx_gc.png" border="1"></p>
+
+
+<p>By viewing JAMon data via the JAMon war you will be able to see even more information associated with the garbage collector.
+    <ul><li>For example
+the following image shows the JAMon monitors that track performance of each of the types of garbage collector that fired.</li>
+    <li>In this case minor and major collections occured.  Depending on how you configured your garbage collector different data
+may appear for you. These monitors indicate the duration in ms. of the GC invocations. </li>
+    <li>You can see that a MarkSweep collector was invoked 6 times and the Scavenge collector was invoked 8 times.</li>
+</ul>
+</p>
+
+    <p><img src="jamon_jmx_gc_time.png" border="1"></p>
+
+<p>In addition to the aggregates mentioned above, JAMon also tracks the details of each individual GC invocation via
+    <a href="jamonlisteners.html#example">JAMon's buffer listener</a> capabilities.  Listeners can be configured in the
+    <a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/jamon/src/test/resources/jamonapi.properties">jamonapi.properties</a> file.
+    To configure and view the detailed GC invocation data click on the blue box underneath the 'Modify' column (see above).
+    </p>
+<p>Each row in the table below represents details collected for one GC invocation.  Some of the data collected is: The duration of the GC invocation (in ms.), memory statistics both
+    before and after the GC invocation (BeforeGc, and AfterGc respectively).
+</p>
+
+    <p><img src="jamon_jmx_gc_details.png" border="1"></p>
+
+<p>In addition to tracking the frequency and duration of the GC invocations JAMon JMX also tracks the memory consumed (in bytes) by Java different memory pools after the GC was firing (AfterGc).  Note all
+    GC related data shows up in the JAMon display screen if you filter by 'gc'.  A snapshot of this data is in the image below.  Note you can also attach a JAMon Buffer listener to all the
+    GC data in the report below.
+</p>
+
+<p><img src="jamon_jmx_gc_mem.png" border="1"></p>
 
 <h2><a name="custommetrics">6. JAMon Custom Metrics</a></h2>
 
