@@ -140,6 +140,19 @@ may appear for you. These monitors indicate the duration in ms. of the GC invoca
 
 <h2><a name="custommetrics">6. JAMon Custom Metrics</a></h2>
 
+<p>Developers can use JAMon's custom JMX metrics capabilities to add any JAMon monitor to JMX. In fact that is exactly how any of the JMX entries that start with 'Jamon.' were added.
+    For example <a href="#pagerequests">'Jamon.PageRequests.Jetty'</a> was added this way.  To add your own custom JMX monitors simply add them to the
+    <a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/jamon/src/test/resources/jamonapi.properties">jamonapi.properties</a> file.  Below you can
+    see how many of the custom metrics discussed in this document are configured.  Note each custom metric has to have the exact JAMon monitor label and units (comma delimited).
+    Optionally if you
+    would like it to appear with a different (more readable) name in JMX then you can provide a name.  By convention the name should start with 'Jamon.'.
+</p>
+
+<p>Note if you provide one custom JAMon JMX monitor and you want then you are taking ownership of ALL custom monitors.  This means that if yo would like any of the other 'Jamon.' custom
+JMX metrics to still appear they must also be in the jamonapi.properties file.</p>
+
+<p><img src="jamon_jmx_custommetrics.png" border="1"></p>
+
 
 <h2><a name="managing">7. Managing JAMon</a></h2>
 
