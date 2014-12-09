@@ -160,6 +160,18 @@ JMX metrics to still appear they must also be in the jamonapi.properties file.</
     <p><img src="jamon_jmx_managing.png" border="1"></p>
 
 <h2><a name="deltas">8. Deltas</a></h2>
+<p>Normally JAMon numbers continually grow.  Deltas allow a developer to tell how much the JAMon metrics have changed since the
+last time they were checked.  All 'Delta' JMX beans reside within the 'deltas' jmx directory structure as seen below.
+</p>
+
+<p>For example the 'refresh' button was clicked on the Log4j Delta JMX bean below and it indicates that most log methods were
+called 2,000 times since the Delta 'refresh' button was last clicked.  If the 'refresh' button was clicked again and no log methods
+had been called in between refreshes then all the numbers would be 0.</p>
+
+<p><img src="jamon_jmx_deltas_log4j.png" border="1"></p>
+
+<p>The following shows changes in jetty page hits since the 'refresh' button was last clicked.  So 15 page hits occurred during this time interval, and
+their average time per invocation was 73.3 ms. </p>
 
     <p><img src="jamon_jmx_deltas.png" border="1"></p>
 
