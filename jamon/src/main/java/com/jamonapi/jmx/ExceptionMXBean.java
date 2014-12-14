@@ -1,5 +1,7 @@
 package com.jamonapi.jmx;
 
+import java.util.Date;
+
 /**
  * MxBean that tracks the count of the number of exceptions thrown.  It also shows the full stacktrace of the
  * most recent exception thrown.
@@ -19,4 +21,11 @@ public interface ExceptionMXBean {
      * @return number of exceptions thrown
      */
     public long getExceptionCount();
+
+    /**
+     * Get the date of the most recently thrown exception.
+     *
+     * @return date
+     */
+    public Date getDate();
 }

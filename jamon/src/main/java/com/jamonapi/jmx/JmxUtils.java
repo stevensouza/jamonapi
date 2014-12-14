@@ -52,8 +52,8 @@ import java.util.*;
      *
      * @param label jamon label
      * @param units jamon units
-     * @param value string representing the metric to return i.e. avg, hits etc.
-     * @return The date assosiated with the jamon monitor
+     * @param value string representing the date metric to return lastaccess, firstaccess.
+     * @return The date associated with the jamon monitor
      */
     static Date getDate(String label, String units, String value) {
         if (MonitorFactory.exists(label, units)) {

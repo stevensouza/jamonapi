@@ -5,6 +5,7 @@ import com.jamonapi.JAMonListener;
 import com.jamonapi.MonitorFactory;
 
 import javax.management.ObjectName;
+import java.util.Date;
 
 /**
  * Track exceptions caught by jamon.
@@ -34,6 +35,11 @@ public class ExceptionMXBeanImp implements ExceptionMXBean {
     @Override
     public long getExceptionCount() {
         return JmxUtils.getCount(LABEL, UNITS);
+    }
+
+    @Override
+    public Date getDate() {
+        return JmxUtils.getDate(LABEL, UNITS, "lastaccess");
     }
 
     private static String getMostRecentStacktrace(JAMonBufferListener listener) {
