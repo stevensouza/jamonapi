@@ -53,6 +53,6 @@ public class ExceptionMXBeanImpTest {
     @Test
     public void testGetExceptionDate() throws Exception {
         MonitorFactory.add(ExceptionMXBean.LABEL, ExceptionMXBean.UNITS, 1);
-        assertThat(bean.getDate()).isEqualTo(MonitorFactory.getMonitor(ExceptionMXBean.LABEL, ExceptionMXBean.UNITS).getLastAccess());
+        assertThat(bean.getWhen()).isEqualTo(MonitorFactory.getMonitor(ExceptionMXBean.LABEL, ExceptionMXBean.UNITS).getLastAccess());
     }
 }

@@ -27,5 +27,5 @@ public interface ExceptionMXBean {
      *
      * @return date
      */
-    public Date getDate();
+    public Date getWhen();
 }

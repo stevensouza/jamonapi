@@ -38,7 +38,7 @@ public class ExceptionMXBeanImp implements ExceptionMXBean {
     }
 
     @Override
-    public Date getDate() {
+    public Date getWhen() {
         return JmxUtils.getDate(LABEL, UNITS, "lastaccess");
     }
 
