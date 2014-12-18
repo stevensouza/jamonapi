@@ -23,7 +23,7 @@ import java.util.Locale;
 public final class LocaleContext {
 
     /** the thread local storage for the locale specific formatters */
-    private static final ThreadLocalFormatterStorage formatterStorage = new ThreadLocalFormatterStorage();
+    private static ThreadLocalFormatterStorage formatterStorage = new ThreadLocalFormatterStorage();
 
     /** @return the thread local storage for the fixed-point number formatting specific for the locale */
     public static DecimalFormat getFloatingPointFormatter() {
@@ -65,6 +65,15 @@ public final class LocaleContext {
      */
     public static void setLocale(Locale locale) {
         getFormatters().setLocale(locale);
+    }
+
+    /**
+     * Reset thread local variables.  For example this can be called when an application is 'undeployed'.
+     * This was done to fix a memory leak in tomcat that happened when the app context was destroyed.
+     * The context couldn't be properly destroyed as objects were still in the threadlocal map.
+     */
+    public static void reset() {
+        formatterStorage = new ThreadLocalFormatterStorage();
     }
 
     /**

@@ -3,6 +3,7 @@ package com.jamonapi.distributed;
 import com.jamonapi.JamonPropertiesLoader;
 import com.jamonapi.MonitorFactory;
 import com.jamonapi.jmx.JmxUtils;
+import com.jamonapi.utils.LocaleContext;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -57,6 +58,7 @@ public class JamonServletContextListener implements ServletContextListener  {
 
     @Override
     public void contextDestroyed(ServletContextEvent event)  {
+        LocaleContext.reset();
         JmxUtils.unregisterMbeans();
     }
 
