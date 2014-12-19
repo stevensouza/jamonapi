@@ -46,7 +46,7 @@
             <ol>
                 <li><a href="#log4j">Log4j</a> - Counts for calls at the various log levels: TRACE, DEBUG, WARNING, INFO, ERROR, FATAL,...</li>
                 <li><a href="#pagerequests">Page Requests</a> - Metrics for page hits in a web application.  Metrics include count, average time, total time, max time, min time and more.</li>
-                <li><a href="#sql">SQL Executions</a> - Metrics for SQL statements including select, insert, delete, update and more.  Metrics include count, average time, total time, max time, min time and more.</li>
+                <li><a href="#sql">SQL</a> - Metrics for SQL statements including select, insert, delete, update and more.  Metrics include count, average time, total time, max time, min time and more.</li>
                 <li><a href="#exceptions">Exceptions</a> - A count of exceptions thrown by the application.  You can also view the most recent stack trace.</li>
                 <li><a href="#gc">Garbage Collection info</a> - For Oracle JVM's metrics for the garbage collector are automatically stored in JAMon.  This allows developers to look at details of the
                 garbage collector without grepping a log.  It also tracks the following garbage collector metrics: how often it fires, how long it takes, how much memory it frees and more.</li>
@@ -78,7 +78,7 @@
 
     <p><img src="jamon_jmx_pagerequests.png" border="1"></p>
 
-<h2><a name="sql">3. SQL Executions</a></h2>
+<h2><a name="sql">3. SQL</a></h2>
 
 <p> This section represents any SQL commands executed by the application.
 <ul>
@@ -95,7 +95,13 @@
 <p> This section represents any Exceptions thrown by the application.
 <ul>
     <li>To enable this capability one of the JAMon capbilities that tracks exceptions must be enabled.  This includes SQL, HTTP Page Request, interface monitoring, or Sring AOP monitoring.</li>
-    <li>As you can see below the count of exceptions as well as the most recent stack trace are tracked.</li>
+    <li>As you can see below the following are tracked:
+        <ol>
+            <li>Count of exceptions,</li>
+            <li>The most recent stacktrace, </li>
+            <li>When the most recent stacktrace occurred.</li>
+        </ol>
+    </li>
 </ul>
     <p><img src="jamon_jmx_exceptions.png" border="1"></p>
 
