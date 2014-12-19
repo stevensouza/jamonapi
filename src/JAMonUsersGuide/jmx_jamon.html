@@ -45,13 +45,13 @@
             <p>As of release 2.80 JAMon exposes the following through JMX (note all data is also viewable via the JAMon war):</p>
             <ol>
                 <li><a href="#log4j">Log4j</a> - Counts for calls at the various log levels: TRACE, DEBUG, WARNING, INFO, ERROR, FATAL,...</li>
-                <li><a href="#pagerequests">Page Requests</a> - Metrics for page hits in a web application.  Metrics include count, average time, total time, max time, min time and more.</li>
+                <li><a href="#pagerequests">HTTP Page Requests</a> - Metrics for page hits in a web application.  Metrics include count, average time, total time, max time, min time and more.</li>
                 <li><a href="#sql">SQL</a> - Metrics for SQL statements including select, insert, delete, update and more.  Metrics include count, average time, total time, max time, min time and more.</li>
                 <li><a href="#exceptions">Exceptions</a> - A count of exceptions thrown by the application.  You can also view the most recent stack trace.</li>
                 <li><a href="#gc">Garbage Collection info</a> - For Oracle JVM's metrics for the garbage collector are automatically stored in JAMon.  This allows developers to look at details of the
                 garbage collector without grepping a log.  It also tracks the following garbage collector metrics: how often it fires, how long it takes, how much memory it frees and more.</li>
                 <li><a href="#custommetrics">JAMon Custom Metrics</a> - Developers can easily expose any JAMon monitor to JMX by simply adding the monitor label, and units to the jamonapi.properties file.</li>
-                <li><a href="#managing">Managing JAMon</a> - The following functions can be performed via a JMX enabled gui such as jconsole: Enable/Disable, reset JAMon monitors</li>
+                <li><a href="#managing">Managing JAMon</a> - The following functions can be performed via a JMX enabled gui such as jconsole: Enable/Disable/Reset JAMon monitors</li>
                 <li><a href="#deltas">Deltas</a> - Display how much the JAMon monitors have changed (delta) since the last time the monitor was viewed.</li>
             </ol>
 
@@ -63,7 +63,7 @@
     <p> The above image is an example of the JAMon JMX Log4j data.  It shows that each of the log levels were called 4000 times except TRACE, which wasn't called at all.
         The <a href="log4j_jamonappender.html">JAMon log4j appender</a>  must be enabled for this data to appear.</p>
 
-<h2><a name="pagerequests">2. Page Requests</a></h2>
+<h2><a name="pagerequests">2. HTTP Page Requests</a></h2>
 
 <p> This section represents any page hits (jsp, servlet, html, etc) in a web application.
     <ul>
