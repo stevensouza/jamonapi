@@ -341,6 +341,7 @@ public class MonitorFactory {
         }
 
         disabledFactory = new FactoryDisabled(enabledFactory);
+        setDebugEnabled(false);
     }
 
 

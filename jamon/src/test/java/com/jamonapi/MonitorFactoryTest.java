@@ -567,6 +567,24 @@ public class MonitorFactoryTest {
         assertThat(copy.getMonitor("hi", "ms.").getHits()).isEqualTo(2);
     }
 
+    @Test
+    public void testEnableDisableDebugFactory() {
+        assertThat(MonitorFactory.isDebugEnabled()).isFalse();
+        MonitorFactory.getDebugFactory().start("anykey").stop();
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(0);
+
+        MonitorFactory.setDebugEnabled(true);
+        assertThat(MonitorFactory.isDebugEnabled()).isTrue();
+        MonitorFactory.getDebugFactory().start("anykey").stop();
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(1);
+
+        MonitorFactory.setDebugEnabled(false);
+        assertThat(MonitorFactory.isDebugEnabled()).isFalse();
+        MonitorFactory.getDebugFactory().start("anykey").stop();
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(1);
+        assertThat(MonitorFactory.getMonitor("anykey", "ms.").getHits()).isEqualTo(1);
+    }
+
     private void assertValueListenerIsNonDecreasing(Monitor mon) {
         Double previous=-1000.0;
         // value listener should be nondecreasing.
