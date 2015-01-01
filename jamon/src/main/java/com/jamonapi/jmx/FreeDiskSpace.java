@@ -11,7 +11,7 @@ import java.io.File;
  *   Filesystem      Size   Used  Avail Capacity  iused    ifree %iused  Mounted on
  *  /dev/disk1      499G   210G   289G    43% 51291254 70507400   42%
  */
-public class FreeDiskSpace {
+ class FreeDiskSpace {
     static final double GB = 1000L*1000L*1000L;
     private File dir;
 
@@ -61,5 +61,5 @@ public class FreeDiskSpace {
     public String toString() {
         return "path="+getAbsolutePath()+", freeSpace="+getFreeSpace()+" GB, totalSpace="+getTotalSpace()+" GB, freeSpacePercent="+getFreeSpacePercent();
     }
-    
+
 }
