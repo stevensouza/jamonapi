@@ -6,13 +6,11 @@ import com.jamonapi.MonitorFactory;
 import com.sun.management.GarbageCollectionNotificationInfo;
 import com.sun.management.GcInfo;
 
-import javax.management.Notification;
-import javax.management.NotificationListener;
-import javax.management.ObjectName;
+import javax.management.*;
 import javax.management.openmbean.CompositeData;
+import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Class that can listen to any jmx notifications. It listens to gc collections from a sun jvm only and that is
@@ -27,6 +25,7 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
     private long duration;
     private Date when;
     private static final String PREFIX = GcMXBeanImp.class.getPackage().getName();
+    private Set<String> gcNames = new HashSet<String>();
 
     public static ObjectName getObjectName() {
         return JmxUtils.getObjectName( PREFIX + ":type=current,name=GcInfo");
@@ -40,6 +39,7 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
             CompositeData cd = (CompositeData) notification.getUserData();
             GarbageCollectionNotificationInfo gcNotifyInfo = GarbageCollectionNotificationInfo.from(cd);
             monitor(gcNotifyInfo);
+            register(gcNotifyInfo.getGcName());
         }
     }
 
@@ -51,17 +51,22 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
         duration = gcInfo.getDuration();
         when = new Date();
         String details = toString(gcNotifyInfo);
-        String labelPrefix = PREFIX + ".gc." + gcNotifyInfo.getGcName();
+        String labelPrefix = getGcPrefix(gcNotifyInfo.getGcName());
 
         // create jamon gc monitors
         monitorDuration(labelPrefix, details);
         monitorUsedMemory(labelPrefix, gcInfo, details);
     }
 
+    private String getGcPrefix(String gcName) {
+        return PREFIX + ".gc." + gcName;
+    }
+
     private void monitorDuration(String labelPrefix, String details) {
         MonKey key = new MonKeyImp(labelPrefix+".time", details, "ms.");
         MonitorFactory.add(key, duration); // ms. duration of gc
     }
+
 
     /**
      * Loop through different memory pools and determine how much memory is used (bytes) after this
@@ -110,6 +115,27 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
         sb.append("AfterGc: ").append(formatGcData(gcInfo.getMemoryUsageAfterGc())).append("\n");
         gcInfoString = sb.toString();
         return gcInfoString;
+    }
+
+    private void register(String gcName) {
+        if (!gcNames.contains(gcName)) {
+            gcNames.add(gcName);
+            String label = getGcPrefix(gcName)+".time";
+
+            // move to utils
+            // unregister
+            // update documentation
+            // gcInfo rename to MostRecentGc
+            try {
+              MonitorMXBean mXbean = MonitorMXBeanFactory.create(label, "ms.", "Jamon.Gc."+gcName);
+              ManagementFactory.getPlatformMBeanServer().registerMBean(mXbean, MonitorMXBeanFactory.getObjectName(mXbean));
+
+              MonitorMXBean  mXbeanDelta = MonitorMXBeanFactory.createDelta(label, "ms.", "Jamon.Gc."+gcName);
+              ManagementFactory.getPlatformMBeanServer().registerMBean(mXbeanDelta, MonitorMXBeanFactory.getDeltaObjectName(mXbeanDelta));
+            } catch (Exception e) {
+                e.printStackTrace(); //?
+            }
+        }
     }
 
     private String formatGcData(Map map) {
