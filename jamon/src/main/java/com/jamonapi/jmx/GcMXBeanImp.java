@@ -6,11 +6,16 @@ import com.jamonapi.MonitorFactory;
 import com.sun.management.GarbageCollectionNotificationInfo;
 import com.sun.management.GcInfo;
 
-import javax.management.*;
+import javax.management.Notification;
+import javax.management.NotificationListener;
+import javax.management.ObjectName;
 import javax.management.openmbean.CompositeData;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Class that can listen to any jmx notifications. It listens to gc collections from a sun jvm only and that is
@@ -28,7 +33,7 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
     private Set<String> gcNames = new HashSet<String>();
 
     public static ObjectName getObjectName() {
-        return JmxUtils.getObjectName( PREFIX + ":type=current,name=GcInfo");
+        return JmxUtils.getObjectName( PREFIX + ":type=current,name=Jamon.Gc.MostRecent");
     }
 
     /** This is called automatically when a gc is fired */
@@ -39,7 +44,9 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
             CompositeData cd = (CompositeData) notification.getUserData();
             GarbageCollectionNotificationInfo gcNotifyInfo = GarbageCollectionNotificationInfo.from(cd);
             monitor(gcNotifyInfo);
-            register(gcNotifyInfo.getGcName());
+            if (!gcNames.contains(gcNotifyInfo.getGcName())) {
+                registerDependentGcMbeans(gcNotifyInfo.getGcName());
+            }
         }
     }
 
@@ -58,6 +65,7 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
         monitorUsedMemory(labelPrefix, gcInfo, details);
     }
 
+    // gcName would be something like: PS Scavenge, or PS MarkSweep
     private String getGcPrefix(String gcName) {
         return PREFIX + ".gc." + gcName;
     }
@@ -117,24 +125,24 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
         return gcInfoString;
     }
 
-    private void register(String gcName) {
-        if (!gcNames.contains(gcName)) {
-            gcNames.add(gcName);
-            String label = getGcPrefix(gcName)+".time";
+    // register the custom gc monitors for each gcName (for example Scavenge, and MarkSweep
+    private void registerDependentGcMbeans(String gcName) {
+        String label = getGcPrefix(gcName)+".time";
+        String jmxName = "Jamon.Gc."+gcName;
 
-            // move to utils
-            // unregister
-            // update documentation
-            // gcInfo rename to MostRecentGc
-            try {
-              MonitorMXBean mXbean = MonitorMXBeanFactory.create(label, "ms.", "Jamon.Gc."+gcName);
-              ManagementFactory.getPlatformMBeanServer().registerMBean(mXbean, MonitorMXBeanFactory.getObjectName(mXbean));
+        try {
+          // register current
+          MonitorMXBean mXbean = MonitorMXBeanFactory.create(label, "ms.", jmxName);
+          ObjectName current =  MonitorMXBeanFactory.getObjectName(mXbean);
+          ManagementFactory.getPlatformMBeanServer().registerMBean(mXbean, current);
 
-              MonitorMXBean  mXbeanDelta = MonitorMXBeanFactory.createDelta(label, "ms.", "Jamon.Gc."+gcName);
-              ManagementFactory.getPlatformMBeanServer().registerMBean(mXbeanDelta, MonitorMXBeanFactory.getDeltaObjectName(mXbeanDelta));
-            } catch (Exception e) {
-                e.printStackTrace(); //?
-            }
+          // register delta
+          MonitorMXBean  mXbeanDelta = MonitorMXBeanFactory.createDelta(label, "ms.", jmxName);
+          ObjectName delta =  MonitorMXBeanFactory.getDeltaObjectName(mXbeanDelta);
+          ManagementFactory.getPlatformMBeanServer().registerMBean(mXbeanDelta, delta);
+          gcNames.add(gcName);
+        } catch (Exception e) {
+           e.printStackTrace(); // shouldn't happen.
         }
     }
 
@@ -157,4 +165,5 @@ public class GcMXBeanImp implements GcMXBean, NotificationListener {
     public long getDuration() {
         return duration;
     }
+
 }

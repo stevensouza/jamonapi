@@ -7,8 +7,10 @@ import org.junit.Test;
 
 import javax.management.JMX;
 import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.util.Date;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -70,6 +72,35 @@ public class JmxUtilsTest {
         assertThat(versionMxBeanImp.getVersion()).isEqualTo(MonitorFactory.getVersion());
 
         JmxUtils.unregisterMbeans();
+    }
+
+    @Test
+    public void testQueryMbeans() throws Exception {
+        JmxUtils.registerMbeans();
+
+        Set<ObjectName> set = JmxUtils.queryMBeans(mBeanServer, "name");
+        assertThat(set).isNotEmpty();
+        for (ObjectName obj : set) {
+            assertThat(obj.toString()).contains("name");
+        }
+
+        JmxUtils.unregisterMbeans();
+    }
+
+
+    @Test
+    public void testQueryGcDependentMbeansCreatedAndDestroyed() throws Exception {
+        JmxUtils.registerMbeans();
+        // gc call
+        System.gc();
+        Thread.sleep(100);
+
+        Set set = JmxUtils.queryMBeans(mBeanServer, "Jamon.Gc.");
+        assertThat(set).isNotEmpty();
+
+        JmxUtils.unregisterMbeans();
+        set = JmxUtils.queryMBeans(mBeanServer, "Jamon.Gc.");
+        assertThat(set).isEmpty();
     }
 
     @Test(expected = RuntimeException.class)

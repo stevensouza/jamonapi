@@ -4,6 +4,8 @@ import com.jamonapi.JamonPropertiesLoader;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
@@ -184,10 +186,14 @@ import java.util.*;
      * @throws Exception
      */
     public static Set<ObjectName> getGarbageCollectionMbeans(MBeanServer mBeanServer) throws Exception {
+        return queryMBeans(mBeanServer, "type=GarbageCollector");
+    }
+
+    static Set<ObjectName> queryMBeans(MBeanServer mBeanServer, String containsStr) {
         Set<ObjectName> mbeans = mBeanServer.queryNames(null, null);
         Set<ObjectName> gcMbeans = new HashSet<ObjectName>();
         for (ObjectName objectInstance : mbeans) {
-            if (objectInstance.toString().contains("type=GarbageCollector")) {
+            if (objectInstance.toString().contains(containsStr)) {
                 gcMbeans.add(objectInstance);
             }
         }
@@ -218,10 +224,17 @@ import java.util.*;
              mBeanServer.removeNotificationListener(name, GcMXBeanImp.getObjectName());
           }
           // above must remove before unregistering
-          mBeanServer.unregisterMBean(GcMXBeanImp.getObjectName());
+          unregisterAllMXBeans(mBeanServer);
         } catch (Throwable e) {
             // fail silently
         }
+    }
+
+    private static void unregisterAllMXBeans(MBeanServer mBeanServer) throws MBeanRegistrationException, InstanceNotFoundException {
+         Set<ObjectName> gcMbeans = queryMBeans(mBeanServer, "Jamon.Gc.");
+         for (ObjectName name : gcMbeans) {
+            mBeanServer.unregisterMBean(name);
+         }
     }
 
 }
