@@ -1,7 +1,5 @@
 package com.jamonapi;
 
-import com.jamonapi.proxy.MonProxy;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
