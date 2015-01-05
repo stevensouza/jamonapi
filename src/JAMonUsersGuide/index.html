@@ -29,25 +29,31 @@
 
 
 <!-- START JAMON SPECIFIC HTML -->
-<p>JAMon comes with several ways to monitor your application that require no application code changes.
-    Usually all that is required is to add a line to an xml file, and put the jamon jar file in your classpath.
-    You could be monitoring your code in a few minutes.
+<p>JAMon comes with several ways to monitor your application that require no application code changes.  Usually all that is required is to...
+    <ul>
+    <li>add a line to an xml file,</li>
+    <li>put the jamon jar file in your classpath, </li>
+    <li>and install the JAMon war to view JAMon metrics/monitors (or you
+    can view the metrics in a JMX console like jconsole).</li>
+    </ul>
+See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to monitor page requests in your web server.
+    You could be monitoring your code in a few minutes.  Happy monitoring!
 </p>
 
-<ul> <li> Some JAMon highlights follow:</li>
+<p>Some JAMon highlights follow:
     <ul>
-        <li><a href="distributed_jamon.html">Distributed Applications</a> - View all the data from your organizations applications from a central monitoring web application (the JAMon web application).</li>
+        <li><a href="distributed_jamon.html">Distributed Application Monitoring</a> - View all the data from your organizations applications from a central monitoring web application (the JAMon web application).</li>
         <li><a href="http_monitoring.html">HTTP Monitoring</a> - Monitor requests/responses to Tomcat, Jetty, JBoss or any other JAVA web container. Track page execution times, status codes,
             bytes sent, exceptions thrown and more.</li>
-        <li><a href="spring_aop_monitoring.html">Spring</a> - Monitor any Spring bean.  Track method invocations, arguments passed to methods, and  exceptions thrown.</li>
+        <li><a href="spring_aop_monitoring.html">Spring Monitoring</a> - Monitor any Spring bean.  Track method invocations, arguments passed to methods, and  exceptions thrown.</li>
         <li><a href="#monitoringsqlcommands">JDBC/SQL monitoring</a> - via the JAMon JDBC proxy driver (works with any other JDBC driver). Track SQL called, JDBC method calls, exceptions thrown and more.</li>
-        <li><a href="log4j_jamonappender.html">Log4j</a> -  Monitor via the JAMon log4j Appender.  Track counts for ERROR, INFO, WARNING etc.  'Tail' the Log4j log from the JAMon web application</li>
-        <li><a href="#ejbmonitoring">EJB3</a> - Monitor EJBs using the JAMon EJB interceptor.</li>
-        <li><a href="jmx_jamon.html">JAMon JMX</a> - View JAMon data in a JMX tool like jconsole and visualvm.</li>
+        <li><a href="log4j_jamonappender.html">Log4j Monitoring</a> -  Monitor via the JAMon log4j Appender.  Track counts for ERROR, INFO, WARNING etc.  'Tail' the Log4j log from the JAMon web application</li>
+        <li><a href="#ejbmonitoring">EJB3 Monitoring</a> - Monitor EJBs using the JAMon EJB interceptor.</li>
+        <li><a href="jmx_jamon.html">JAMon JMX</a> - View JAMon data in a JMX tool like jconsole and visualvm. (2.80+)</li>
     </ul>
-</ul>
+</p>
 
-
+<p>The table of contents for JAMon documentaiton follows:</p>
 <table border="0" width="80%" align="center">
 <tr>
 </tr>
@@ -589,6 +595,8 @@ creation).</p>
       The most obvious use of this is to pass in table names and see how many times the table occurs in queries and what the performance characteristics of these queries is.  
       This can lead the way to detecting problem tables.  One row will show up in the JAMonAdmin report for each match. 
       Example - MonProxy-SQL-Match: SYSTEM_TYPEINFO
+        </li>
+        </ul>
 
 
     <p>SQL summary statistics are viewable via jamonadmin.jsp.</p>

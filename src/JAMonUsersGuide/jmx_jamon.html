@@ -40,16 +40,17 @@
 
 
             <p>The Java Management Extensions (JMX) technology is a standard part of the Java Platform.  With JMX developers can expose and manage their application
-            via any JMX enabled console (Examples of these consoles are jconsole and visualvm).  As of release 2.80 JAMon exposes the following through JMX:</p>
+            via any JMX enabled console (Examples of these consoles are jconsole and visualvm).</p>
 
-            <p>As of release 2.80 JAMon exposes the following through JMX (note all data is also viewable via the JAMon war):</p>
+            <p>As of release 2.80 JAMon allows all monitors to be viewed via a JMX console.  Some monitors are automatically displayed in the JMX console (for example Garbage Collection metrics),
+                and others would need to be explicitly included (Note: All JAMon data is also viewable via the JAMon war).  A summary of JAMon's JMX capabilities follows:</p>
             <ol>
-                <li><a href="#log4j">Log4j</a> - Counts for calls at the various log levels: TRACE, DEBUG, WARNING, INFO, ERROR, FATAL,...</li>
+                <li><a href="#log4j">Log4j</a> - Counts for for Log4j log levels: TRACE, DEBUG, WARNING, INFO, ERROR, FATAL,...</li>
                 <li><a href="#pagerequests">HTTP Page Requests</a> - Metrics for page hits in a web application.  Metrics include count, average time, total time, max time, min time and more.</li>
                 <li><a href="#sql">SQL</a> - Metrics for SQL statements including select, insert, delete, update and more.  Metrics include count, average time, total time, max time, min time and more.</li>
                 <li><a href="#exceptions">Exceptions</a> - A count of exceptions thrown by the application.  You can also view the most recent stack trace.</li>
-                <li><a href="#gc">Garbage Collection info</a> - For Oracle JVM's metrics for the garbage collector are automatically stored in JAMon.  This allows developers to look at details of the
-                garbage collector without grepping a log.  It also tracks the following garbage collector metrics: how often it fires, how long it takes, how much memory it frees and more.</li>
+                <li><a href="#gc">Garbage Collection info (For Oracle JVM's)</a> -  Metrics for the garbage collector are automatically stored in JAMon.  This allows developers to look at details of the
+                garbage collector without grepping a log.  It tracks the following garbage collector metrics: how often it fires, how long it takes, how much memory it frees and more.</li>
                 <li><a href="#custommetrics">JAMon Custom Metrics</a> - Developers can easily expose any JAMon monitor to JMX by simply adding the monitor label, and units to the jamonapi.properties file.</li>
                 <li><a href="#managing">Managing JAMon</a> - The following functions can be performed via a JMX enabled gui such as jconsole: Enable/Disable/Reset JAMon monitors</li>
                 <li><a href="#deltas">Deltas</a> - Display how much the JAMon monitors have changed (delta) since the last time the monitor was viewed.</li>
@@ -70,7 +71,7 @@
     <li>To enable this capability <a href="http_monitoring.html">JAMon http monitoring</a>
     must be enabled.</li>
     <li>If the web container is Jetty then the the JMX labeled 'Jamon.PageRequests.Jetty' will have metrics in it, and if Tomcat is the container then 'Jamon.PageRequests.Tomcat'
-    will be the label.  Note: If you are using a different web container you can still track page request metrics by using <a href="#custommetrics">JAMon Custom Metrics</a>.</li>
+    will have metrics.  Note: If you are using a different web container you can still track page request metrics by using <a href="#custommetrics">JAMon Custom Metrics</a>.</li>
     <li>As you can see below the following are tracked for the page requests: hits, average execution time, max execution time and all the other standard JAMon metrics.  '_Count08_640_1280ms'
     contains the count of page hits that took between 640 and 1280 ms.  The same principal applies to the other similarly named fields.</li>
     </ul>
@@ -109,22 +110,25 @@
 <p> This section represents information associated with garbage collection invocations.
 <ul>
     <li>This capability only works for the Oracle JVM</li>
-    <li>As you can below the following metrics are tracked for the most recent GC firing: duration in ms., when the invocation occured, metadata associated with he GC firing.</li>
-</ul>
-
-<p><img src="jamon_jmx_gc.png" border="1"></p>
-
-
-<p>By viewing JAMon data via the JAMon war you will be able to see even more information associated with the garbage collector.
-    <ul><li>For example
-the following image shows the JAMon monitors that track performance of each of the types of garbage collector that fired.</li>
-    <li>In this case minor and major collections occured.  Depending on how you configured your garbage collector different data
-may appear for you. These monitors indicate the duration in ms. of the GC invocations. </li>
-    <li>You can see that a MarkSweep collector was invoked 6 times and the Scavenge collector was invoked 8 times.</li>
+    <li>The following metrics are tracked for the most recent GC firing: duration in ms., when the invocation occured, metadata associated with he GC firing.</li>
+    <li>For each type of GC type (i.e. Scavenge, MarkSweep/Full) detailed metrics are tracked: hits, average execution time, max execution time and all the other standard JAMon metrics. </li>
 </ul>
 </p>
 
+<p><img src="jamon_jmx_gc.png" border="1"></p>
+
+<p>The JMX console also displays aggregate statistics (duration in ms.) for each type of Garbage Colleciton that has occurred (i.e. Scavenge, MarkSweep/Full).  An example for 'Scavenge' appears
+below.</p>
+
+<p><img src="jamon_jmx_gc_scavenge.png" border="1"></p>
+
+
+<p>Of course you can also see this informat in the JAMon web application. The following shows
+    that a MarkSweep collector was invoked 6 times and the Scavenge collector was invoked 8 times.
+</p>
+
     <p><img src="jamon_jmx_gc_time.png" border="1"></p>
+
 
 <p>In addition to the aggregates mentioned above, JAMon also tracks the details of each individual GC invocation via
     <a href="jamonlisteners.html#example">JAMon's buffer listener</a> capabilities.  Listeners can be configured in the
@@ -137,25 +141,23 @@ may appear for you. These monitors indicate the duration in ms. of the GC invoca
 
     <p><img src="jamon_jmx_gc_details.png" border="1"></p>
 
-<p>In addition to tracking the frequency and duration of the GC invocations JAMon JMX also tracks the memory consumed (in bytes) by Java different memory pools after the GC was firing (AfterGc).  Note all
-    GC related data shows up in the JAMon display screen if you filter by 'gc'.  A snapshot of this data is in the image below.  Note you can also attach a JAMon Buffer listener to all the
-    GC data in the report below.
+<p>In addition to tracking the frequency and duration of the GC invocations JAMon JMX also tracks the memory consumed (in bytes) by Java different memory pools after the GC was fired (AfterGc).  Note all
+    GC related data shows up in the JAMon display screen if you filter by 'gc'.  A snapshot of this data is in the image below.
 </p>
 
 <p><img src="jamon_jmx_gc_mem.png" border="1"></p>
 
 <h2><a name="custommetrics">6. JAMon Custom Metrics</a></h2>
 
-<p>Developers can use JAMon's custom JMX metrics capabilities to add any JAMon monitor to JMX. In fact that is exactly how any of the JMX entries that start with 'Jamon.' were added.
+<p>Developers can use JAMon's custom JMX metrics capabilities to add any JAMon monitor to JMX. In fact that is exactly how the JMX entries we have discussed that start with 'Jamon.' were added.
     For example <a href="#pagerequests">'Jamon.PageRequests.Jetty'</a> was added this way.  To add your own custom JMX monitors simply add them to the
     <a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/jamon/src/test/resources/jamonapi.properties">jamonapi.properties</a> file.  Below you can
     see how many of the custom metrics discussed in this document are configured.  Note each custom metric has to have the exact JAMon monitor label and units (comma delimited).
-    Optionally if you
-    would like it to appear with a different (more readable) name in JMX then you can provide a name.  By convention the name should start with 'Jamon.'.
+    Optionally if you would like the JMX label to appear with a different (more readable) name in JMX then this can also be provided.  By convention the name should start with 'Jamon.'.
 </p>
 
-<p>Note if you provide one custom JAMon JMX monitor and you want then you are taking ownership of ALL custom monitors.  This means that if yo would like any of the other 'Jamon.' custom
-JMX metrics to still appear they must also be in the jamonapi.properties file.</p>
+<p>Note if you provide one custom JAMon JMX monitor then you are taking ownership of ALL custom monitors.  This means that if you would like any of the other 'Jamon.' custom
+JMX metrics discussed above to still appear they must also be in the jamonapi.properties file.</p>
 
 <p><img src="jamon_jmx_custommetrics.png" border="1"></p>
 
@@ -166,7 +168,7 @@ JMX metrics to still appear they must also be in the jamonapi.properties file.</
     <p><img src="jamon_jmx_managing.png" border="1"></p>
 
 <h2><a name="deltas">8. Deltas</a></h2>
-<p>Normally JAMon numbers continually grow.  Deltas allow a developer to tell how much the JAMon metrics have changed since the
+<p>Normally JAMon numbers continually grow.  The 'Delta' capability allows a developer to determine how much the JAMon metrics have changed since the
 last time they were checked.  All 'Delta' JMX beans reside within the 'deltas' jmx directory structure as seen below.
 </p>
 
@@ -176,8 +178,8 @@ had been called in between refreshes then all the numbers would be 0.</p>
 
 <p><img src="jamon_jmx_deltas_log4j.png" border="1"></p>
 
-<p>The following shows changes in jetty page hits since the 'refresh' button was last clicked.  So 15 page hits occurred during this time interval, and
-their average time per invocation was 73.3 ms. </p>
+<p>The following shows changes in jetty page hits since the 'refresh' button was last clicked.  So 3 page hits occurred during this time interval, and
+their average time per invocation was 102 ms. </p>
 
     <p><img src="jamon_jmx_deltas.png" border="1"></p>
 
