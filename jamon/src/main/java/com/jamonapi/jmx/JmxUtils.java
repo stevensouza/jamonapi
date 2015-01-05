@@ -180,6 +180,7 @@ import java.util.*;
 
     /**
      * Get a list of the garbage collector mbeans.  This is used primarily to regsiter jamon to listen for gc notifications.
+     * Note if the GarbageCollector mbean doesn't exist an empty collection will be returned.
      *
      * @param mBeanServer
      * @return Set of ObjectNames for gc jmx objects
