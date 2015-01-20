@@ -4,14 +4,13 @@
      <parent>
          <groupId>com.jamonapi</groupId>
          <artifactId>jamon-parent</artifactId>
-         <version>2.80</version>
+         <version>2.81-SNAPSHOT</version>
      </parent>
 
   <groupId>com.jamonapi</groupId>
   <artifactId>jamon_war</artifactId>
   <packaging>war</packaging>
   <name>JAMon War</name>
-  <version>${jamon.version}</version>
 
   <build>
     <finalName>jamon</finalName>

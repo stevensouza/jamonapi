@@ -4,7 +4,7 @@
      <parent>
          <groupId>com.jamonapi</groupId>
          <artifactId>jamon-parent</artifactId>
-         <version>2.80</version>
+         <version>2.81-SNAPSHOT</version>
      </parent>
 
   <artifactId>jamon</artifactId>
@@ -12,13 +12,13 @@
   <name>JAMon Core</name>
 
   <build>
-    <finalName>jamon-${jamon.version}</finalName>
+    <finalName>jamon-${project.version}</finalName>
       <!-- generate javadoc and sources jars -->
       <plugins>
           <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-javadoc-plugin</artifactId>
-              <version>2.9.1</version>
+              <version>${maven.javadoc.plugin.version}</version>
 <!--
 needed for jdk 1.8 javadocs generation or failure.
               <configuration>
@@ -29,7 +29,7 @@ needed for jdk 1.8 javadocs generation or failure.
           <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-source-plugin</artifactId>
-              <version>2.2.1</version>
+              <version>${maven.source.plugin.version}</version>
               <executions>
                   <execution>
                       <id>attach-sources</id>
