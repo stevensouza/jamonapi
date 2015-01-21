@@ -297,10 +297,10 @@ private static void setBufferSize(String bufferSize) {
 }
 
 private static ResultSetConverter getResultSetConverter(String[] header, Object[][] data, String arraySQLExec) {
-     ArraySQL asql=new ArraySQL(header, arraySQLExec );
-
-     ResultSetConverter rsc = new ResultSetConverter(header, asql.execute(data));
-     //MonitorFactory.add("cellCount","count",rsc.getColumnCount()*rsc.getRowCount());
+     ResultSetConverter rsc = new ResultSetConverter(header, data).
+             execute("select Label as exceptionStackTrace, Date from array"). // only take data of interest and rename
+             execute(arraySQLExec). // honor users filter/query
+             execute("select rowNum() as RowNum, * from array");// add rownumbers
      return rsc;
 }
 
