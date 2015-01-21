@@ -137,6 +137,7 @@ public class FactoryEnabled implements MonitorFactoryInterface {
       String stackTtrace = new StringBuffer("stackTrace=")
          .append(Misc.getExceptionTrace(throwable))
          .toString();
+
       if (mon!=null) {
           MonKey key = mon.getMonKey();
           key.setDetails(stackTtrace);

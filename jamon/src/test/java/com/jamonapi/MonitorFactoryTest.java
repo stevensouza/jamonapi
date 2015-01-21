@@ -472,6 +472,17 @@ public class MonitorFactoryTest {
     }
 
     @Test
+    public void testOnlyOneListenerOfTheSameName() throws Exception {
+        Monitor mon = MonitorFactory.start().stop();
+        mon.addListener("value", new JAMonBufferListener("first"));
+        mon.addListener("value", new JAMonBufferListener("first"));
+
+        assertThat(mon.getListenerType("value").getData().length).isEqualTo(1);
+
+        mon.addListener("value", new JAMonBufferListener("second"));
+        assertThat(mon.getListenerType("value").getData().length).isEqualTo(2);
+    }
+        @Test
     public void testTrackExceptionWithoutMon() {
         Monitor mon = MonitorFactory.addException(new RuntimeException("my exception"));
         assertThat(mon.getHits()).isEqualTo(1);

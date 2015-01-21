@@ -34,7 +34,12 @@ public class CompositeListener implements JAMonListener, DetailData {
 
     /** Add a listener to the composite and return this object */
     public CompositeListener addListener(JAMonListener listener) {
-        listenerList.add(listener);
+        // added a check to not have the same listener name like FIFOBuffer.  This will allow for one time initialization of
+        // a listener such as a FIFOBuffer on an exception monitor.  Repeat adding of a listener with this name
+        // will have no effect.  This is useful if different parts of the program initialize an exception listener for example.
+        if (listener instanceof  CompositeListener || !hasListener(listener.getName())) {
+            listenerList.add(listener);
+        }
         return this;
     }
 
@@ -150,7 +155,7 @@ public class CompositeListener implements JAMonListener, DetailData {
     }
 
 
-    /** Return all the monitors in the composite */
+    /** Return all the listeners in the composite */
     public Object[][] getData() {
         if (isEmpty())
             return null;
