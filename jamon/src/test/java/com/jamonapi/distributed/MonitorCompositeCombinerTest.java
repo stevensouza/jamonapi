@@ -31,12 +31,15 @@ public class MonitorCompositeCombinerTest {
 
         MonitorFactory.start("hello").stop();
         MonitorFactory.start("world").stop();
+        // hello, world, com.jamonapi.Exceptions
         MonitorComposite mc1 = MonitorFactory.getRootMonitor().copy();
 
         MonitorFactory.start("hi").stop();
+        // hi,hello, world, com.jamonapi.Exceptions
         MonitorComposite mc2 = MonitorFactory.getRootMonitor().copy();
 
         MonitorFactory.start("again").stop();
+        // again,hi,hello, world, com.jamonapi.Exceptions
         MonitorComposite mc3 = MonitorFactory.getRootMonitor().copy();
 
         when(persister.get("local1")).thenReturn(mc1);
@@ -44,7 +47,7 @@ public class MonitorCompositeCombinerTest {
         when(persister.get("local3")).thenReturn(mc3);
 
         MonitorComposite monitorComposite = mcc.get("local1", "local2", "local3");
-        assertThat(monitorComposite.getNumRows()).isEqualTo(9);
+        assertThat(monitorComposite.getNumRows()).isEqualTo(12);
     }
 
     @Test
@@ -61,7 +64,7 @@ public class MonitorCompositeCombinerTest {
 
         List<MonitorComposite> list = Arrays.asList(mc1, mc2, mc3);
         MonitorComposite monitorComposite = MonitorCompositeCombiner.combine(list);
-        assertThat(monitorComposite.getNumRows()).isEqualTo(9);
+        assertThat(monitorComposite.getNumRows()).isEqualTo(12);
     }
 
     @Test

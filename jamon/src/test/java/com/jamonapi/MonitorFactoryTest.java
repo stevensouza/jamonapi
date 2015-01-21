@@ -158,14 +158,14 @@ public class MonitorFactoryTest {
             MonitorFactory.add("key"+i, "count", 1);
             MonitorFactory.start("key").stop();
         }
-        assertThat(MonitorFactory.getRootMonitor().getNumRows()).isEqualTo(101);
+        assertThat(MonitorFactory.getRootMonitor().getNumRows()).isEqualTo(102);
 
         MonitorFactory.disable();
         assertThat(MonitorFactory.isEnabled()).isFalse();
         assertThat(MonitorFactory.getRootMonitor().getNumRows()).isEqualTo(0);
 
         MonitorFactory.enable();
-        assertThat(MonitorFactory.getRootMonitor().getNumRows()).isEqualTo(101);
+        assertThat(MonitorFactory.getRootMonitor().getNumRows()).isEqualTo(102);
         assertThat(MonitorFactory.isEnabled()).isTrue();
     }
 
@@ -227,7 +227,7 @@ public class MonitorFactoryTest {
         MonitorFactory.start("test1").stop();
         MonitorFactory.start("test2").stop();
         MonitorFactory.add("test1", "count", 100);
-        assertThat(MonitorFactory.getNumRows()).isEqualTo(3);
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(4);
     }
 
     @Test
@@ -244,7 +244,8 @@ public class MonitorFactoryTest {
     @Test
     public void testGetRootMonitor() {
         MonitorFactory.start("test");
-        assertThat(MonitorFactory.getRootMonitor().getNumRows()).isEqualTo(1);    }
+        assertThat(MonitorFactory.getRootMonitor().getNumRows()).isEqualTo(2);
+    }
 
 
     @Test
@@ -262,10 +263,10 @@ public class MonitorFactoryTest {
     public void testReset() {
         MonitorFactory.start("test1");
         MonitorFactory.start("test2");
-        assertThat(MonitorFactory.getNumRows()).isEqualTo(2);
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(3);
 
         MonitorFactory.reset();
-        assertThat(MonitorFactory.getNumRows()).isEqualTo(0);
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(1);
     }
 
     @Test
@@ -346,10 +347,10 @@ public class MonitorFactoryTest {
 
         // test all data
         data = MonitorFactory.getRootMonitor().getData();
-        assertThat(data.length).isEqualTo(2);
+        assertThat(data.length).isEqualTo(3);
         data = MonitorFactory.getData();
-        assertThat(data.length).isEqualTo(2);
-        assertThat(MonitorFactory.getRootMonitor().getMonitors().length).isEqualTo(2);
+        assertThat(data.length).isEqualTo(3);
+        assertThat(MonitorFactory.getRootMonitor().getMonitors().length).isEqualTo(3);
     }
 
     @Test
@@ -371,7 +372,7 @@ public class MonitorFactoryTest {
             iter.next();
         }
 
-        assertThat(numCount).isEqualTo(2);
+        assertThat(numCount).isEqualTo(3);
     }
 
     @Test
@@ -499,8 +500,6 @@ public class MonitorFactoryTest {
     public void testTrackExceptionWithMon() {
         Monitor mon1 = MonitorFactory.start("anytimer").stop();
         Monitor mon =  MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception");
-        // so we can see exception in general exception Monitor
-        mon.addListener("value", JAMonListenerFactory.get("FIFOBuffer"));
         mon = MonitorFactory.addException(mon1, new RuntimeException("my exception"));
 
         assertThat(MonitorFactory.getRootMonitor().hasListeners()).isTrue();
@@ -523,8 +522,6 @@ public class MonitorFactoryTest {
     @Test
     public void testTrackExceptionWithMon_fromDefaultProperties() {
         List<JamonPropertiesLoader.JamonListener> listeners = new JamonPropertiesLoader("I_DO_NOT_EXIST.properties").getListeners();
-        assertThat(listeners).hasSize(1);
-        MonitorFactory.addListeners(listeners);
         Monitor mon1 = MonitorFactory.start("anytimer").stop();
         Monitor mon = MonitorFactory.addException(mon1, new RuntimeException("my exception"));
 
@@ -599,7 +596,7 @@ public class MonitorFactoryTest {
 
         copy.start("hi").stop();
         copy.add("filesize2", "mb", 100);
-        assertThat(copy.getNumRows()).isEqualTo(3);
+        assertThat(copy.getNumRows()).isEqualTo(4);
         assertThat(copy.getMonitor("hi", "ms.").getHits()).isEqualTo(2);
     }
 
@@ -607,17 +604,17 @@ public class MonitorFactoryTest {
     public void testEnableDisableDebugFactory() {
         assertThat(MonitorFactory.isDebugEnabled()).isFalse();
         MonitorFactory.getDebugFactory().start("anykey").stop();
-        assertThat(MonitorFactory.getNumRows()).isEqualTo(0);
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(1);
 
         MonitorFactory.setDebugEnabled(true);
         assertThat(MonitorFactory.isDebugEnabled()).isTrue();
         MonitorFactory.getDebugFactory().start("anykey").stop();
-        assertThat(MonitorFactory.getNumRows()).isEqualTo(1);
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(2);
 
         MonitorFactory.setDebugEnabled(false);
         assertThat(MonitorFactory.isDebugEnabled()).isFalse();
         MonitorFactory.getDebugFactory().start("anykey").stop();
-        assertThat(MonitorFactory.getNumRows()).isEqualTo(1);
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(2);
         assertThat(MonitorFactory.getMonitor("anykey", "ms.").getHits()).isEqualTo(1);
     }
 

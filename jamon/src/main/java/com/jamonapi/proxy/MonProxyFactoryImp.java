@@ -1,6 +1,11 @@
 package com.jamonapi.proxy;
 
 
+import com.jamonapi.JAMonBufferListener;
+import com.jamonapi.JAMonListener;
+import com.jamonapi.Monitor;
+import com.jamonapi.MonitorFactory;
+
 import java.lang.reflect.Proxy;
 import java.sql.*;
 import java.util.*;
@@ -68,6 +73,8 @@ import java.util.*;
 
 
 public class MonProxyFactoryImp {
+
+    private static final String EXCEPTION = "Exception";
 
     private final Class[] CLASS_ARRAY=new Class[0];
     private Params params=new Params();
@@ -441,12 +448,36 @@ public class MonProxyFactoryImp {
 
     /** Get the header that can be used to display the Exceptions buffer */
     public String[] getExceptionDetailHeader() {
-        return params.exceptionBuffer.getHeader();
+        JAMonBufferListener jaMonBufferListener = getExceptionBufferListener();
+        if (jaMonBufferListener==null) {
+            return null;
+        }
+        return jaMonBufferListener.getDetailData().getHeader();
+     //   return params.exceptionBuffer.getHeader();
+    }
+
+    private JAMonBufferListener getExceptionBufferListener() {
+        if (MonitorFactory.exists(MonitorFactory.EXCEPTIONS_LABEL, EXCEPTION)) {
+            Monitor mon = MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, EXCEPTION);
+            if (mon.hasListener("value", "FIFOBuffer")) {
+                JAMonListener bufferListener = mon.getListenerType("value").getListener("FIFOBuffer");
+                if (bufferListener instanceof JAMonBufferListener) {
+                    return (JAMonBufferListener) bufferListener;
+                }
+            }
+        }
+
+        return null;
     }
 
     /** Get the exception buffer as an array, so it can be displayed */
     public Object[][] getExceptionDetail() {
-        return params.exceptionBuffer.getData();
+        JAMonBufferListener jaMonBufferListener = getExceptionBufferListener();
+        if (jaMonBufferListener==null) {
+            return null;
+        }
+        return jaMonBufferListener.getDetailData().getData();
+       // return params.exceptionBuffer.getData();
     }
 
 

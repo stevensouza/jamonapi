@@ -25,14 +25,14 @@ public class ExceptionMXBeanImpTest {
 
     @Test
     public void testNoExceptionsException() throws Exception {
-        assertThat(bean.getMostRecentException()).isEqualTo("No exceptions have been thrown");
+        assertThat(bean.getMostRecentException()).isEqualTo("There are no stacktraces");
         assertThat(bean.getExceptionCount()).isEqualTo(0);
     }
 
     @Test
-    public void testNoListener() throws Exception {
+    public void testExceptionListenerEnabledByDefault() throws Exception {
         MonitorFactory.add(ExceptionMXBean.LABEL, ExceptionMXBean.UNITS, 1);
-        assertThat(bean.getMostRecentException()).isEqualTo("Exception Stacktrace tracking is not enabled.");
+        assertThat(bean.getMostRecentException()).isEqualTo("com.jamonapi.Exceptions");
     }
 
     @Test

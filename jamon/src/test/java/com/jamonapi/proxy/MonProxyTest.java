@@ -50,7 +50,7 @@ public class MonProxyTest {
 
         assertThat(MonProxyFactory.getSQLDetail()).isNull();
         assertThat(MonProxyFactory.getExceptionDetail()).isNull();
-        assertThat(MonitorFactory.getRootMonitor().getBasicData()).isNull();
+        assertThat(MonitorFactory.getRootMonitor().getBasicData().length).isEqualTo(1);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class MonProxyTest {
 
         assertThat(MonProxyFactory.getSQLDetail()).isNull();
         assertThat(MonProxyFactory.getExceptionDetail()).isNull();
-        assertThat(MonitorFactory.getRootMonitor().getBasicData()).isNull();
+        assertThat(MonitorFactory.getRootMonitor().getBasicData().length).isEqualTo(1);
     }
 
     @Test
@@ -91,7 +91,7 @@ public class MonProxyTest {
             conn.close();
         }
 
-        assertThat(MonitorFactory.getNumRows()).isEqualTo(4);
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(5);
         assertThat(MonitorFactory.getReport()).contains("connect");
         assertThat(MonitorFactory.getReport()).contains("Connection.createStatement()");
         assertThat(MonitorFactory.getReport()).contains(".close()"); // statement, and connection close
@@ -158,7 +158,7 @@ public class MonProxyTest {
 
         assertThat(MonProxyFactory.getSQLDetail()).isNull();
         assertThat(MonProxyFactory.getExceptionDetail()).isNull();;
-        assertThat(MonitorFactory.getRootMonitor().getBasicData()).isNull();
+        assertThat(MonitorFactory.getRootMonitor().getBasicData().length).isEqualTo(1);
     }
 
     @Test
@@ -264,7 +264,7 @@ public class MonProxyTest {
 
 
     @Test
-    public void testMapProxy() {
+         public void testMapProxy() {
         Map map= (Map) MonProxyFactory.monitor(new HashMap());
         map.put("key","value");
         map.get("key");
@@ -275,6 +275,20 @@ public class MonProxyTest {
         assertThat(map).isEqualTo(mapExpected);
         assertThat(MonitorFactory.getReport()).contains("Map.put(");
         assertThat(MonitorFactory.getReport()).contains("Map.get(");
+    }
+
+    @Test
+    public void testExceptionsDefaults() {
+        assertThat(MonProxyFactory.getExceptionDetailHeader()).isNotNull();
+        assertThat(MonProxyFactory.getExceptionDetail()).isNull();
+        assertThat(MonProxyFactory.getExceptionBufferSize()).isEqualTo(50);
+        assertThat(MonProxyFactory.isExceptionDetailEnabled()).isTrue();
+    }
+
+    @Test
+    public void testSetExceptionBufferSize() {
+        MonProxyFactory.setExceptionBufferSize(250);
+        assertThat(MonProxyFactory.getExceptionBufferSize()).isEqualTo(250);
     }
 
     @Test

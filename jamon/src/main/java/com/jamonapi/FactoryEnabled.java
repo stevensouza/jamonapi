@@ -62,7 +62,17 @@ public class FactoryEnabled implements MonitorFactoryInterface {
         if (isTotalKeySizeTrackingEnabled()) {
             enableTotalKeySizeTracking();
         }
+
+        addExceptionFifoBufferListener();
     }
+
+    private void addExceptionFifoBufferListener() {
+        Monitor mon =  getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception");
+        if (!mon.hasListener("value", "FIFOBuffer")) {
+            mon.addListener("value", JAMonListenerFactory.get("FIFOBuffer"));
+        }
+    }
+
 
     public Monitor add(MonKey key, double value) {
         return getMonitor(key).add(value);

@@ -53,7 +53,7 @@ public class GcMXBeanImpTest {
         beanImp.monitor(gcNotifyInfo);
 
         // assert
-        assertThat(MonitorFactory.getNumRows()).isEqualTo(3);
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(4);
         assertThat(MonitorFactory.getMonitor("com.jamonapi.jmx.gc.mygcname.time", "ms.").getLastValue()).isEqualTo(101);
         assertThat(MonitorFactory.getMonitor("com.jamonapi.jmx.gc.mygcname.usedMemory.PS Old Gen", "bytes").getLastValue()).isEqualTo(301);
         assertThat(MonitorFactory.getMonitor("com.jamonapi.jmx.gc.mygcname.usedMemory.Code Cache", "bytes").getLastValue()).isEqualTo(301);

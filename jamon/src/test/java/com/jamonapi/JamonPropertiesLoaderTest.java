@@ -24,7 +24,6 @@ public class JamonPropertiesLoaderTest {
         assertThat(props.getProperty("jamonListener.name")).isEqualTo("FIFOBuffer");
         assertThat(props.getProperty("jamonListener.size")).isEqualTo("50");
         assertThat(props.getProperty("jamonJmxBean.size")).isEqualTo("50");
-        assertThat(props.getProperty("jamonListener[50].key")).isEqualTo("com.jamonapi.Exceptions, Exception");
     }
 
     @Test
@@ -50,12 +49,7 @@ public class JamonPropertiesLoaderTest {
         JamonPropertiesLoader loader = new JamonPropertiesLoader("I_DO_NOT_EXIST.properties");
         List<JamonPropertiesLoader.JamonListener> listeners = loader.getListeners();
 
-        assertThat(listeners).hasSize(1);
-        JamonPropertiesLoader.JamonListener listener = listeners.get(0);
-        assertThat(listener.getLabel()).isEqualTo("com.jamonapi.Exceptions");
-        assertThat(listener.getUnits()).isEqualTo("Exception");
-        assertThat(listener.getListenerType()).isEqualTo("value");
-        assertThat(listener.getListenerName()).isEqualTo("FIFOBuffer");
+        assertThat(listeners).hasSize(0);
     }
 
     @Test

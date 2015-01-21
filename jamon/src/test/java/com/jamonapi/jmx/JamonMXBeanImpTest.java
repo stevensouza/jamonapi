@@ -30,16 +30,16 @@ public class JamonMXBeanImpTest {
     @Test
     public void testReset() throws Exception {
         MonitorFactory.add("mymonitor", "units", 100);
-        assertThat(MonitorFactory.getNumRows()).isEqualTo(1);
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(2);
         bean.reset();
-        assertThat(MonitorFactory.getNumRows()).isEqualTo(0);
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(1);
     }
 
     @Test
     public void testEnableDisable() throws Exception {
         MonitorFactory.add("mymonitor", "units", 100);
         assertThat(bean.getEnabled()).isEqualTo(true);
-        assertThat(MonitorFactory.getNumRows()).isEqualTo(1);
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(2);
 
         bean.setEnabled(false);
         MonitorFactory.add("mymonitor", "units", 100);
@@ -49,7 +49,7 @@ public class JamonMXBeanImpTest {
         bean.setEnabled(true);
         MonitorFactory.add("mymonitor", "units", 100);
         assertThat(bean.getEnabled()).isEqualTo(true);
-        assertThat(MonitorFactory.getNumRows()).isEqualTo(1);
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(2);
         assertThat(MonitorFactory.getMonitor("mymonitor", "units").getHits()).isEqualTo(2);
 
     }
