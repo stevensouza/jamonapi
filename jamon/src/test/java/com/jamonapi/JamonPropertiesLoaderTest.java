@@ -13,7 +13,7 @@ public class JamonPropertiesLoaderTest {
 
     @Test
     public void shouldUseDefaults() {
-        JamonPropertiesLoader loader = new JamonPropertiesLoader("I_DO_NOT_EXIT.properties");
+        JamonPropertiesLoader loader = new JamonPropertiesLoader("I_DO_NOT_EXIST.properties");
         Properties props = loader.getJamonProperties();
         assertThat(props.getProperty("distributedDataRefreshRateInMinutes")).isEqualTo("5");
         assertThat(props.getProperty("jamonDataPersister")).isEqualTo("com.jamonapi.distributed.HazelcastFilePersister");
@@ -24,6 +24,7 @@ public class JamonPropertiesLoaderTest {
         assertThat(props.getProperty("jamonListener.name")).isEqualTo("FIFOBuffer");
         assertThat(props.getProperty("jamonListener.size")).isEqualTo("50");
         assertThat(props.getProperty("jamonJmxBean.size")).isEqualTo("50");
+        assertThat(props.getProperty("jamonListener[50].key")).isEqualTo("com.jamonapi.Exceptions, Exception");
     }
 
     @Test
@@ -45,11 +46,24 @@ public class JamonPropertiesLoaderTest {
     }
 
     @Test
+    public void shouldReturnDefaultListeners() {
+        JamonPropertiesLoader loader = new JamonPropertiesLoader("I_DO_NOT_EXIST.properties");
+        List<JamonPropertiesLoader.JamonListener> listeners = loader.getListeners();
+
+        assertThat(listeners).hasSize(1);
+        JamonPropertiesLoader.JamonListener listener = listeners.get(0);
+        assertThat(listener.getLabel()).isEqualTo("com.jamonapi.Exceptions");
+        assertThat(listener.getUnits()).isEqualTo("Exception");
+        assertThat(listener.getListenerType()).isEqualTo("value");
+        assertThat(listener.getListenerName()).isEqualTo("FIFOBuffer");
+    }
+
+    @Test
     public void shouldReturnListeners() {
         JamonPropertiesLoader loader = new JamonPropertiesLoader("jamonapi2.properties");
         List<JamonPropertiesLoader.JamonListener> listeners = loader.getListeners();
 
-        assertThat(listeners).hasSize(3);
+        assertThat(listeners).hasSize(4);
         JamonPropertiesLoader.JamonListener listener = listeners.get(0);
         assertThat(listener.getLabel()).isEqualTo("com.jamonapi.Exceptions");
         assertThat(listener.getUnits()).isEqualTo("Exception");
@@ -68,6 +82,12 @@ public class JamonPropertiesLoaderTest {
         assertThat(listener.getUnits()).isEqualTo("ms.");
         assertThat(listener.getListenerType()).isEqualTo("value");
         assertThat(listener.getListenerName()).isEqualTo("FIFOBuffer");
+
+        listener = listeners.get(3);
+        assertThat(listener.getLabel()).isEqualTo("com.jamonapi.log4j.JAMonAppender.ERROR");
+        assertThat(listener.getUnits()).isEqualTo("log4j");
+        assertThat(listener.getListenerType()).isEqualTo("value");
+        assertThat(listener.getListenerName()).isEqualTo("FIFOBuffer");
     }
 
     @Test
@@ -78,7 +98,7 @@ public class JamonPropertiesLoaderTest {
         loader.getListeners();
         List<JamonPropertiesLoader.JamonListener> listeners = loader.getListeners();
 
-        assertThat(listeners).hasSize(3);
+        assertThat(listeners).hasSize(4);
     }
 
     @Test

@@ -130,6 +130,7 @@ public class JamonPropertiesLoader {
         defaults.put("jamonListener.name", "FIFOBuffer");
         defaults.put("jamonListener.size", "50");
         defaults.put("jamonJmxBean.size", "50");
+        defaults.put("jamonListener[50].key", "com.jamonapi.Exceptions, Exception");
         return defaults;
     }
 
