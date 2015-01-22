@@ -221,8 +221,6 @@ String[] actionHeader={"action","actionDisplay"};
 Object[][] actionBody={
                  {"Refresh", "Refresh"}, 
                  {"Reset", "Reset"}, 
-	         {"Enable","Enable"}, 
-	         {"Disable","Disable"}, 
                 };
 
 
@@ -274,13 +272,9 @@ private static int getNum(String value, String defaultValue) {
 
 private static void executeAction(String action) {
 
-  if ("Reset".equals(action))
-    MonProxyFactory.resetExceptionDetail();
-  else if ("Enable".equals(action)) 
-    MonProxyFactory.enableExceptionDetail(true);
-  else if ("Disable".equals(action))  
-    MonProxyFactory.enableExceptionDetail(false);
-
+  if ("Reset".equals(action)) {
+      MonProxyFactory.resetExceptionDetail();
+  }
 
 }
 
