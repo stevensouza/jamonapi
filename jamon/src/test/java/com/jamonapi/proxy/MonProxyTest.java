@@ -3,6 +3,7 @@ package com.jamonapi.proxy;
 import com.jamonapi.FactoryEnabled;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
+import com.jamonapi.utils.Misc;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -292,6 +293,28 @@ public class MonProxyTest {
     }
 
     @Test
+    public void testExceptionListener() {
+        throwException();
+        assertThat(MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception").getHits()).isEqualTo(1);
+        assertThat(MonProxyFactory.getExceptionDetail().length).isEqualTo(1);
+        assertThat(Misc.getAsString(MonProxyFactory.getExceptionDetail()[0])).contains("My Exception!");
+
+        MonProxyFactory.resetExceptionDetail();
+        assertThat(MonProxyFactory.getExceptionDetail()).isNull();
+        throwException();
+        assertThat(Misc.getAsString(MonProxyFactory.getExceptionDetail()[0])).contains("My Exception!");
+    }
+
+    private void throwException() {
+        Base2 myClass = (Base2) MonProxyFactory.monitor(new MyClass0());
+        try {
+            myClass.throwException();
+        } catch (RuntimeException e){
+
+        }
+    }
+
+    @Test
     public void testInterfaces_MyClass0() {
         List<String> interfaces=testInterfaces(new MyClass0().getClass());
         List<String> expectedInterfaces=new ArrayList<String>();
@@ -397,6 +420,7 @@ public class MonProxyTest {
     }
 
     private interface Base0 extends Tag0 {
+        public void throwException();
     }
 
     private interface Base1 extends Base0 {
@@ -406,6 +430,9 @@ public class MonProxyTest {
     }
 
     private static class MyClass0 implements Base2 {
+        public void throwException() {
+            throw new RuntimeException("My Exception!");
+        }
     }
 
     private static class MyClass1 extends MyClass0 implements Tag1 {
@@ -449,8 +476,6 @@ public class MonProxyTest {
 
         monTotal.stop();
         String message = name + " execution time: " + mon.stop().getLastValue();
-        //System.out.println(message);
-        //System.out.println(MonitorFactory.getReport());
     }
 
 

@@ -296,7 +296,12 @@ public class MonProxyFactoryImp {
      * 
      */
     public int getExceptionBufferSize() {
-        return params.exceptionBuffer.getBufferSize();
+        JAMonBufferListener jaMonBufferListener = getExceptionBufferListener();
+        if (jaMonBufferListener==null) {
+            return 0;
+        }
+
+        return jaMonBufferListener.getBufferList().getBufferSize();
     }
 
 
@@ -304,12 +309,22 @@ public class MonProxyFactoryImp {
      * be removed.  A value of 0 will disable collecting of Exceptions in the buffer.
      */
     public void setExceptionBufferSize(int exceptionBufferSize) {
-        params.exceptionBuffer.setBufferSize(exceptionBufferSize);
+        JAMonBufferListener jaMonBufferListener = getExceptionBufferListener();
+        if (jaMonBufferListener==null) {
+            return;
+        }
+
+        jaMonBufferListener.getBufferList().setBufferSize(exceptionBufferSize);
     }
 
     /** Remove all Exceptions from the buffer. */
     public void resetExceptionDetail() {
-        params.exceptionBuffer.reset();
+        JAMonBufferListener jaMonBufferListener = getExceptionBufferListener();
+        if (jaMonBufferListener==null) {
+            return;
+        }
+
+        jaMonBufferListener.getBufferList().reset();
     }
 
 
@@ -453,7 +468,6 @@ public class MonProxyFactoryImp {
             return null;
         }
         return jaMonBufferListener.getDetailData().getHeader();
-     //   return params.exceptionBuffer.getHeader();
     }
 
     private JAMonBufferListener getExceptionBufferListener() {
@@ -477,7 +491,6 @@ public class MonProxyFactoryImp {
             return null;
         }
         return jaMonBufferListener.getDetailData().getData();
-       // return params.exceptionBuffer.getData();
     }
 
 
