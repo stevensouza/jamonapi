@@ -141,9 +141,11 @@ Available:<br>
 
 </th>
 
-
+<!--
+    The following hack of calling setTimeout is to fix a bug within safari that didn't properly submit the form.
+-->
 <th>
-    <input type="submit" name="addlistener" title="Add Listener" value="--->" onClick="this.form.action='monmanage.jsp'; setTimeout(function() {
+        <input type="submit" name="addlistener" title="Add Listener" value="--->" onClick="this.form.action='monmanage.jsp'; setTimeout(function() {
         this.form.submit();
         }, 10);">
     <br><br>
