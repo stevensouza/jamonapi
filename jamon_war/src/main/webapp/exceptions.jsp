@@ -220,7 +220,7 @@ Object[][] outputTypeBody={
 String[] actionHeader={"action","actionDisplay"};
 Object[][] actionBody={
                  {"Refresh", "Refresh"}, 
-                 {"Reset", "Reset"}, 
+                 {"Reset", "Reset"},
                 };
 
 
