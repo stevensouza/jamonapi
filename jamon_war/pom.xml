@@ -11,7 +11,6 @@
   <artifactId>jamon_war</artifactId>
   <packaging>war</packaging>
   <name>JAMon War</name>
-  <version>${jamon.version}</version>
 
   <build>
     <finalName>jamon</finalName>
