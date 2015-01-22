@@ -38,6 +38,8 @@ public class MonProxyTest {
         MonitorFactory.reset();
     }
 
+    // This will test perform standard sql commands without a proxy so no jamon tracking.
+    // Uses a regular/nonmonitored jdbc connecton.
     @Test
     public void testSqlNoProxy() throws Exception {
         int times = 2000;
@@ -74,7 +76,7 @@ public class MonProxyTest {
     }
 
     @Test
-    public void testConnection() throws Exception {
+    public void testConnections() throws Exception {
         JAMonDriver.register();
         for (int i=0;i<5;i++) {
             Properties props=new Properties();
@@ -265,7 +267,7 @@ public class MonProxyTest {
 
 
     @Test
-         public void testMapProxy() {
+    public void testMapProxy() {
         Map map= (Map) MonProxyFactory.monitor(new HashMap());
         map.put("key","value");
         map.get("key");
@@ -283,7 +285,6 @@ public class MonProxyTest {
         assertThat(MonProxyFactory.getExceptionDetailHeader()).isNotNull();
         assertThat(MonProxyFactory.getExceptionDetail()).isNull();
         assertThat(MonProxyFactory.getExceptionBufferSize()).isEqualTo(50);
-        assertThat(MonProxyFactory.isExceptionDetailEnabled()).isTrue();
     }
 
     @Test
@@ -298,6 +299,8 @@ public class MonProxyTest {
         assertThat(MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception").getHits()).isEqualTo(1);
         assertThat(MonProxyFactory.getExceptionDetail().length).isEqualTo(1);
         assertThat(Misc.getAsString(MonProxyFactory.getExceptionDetail()[0])).contains("My Exception!");
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(5);
+        assertThat(MonitorFactory.getComposite("Exception").getNumRows()).isEqualTo(4);
 
         MonProxyFactory.resetExceptionDetail();
         assertThat(MonProxyFactory.getExceptionDetail()).isNull();
@@ -452,7 +455,6 @@ public class MonProxyTest {
 
     private static void mainTestMethod(String name, Connection conn, int times, Params params, FactoryEnabled mf) throws Exception {
         testCounter++;
-        //System.out.println("\n\n\n" + testCounter + ") " + name + "** "+ params);
 
         Monitor mon = mf.start(testCounter + ") " + name + " ** "+ params.toString());
         Monitor monTotal = mf.start("totalTime");
@@ -460,8 +462,6 @@ public class MonProxyTest {
         MonProxyFactory.enableInterface(params.isInterfaceEnabled);
         MonProxyFactory.enableSQLDetail(params.isSQLDetailEnabled);
         MonProxyFactory.enableSQLSummary(params.isSQLSummaryEnabled);
-        MonProxyFactory.enableExceptionSummary(params.isExceptionSummaryEnabled);
-        MonProxyFactory.enableExceptionDetail(params.isExceptionDetailEnabled);
         MonProxyFactory.enable(params.isEnabled);
 
         PreparedStatement ps = getPreparedStatement(conn);

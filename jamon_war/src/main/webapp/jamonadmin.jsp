@@ -339,13 +339,11 @@ private static Object[][] getMonProxyBody() {
 
    String enableInfo="No Action (currently="+
       (MonProxyFactory.isSQLSummaryEnabled() ? "T" : "F")+
-      (MonProxyFactory.isExceptionSummaryEnabled() ? "T" : "F")+
       (MonProxyFactory.isInterfaceEnabled() ? "T" : "F")+
       (MonProxyFactory.isResultSetEnabled() ? "T" : "F")+")";
 
 
    String sql=enabledMessage(MonProxyFactory.isSQLSummaryEnabled())+"SQL";
-   String exceptions=enabledMessage(MonProxyFactory.isExceptionSummaryEnabled())+"Exceptions";
    String interfaces=enabledMessage(MonProxyFactory.isInterfaceEnabled())+"Interfaces";
    String resultSet=enabledMessage(MonProxyFactory.isResultSetEnabled())+"ResultSet";
 
@@ -354,10 +352,9 @@ private static Object[][] getMonProxyBody() {
              {"Enable All", "Enable All"},
              {"Disable All", "Disable All"},
 	         {sql,sql}, 
-	         {exceptions,exceptions}, 
-	         {interfaces,interfaces}, 
+	         {interfaces,interfaces},
 	         {resultSet,resultSet}, 
-                };
+           };
 }
 
 
@@ -458,29 +455,22 @@ private static void executeAction(String action) {
 private static void enableMonProxy(String monProxyAction) {
 if ("Enable All".equals(monProxyAction)) {
   MonProxyFactory.enableSQLSummary(true);
-  MonProxyFactory.enableExceptionSummary(true);
   MonProxyFactory.enableInterface(true);
   MonProxyFactory.enableResultSet(true);
- 
 } else if ("Enable SQL".equals(monProxyAction))
   MonProxyFactory.enableSQLSummary(true);
-else if ("Enable Exceptions".equals(monProxyAction))  
-  MonProxyFactory.enableExceptionSummary(true);
-else if ("Enable Interfaces".equals(monProxyAction))  
+else if ("Enable Interfaces".equals(monProxyAction))
   MonProxyFactory.enableInterface(true);
 else if ("Enable ResultSet".equals(monProxyAction))  
   MonProxyFactory.enableResultSet(true);
 
 else if ("Disable All".equals(monProxyAction)) {
   MonProxyFactory.enableSQLSummary(false);
-  MonProxyFactory.enableExceptionSummary(false);
   MonProxyFactory.enableInterface(false);
   MonProxyFactory.enableResultSet(false);
 } else if ("Disable SQL".equals(monProxyAction))
   MonProxyFactory.enableSQLSummary(false);
-else if ("Disable Exceptions".equals(monProxyAction))  
-  MonProxyFactory.enableExceptionSummary(false);
-else if ("Disable Interfaces".equals(monProxyAction))  
+else if ("Disable Interfaces".equals(monProxyAction))
   MonProxyFactory.enableInterface(false);
 else if ("Disable ResultSet".equals(monProxyAction))  
   MonProxyFactory.enableResultSet(false);

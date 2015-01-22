@@ -342,36 +342,30 @@ public class MonProxyFactoryImp {
     }
 
 
-    /** Indicates whether jamon summary stats are kept for exceptions */
+    /** This method is now a noop and will be removed from a future release */
+    @Deprecated
     public boolean isExceptionSummaryEnabled() {
-        return params.isExceptionSummaryEnabled;
+        return true;
     }
 
 
-    /** Enables/disables jamon summary stats for exceptions */
+    /** This method is now a noop and will be removed from a future release */
+    @Deprecated
     public void enableExceptionSummary(boolean enable) {
-        params.isExceptionSummaryEnabled=enable;
-        if (enable)
-            enable(true);
+
     }
 
 
-    /** Indicates whether exceptions are tracked in a rolling buffer */
+    /** This method is now a noop and will be removed from a future release */
+    @Deprecated
     public boolean isExceptionDetailEnabled() {
-        return params.isExceptionDetailEnabled;
+        return true;
     }
 
 
-    /** Enables/Disables whether exceptions are tracked in a rolling buffer */
+    /** This method is now a noop and will be removed from a future release */
+    @Deprecated
     public void enableExceptionDetail(boolean enable) {
-        params.isExceptionDetailEnabled=enable;
-        if (enable)
-            params.exceptionBuffer.enable();
-        else
-            params.exceptionBuffer.disable();
-
-        if (enable)
-            enable(true);
 
     }
 
@@ -436,16 +430,17 @@ public class MonProxyFactoryImp {
     public void enableAll(boolean enable) {
         enable(enable);
         enableInterface(enable);
-        enableExceptionSummary(enable);
-        enableExceptionDetail(enable);
         enableSQLSummary(enable);
         enableSQLDetail(enable);
         enableResultSet(enable);
     }
 
     public boolean isAllEnabled() {
-        return (params.isEnabled && params.isExceptionDetailEnabled && params.isExceptionSummaryEnabled
-                && params.isSQLSummaryEnabled && params.isSQLDetailEnabled && params.isInterfaceEnabled && params.isResultSetEnabled);
+                return (params.isEnabled
+                        && params.isSQLSummaryEnabled
+                        && params.isSQLDetailEnabled
+                        && params.isInterfaceEnabled
+                        && params.isResultSetEnabled);
     }
 
     /** Enables all monitors except ResultSet monitoring.  This overrides all other monitor booleans.  It never enables ResultSet monitoring

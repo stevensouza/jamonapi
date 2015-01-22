@@ -89,7 +89,6 @@ class JDBCMonProxy extends MonProxy {
                         MonitorFactory.add("MonProxy-SQL-PreparedStatement Reuse","count", 2*statementReuseCounter);// to get the average to be accurate multiply by 2
 
                     actualSQL=getSQL(sqlMon.getSQL());// in the case of a preparedStatement the actual sql includes question marks.
-
                 }
 
                 // create a monitor for:  select * from table where name=?

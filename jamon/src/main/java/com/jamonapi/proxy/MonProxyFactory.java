@@ -93,19 +93,26 @@ public class MonProxyFactory {
         proxyFactory.enableInterface(enable);
     }
 
+    /** This method is now a noop and will be removed from a future release */
+    @Deprecated
     public static boolean isExceptionSummaryEnabled() {
         return proxyFactory.isExceptionSummaryEnabled();
     }
 
+    /** This method is now a noop and will be removed from a future release */
+    @Deprecated
     public static void enableExceptionSummary(boolean enable) {
         proxyFactory.enableExceptionSummary(enable);
     }
 
+    /** This method is now a noop and will be removed from a future release */
+    @Deprecated
     public static boolean isExceptionDetailEnabled() {
         return proxyFactory.isExceptionDetailEnabled();
     }
 
-
+    /** This method is now a noop and will be removed from a future release */
+    @Deprecated
     public static void enableExceptionDetail(boolean enable) {
         proxyFactory.enableExceptionDetail(enable);
     }
