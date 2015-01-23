@@ -122,28 +122,6 @@ public class MonProxyTest {
     }
 
     @Test
-    public void testSqlProxy_ResultSetEnabled() throws Exception {
-        int times = 2000;
-        Params params = new Params();
-        params.isResultSetEnabled = true;
-        FactoryEnabled mf = new FactoryEnabled();
-
-        Class.forName("org.hsqldb.jdbcDriver");
-        Connection conn = DriverManager.getConnection("jdbc:hsqldb:mem:.", "sa", "");
-
-        // returns monitored connection
-        MonProxyFactory.enableAll(true);
-        conn = MonProxyFactory.monitor(conn);
-
-        mainTestMethod("MonProxyFactory ResultSet enabled", conn, times, params, mf);
-
-        assertThat(MonProxyFactory.getSQLDetail().length).isEqualTo(100);
-        assertThat(MonProxyFactory.getExceptionDetail().length).isEqualTo(1);
-        assertSqlMonitoringEnabled(MonitorFactory.getReport());
-        assertThat(MonitorFactory.getReport()).contains("ResultSet.next()");
-    }
-
-    @Test
     public void testSqlProxy_Disabled() throws Exception {
         int times = 2000;
         Params params = new Params();
@@ -162,6 +140,7 @@ public class MonProxyTest {
         assertThat(MonProxyFactory.getSQLDetail()).isNull();
         assertThat(MonProxyFactory.getExceptionDetail()).isNull();;
         assertThat(MonitorFactory.getRootMonitor().getBasicData().length).isEqualTo(1);
+        assertThat(MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception").getHits()).isEqualTo(1);
     }
 
     @Test
