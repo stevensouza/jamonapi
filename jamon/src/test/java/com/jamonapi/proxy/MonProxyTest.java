@@ -119,6 +119,7 @@ public class MonProxyTest {
         assertThat(MonProxyFactory.getExceptionDetail().length).isEqualTo(1);
         assertSqlMonitoringEnabled(MonitorFactory.getReport());
         assertThat(MonitorFactory.getReport()).doesNotContain("ResultSet.next()");
+        assertThat(MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception").getHits()).isEqualTo(1);
     }
 
     @Test
@@ -140,7 +141,7 @@ public class MonProxyTest {
         assertThat(MonProxyFactory.getSQLDetail()).isNull();
         assertThat(MonProxyFactory.getExceptionDetail()).isNull();;
         assertThat(MonitorFactory.getRootMonitor().getBasicData().length).isEqualTo(1);
-        assertThat(MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception").getHits()).isEqualTo(1);
+        assertThat(MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception").getHits()).isEqualTo(0);
     }
 
     @Test
@@ -167,6 +168,7 @@ public class MonProxyTest {
 
         assertThat(MonProxyFactory.getSQLDetail().length).isEqualTo(100);
         assertThat(MonProxyFactory.getExceptionDetail().length).isEqualTo(1);
+        assertThat(MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception").getHits()).isEqualTo(1);
     }
 
 
@@ -195,6 +197,7 @@ public class MonProxyTest {
 
         assertThat(MonProxyFactory.getSQLDetail()).isNull();
         assertThat(MonProxyFactory.getExceptionDetail().length).isEqualTo(1);
+        assertThat(MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception").getHits()).isEqualTo(1);
     }
 
 
@@ -224,6 +227,7 @@ public class MonProxyTest {
         assertThat(MonitorFactory.getReport()).doesNotContain("ResultSet.next()");
         assertThat(MonitorFactory.getReport()).contains("MonProxy-SQL-Match: LOCAL_TYPE_NAME");
         assertThat(MonitorFactory.getReport()).contains("MonProxy-SQL-Match: SYSTEM_TYPEINFO");
+        assertThat(MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception").getHits()).isEqualTo(1);
     }
 
     @Test
