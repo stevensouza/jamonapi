@@ -64,20 +64,20 @@ ArrayConverter ac=getArrayConverter(textSize, highlightString );
 fds.setArrayConverter(ac);
 
 
-if (rsc.isEmpty())
+if (rsc==null || rsc.isEmpty())
   outputText="<div align='center'><br><br><b>No data was returned</b></div>";
 else {  
  if ("xml".equalsIgnoreCase(outputType)) {
-   rsc=new ResultSetConverter(rsc.getMetaData(), rsc.getResultSet());
-   outputText=fds.getFormattedDataSet(rsc, map, "xml1");
+     rsc=new ResultSetConverter(rsc.getMetaData(), rsc.getResultSet());
+     outputText=fds.getFormattedDataSet(rsc, map, "xml1");
  } else if  ("csv".equalsIgnoreCase(outputType)) {
      rsc=new ResultSetConverter(rsc.getMetaData(), ac.convert(rsc.getResultSet()));
      outputText=fds.getFormattedDataSet(rsc, map, "csv");
  } else if ("excel".equalsIgnoreCase(outputType) || "spreadsheet".equalsIgnoreCase(outputType)) {
-   rsc=new ResultSetConverter(rsc.getMetaData(), ac.convert(rsc.getResultSet()));
-   outputText=fds.getFormattedDataSet(rsc, map, "basicHtmlTable");
+     rsc=new ResultSetConverter(rsc.getMetaData(), ac.convert(rsc.getResultSet()));
+     outputText=fds.getFormattedDataSet(rsc, map, "basicHtmlTable");
  } else 
-   outputText=fds.getSortedText(rsc.getMetaData(), rsc.getResultSet(), map, sortCol, sortOrder, getJAMonTemplate(fds));
+     outputText=fds.getSortedText(rsc.getMetaData(), rsc.getResultSet(), map, sortCol, sortOrder, getJAMonTemplate(fds));
 }
 
 %>
@@ -229,7 +229,7 @@ Object[][] bufferSizeBody={
                  {"No Action", "No Action"}, 
                  {"50", "50 rows"}, 
                  {"100", "100 rows"}, 
-	         {"250","250 rows"}, 
+	             {"250","250 rows"},
                };
 
 
@@ -291,6 +291,9 @@ private static void setBufferSize(String bufferSize) {
 }
 
 private static ResultSetConverter getResultSetConverter(String[] header, Object[][] data, String arraySQLExec) {
+     if (data==null) {
+         return null;
+     }
      ResultSetConverter rsc = new ResultSetConverter(header, data).
              execute("select Label as exceptionStackTrace, Date from array"). // only take data of interest and rename
              execute(arraySQLExec). // honor users filter/query
