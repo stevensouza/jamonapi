@@ -216,7 +216,7 @@ public class JamonPropertiesLoader {
     // Simple value object that holds the values for a jamon jmx bean read in from the properties file
     public class JamonJmxBeanProperty {
 
-        // use JamonListener as a helper class implementation detail (using delegation) as it can read from the properties file.
+        // use JamonListenerProperty as a helper class implementation detail (using delegation) as it can read from the properties file.
         private JamonListenerProperty listener;
 
         protected JamonJmxBeanProperty() {

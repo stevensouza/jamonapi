@@ -34,6 +34,22 @@ import java.util.*;
     }
 
     /**
+     * Return hits/count of the first passed in monitor that exists otherwise return 0
+     *
+     * @param jmxBeanProperties jamon label
+     * @return count
+     */
+    static long getCount(List<JamonPropertiesLoader.JamonJmxBeanProperty> jmxBeanProperties) {
+        for (JamonPropertiesLoader.JamonJmxBeanProperty jmxBeanProperty: jmxBeanProperties) {
+            if (MonitorFactory.exists(jmxBeanProperty.getLabel(), jmxBeanProperty.getUnits())) {
+                return getCount(jmxBeanProperty.getLabel(), jmxBeanProperty.getUnits());
+            }
+        }
+
+        return 0;
+    }
+
+    /**
      * Return hits/count of the passed in monitor if it exists otherwise return 0
      *
      * @param label jamon label
@@ -51,21 +67,23 @@ import java.util.*;
     }
 
     /**
-     * Return hits/count of the passed in monitor if it exists otherwise return 0
+     * Return hits/count of the first passed in monitor that exists otherwise return 0
      *
-     * @param label jamon label
-     * @param units jamon units
+     * @param jmxBeanProperties List of jmx bean properties to check for the passed in value.
      * @param value string representing the metric to return i.e. avg, hits etc.
      * @return the metric
      */
-//    static double getDouble(String label, String units, String value) {
-//        if (MonitorFactory.exists(label, units)) {
-//            Monitor mon = MonitorFactory.getMonitor(label, units);
-//            return  (Double) mon.getValue(value);
-//        }
-//
-//        return 0.0;
-//    }
+    static double getDouble(List<JamonPropertiesLoader.JamonJmxBeanProperty> jmxBeanProperties, String value) {
+        for (JamonPropertiesLoader.JamonJmxBeanProperty jmxBeanProperty: jmxBeanProperties) {
+            if (MonitorFactory.exists(jmxBeanProperty.getLabel(), jmxBeanProperty.getUnits())) {
+                return getDouble(jmxBeanProperty.getLabel(), jmxBeanProperty.getUnits(), value);
+            }
+        }
+
+        return 0.0;
+    }
+
+
     /**
      *
      * @param label jamon label
@@ -81,6 +99,23 @@ import java.util.*;
 
         return null;
     }
+
+    /**
+     *
+     * @param jmxBeanProperties list of jamon properties to check for the associated date
+     * @param value string representing the date metric to return lastaccess, firstaccess.
+     * @return The date associated with the first jamon monitor that exist or else a null if none exist.
+     */
+    static Date getDate(List<JamonPropertiesLoader.JamonJmxBeanProperty> jmxBeanProperties, String value) {
+        for (JamonPropertiesLoader.JamonJmxBeanProperty jmxBeanProperty : jmxBeanProperties) {
+            if (MonitorFactory.exists(jmxBeanProperty.getLabel(), jmxBeanProperty.getUnits())) {
+                return getDate(jmxBeanProperty.getLabel(), jmxBeanProperty.getUnits(), value);
+            }
+        }
+
+        return null;
+    }
+
 
     /**
      * Create a jmx ObjectName out of the passed in String

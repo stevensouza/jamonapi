@@ -1,5 +1,6 @@
 package com.jamonapi.jmx;
 
+import com.jamonapi.JamonPropertiesLoader;
 import com.jamonapi.MonitorFactory;
 import org.junit.After;
 import org.junit.Before;
@@ -9,17 +10,28 @@ import javax.management.JMX;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 
 public class JmxUtilsTest {
     private MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+    private List<JamonPropertiesLoader.JamonJmxBeanProperty> beanPropertyList;
 
     @Before
     public void setUp() throws Exception {
         MonitorFactory.reset();
+        JamonPropertiesLoader.JamonJmxBeanProperty property = mock(JamonPropertiesLoader.JamonJmxBeanProperty.class);
+        when(property.getLabel()).thenReturn("I_EXIST");
+        when(property.getUnits()).thenReturn("ms.");
+        beanPropertyList = new ArrayList<JamonPropertiesLoader.JamonJmxBeanProperty>();
+        beanPropertyList.add(property);
     }
 
     @After
@@ -29,7 +41,7 @@ public class JmxUtilsTest {
 
     @Test
     public void shouldEqual0IfNotExist() throws Exception  {
-        assertThat(JmxUtils.getCount("I_DO_NOT_EXIT","ms.")).isEqualTo(0);
+        assertThat(JmxUtils.getCount("I_DO_NOT_EXIST","ms.")).isEqualTo(0);
     }
 
     @Test
@@ -43,12 +55,22 @@ public class JmxUtilsTest {
     public void getDate() throws Exception  {
         MonitorFactory.start("I_EXIST").stop();
         assertThat(JmxUtils.getDate("I_EXIST","ms.","lastaccess")).isBeforeOrEqualsTo(new Date());
+        assertThat(JmxUtils.getDate(beanPropertyList,"lastaccess")).isBeforeOrEqualsTo(new Date());
+
     }
 
     @Test
     public void getDouble() throws Exception  {
         MonitorFactory.start("I_EXIST").stop();
         assertThat(JmxUtils.getDouble("I_EXIST","ms.","hits")).isEqualTo(1);
+        assertThat(JmxUtils.getDouble(beanPropertyList,"hits")).isEqualTo(1);
+    }
+
+    @Test
+    public void getCount() throws Exception  {
+        MonitorFactory.start("I_EXIST").stop();
+        assertThat(JmxUtils.getCount("I_EXIST", "ms.")).isEqualTo(1);
+        assertThat(JmxUtils.getCount(beanPropertyList)).isEqualTo(1);
     }
 
 
