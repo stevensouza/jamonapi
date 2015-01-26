@@ -481,7 +481,7 @@ public class MonitorFactory {
      *
      * @since 2.79
      */
-    public static void addListeners(List<JamonPropertiesLoader.JamonListener> listeners) {
+    public static void addListeners(List<JamonPropertiesLoader.JamonListenerProperty> listeners) {
         factory.addListeners(listeners);
     }
 

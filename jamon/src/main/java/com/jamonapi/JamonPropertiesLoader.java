@@ -19,7 +19,7 @@ public class JamonPropertiesLoader {
 
     private String fileName;
     private Properties jamonProps;
-    private List<JamonListener> listenerList;
+    private List<JamonListenerProperty> listenerList;
     private List<JamonJmxBeanProperty> jamonMxBeanList;
 
     public JamonPropertiesLoader() {
@@ -55,7 +55,7 @@ public class JamonPropertiesLoader {
         return getClass().getClassLoader().getResource(".");
     }
 
-    public List<JamonListener> getListeners() {
+    public List<JamonListenerProperty> getListeners() {
         if (jamonProps==null) {
             initialize();
         }
@@ -147,13 +147,13 @@ public class JamonPropertiesLoader {
     }
 
     private void addListeners() {
-        listenerList = new ArrayList<JamonListener>();
+        listenerList = new ArrayList<JamonListenerProperty>();
         int size = Integer.valueOf(jamonProps.getProperty("jamonListener.size"));
         for (int i = 0; i <= size; i++) {
            String keyPrefix = getKeyPrefix("jamonListener", i);
            String listener = jamonProps.getProperty(keyPrefix + "key");
            if (listener != null) {
-              listenerList.add(new JamonListener(keyPrefix));
+              listenerList.add(new JamonListenerProperty(keyPrefix));
            }
         }
     }
@@ -176,10 +176,10 @@ public class JamonPropertiesLoader {
 
 
     // Simple value object that holds the values for a listener read in from the properties file
-    public class JamonListener {
+    public class JamonListenerProperty {
         protected String keyPrefix;
 
-        protected JamonListener(String keyPrefix) {
+        protected JamonListenerProperty(String keyPrefix) {
             this.keyPrefix = keyPrefix;
         }
 
@@ -217,13 +217,13 @@ public class JamonPropertiesLoader {
     public class JamonJmxBeanProperty {
 
         // use JamonListener as a helper class implementation detail (using delegation) as it can read from the properties file.
-        private JamonListener listener;
+        private JamonListenerProperty listener;
 
         protected JamonJmxBeanProperty() {
         }
 
         protected JamonJmxBeanProperty(String keyPrefix) {
-            listener = new JamonListener(keyPrefix);
+            listener = new JamonListenerProperty(keyPrefix);
         }
 
         /** example: com.jamonapi.Exceptions */

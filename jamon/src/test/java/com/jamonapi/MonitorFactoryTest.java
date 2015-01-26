@@ -521,7 +521,7 @@ public class MonitorFactoryTest {
 
     @Test
     public void testTrackExceptionWithMon_fromDefaultProperties() {
-        List<JamonPropertiesLoader.JamonListener> listeners = new JamonPropertiesLoader("I_DO_NOT_EXIST.properties").getListeners();
+        List<JamonPropertiesLoader.JamonListenerProperty> listeners = new JamonPropertiesLoader("I_DO_NOT_EXIST.properties").getListeners();
         Monitor mon1 = MonitorFactory.start("anytimer").stop();
         Monitor mon = MonitorFactory.addException(mon1, new RuntimeException("my exception"));
 
@@ -544,7 +544,7 @@ public class MonitorFactoryTest {
 
     @Test
     public void testTrackExceptionWithMon_fromProperties() {
-        List<JamonPropertiesLoader.JamonListener> listeners = new JamonPropertiesLoader("jamonapi2.properties").getListeners();
+        List<JamonPropertiesLoader.JamonListenerProperty> listeners = new JamonPropertiesLoader("jamonapi2.properties").getListeners();
         assertThat(listeners).hasSize(4);
         MonitorFactory.addListeners(listeners);
         Monitor mon1 = MonitorFactory.start("anytimer").stop();

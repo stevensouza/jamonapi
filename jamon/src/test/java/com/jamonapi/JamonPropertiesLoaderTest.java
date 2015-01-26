@@ -47,7 +47,7 @@ public class JamonPropertiesLoaderTest {
     @Test
     public void shouldReturnDefaultListeners() {
         JamonPropertiesLoader loader = new JamonPropertiesLoader("I_DO_NOT_EXIST.properties");
-        List<JamonPropertiesLoader.JamonListener> listeners = loader.getListeners();
+        List<JamonPropertiesLoader.JamonListenerProperty> listeners = loader.getListeners();
 
         assertThat(listeners).hasSize(0);
     }
@@ -55,10 +55,10 @@ public class JamonPropertiesLoaderTest {
     @Test
     public void shouldReturnListeners() {
         JamonPropertiesLoader loader = new JamonPropertiesLoader("jamonapi2.properties");
-        List<JamonPropertiesLoader.JamonListener> listeners = loader.getListeners();
+        List<JamonPropertiesLoader.JamonListenerProperty> listeners = loader.getListeners();
 
         assertThat(listeners).hasSize(4);
-        JamonPropertiesLoader.JamonListener listener = listeners.get(0);
+        JamonPropertiesLoader.JamonListenerProperty listener = listeners.get(0);
         assertThat(listener.getLabel()).isEqualTo("com.jamonapi.Exceptions");
         assertThat(listener.getUnits()).isEqualTo("Exception");
         assertThat(listener.getListenerType()).isEqualTo("value");
@@ -90,7 +90,7 @@ public class JamonPropertiesLoaderTest {
         // so wasn't indempotent
         JamonPropertiesLoader loader = new JamonPropertiesLoader("jamonapi2.properties");
         loader.getListeners();
-        List<JamonPropertiesLoader.JamonListener> listeners = loader.getListeners();
+        List<JamonPropertiesLoader.JamonListenerProperty> listeners = loader.getListeners();
 
         assertThat(listeners).hasSize(4);
     }

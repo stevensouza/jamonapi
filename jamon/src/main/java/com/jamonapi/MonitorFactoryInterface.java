@@ -201,7 +201,7 @@ public interface MonitorFactoryInterface extends Serializable {
      *
      * @since 2.79
      */
-    public void addListeners(List<JamonPropertiesLoader.JamonListener> listeners);
+    public void addListeners(List<JamonPropertiesLoader.JamonListenerProperty> listeners);
 
     /**
      * @since  2.79

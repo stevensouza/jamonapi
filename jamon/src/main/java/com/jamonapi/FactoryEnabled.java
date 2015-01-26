@@ -517,10 +517,10 @@ public class FactoryEnabled implements MonitorFactoryInterface {
     }
 
     @Override
-    public void addListeners(List<JamonPropertiesLoader.JamonListener> listeners) {
-        Iterator<JamonPropertiesLoader.JamonListener> iter = listeners.iterator();
+    public void addListeners(List<JamonPropertiesLoader.JamonListenerProperty> listeners) {
+        Iterator<JamonPropertiesLoader.JamonListenerProperty> iter = listeners.iterator();
         while (iter.hasNext()) {
-            JamonPropertiesLoader.JamonListener listenerInfo = iter.next();
+            JamonPropertiesLoader.JamonListenerProperty listenerInfo = iter.next();
             Monitor mon =  MonitorFactory.getMonitor(listenerInfo.getLabel(), listenerInfo.getUnits());
             mon.addListener(listenerInfo.getListenerType(), JAMonListenerFactory.get(listenerInfo.getListenerName()));
         }
