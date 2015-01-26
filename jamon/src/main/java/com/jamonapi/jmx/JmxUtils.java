@@ -51,6 +51,22 @@ import java.util.*;
     }
 
     /**
+     * Return hits/count of the passed in monitor if it exists otherwise return 0
+     *
+     * @param label jamon label
+     * @param units jamon units
+     * @param value string representing the metric to return i.e. avg, hits etc.
+     * @return the metric
+     */
+//    static double getDouble(String label, String units, String value) {
+//        if (MonitorFactory.exists(label, units)) {
+//            Monitor mon = MonitorFactory.getMonitor(label, units);
+//            return  (Double) mon.getValue(value);
+//        }
+//
+//        return 0.0;
+//    }
+    /**
      *
      * @param label jamon label
      * @param units jamon units
@@ -114,12 +130,12 @@ import java.util.*;
      */
     private static  void registerMbeansFromPropsFile(MBeanServer mBeanServer) throws Exception {
         JamonPropertiesLoader loader = new JamonPropertiesLoader();
-        List<JamonPropertiesLoader.JamonJmxBean> jamonJmxBeans = loader.getMxBeans();
-        Iterator<JamonPropertiesLoader.JamonJmxBean> iter = jamonJmxBeans.iterator();
+        List<JamonPropertiesLoader.JamonJmxBeanProperty> jamonJmxBeanProperties = loader.getMxBeans();
+        Iterator<JamonPropertiesLoader.JamonJmxBeanProperty> iter = jamonJmxBeanProperties.iterator();
 
         // register both the mxbean and the delta mxbean that displays diffs from when the bean was last called.
         while (iter.hasNext()) {
-          JamonPropertiesLoader.JamonJmxBean beanInfo = iter.next();
+          JamonPropertiesLoader.JamonJmxBeanProperty beanInfo = iter.next();
 
           MonitorMXBean mXbean = MonitorMXBeanFactory.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
           mBeanServer.registerMBean(mXbean, MonitorMXBeanFactory.getObjectName(mXbean));
@@ -164,11 +180,11 @@ import java.util.*;
      */
     private static  void unregisterMbeansFromPropsFile(MBeanServer mBeanServer) throws Exception {
         JamonPropertiesLoader loader = new JamonPropertiesLoader();
-        List<JamonPropertiesLoader.JamonJmxBean> jamonJmxBeans = loader.getMxBeans();
-        Iterator<JamonPropertiesLoader.JamonJmxBean> iter = jamonJmxBeans.iterator();
+        List<JamonPropertiesLoader.JamonJmxBeanProperty> jamonJmxBeanProperties = loader.getMxBeans();
+        Iterator<JamonPropertiesLoader.JamonJmxBeanProperty> iter = jamonJmxBeanProperties.iterator();
 
         while (iter.hasNext()) {
-            JamonPropertiesLoader.JamonJmxBean beanInfo = iter.next();
+            JamonPropertiesLoader.JamonJmxBeanProperty beanInfo = iter.next();
 
             MonitorMXBean mXbean = MonitorMXBeanFactory.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
             mBeanServer.unregisterMBean(MonitorMXBeanFactory.getObjectName(mXbean));

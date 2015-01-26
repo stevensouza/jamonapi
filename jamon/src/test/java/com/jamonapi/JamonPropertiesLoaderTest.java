@@ -98,11 +98,11 @@ public class JamonPropertiesLoaderTest {
     @Test
     public void shouldReturnJmxBeans() {
         JamonPropertiesLoader loader = new JamonPropertiesLoader("jamonapi2.properties");
-        List<JamonPropertiesLoader.JamonJmxBean> mxBeans = loader.getMxBeans();
+        List<JamonPropertiesLoader.JamonJmxBeanProperty> mxBeans = loader.getMxBeans();
 
         assertThat(mxBeans).hasSize(3);
 
-        JamonPropertiesLoader.JamonJmxBean mxBean = mxBeans.get(0);
+        JamonPropertiesLoader.JamonJmxBeanProperty mxBean = mxBeans.get(0);
         assertThat(mxBean.getLabel()).isEqualTo("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages");
         assertThat(mxBean.getUnits()).isEqualTo("ms.");
         assertThat(mxBean.getName()).isEqualTo("JettyPageRequests");

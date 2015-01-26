@@ -20,7 +20,7 @@ public class JamonPropertiesLoader {
     private String fileName;
     private Properties jamonProps;
     private List<JamonListener> listenerList;
-    private List<JamonJmxBean> jamonMxBeanList;
+    private List<JamonJmxBeanProperty> jamonMxBeanList;
 
     public JamonPropertiesLoader() {
         this("jamonapi.properties");
@@ -65,7 +65,7 @@ public class JamonPropertiesLoader {
         return listenerList;
     }
 
-    public List<JamonJmxBean> getMxBeans() {
+    public List<JamonJmxBeanProperty> getMxBeans() {
         if (jamonProps==null) {
             initialize();
         }
@@ -137,13 +137,13 @@ public class JamonPropertiesLoader {
     // 1 is created in the properties file then none of these are created.  This allows a user to override
     // these defaults for example if they don't use 'delete' statements.
     private void loadDefaultJamonMxBeans() {
-        jamonMxBeanList.add(new JamonJmxBeanDefault("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages", "ms.", "Jamon.PageRequests.Jetty"));
-        jamonMxBeanList.add(new JamonJmxBeanDefault("com.jamonapi.http.JAMonTomcatValve.request.allPages", "ms.", "Jamon.PageRequests.Tomcat"));
-        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: All", "ms.", "Jamon.Sql.All"));
-        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: select", "ms.", "Jamon.Sql.Select"));
-        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: update", "ms.", "Jamon.Sql.Update"));
-        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: delete", "ms.", "Jamon.Sql.Delete"));
-        jamonMxBeanList.add(new JamonJmxBeanDefault("MonProxy-SQL-Type: insert", "ms.", "Jamon.Sql.Insert"));
+        jamonMxBeanList.add(new JamonJmxBeanPropertyDefault("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages", "ms.", "Jamon.PageRequests.Jetty"));
+        jamonMxBeanList.add(new JamonJmxBeanPropertyDefault("com.jamonapi.http.JAMonTomcatValve.request.allPages", "ms.", "Jamon.PageRequests.Tomcat"));
+        jamonMxBeanList.add(new JamonJmxBeanPropertyDefault("MonProxy-SQL-Type: All", "ms.", "Jamon.Sql.All"));
+        jamonMxBeanList.add(new JamonJmxBeanPropertyDefault("MonProxy-SQL-Type: select", "ms.", "Jamon.Sql.Select"));
+        jamonMxBeanList.add(new JamonJmxBeanPropertyDefault("MonProxy-SQL-Type: update", "ms.", "Jamon.Sql.Update"));
+        jamonMxBeanList.add(new JamonJmxBeanPropertyDefault("MonProxy-SQL-Type: delete", "ms.", "Jamon.Sql.Delete"));
+        jamonMxBeanList.add(new JamonJmxBeanPropertyDefault("MonProxy-SQL-Type: insert", "ms.", "Jamon.Sql.Insert"));
     }
 
     private void addListeners() {
@@ -159,13 +159,13 @@ public class JamonPropertiesLoader {
     }
 
     private void addJamonMxBeans() {
-        jamonMxBeanList = new ArrayList<JamonJmxBean>();
+        jamonMxBeanList = new ArrayList<JamonJmxBeanProperty>();
         int size = Integer.valueOf(jamonProps.getProperty("jamonJmxBean.size"));
         for (int i = 0; i <= size; i++) {
             String keyPrefix = getKeyPrefix("jamonJmxBean", i);
             String listener = jamonProps.getProperty(keyPrefix + "key");
             if (listener != null) {
-                jamonMxBeanList.add(new JamonJmxBean(keyPrefix));
+                jamonMxBeanList.add(new JamonJmxBeanProperty(keyPrefix));
             }
         }
     }
@@ -214,15 +214,15 @@ public class JamonPropertiesLoader {
     }
 
     // Simple value object that holds the values for a jamon jmx bean read in from the properties file
-    public class JamonJmxBean {
+    public class JamonJmxBeanProperty {
 
         // use JamonListener as a helper class implementation detail (using delegation) as it can read from the properties file.
         private JamonListener listener;
 
-        protected JamonJmxBean() {
+        protected JamonJmxBeanProperty() {
         }
 
-        protected JamonJmxBean(String keyPrefix) {
+        protected JamonJmxBeanProperty(String keyPrefix) {
             listener = new JamonListener(keyPrefix);
         }
 
@@ -249,12 +249,12 @@ public class JamonPropertiesLoader {
 
      // This class is used to load default jamon jmx configurable beans when none are defined in the properties file.
      // It is a simple value object.
-     class JamonJmxBeanDefault extends JamonJmxBean {
+     class JamonJmxBeanPropertyDefault extends JamonJmxBeanProperty {
          private final String label;
          private final String units;
          private final String name;
 
-         public JamonJmxBeanDefault(String label, String units, String name) {
+         public JamonJmxBeanPropertyDefault(String label, String units, String name) {
              this.label = label;
              this.units = units;
              this.name = name;
