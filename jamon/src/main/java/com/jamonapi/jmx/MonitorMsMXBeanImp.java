@@ -19,7 +19,8 @@ public class MonitorMsMXBeanImp extends MonitorMXBeanImp implements MonitorMsMXB
         super(label, units, name);
     }
 
-    private long getCount(int i) {
+    // get hits/count for each range such as 0_10ms. 10_20ms. etc.
+    private long getRangeCount(int i) {
         if (!MonitorFactory.exists(label, units)) {
           return 0;
         }
@@ -39,72 +40,72 @@ public class MonitorMsMXBeanImp extends MonitorMXBeanImp implements MonitorMsMXB
 
     @Override
     public long get_Count00_LessThan_0ms() {
-        return getCount(0);
+        return getRangeCount(0);
     }
 
     @Override
     public long get_Count01_0_10ms() {
-        return getCount(1);
+        return getRangeCount(1);
     }
 
     @Override
     public long get_Count02_10_20ms() {
-        return getCount(2);
+        return getRangeCount(2);
     }
 
     @Override
     public long get_Count03_20_40ms() {
-        return getCount(3);
+        return getRangeCount(3);
     }
 
     @Override
     public long get_Count04_40_80ms() {
-        return getCount(4);
+        return getRangeCount(4);
     }
 
     @Override
     public long get_Count05_80_160ms() {
-        return getCount(5);
+        return getRangeCount(5);
     }
 
     @Override
     public long get_Count06_160_320ms() {
-        return getCount(6);
+        return getRangeCount(6);
     }
 
     @Override
     public long get_Count07_320_640ms() {
-        return getCount(7);
+        return getRangeCount(7);
     }
 
     @Override
     public long get_Count08_640_1280ms() {
-        return getCount(8);
+        return getRangeCount(8);
     }
 
     @Override
     public long get_Count09_1280_2560ms() {
-        return getCount(9);
+        return getRangeCount(9);
     }
 
     @Override
     public long get_Count10_2560_5120ms() {
-        return getCount(10);
+        return getRangeCount(10);
     }
 
     @Override
     public long get_Count11_5120_10240ms() {
-        return getCount(11);
+        return getRangeCount(11);
     }
 
     @Override
     public long get_Count12_10240_20480ms() {
-        return getCount(12);
+        return getRangeCount(12);
     }
 
     @Override
     public long get_Count13_GreaterThan_20480ms() {
-        return getCount(13);
+        return getRangeCount(13);
     }
 
 }
