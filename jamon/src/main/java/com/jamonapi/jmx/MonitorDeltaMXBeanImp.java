@@ -2,8 +2,10 @@ package com.jamonapi.jmx;
 
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
+import com.jamonapi.NullMonitor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Calculate the delta since the last time the methods were called for a given jamon monitor key.
@@ -13,6 +15,7 @@ import java.util.Date;
  * then the deltas could get out of sync.
  */
 public class MonitorDeltaMXBeanImp extends MonitorMXBeanImp {
+    private static Monitor NULL_MONITOR = new NullMonitor();
 
     private MonitorDelta prevTotal = new MonitorDelta();
     private MonitorDelta prevAvg = new MonitorDelta();
@@ -29,6 +32,9 @@ public class MonitorDeltaMXBeanImp extends MonitorMXBeanImp {
 
     private MonitorDelta prevMon;
 
+    public MonitorDeltaMXBeanImp(List<JamonJmxBeanProperty> jmxProperties) {
+        super(jmxProperties);
+    }
     public MonitorDeltaMXBeanImp(String label, String units) {
         this(label, units, label);
     }
@@ -38,7 +44,12 @@ public class MonitorDeltaMXBeanImp extends MonitorMXBeanImp {
     }
 
     private Monitor getMon() {
-        return MonitorFactory.getMonitor(label, units);
+        Monitor mon = JmxUtils.getMonitor(jmxProperties);
+        if (mon==null) {
+            return NULL_MONITOR;
+        }
+
+        return mon;
     }
 
     // return the value to be displayed via jmx/jconsole
