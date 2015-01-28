@@ -24,7 +24,7 @@ public class JAMonListenerFactoryTest {
     }
 
     @Test
-    public void testFactoryPopulated() {
+    public void testFactoryPopulatedAndReset() {
         final int BUFFER_SIZE=301;
         List<String> listeners=listenerNamesToCollection(JAMonListenerFactory.getData());
         assertThat(listeners).hasSize(14);
@@ -42,6 +42,10 @@ public class JAMonListenerFactoryTest {
         jbl=(JAMonBufferListener)JAMonListenerFactory.get("FIFOBuffer");
         assertThat(jbl.getName()).isEqualTo("FIFOBuffer");
         assertThat(jbl.getBufferList().getBufferSize()).isEqualTo(50);
+
+        JAMonListenerFactory.reset();
+        listeners=listenerNamesToCollection(JAMonListenerFactory.getData());
+        assertThat(listeners).hasSize(14);
     }
 
 

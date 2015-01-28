@@ -50,10 +50,18 @@ public class JAMonListenerFactory {
     private static final boolean NATURAL_ORDER=true;
     private static final boolean REVERSE_ORDER=false;
     private static String[] HEADER={"ListenerName", "Listener"};
-    private static Map map=Misc.createCaseInsensitiveMap();
+    private static Map map = Misc.createCaseInsensitiveMap();
 
     static {
+        reset();
+    }
+
+    /** Reset all listeners in factory to default settings.  Note this is required to get rid of shared buffer data in
+     * memory.
+     */
+    public static void reset() {
         // put factory instances into the JAMonListenerFactory
+        map = Misc.createCaseInsensitiveMap();
         put(getFIFO());
         put(getNLargest());
         put(getNSmallest());
