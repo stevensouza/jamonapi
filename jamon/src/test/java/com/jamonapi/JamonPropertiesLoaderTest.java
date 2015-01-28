@@ -13,7 +13,7 @@ public class JamonPropertiesLoaderTest {
 
     @Test
     public void shouldUseDefaults() {
-        JamonPropertiesLoader loader = new JamonPropertiesLoader("I_DO_NOT_EXIT.properties");
+        JamonPropertiesLoader loader = new JamonPropertiesLoader("I_DO_NOT_EXIST.properties");
         Properties props = loader.getJamonProperties();
         assertThat(props.getProperty("distributedDataRefreshRateInMinutes")).isEqualTo("5");
         assertThat(props.getProperty("jamonDataPersister")).isEqualTo("com.jamonapi.distributed.HazelcastFilePersister");
@@ -37,7 +37,6 @@ public class JamonPropertiesLoaderTest {
         assertThat(props.getProperty("jamonDataPersister.directory")).isEqualTo("persistence/jamondata");
     }
 
-
     @Test
     public void configDirectory() {
         JamonPropertiesLoader loader = new JamonPropertiesLoader("jamonapi2.properties");
@@ -45,12 +44,20 @@ public class JamonPropertiesLoaderTest {
     }
 
     @Test
+    public void shouldReturnDefaultListeners() {
+        JamonPropertiesLoader loader = new JamonPropertiesLoader("I_DO_NOT_EXIST.properties");
+        List<JamonPropertiesLoader.JamonListenerProperty> listeners = loader.getListeners();
+
+        assertThat(listeners).hasSize(0);
+    }
+
+    @Test
     public void shouldReturnListeners() {
         JamonPropertiesLoader loader = new JamonPropertiesLoader("jamonapi2.properties");
-        List<JamonPropertiesLoader.JamonListener> listeners = loader.getListeners();
+        List<JamonPropertiesLoader.JamonListenerProperty> listeners = loader.getListeners();
 
-        assertThat(listeners).hasSize(3);
-        JamonPropertiesLoader.JamonListener listener = listeners.get(0);
+        assertThat(listeners).hasSize(4);
+        JamonPropertiesLoader.JamonListenerProperty listener = listeners.get(0);
         assertThat(listener.getLabel()).isEqualTo("com.jamonapi.Exceptions");
         assertThat(listener.getUnits()).isEqualTo("Exception");
         assertThat(listener.getListenerType()).isEqualTo("value");
@@ -68,6 +75,12 @@ public class JamonPropertiesLoaderTest {
         assertThat(listener.getUnits()).isEqualTo("ms.");
         assertThat(listener.getListenerType()).isEqualTo("value");
         assertThat(listener.getListenerName()).isEqualTo("FIFOBuffer");
+
+        listener = listeners.get(3);
+        assertThat(listener.getLabel()).isEqualTo("com.jamonapi.log4j.JAMonAppender.ERROR");
+        assertThat(listener.getUnits()).isEqualTo("log4j");
+        assertThat(listener.getListenerType()).isEqualTo("value");
+        assertThat(listener.getListenerName()).isEqualTo("FIFOBuffer");
     }
 
     @Test
@@ -76,31 +89,25 @@ public class JamonPropertiesLoaderTest {
         // so wasn't indempotent
         JamonPropertiesLoader loader = new JamonPropertiesLoader("jamonapi2.properties");
         loader.getListeners();
-        List<JamonPropertiesLoader.JamonListener> listeners = loader.getListeners();
+        List<JamonPropertiesLoader.JamonListenerProperty> listeners = loader.getListeners();
 
-        assertThat(listeners).hasSize(3);
+        assertThat(listeners).hasSize(4);
     }
 
     @Test
     public void shouldReturnJmxBeans() {
         JamonPropertiesLoader loader = new JamonPropertiesLoader("jamonapi2.properties");
-        List<JamonPropertiesLoader.JamonJmxBean> mxBeans = loader.getMxBeans();
+        List<String> mxBeans = loader.getMxBeans();
 
         assertThat(mxBeans).hasSize(3);
 
-        JamonPropertiesLoader.JamonJmxBean mxBean = mxBeans.get(0);
-        assertThat(mxBean.getLabel()).isEqualTo("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages");
-        assertThat(mxBean.getUnits()).isEqualTo("ms.");
-        assertThat(mxBean.getName()).isEqualTo("JettyPageRequests");
+        String mxBean = mxBeans.get(0);
+        assertThat(mxBean).isEqualTo("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages, ms., com.jamonapi.http.JAMonTomcatValve.request.allPages, ms., Jamon.HttpPageRequests");
 
         mxBean = mxBeans.get(1);
-        assertThat(mxBean.getLabel()).isEqualTo("MonProxy-SQL-Type: All");
-        assertThat(mxBean.getUnits()).isEqualTo("ms.");
-        assertThat(mxBean.getName()).isEqualTo("Sql");
+        assertThat(mxBean).isEqualTo("MonProxy-SQL-Type: All, ms., Sql");
 
         mxBean = mxBeans.get(2);
-        assertThat(mxBean.getLabel()).isEqualTo("MonProxy-SQL-Type: All");
-        assertThat(mxBean.getUnits()).isEqualTo("ms.");
-        assertThat(mxBean.getName()).isEqualTo("");
+        assertThat(mxBean).isEqualTo("MonProxy-SQL-Type: All, ms.");
     }
 }

@@ -3,6 +3,7 @@ package com.jamonapi.proxy;
 import com.jamonapi.FactoryEnabled;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
+import com.jamonapi.utils.Misc;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +38,8 @@ public class MonProxyTest {
         MonitorFactory.reset();
     }
 
+    // This will test perform standard sql commands without a proxy so no jamon tracking.
+    // Uses a regular/nonmonitored jdbc connecton.
     @Test
     public void testSqlNoProxy() throws Exception {
         int times = 2000;
@@ -50,7 +53,7 @@ public class MonProxyTest {
 
         assertThat(MonProxyFactory.getSQLDetail()).isNull();
         assertThat(MonProxyFactory.getExceptionDetail()).isNull();
-        assertThat(MonitorFactory.getRootMonitor().getBasicData()).isNull();
+        assertThat(MonitorFactory.getRootMonitor().getBasicData().length).isEqualTo(1);
     }
 
     @Test
@@ -69,11 +72,11 @@ public class MonProxyTest {
 
         assertThat(MonProxyFactory.getSQLDetail()).isNull();
         assertThat(MonProxyFactory.getExceptionDetail()).isNull();
-        assertThat(MonitorFactory.getRootMonitor().getBasicData()).isNull();
+        assertThat(MonitorFactory.getRootMonitor().getBasicData().length).isEqualTo(1);
     }
 
     @Test
-    public void testConnection() throws Exception {
+    public void testConnections() throws Exception {
         JAMonDriver.register();
         for (int i=0;i<5;i++) {
             Properties props=new Properties();
@@ -91,7 +94,7 @@ public class MonProxyTest {
             conn.close();
         }
 
-        assertThat(MonitorFactory.getNumRows()).isEqualTo(4);
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(5);
         assertThat(MonitorFactory.getReport()).contains("connect");
         assertThat(MonitorFactory.getReport()).contains("Connection.createStatement()");
         assertThat(MonitorFactory.getReport()).contains(".close()"); // statement, and connection close
@@ -116,28 +119,7 @@ public class MonProxyTest {
         assertThat(MonProxyFactory.getExceptionDetail().length).isEqualTo(1);
         assertSqlMonitoringEnabled(MonitorFactory.getReport());
         assertThat(MonitorFactory.getReport()).doesNotContain("ResultSet.next()");
-    }
-
-    @Test
-    public void testSqlProxy_ResultSetEnabled() throws Exception {
-        int times = 2000;
-        Params params = new Params();
-        params.isResultSetEnabled = true;
-        FactoryEnabled mf = new FactoryEnabled();
-
-        Class.forName("org.hsqldb.jdbcDriver");
-        Connection conn = DriverManager.getConnection("jdbc:hsqldb:mem:.", "sa", "");
-
-        // returns monitored connection
-        MonProxyFactory.enableAll(true);
-        conn = MonProxyFactory.monitor(conn);
-
-        mainTestMethod("MonProxyFactory ResultSet enabled", conn, times, params, mf);
-
-        assertThat(MonProxyFactory.getSQLDetail().length).isEqualTo(100);
-        assertThat(MonProxyFactory.getExceptionDetail().length).isEqualTo(1);
-        assertSqlMonitoringEnabled(MonitorFactory.getReport());
-        assertThat(MonitorFactory.getReport()).contains("ResultSet.next()");
+        assertThat(MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception").getHits()).isEqualTo(1);
     }
 
     @Test
@@ -158,7 +140,8 @@ public class MonProxyTest {
 
         assertThat(MonProxyFactory.getSQLDetail()).isNull();
         assertThat(MonProxyFactory.getExceptionDetail()).isNull();;
-        assertThat(MonitorFactory.getRootMonitor().getBasicData()).isNull();
+        assertThat(MonitorFactory.getRootMonitor().getBasicData().length).isEqualTo(1);
+        assertThat(MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception").getHits()).isEqualTo(0);
     }
 
     @Test
@@ -185,6 +168,7 @@ public class MonProxyTest {
 
         assertThat(MonProxyFactory.getSQLDetail().length).isEqualTo(100);
         assertThat(MonProxyFactory.getExceptionDetail().length).isEqualTo(1);
+        assertThat(MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception").getHits()).isEqualTo(1);
     }
 
 
@@ -213,6 +197,7 @@ public class MonProxyTest {
 
         assertThat(MonProxyFactory.getSQLDetail()).isNull();
         assertThat(MonProxyFactory.getExceptionDetail().length).isEqualTo(1);
+        assertThat(MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception").getHits()).isEqualTo(1);
     }
 
 
@@ -242,6 +227,7 @@ public class MonProxyTest {
         assertThat(MonitorFactory.getReport()).doesNotContain("ResultSet.next()");
         assertThat(MonitorFactory.getReport()).contains("MonProxy-SQL-Match: LOCAL_TYPE_NAME");
         assertThat(MonitorFactory.getReport()).contains("MonProxy-SQL-Match: SYSTEM_TYPEINFO");
+        assertThat(MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception").getHits()).isEqualTo(1);
     }
 
     @Test
@@ -275,6 +261,43 @@ public class MonProxyTest {
         assertThat(map).isEqualTo(mapExpected);
         assertThat(MonitorFactory.getReport()).contains("Map.put(");
         assertThat(MonitorFactory.getReport()).contains("Map.get(");
+    }
+
+    @Test
+    public void testExceptionsDefaults() {
+        assertThat(MonProxyFactory.getExceptionDetailHeader()).isNotNull();
+        assertThat(MonProxyFactory.getExceptionDetail()).isNull();
+        assertThat(MonProxyFactory.getExceptionBufferSize()).isEqualTo(50);
+    }
+
+    @Test
+    public void testSetExceptionBufferSize() {
+        MonProxyFactory.setExceptionBufferSize(250);
+        assertThat(MonProxyFactory.getExceptionBufferSize()).isEqualTo(250);
+    }
+
+    @Test
+    public void testExceptionListener() {
+        throwException();
+        assertThat(MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception").getHits()).isEqualTo(1);
+        assertThat(MonProxyFactory.getExceptionDetail().length).isEqualTo(1);
+        assertThat(Misc.getAsString(MonProxyFactory.getExceptionDetail()[0])).contains("My Exception!");
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(5);
+        assertThat(MonitorFactory.getComposite("Exception").getNumRows()).isEqualTo(4);
+
+        MonProxyFactory.resetExceptionDetail();
+        assertThat(MonProxyFactory.getExceptionDetail()).isNull();
+        throwException();
+        assertThat(Misc.getAsString(MonProxyFactory.getExceptionDetail()[0])).contains("My Exception!");
+    }
+
+    private void throwException() {
+        Base2 myClass = (Base2) MonProxyFactory.monitor(new MyClass0());
+        try {
+            myClass.throwException();
+        } catch (RuntimeException e){
+
+        }
     }
 
     @Test
@@ -383,6 +406,7 @@ public class MonProxyTest {
     }
 
     private interface Base0 extends Tag0 {
+        public void throwException();
     }
 
     private interface Base1 extends Base0 {
@@ -392,6 +416,9 @@ public class MonProxyTest {
     }
 
     private static class MyClass0 implements Base2 {
+        public void throwException() {
+            throw new RuntimeException("My Exception!");
+        }
     }
 
     private static class MyClass1 extends MyClass0 implements Tag1 {
@@ -411,7 +438,6 @@ public class MonProxyTest {
 
     private static void mainTestMethod(String name, Connection conn, int times, Params params, FactoryEnabled mf) throws Exception {
         testCounter++;
-        //System.out.println("\n\n\n" + testCounter + ") " + name + "** "+ params);
 
         Monitor mon = mf.start(testCounter + ") " + name + " ** "+ params.toString());
         Monitor monTotal = mf.start("totalTime");
@@ -419,8 +445,6 @@ public class MonProxyTest {
         MonProxyFactory.enableInterface(params.isInterfaceEnabled);
         MonProxyFactory.enableSQLDetail(params.isSQLDetailEnabled);
         MonProxyFactory.enableSQLSummary(params.isSQLSummaryEnabled);
-        MonProxyFactory.enableExceptionSummary(params.isExceptionSummaryEnabled);
-        MonProxyFactory.enableExceptionDetail(params.isExceptionDetailEnabled);
         MonProxyFactory.enable(params.isEnabled);
 
         PreparedStatement ps = getPreparedStatement(conn);
@@ -435,8 +459,6 @@ public class MonProxyTest {
 
         monTotal.stop();
         String message = name + " execution time: " + mon.stop().getLastValue();
-        //System.out.println(message);
-        //System.out.println(MonitorFactory.getReport());
     }
 
 

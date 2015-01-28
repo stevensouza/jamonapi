@@ -87,7 +87,7 @@ public class LocalJamonFilePersisterTest {
     @Test
     public void testRemoveLocal() throws Exception {
         persister.remove("local");
-        assertThat(MonitorFactory.getNumRows()).isEqualTo(0);
+        assertThat(MonitorFactory.getNumRows()).isEqualTo(1);
     }
 
     @Test

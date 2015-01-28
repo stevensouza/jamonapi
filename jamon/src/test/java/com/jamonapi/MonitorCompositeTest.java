@@ -20,16 +20,18 @@ public class MonitorCompositeTest {
     private static final String EXCEPTION_METHOD = "mymethodexception";
     private static final String EXCEPTION_NAME = "My Exception";
 
-    private Object[][] possibleListeners = JAMonListenerFactory.getData();
-
     @Before
     public void setUp() throws Exception {
         MonitorFactory.reset();
+        JAMonListenerFactory.reset();
+        Object[][] possibleListeners = JAMonListenerFactory.getData();
         // Add every possible listener type to ensure that they are all serialized/deserialized
-        Monitor mon = MonitorFactory.getMonitor("mymethodexception", "ms.");
+        Monitor mon = MonitorFactory.getMonitor(EXCEPTION_METHOD, "ms.");
         for (Object[] listenerType : possibleListeners) {
-            mon.addListener("value", JAMonListenerFactory.get(listenerType[0].toString()));
+            JAMonListener listener = JAMonListenerFactory.get(listenerType[0].toString());
+            mon.addListener("value", listener);
         }
+
         // Add data that we can use to test serialization/deserialization.
         // This includes different types of monitors behind the scenes like TimeMon, and TimeNano.
         // A stacktraces is also put in the details of the key so it can be checked to see if it was properly
@@ -50,8 +52,8 @@ public class MonitorCompositeTest {
     public void tearDown() throws Exception {
         // Reset JAMon after each test method.  The Monitors are static and so would otherwise stick around
         MonitorFactory.reset();
+        JAMonListenerFactory.reset();
     }
-
 
     @Test
     public void testSerialization() throws Throwable {
@@ -68,6 +70,7 @@ public class MonitorCompositeTest {
         // do a deep copy of the object.
         MonitorComposite original = MonitorFactory.getRootMonitor();
         MonitorComposite deserialized = original.copy();
+
         deepComparisonAssertions(original, deserialized);
     }
 
@@ -134,7 +137,7 @@ public class MonitorCompositeTest {
     private void methodWithException(int i) {
         Exception exception = new RuntimeException(EXCEPTION_NAME +i);
         MonKey key = new MonKeyImp(EXCEPTION_METHOD, Misc.getExceptionTrace(exception), "ms.");
-        MonitorFactory.start(key).stop();
+        MonitorFactory.add(key, i).start().stop();
     }
 
     private void deepComparisonAssertions(MonitorComposite original, MonitorComposite copy) {
@@ -147,7 +150,10 @@ public class MonitorCompositeTest {
         // One of the monitors was given all current listener types.  Each of them should have 50 rows of data
         Monitor mon = getMonitorWithListeners(copy);
         CompositeListener compositeListener = (CompositeListener) mon.getListenerType("value").getListener();
-        assertThat(compositeListener.getRowCount()).isEqualTo(possibleListeners.length);
+        // due to shared buffers being created the number of listeners and the composite uses them (_Shared...)
+        // but does not contain the actual factory instance (Shared...) the factory will have more elements (1
+        // for each shard listener) than the composite.
+        assertThat(compositeListener.getRowCount()).isLessThanOrEqualTo(JAMonListenerFactory.getData().length);
 
         for (Object[] listenerType : compositeListener.getData()) {
             JAMonBufferListener bufferListener = (JAMonBufferListener) mon.getListenerType("value").getListener(listenerType[0].toString());

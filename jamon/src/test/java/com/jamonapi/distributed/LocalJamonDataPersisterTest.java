@@ -31,7 +31,7 @@ public class LocalJamonDataPersisterTest {
     public void testPut() throws Exception {
         localJamonData.put();
         assertThat(localJamonData.getInstances()).hasSize(1);
-        assertThat(localJamonData.get(LocalJamonDataPersister.INSTANCE).getNumRows()).isEqualTo(1);
+        assertThat(localJamonData.get(LocalJamonDataPersister.INSTANCE).getNumRows()).isEqualTo(2);
     }
 
     @Test
@@ -51,6 +51,6 @@ public class LocalJamonDataPersisterTest {
         localJamonData.put();
         localJamonData.remove(LocalJamonDataPersister.INSTANCE);
         MonitorComposite monitorComposite = localJamonData.get(LocalJamonDataPersister.INSTANCE);
-        assertThat(monitorComposite.getMonitors()).isNull();
+        assertThat(monitorComposite.getNumRows()).isEqualTo(1);
     }
 }

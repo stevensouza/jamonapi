@@ -41,8 +41,8 @@ public class DistributedJamonHazelcastTest {
                 }
             }
 
-          // rows should be 100 for the loop and 1 for the call to get = 101
-          assertThat(jamonData.get(jamonData.getInstance()).getNumRows()).isEqualTo(101);
+          // rows should be 100 for the loop and 1 for the call to jamonData.put(), com.jamonapi.Exceptions = 102
+          assertThat(jamonData.get(jamonData.getInstance()).getNumRows()).isEqualTo(102);
           jamonData.remove(jamonData.getInstance());
           assertThat(jamonData.get(jamonData.getInstance())).isNull();
           jamonData.shutDownHazelCast();

@@ -183,7 +183,7 @@ public final class FactoryDisabled implements MonitorFactoryInterface {
     }
 
     @Override
-    public void addListeners(List<JamonPropertiesLoader.JamonListener> listeners) {
+    public void addListeners(List<JamonPropertiesLoader.JamonListenerProperty> listeners) {
 
     }
 

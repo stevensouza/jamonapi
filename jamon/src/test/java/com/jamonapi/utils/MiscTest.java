@@ -39,4 +39,14 @@ public class MiscTest {
         assertThat(m.get("STEVE")).isEqualTo("Souza");
     }
 
+    @Test
+    public void testArrayTrim() {
+        String[] array={" a ", "b", " c", "d "};
+        array = Misc.trim(array);
+        assertThat(array[0]).isEqualTo("a");
+        assertThat(array[1]).isEqualTo("b");
+        assertThat(array[2]).isEqualTo("c");
+        assertThat(array[3]).isEqualTo("d");
+    }
+
 }

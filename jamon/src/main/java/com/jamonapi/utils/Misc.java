@@ -130,6 +130,19 @@ public class Misc {
 
     }
 
+    /**
+     * @param array  array to do a string trim for all elements
+     * @return trimmed array (done in place)
+     */
+    public static String[] trim(String[] array) {
+        int len = (array==null) ? 0 : array.length;
+        for (int i=0;i<len;i++) {
+            array[i] = array[i].trim();
+        }
+
+        return array;
+    }
+
 
     public static Object[][] allocateArray(int rows, int cols) {
         if (rows<=0 || cols<=0)

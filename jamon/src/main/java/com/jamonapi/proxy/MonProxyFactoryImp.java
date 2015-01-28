@@ -1,6 +1,11 @@
 package com.jamonapi.proxy;
 
 
+import com.jamonapi.JAMonBufferListener;
+import com.jamonapi.JAMonListener;
+import com.jamonapi.Monitor;
+import com.jamonapi.MonitorFactory;
+
 import java.lang.reflect.Proxy;
 import java.sql.*;
 import java.util.*;
@@ -68,6 +73,8 @@ import java.util.*;
 
 
 public class MonProxyFactoryImp {
+
+    private static final String EXCEPTION = "Exception";
 
     private final Class[] CLASS_ARRAY=new Class[0];
     private Params params=new Params();
@@ -289,7 +296,12 @@ public class MonProxyFactoryImp {
      * 
      */
     public int getExceptionBufferSize() {
-        return params.exceptionBuffer.getBufferSize();
+        JAMonBufferListener jaMonBufferListener = getExceptionBufferListener();
+        if (jaMonBufferListener==null) {
+            return 0;
+        }
+
+        return jaMonBufferListener.getBufferList().getBufferSize();
     }
 
 
@@ -297,12 +309,22 @@ public class MonProxyFactoryImp {
      * be removed.  A value of 0 will disable collecting of Exceptions in the buffer.
      */
     public void setExceptionBufferSize(int exceptionBufferSize) {
-        params.exceptionBuffer.setBufferSize(exceptionBufferSize);
+        JAMonBufferListener jaMonBufferListener = getExceptionBufferListener();
+        if (jaMonBufferListener==null) {
+            return;
+        }
+
+        jaMonBufferListener.getBufferList().setBufferSize(exceptionBufferSize);
     }
 
     /** Remove all Exceptions from the buffer. */
     public void resetExceptionDetail() {
-        params.exceptionBuffer.reset();
+        JAMonBufferListener jaMonBufferListener = getExceptionBufferListener();
+        if (jaMonBufferListener==null) {
+            return;
+        }
+
+        jaMonBufferListener.getBufferList().reset();
     }
 
 
@@ -320,36 +342,30 @@ public class MonProxyFactoryImp {
     }
 
 
-    /** Indicates whether jamon summary stats are kept for exceptions */
+    /** This method is now a noop and will be removed from a future release */
+    @Deprecated
     public boolean isExceptionSummaryEnabled() {
-        return params.isExceptionSummaryEnabled;
+        return true;
     }
 
 
-    /** Enables/disables jamon summary stats for exceptions */
+    /** This method is now a noop and will be removed from a future release */
+    @Deprecated
     public void enableExceptionSummary(boolean enable) {
-        params.isExceptionSummaryEnabled=enable;
-        if (enable)
-            enable(true);
+
     }
 
 
-    /** Indicates whether exceptions are tracked in a rolling buffer */
+    /** This method is now a noop and will be removed from a future release */
+    @Deprecated
     public boolean isExceptionDetailEnabled() {
-        return params.isExceptionDetailEnabled;
+        return true;
     }
 
 
-    /** Enables/Disables whether exceptions are tracked in a rolling buffer */
+    /** This method is now a noop and will be removed from a future release */
+    @Deprecated
     public void enableExceptionDetail(boolean enable) {
-        params.isExceptionDetailEnabled=enable;
-        if (enable)
-            params.exceptionBuffer.enable();
-        else
-            params.exceptionBuffer.disable();
-
-        if (enable)
-            enable(true);
 
     }
 
@@ -414,16 +430,17 @@ public class MonProxyFactoryImp {
     public void enableAll(boolean enable) {
         enable(enable);
         enableInterface(enable);
-        enableExceptionSummary(enable);
-        enableExceptionDetail(enable);
         enableSQLSummary(enable);
         enableSQLDetail(enable);
         enableResultSet(enable);
     }
 
     public boolean isAllEnabled() {
-        return (params.isEnabled && params.isExceptionDetailEnabled && params.isExceptionSummaryEnabled
-                && params.isSQLSummaryEnabled && params.isSQLDetailEnabled && params.isInterfaceEnabled && params.isResultSetEnabled);
+                return (params.isEnabled
+                        && params.isSQLSummaryEnabled
+                        && params.isSQLDetailEnabled
+                        && params.isInterfaceEnabled
+                        && params.isResultSetEnabled);
     }
 
     /** Enables all monitors except ResultSet monitoring.  This overrides all other monitor booleans.  It never enables ResultSet monitoring
@@ -441,12 +458,34 @@ public class MonProxyFactoryImp {
 
     /** Get the header that can be used to display the Exceptions buffer */
     public String[] getExceptionDetailHeader() {
-        return params.exceptionBuffer.getHeader();
+        JAMonBufferListener jaMonBufferListener = getExceptionBufferListener();
+        if (jaMonBufferListener==null) {
+            return null;
+        }
+        return jaMonBufferListener.getDetailData().getHeader();
+    }
+
+    private JAMonBufferListener getExceptionBufferListener() {
+        if (MonitorFactory.exists(MonitorFactory.EXCEPTIONS_LABEL, EXCEPTION)) {
+            Monitor mon = MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, EXCEPTION);
+            if (mon.hasListener("value", "FIFOBuffer")) {
+                JAMonListener bufferListener = mon.getListenerType("value").getListener("FIFOBuffer");
+                if (bufferListener instanceof JAMonBufferListener) {
+                    return (JAMonBufferListener) bufferListener;
+                }
+            }
+        }
+
+        return null;
     }
 
     /** Get the exception buffer as an array, so it can be displayed */
     public Object[][] getExceptionDetail() {
-        return params.exceptionBuffer.getData();
+        JAMonBufferListener jaMonBufferListener = getExceptionBufferListener();
+        if (jaMonBufferListener==null) {
+            return null;
+        }
+        return jaMonBufferListener.getDetailData().getData();
     }
 
 

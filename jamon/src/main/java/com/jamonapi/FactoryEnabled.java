@@ -62,7 +62,17 @@ public class FactoryEnabled implements MonitorFactoryInterface {
         if (isTotalKeySizeTrackingEnabled()) {
             enableTotalKeySizeTracking();
         }
+
+        addExceptionFifoBufferListener();
     }
+
+    private void addExceptionFifoBufferListener() {
+        Monitor mon =  getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception");
+        if (!mon.hasListener("value", "FIFOBuffer")) {
+            mon.addListener("value", JAMonListenerFactory.get("FIFOBuffer"));
+        }
+    }
+
 
     public Monitor add(MonKey key, double value) {
         return getMonitor(key).add(value);
@@ -137,6 +147,7 @@ public class FactoryEnabled implements MonitorFactoryInterface {
       String stackTtrace = new StringBuffer("stackTrace=")
          .append(Misc.getExceptionTrace(throwable))
          .toString();
+
       if (mon!=null) {
           MonKey key = mon.getMonKey();
           key.setDetails(stackTtrace);
@@ -506,10 +517,10 @@ public class FactoryEnabled implements MonitorFactoryInterface {
     }
 
     @Override
-    public void addListeners(List<JamonPropertiesLoader.JamonListener> listeners) {
-        Iterator<JamonPropertiesLoader.JamonListener> iter = listeners.iterator();
+    public void addListeners(List<JamonPropertiesLoader.JamonListenerProperty> listeners) {
+        Iterator<JamonPropertiesLoader.JamonListenerProperty> iter = listeners.iterator();
         while (iter.hasNext()) {
-            JamonPropertiesLoader.JamonListener listenerInfo = iter.next();
+            JamonPropertiesLoader.JamonListenerProperty listenerInfo = iter.next();
             Monitor mon =  MonitorFactory.getMonitor(listenerInfo.getLabel(), listenerInfo.getUnits());
             mon.addListener(listenerInfo.getListenerType(), JAMonListenerFactory.get(listenerInfo.getListenerName()));
         }

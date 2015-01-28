@@ -2,6 +2,7 @@ package com.jamonapi.jmx;
 
 import com.jamonapi.JAMonBufferListener;
 import com.jamonapi.JAMonListener;
+import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 
 import javax.management.ObjectName;
@@ -39,7 +40,7 @@ public class ExceptionMXBeanImp implements ExceptionMXBean {
 
     @Override
     public Date getWhen() {
-        return JmxUtils.getDate(LABEL, UNITS, "lastaccess");
+        return JmxUtils.getDate(LABEL, UNITS, Monitor.LASTACCESS);
     }
 
     private static String getMostRecentStacktrace(JAMonBufferListener listener) {

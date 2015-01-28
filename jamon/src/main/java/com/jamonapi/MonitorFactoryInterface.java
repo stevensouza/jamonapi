@@ -16,7 +16,7 @@ import java.util.Map;
 
 public interface MonitorFactoryInterface extends Serializable {
 
-    public static final String VERSION="2.80";
+    public static final String VERSION="2.81";
 
     /** Return a monitor with the given label and units.  Note label has an effect on what range is used.  If no range is
      * associated with units then it will use the null range (i.e. no range)
@@ -201,7 +201,7 @@ public interface MonitorFactoryInterface extends Serializable {
      *
      * @since 2.79
      */
-    public void addListeners(List<JamonPropertiesLoader.JamonListener> listeners);
+    public void addListeners(List<JamonPropertiesLoader.JamonListenerProperty> listeners);
 
     /**
      * @since  2.79

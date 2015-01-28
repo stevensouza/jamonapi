@@ -11,7 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.SQLException;
-import java.util.Date;
 
 /**
  * By using this proxy class ANY java interface can be monitored for performance and exceptions via JAMon.
@@ -110,78 +109,48 @@ public class MonProxy implements InvocationHandler {
      */
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Monitor mon = null;
-        boolean isExceptionSummaryEnabled = (params.isExceptionSummaryEnabled && params.isEnabled);// track jamon stats for Exceptions?
-        boolean isExceptionDetailEnabled = (params.isExceptionDetailEnabled && params.isEnabled);// save detailed stack trace in the exception buffer?
-        // Because this monitor string is created every time I use a StringBuffer as it may be more effecient.
+        // Because this monitor string is created every time I use a StringBuffer as it may be more efficient.
         // I didn't do this in the exception part of the code as they shouldn't be called as often.
         if (params.isInterfaceEnabled && params.isEnabled) {
             mon = MonitorFactory.start(labelerInt.getSummaryLabel(method));
         }
 
         try {
-            // Special logic must be performed for 'equals'.  If not nonproxy.equals(proxy)
-            // will not return true
+            // Special logic must be performed for 'equals'.  If not nonproxy.equals(proxy) will not return true
             if (method.equals(EQUALS_METHOD))
                 return Boolean.valueOf(equals(args[0]));
             else
                 return method.invoke(monitoredObj, args);// executes underlying interfaces method;
         } catch (InvocationTargetException e) {
-
-            if (isExceptionSummaryEnabled || isExceptionDetailEnabled) {
+            if (params.isEnabled) {
                 String sqlMessage = "";
                 String detailStackTrace=null;
                 Throwable rootCause = e.getCause();
 
                 // Add special info if it is a SQLException
-                if (rootCause instanceof SQLException
-                        && isExceptionSummaryEnabled) {
+                if (rootCause instanceof SQLException) {
                     SQLException sqlException = (SQLException) rootCause;
-                    sqlMessage = ",ErrorCode=" + sqlException.getErrorCode()
-                    + ",SQLState=" + sqlException.getSQLState();
+                    sqlMessage = ",ErrorCode=" + sqlException.getErrorCode()+ ",SQLState=" + sqlException.getSQLState();
                 }
 
-                if (isExceptionSummaryEnabled) {
-                    // Add jamon entries for Exceptions
-                    detailStackTrace=Misc.getExceptionTrace(rootCause);
-
-                    MonitorFactory.add(new MonKeyImp(
-                            MonitorFactory.EXCEPTIONS_LABEL,
-                            detailStackTrace,
-                    "Exception"), 1); // counts total exceptions from jamon
-                    MonitorFactory.add(new MonKeyImp(
-                            "MonProxy-Exception: InvocationTargetException",
-                            detailStackTrace,
-                    "Exception"), 1); //counts total exceptions for MonProxy
-                    MonitorFactory.add(new MonKeyImp(
-                            "MonProxy-Exception: Root cause exception="
-                            + rootCause.getClass().getName()
-                            + sqlMessage,
-                            detailStackTrace,
-                    "Exception"), 1); // Message for the exception
-                    MonitorFactory.add(new MonKeyImp(
-                            labelerInt.getExceptionLabel(method),
-                            detailStackTrace,
-                    "Exception"),
-                    1); // Exception and method that threw it.
-                }
-
-                // Add stack trace to buffer if it is enabled.
-                if (isExceptionDetailEnabled) {
-                    if (detailStackTrace==null)
-                        detailStackTrace=Misc.getExceptionTrace(rootCause);
-
-                    params.exceptionBuffer.addRow(new Object[] {
-                            new Long(++params.exceptionID), new Date(),
-                            detailStackTrace, method.toString(), });
-                }
+                // Add jamon entries for Exceptions
+                trackException(rootCause, method, sqlMessage);
             } // end if (enabled)
 
             throw e.getCause();
-
         } finally {
             if (mon != null)
                 mon.stop();
         }
+    }
+
+    private void trackException(Throwable rootCause, Method method, String sqlMessage) {
+        String detailStackTrace = Misc.getExceptionTrace(rootCause);
+        MonitorFactory.add(new MonKeyImp(MonitorFactory.EXCEPTIONS_LABEL, detailStackTrace, "Exception"), 1); // counts total exceptions from jamon
+        MonitorFactory.add(new MonKeyImp("MonProxy-Exception: InvocationTargetException", detailStackTrace, "Exception"), 1); //counts total exceptions for MonProxy
+        MonitorFactory.add(new MonKeyImp("MonProxy-Exception: Root cause exception="+rootCause.getClass().getName()+sqlMessage,
+                detailStackTrace, "Exception"), 1); // Message for the exception
+        MonitorFactory.add(new MonKeyImp(labelerInt.getExceptionLabel(method), detailStackTrace,"Exception"), 1); // Exception and method that threw it.
     }
 
 
