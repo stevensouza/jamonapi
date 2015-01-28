@@ -1,5 +1,6 @@
 package com.jamonapi.jmx;
 
+import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
 import org.junit.After;
 import org.junit.Before;
@@ -9,23 +10,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 
-public class MonitorMsMXBeanImpTest {
+public class MonitorDeltaMsMXBeanImpTest {
+
     private static final String LABEL="timer";
     private static final String UNITS="ms.";
-    private  MonitorMsMXBeanImp bean;
-    private  MonitorMsMXBeanImp beanFromProps;
+    private  MonitorDeltaMsMXBeanImp bean;
+    private  MonitorDeltaMsMXBeanImp beanFromProps;
 
 
     @Before
     public void setUp() throws Exception {
         MonitorFactory.reset();
-        bean = (MonitorMsMXBeanImp) MonitorMXBeanFactory.create(LABEL, UNITS, LABEL);
+        bean = new MonitorDeltaMsMXBeanImp(LABEL, UNITS, LABEL);
 
         List<JamonJmxBeanProperty> jmxProperties = new ArrayList<JamonJmxBeanProperty>();
         jmxProperties.add(new JamonJmxBeanPropertyDefault("NO_EXIST", UNITS, "myname1"));
         jmxProperties.add(new JamonJmxBeanPropertyDefault(LABEL, UNITS, "myname2"));
-        beanFromProps = new MonitorMsMXBeanImp(jmxProperties);
+        beanFromProps = new MonitorDeltaMsMXBeanImp(jmxProperties);
     }
 
     @After
@@ -35,42 +38,21 @@ public class MonitorMsMXBeanImpTest {
 
     @Test
     public void testNoExist() throws Exception {
-        MonitorMsMXBeanImp bean = new MonitorMsMXBeanImp("noexist", "units");
-
-        assertThat(bean.getAvg()).isEqualTo(0);
-        assertThat(bean.get_Count01_0_10ms()).isEqualTo(0);
-    }
-
-    @Test
-    public void testNoExistFromProps() throws Exception {
-        List<JamonJmxBeanProperty> jmxProperties = new ArrayList<JamonJmxBeanProperty>();
-        jmxProperties.add(new JamonJmxBeanPropertyDefault("NO_EXIST", UNITS, "myname1"));
-        jmxProperties.add(new JamonJmxBeanPropertyDefault("noexist", "units", "myname2"));
-        MonitorMsMXBeanImp noExistBean = new MonitorMsMXBeanImp(jmxProperties);
-
-        assertThat(noExistBean.getAvg()).isEqualTo(0);
+        MonitorDeltaMsMXBeanImp noExistBean = new MonitorDeltaMsMXBeanImp("NO_EXIST", UNITS, LABEL);
         assertThat(noExistBean.get_Count01_0_10ms()).isEqualTo(0);
-    }
-
-    @Test
-    public void testNotTimeMonitor() throws Exception {
-        MonitorFactory.add("nottimemonitor", "units", 100);
-        MonitorMsMXBeanImp bean = new MonitorMsMXBeanImp("nottimemonitor", "units");
-
-        assertThat(bean.get_Count00_LessThan_0ms()).isEqualTo(0);
-        assertThat(bean.getAvg()).isEqualTo(100);
+        // repeat call
+        assertThat(noExistBean.get_Count01_0_10ms()).isEqualTo(0);
     }
 
     @Test
     public void testGet_Count00_LessThan_0ms() throws Exception {
         assertThat(bean.get_Count00_LessThan_0ms()).isEqualTo(0);
+        assertThat(beanFromProps.get_Count00_LessThan_0ms()).isEqualTo(0);
+
         MonitorFactory.getTimeMonitor(LABEL).add(-100);
 
         assertThat(bean.get_Count00_LessThan_0ms()).isEqualTo(1);
-        assertThat(bean.getAvg()).isEqualTo(-100);
-
         assertThat(beanFromProps.get_Count00_LessThan_0ms()).isEqualTo(1);
-        assertThat(beanFromProps.getAvg()).isEqualTo(-100);
     }
 
     @Test
@@ -81,8 +63,20 @@ public class MonitorMsMXBeanImpTest {
         MonitorFactory.getTimeMonitor(LABEL).add(5);
         assertThat(bean.get_Count01_0_10ms()).isEqualTo(1);
         assertThat(beanFromProps.get_Count01_0_10ms()).isEqualTo(1);
-
     }
+
+    @Test
+    public void testGetRangeAfterReset() throws Exception {
+        MonitorFactory.getTimeMonitor(LABEL).add(5);
+        assertThat(bean.get_Count01_0_10ms()).isEqualTo(1);
+        assertThat(beanFromProps.get_Count01_0_10ms()).isEqualTo(1);
+        MonitorFactory.getTimeMonitor(LABEL).add(5);
+        MonitorFactory.getTimeMonitor(LABEL).add(5);
+        MonitorFactory.getTimeMonitor(LABEL).add(5);
+        assertThat(bean.get_Count01_0_10ms()).isEqualTo(3);
+        assertThat(beanFromProps.get_Count01_0_10ms()).isEqualTo(3);
+    }
+
 
     @Test
     public void testGet_Count02_10_20ms() throws Exception {
@@ -179,7 +173,7 @@ public class MonitorMsMXBeanImpTest {
         assertThat(beanFromProps.get_Count11_5120_10240ms()).isEqualTo(0);
         assertThat(bean.get_Count11_5120_10240ms()).isEqualTo(0);
 
-        MonitorFactory.getTimeMonitor(LABEL).add(6000);
+        Monitor m=MonitorFactory.getTimeMonitor(LABEL).add(6000);
         assertThat(bean.get_Count11_5120_10240ms()).isEqualTo(1);
         assertThat(beanFromProps.get_Count11_5120_10240ms()).isEqualTo(1);
     }

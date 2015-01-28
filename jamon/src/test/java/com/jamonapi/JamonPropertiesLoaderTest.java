@@ -37,7 +37,6 @@ public class JamonPropertiesLoaderTest {
         assertThat(props.getProperty("jamonDataPersister.directory")).isEqualTo("persistence/jamondata");
     }
 
-
     @Test
     public void configDirectory() {
         JamonPropertiesLoader loader = new JamonPropertiesLoader("jamonapi2.properties");
@@ -98,23 +97,17 @@ public class JamonPropertiesLoaderTest {
     @Test
     public void shouldReturnJmxBeans() {
         JamonPropertiesLoader loader = new JamonPropertiesLoader("jamonapi2.properties");
-        List<JamonPropertiesLoader.JamonJmxBeanProperty> mxBeans = loader.getMxBeans();
+        List<String> mxBeans = loader.getMxBeans();
 
         assertThat(mxBeans).hasSize(3);
 
-        JamonPropertiesLoader.JamonJmxBeanProperty mxBean = mxBeans.get(0);
-        assertThat(mxBean.getLabel()).isEqualTo("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages");
-        assertThat(mxBean.getUnits()).isEqualTo("ms.");
-        assertThat(mxBean.getName()).isEqualTo("JettyPageRequests");
+        String mxBean = mxBeans.get(0);
+        assertThat(mxBean).isEqualTo("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages, ms., com.jamonapi.http.JAMonTomcatValve.request.allPages, ms., Jamon.HttpPageRequests");
 
         mxBean = mxBeans.get(1);
-        assertThat(mxBean.getLabel()).isEqualTo("MonProxy-SQL-Type: All");
-        assertThat(mxBean.getUnits()).isEqualTo("ms.");
-        assertThat(mxBean.getName()).isEqualTo("Sql");
+        assertThat(mxBean).isEqualTo("MonProxy-SQL-Type: All, ms., Sql");
 
         mxBean = mxBeans.get(2);
-        assertThat(mxBean.getLabel()).isEqualTo("MonProxy-SQL-Type: All");
-        assertThat(mxBean.getUnits()).isEqualTo("ms.");
-        assertThat(mxBean.getName()).isEqualTo("");
+        assertThat(mxBean).isEqualTo("MonProxy-SQL-Type: All, ms.");
     }
 }

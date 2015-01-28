@@ -16,6 +16,45 @@ import java.util.*;
  * jamon jmx classes.
  */
  public class JmxUtils {
+    private static final Double DOUBLE_ZERO=0.0;
+
+    /**
+     * Return the first monitor that exists in the passed in list.
+     *
+     * @param jmxBeanProperties
+     * @return The found monitor based on label, and units or null if none is found
+     */
+    static Monitor getMonitor(List<JamonJmxBeanProperty> jmxBeanProperties) {
+        for (JamonJmxBeanProperty jmxBeanProperty: jmxBeanProperties) {
+            if (MonitorFactory.exists(jmxBeanProperty.getLabel(), jmxBeanProperty.getUnits())) {
+                return MonitorFactory.getMonitor(jmxBeanProperty.getLabel(), jmxBeanProperty.getUnits());
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Return the value  of the first passed in monitor that exists otherwise return 0
+     *
+     * @param jmxBeanProperties List of jmx bean properties to check for the passed in value.
+     * @param value string representing the metric to return i.e. avg, hits etc.
+     * @param defaultValue value to return if the passed in parameter is not found.
+
+     * @return the metric associated with the first monitor found.
+     */
+    static Object getValue(List<JamonJmxBeanProperty> jmxBeanProperties, String value, Object defaultValue) {
+        Monitor mon = getMonitor(jmxBeanProperties);
+        if (mon==null) {
+            return defaultValue;
+        }
+
+        Object retValue = mon.getValue(value);
+        if (retValue==null) {
+            return defaultValue;
+        }
+        return retValue;
+    }
 
     /**
      * Return hits/count of the passed in monitor if it exists otherwise return 0
@@ -39,18 +78,12 @@ import java.util.*;
      * @param jmxBeanProperties jamon label
      * @return count
      */
-    static long getCount(List<JamonPropertiesLoader.JamonJmxBeanProperty> jmxBeanProperties) {
-        for (JamonPropertiesLoader.JamonJmxBeanProperty jmxBeanProperty: jmxBeanProperties) {
-            if (MonitorFactory.exists(jmxBeanProperty.getLabel(), jmxBeanProperty.getUnits())) {
-                return getCount(jmxBeanProperty.getLabel(), jmxBeanProperty.getUnits());
-            }
-        }
-
-        return 0;
+    static long getCount(List<JamonJmxBeanProperty> jmxBeanProperties) {
+        return (long) getDouble(jmxBeanProperties, Monitor.HITS);
     }
 
     /**
-     * Return hits/count of the passed in monitor if it exists otherwise return 0
+     * Return the value of the passed in monitor if it exists otherwise return 0
      *
      * @param label jamon label
      * @param units jamon units
@@ -67,20 +100,14 @@ import java.util.*;
     }
 
     /**
-     * Return hits/count of the first passed in monitor that exists otherwise return 0
+     * Return the value of the first passed in monitor that exists otherwise return 0.0
      *
      * @param jmxBeanProperties List of jmx bean properties to check for the passed in value.
      * @param value string representing the metric to return i.e. avg, hits etc.
      * @return the metric
      */
-    static double getDouble(List<JamonPropertiesLoader.JamonJmxBeanProperty> jmxBeanProperties, String value) {
-        for (JamonPropertiesLoader.JamonJmxBeanProperty jmxBeanProperty: jmxBeanProperties) {
-            if (MonitorFactory.exists(jmxBeanProperty.getLabel(), jmxBeanProperty.getUnits())) {
-                return getDouble(jmxBeanProperty.getLabel(), jmxBeanProperty.getUnits(), value);
-            }
-        }
-
-        return 0.0;
+    static double getDouble(List<JamonJmxBeanProperty> jmxBeanProperties, String value) {
+        return (Double) getValue(jmxBeanProperties, value, DOUBLE_ZERO);
     }
 
 
@@ -106,14 +133,8 @@ import java.util.*;
      * @param value string representing the date metric to return lastaccess, firstaccess.
      * @return The date associated with the first jamon monitor that exist or else a null if none exist.
      */
-    static Date getDate(List<JamonPropertiesLoader.JamonJmxBeanProperty> jmxBeanProperties, String value) {
-        for (JamonPropertiesLoader.JamonJmxBeanProperty jmxBeanProperty : jmxBeanProperties) {
-            if (MonitorFactory.exists(jmxBeanProperty.getLabel(), jmxBeanProperty.getUnits())) {
-                return getDate(jmxBeanProperty.getLabel(), jmxBeanProperty.getUnits(), value);
-            }
-        }
-
-        return null;
+    static Date getDate(List<JamonJmxBeanProperty> jmxBeanProperties, String value) {
+        return (Date) getValue(jmxBeanProperties, value, null);
     }
 
 
@@ -165,18 +186,18 @@ import java.util.*;
      */
     private static  void registerMbeansFromPropsFile(MBeanServer mBeanServer) throws Exception {
         JamonPropertiesLoader loader = new JamonPropertiesLoader();
-        List<JamonPropertiesLoader.JamonJmxBeanProperty> jamonJmxBeanProperties = loader.getMxBeans();
-        Iterator<JamonPropertiesLoader.JamonJmxBeanProperty> iter = jamonJmxBeanProperties.iterator();
+        List<String> jamonJmxBeanProperties = loader.getMxBeans();
+        Iterator<String> iter = jamonJmxBeanProperties.iterator();
 
         // register both the mxbean and the delta mxbean that displays diffs from when the bean was last called.
         while (iter.hasNext()) {
-          JamonPropertiesLoader.JamonJmxBeanProperty beanInfo = iter.next();
+            String beanInfo = iter.next();
 
-          MonitorMXBean mXbean = MonitorMXBeanFactory.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
-          mBeanServer.registerMBean(mXbean, MonitorMXBeanFactory.getObjectName(mXbean));
+            MonitorMXBean mXbean = MonitorMXBeanFactory.create(beanInfo);
+            mBeanServer.registerMBean(mXbean, MonitorMXBeanFactory.getObjectName(mXbean));
 
-          MonitorMXBean  mXbeanDelta = MonitorMXBeanFactory.createDelta(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
-          mBeanServer.registerMBean(mXbeanDelta, MonitorMXBeanFactory.getDeltaObjectName(mXbeanDelta));
+            MonitorMXBean  mXbeanDelta = MonitorMXBeanFactory.createDelta(beanInfo);
+            mBeanServer.registerMBean(mXbeanDelta, MonitorMXBeanFactory.getDeltaObjectName(mXbeanDelta));
         }
     }
 
@@ -215,16 +236,16 @@ import java.util.*;
      */
     private static  void unregisterMbeansFromPropsFile(MBeanServer mBeanServer) throws Exception {
         JamonPropertiesLoader loader = new JamonPropertiesLoader();
-        List<JamonPropertiesLoader.JamonJmxBeanProperty> jamonJmxBeanProperties = loader.getMxBeans();
-        Iterator<JamonPropertiesLoader.JamonJmxBeanProperty> iter = jamonJmxBeanProperties.iterator();
+        List<String> jamonJmxBeanProperties = loader.getMxBeans();
+        Iterator<String> iter = jamonJmxBeanProperties.iterator();
 
         while (iter.hasNext()) {
-            JamonPropertiesLoader.JamonJmxBeanProperty beanInfo = iter.next();
+            String beanInfo = iter.next();
 
-            MonitorMXBean mXbean = MonitorMXBeanFactory.create(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
+            MonitorMXBean mXbean = MonitorMXBeanFactory.create(beanInfo);
             mBeanServer.unregisterMBean(MonitorMXBeanFactory.getObjectName(mXbean));
 
-            MonitorMXBean  mXbeanDelta = MonitorMXBeanFactory.createDelta(beanInfo.getLabel(), beanInfo.getUnits(), beanInfo.getName());
+            MonitorMXBean  mXbeanDelta = MonitorMXBeanFactory.createDelta(beanInfo);
             mBeanServer.unregisterMBean(MonitorMXBeanFactory.getDeltaObjectName(mXbeanDelta));
         }
     }

@@ -2,14 +2,19 @@ package com.jamonapi.jmx;
 
 import com.jamonapi.FrequencyDist;
 import com.jamonapi.Monitor;
-import com.jamonapi.MonitorFactory;
 import com.jamonapi.Range;
+
+import java.util.List;
 
 /**
  * MxBean used for ms. time monitors as it also includes counts for each range.  Note it will work with any
  * monitor (for example bytes) however the ranges will have no meaning and so are set to 0.
  */
 public class MonitorMsMXBeanImp extends MonitorMXBeanImp implements MonitorMsMXBean {
+
+    public MonitorMsMXBeanImp(List<JamonJmxBeanProperty> jmxProperties) {
+        super(jmxProperties);
+    }
 
     public MonitorMsMXBeanImp(String label, String units) {
         super(label, units);
@@ -21,11 +26,11 @@ public class MonitorMsMXBeanImp extends MonitorMXBeanImp implements MonitorMsMXB
 
     // get hits/count for each range such as 0_10ms. 10_20ms. etc.
     private long getRangeCount(int i) {
-        if (!MonitorFactory.exists(label, units)) {
-          return 0;
+        Monitor mon = JmxUtils.getMonitor(jmxProperties);
+        if (mon==null) {
+            return 0;
         }
 
-        Monitor mon = MonitorFactory.getMonitor(label, units);
         Range range = mon.getRange();
         if (range==null) {
             return 0;

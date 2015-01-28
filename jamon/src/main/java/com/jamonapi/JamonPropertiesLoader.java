@@ -1,5 +1,7 @@
 package com.jamonapi;
 
+import com.jamonapi.utils.Misc;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -20,7 +22,7 @@ public class JamonPropertiesLoader {
     private String fileName;
     private Properties jamonProps;
     private List<JamonListenerProperty> listenerList;
-    private List<JamonJmxBeanProperty> jamonMxBeanList;
+    private List<String> jamonMxBeanList;
 
     public JamonPropertiesLoader() {
         this("jamonapi.properties");
@@ -65,7 +67,7 @@ public class JamonPropertiesLoader {
         return listenerList;
     }
 
-    public List<JamonJmxBeanProperty> getMxBeans() {
+    public List<String> getMxBeans() {
         if (jamonProps==null) {
             initialize();
         }
@@ -137,13 +139,12 @@ public class JamonPropertiesLoader {
     // 1 is created in the properties file then none of these are created.  This allows a user to override
     // these defaults for example if they don't use 'delete' statements.
     private void loadDefaultJamonMxBeans() {
-        jamonMxBeanList.add(new JamonJmxBeanPropertyDefault("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages", "ms.", "Jamon.PageRequests.Jetty"));
-        jamonMxBeanList.add(new JamonJmxBeanPropertyDefault("com.jamonapi.http.JAMonTomcatValve.request.allPages", "ms.", "Jamon.PageRequests.Tomcat"));
-        jamonMxBeanList.add(new JamonJmxBeanPropertyDefault("MonProxy-SQL-Type: All", "ms.", "Jamon.Sql.All"));
-        jamonMxBeanList.add(new JamonJmxBeanPropertyDefault("MonProxy-SQL-Type: select", "ms.", "Jamon.Sql.Select"));
-        jamonMxBeanList.add(new JamonJmxBeanPropertyDefault("MonProxy-SQL-Type: update", "ms.", "Jamon.Sql.Update"));
-        jamonMxBeanList.add(new JamonJmxBeanPropertyDefault("MonProxy-SQL-Type: delete", "ms.", "Jamon.Sql.Delete"));
-        jamonMxBeanList.add(new JamonJmxBeanPropertyDefault("MonProxy-SQL-Type: insert", "ms.", "Jamon.Sql.Insert"));
+        jamonMxBeanList.add("com.jamonapi.http.JAMonJettyHandlerNew.request.allPages, ms., com.jamonapi.http.JAMonTomcatValve.request.allPages, ms., Jamon.HttpPageRequests");
+        jamonMxBeanList.add("MonProxy-SQL-Type: All, ms., Jamon.Sql.All");
+        jamonMxBeanList.add("MonProxy-SQL-Type: select, ms., Jamon.Sql.Select");
+        jamonMxBeanList.add("MonProxy-SQL-Type: update, ms., Jamon.Sql.Update");
+        jamonMxBeanList.add("MonProxy-SQL-Type: delete, ms., Jamon.Sql.Delete");
+        jamonMxBeanList.add("MonProxy-SQL-Type: insert, ms., Jamon.Sql.Insert");
     }
 
     private void addListeners() {
@@ -159,17 +160,23 @@ public class JamonPropertiesLoader {
     }
 
     private void addJamonMxBeans() {
-        jamonMxBeanList = new ArrayList<JamonJmxBeanProperty>();
+        jamonMxBeanList = new ArrayList<String>();
         int size = Integer.valueOf(jamonProps.getProperty("jamonJmxBean.size"));
         for (int i = 0; i <= size; i++) {
             String keyPrefix = getKeyPrefix("jamonJmxBean", i);
-            String listener = jamonProps.getProperty(keyPrefix + "key");
-            if (listener != null) {
-                jamonMxBeanList.add(new JamonJmxBeanProperty(keyPrefix));
+            String propertyValue = jamonProps.getProperty(keyPrefix + "key");
+            if (propertyValue != null) {
+                jamonMxBeanList.add(propertyValue);
             }
         }
     }
 
+    /**
+     *
+     * @param key example: mykey
+     * @param i example: 0
+     * @return something like: mykey[0]
+     */
     private String getKeyPrefix(String key, int i) {
         return key+"["+i+"].";
     }
@@ -183,11 +190,8 @@ public class JamonPropertiesLoader {
             this.keyPrefix = keyPrefix;
         }
 
-        protected String[] split(String keyInfo) {
-            String[] key = keyInfo.split(",");
-            key[0] = key[0].trim();
-            key[1] = key[1].trim();
-            return key;
+        protected String[] split(String listenerPropertyValue) {
+            return Misc.trim(listenerPropertyValue.split(","));
         }
 
         /** example: com.jamonapi.Exceptions */
@@ -212,70 +216,5 @@ public class JamonPropertiesLoader {
             return jamonProps.getProperty(keyPrefix + "name", defaultProp).trim();
         }
     }
-
-    // Simple value object that holds the values for a jamon jmx bean read in from the properties file
-    public class JamonJmxBeanProperty {
-
-        // use JamonListenerProperty as a helper class implementation detail (using delegation) as it can read from the properties file.
-        private JamonListenerProperty listener;
-
-        protected JamonJmxBeanProperty() {
-        }
-
-        protected JamonJmxBeanProperty(String keyPrefix) {
-            listener = new JamonListenerProperty(keyPrefix);
-        }
-
-        /** example: com.jamonapi.Exceptions */
-        public String getLabel() {
-            return listener.getLabel();
-        }
-
-        /** example: Exception */
-        public String getUnits() {
-            return listener.getUnits();
-        }
-
-        /** Return logical name to be used instead of label, or empty string if it doesn't exist. */
-        public String getName() {
-            String[] values = listener.split(jamonProps.getProperty(listener.keyPrefix + "key"));
-            if (values.length==3) {
-                return values[2].trim();
-            }
-            return "";
-        }
-
-    }
-
-     // This class is used to load default jamon jmx configurable beans when none are defined in the properties file.
-     // It is a simple value object.
-     class JamonJmxBeanPropertyDefault extends JamonJmxBeanProperty {
-         private final String label;
-         private final String units;
-         private final String name;
-
-         public JamonJmxBeanPropertyDefault(String label, String units, String name) {
-             this.label = label;
-             this.units = units;
-             this.name = name;
-         }
-
-        /** example: com.jamonapi.Exceptions */
-        public String getLabel() {
-            return label;
-        }
-
-        /** example: Exception */
-        public String getUnits() {
-            return units;
-        }
-
-        /** Return logical name to be used instead of label, or empty string if it doesn't exist. */
-        public String getName() {
-            return name;
-        }
-
-    }
-
 
 }

@@ -1,49 +1,53 @@
 package com.jamonapi.jmx;
 
+import com.jamonapi.Monitor;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Base class for jamon configurable mbeans.  It exposes jamon metrics such as avg, hits, total etc.
+ * It also adds the ability to look for the first monitor in a list of label, unit pairs.  This is useful for example
+ * when tomcat and jetty have different monitor names, but in jmx we want to call them some common name like 'pageHits'.
  */
 public class MonitorMXBeanImp implements MonitorMXBean {
-
+    protected final List<JamonJmxBeanProperty> jmxProperties;
     protected final String label;
     protected final String units;
     protected final String name;
 
-    // see MonitorInt for values.  I didn't use those values as it is package private data and I didn't want
-    // to change that at this time.
-    private static final String LASTVALUE = "lastvalue";
-    private static final String MAX = "max";
-    private static final String MIN = "min";
-    private static final String MAXACTIVE = "maxactive";
-    private static final String TOTAL = "total";
-    private static final String AVG = "avg";
-    private static final String HITS = "hits";
-    private static final String STDDEV = "stddev";
-    private static final String FIRSTACCESS = "firstaccess";
-    private static final String LASTACCESS = "lastaccess";
-    private static final String ACTIVE = "active";
-    private static final String AVGACTIVE = "avgactive";
+
+    public MonitorMXBeanImp(List<JamonJmxBeanProperty> jmxProperties) {
+        this.label = jmxProperties.get(0).getLabel();
+        this.units = jmxProperties.get(0).getUnits();
+        this.name =  jmxProperties.get(0).getName();
+        this.jmxProperties = jmxProperties;
+    }
 
     public MonitorMXBeanImp(String label, String units) {
         this(label, units, label);
     }
 
     public MonitorMXBeanImp(String label, String units, String name) {
-        this.label = label;
-        this.units = units;
-        this.name = name;
+        this(init(label,units,name));
+    }
+
+    private static List<JamonJmxBeanProperty> init(String label, String units, String name) {
+        JamonJmxBeanProperty property = new JamonJmxBeanPropertyDefault(label,units,name);
+        List<JamonJmxBeanProperty> properties = new ArrayList<JamonJmxBeanProperty>();
+        properties.add(property);
+        return properties;
     }
 
     @Override
     public String getLabel() {
-        return label;
+        return (String) JmxUtils.getValue(jmxProperties, "label", label);
     }
 
     @Override
     public String getUnits() {
-        return units;
+        return (String) JmxUtils.getValue(jmxProperties, "units", units);
     }
 
     @Override
@@ -53,69 +57,69 @@ public class MonitorMXBeanImp implements MonitorMXBean {
 
     @Override
     public double getTotal() {
-        return getDouble(TOTAL);
+        return getDouble(Monitor.TOTAL);
     }
 
     @Override
     public double getAvg() {
-        return getDouble(AVG);
+        return getDouble(Monitor.AVG);
     }
 
     @Override
     public double getMin() {
-        return getDouble(MIN);
+        return getDouble(Monitor.MIN);
     }
 
     @Override
     public double getMax() {
-        return getDouble(MAX);
+        return getDouble(Monitor.MAX);
     }
 
     @Override
     public double getHits() {
-        return getDouble(HITS);
+        return getDouble(Monitor.HITS);
     }
 
     @Override
     public double getStdDev() {
-        return getDouble(STDDEV);
+        return getDouble(Monitor.STDDEV);
     }
 
     @Override
     public Date getFirstAccess() {
-        return getDate(FIRSTACCESS);
+        return getDate(Monitor.FIRSTACCESS);
     }
 
     @Override
     public Date getLastAccess() {
-        return getDate(LASTACCESS);
+        return getDate(Monitor.LASTACCESS);
     }
 
     @Override
     public double getLastValue() {
-        return getDouble(LASTVALUE);
+        return getDouble(Monitor.LASTVALUE);
     }
 
     @Override
     public double getActive() {
-        return getDouble(ACTIVE);
+        return getDouble(Monitor.ACTIVE);
     }
 
     @Override
     public double getMaxActive() {
-        return getDouble(MAXACTIVE);
+        return getDouble(Monitor.MAXACTIVE);
     }
 
     @Override
     public double getAvgActive() {
-        return getDouble(AVGACTIVE);
+        return getDouble(Monitor.AVGACTIVE);
     }
 
     private double getDouble(String  value) {
-        return JmxUtils.getDouble(label, units, value);
+        return JmxUtils.getDouble(jmxProperties, value);
     }
 
     private Date getDate(String  value) {
-        return JmxUtils.getDate(label, units, value);
+        return JmxUtils.getDate(jmxProperties, value);
     }
 }
