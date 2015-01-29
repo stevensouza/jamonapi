@@ -1,14 +1,18 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<!DOCTYPE HTML>
+<html lang="en">
 <head>
+        <meta charset="utf-8"/>
+
 <meta name="keywords" lang="en-us" content="java, performance tuning, jamonlistener, log4j, jboss, appender, JAMonAppender, listener, monitor, bottleneck, scale, scalability, monitoring tools, page hits, page counter, currentTimeMillis, benchmark, jamonapi, free, freeware, shareware, open source, measure, fdsapi, http, valve, tomcat, jetty, jboss, appserver, webserver, formatteddataset, servlet filter">
 <meta name="description" content="The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.">
 <title>HTTP Monitoring</title>
-</head>
-<body bgcolor="#FFFFFF">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 
-<div align="center">
-<script type="text/javascript"><!--
+</head>
+<body>
+<div class="container">
+
+    <script type="text/javascript"><!--
 google_ad_client = "pub-2677015225815089";
 google_ad_width = 728;
 google_ad_height = 90;
@@ -24,13 +28,10 @@ google_color_text = "000000";
 <script type="text/javascript"
   src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </script>
-</div>
-
-<hr>
 
 
 <p align="center">
-<img src="jamon1.jpg" id="fdsbanner1" border="0" /></a>
+<img src="jamon1.jpg" id="fdsbanner1" border="0" />
 </p>
 
 <h2 align='center'>HTTP Monitoring with JAMon</h2>
@@ -38,11 +39,7 @@ google_color_text = "000000";
 
 <!-- START JAMON SPECIFIC HTML -->
 
-<table border="0" width="80%" align="center">
-<tr>
-</tr>
-<tr align="left">
-<th><ol>
+<ol>
    <li><a href="#intro">Monitoring HTTP Requests</a></li>
    <li><a href="#interpretting">Interpretting JAMon HTTP Data</a></li>
    <li><a href="#configuring">Configuring the JAMon HTTP Monitor</a></li>
@@ -53,23 +50,7 @@ google_color_text = "000000";
 
 
 
-</th>
-</tr>
-<tr>
-<td><br><br></td>
-</tr>
-</table>
-
-<table border="0" width="80%" align="center">
-
-
-
-
-<tr>
-<th align="left"><h2><a name="intro">1. Monitoring HTTP Requests</a></h2></th>
-</tr>
-<tr>
-<td>
+<h2><a name="intro">1. Monitoring HTTP Requests</a></h2>
 
    <p>JAMon 2.7 introduces HTTP monitoring.  JAMon HTTP Monitoring uses reflection to monitor different aspects of the containers HttpServletRequest, and HttpServletResponse objects.  
    With JAMon you can monitor individual page performance, frequency of each http status code (200, 404 etc.), number of bytes returned in a response, Servlet exceptions and much more.  As is always the case with JAMon HTTP monitoring can be enabled/disabled
@@ -80,8 +61,9 @@ google_color_text = "000000";
         <li>Put jamon-2.7.jar (or higher) in the tomcat 'lib' directory. </li>
         <li>Put jamon.war (or higher) in the tomcat 'webapps' directory. </li>
         <li>Add the following Valve line to Tomcat's server.xml file. The 'Engine' line is used to show context.</li>
-           <ul><code>&lt;Engine name="Catalina" defaultHost="localhost"&gt;<br>
-              &lt;Valve className="com.jamonapi.http.JAMonTomcatValve"/&gt;</code>
+           <ul><pre>
+&lt;Engine name="Catalina" defaultHost="localhost"&gt;
+&lt;Valve className="com.jamonapi.http.JAMonTomcatValve"/&gt;</pre>
            </ul>
     </ul>
     </ul>
@@ -93,8 +75,9 @@ google_color_text = "000000";
         <li>Put jamon.war (or higher) in the tomcat 'webapps' directory. </li>
         <li>Add the following Valve line to Tomcat's server.xml file using the appropriate version. Note only one of the valve lines should be used, and also note the package is 'com.jamontomcat' and not 'com.jamonapi'.
         The 'Engine' line is used to show context.</li>
-           <ul><code>&lt;Engine name="Catalina" defaultHost="localhost"&gt;<br>
-              &lt;Valve className="com.jamontomcat.JAMonTomcat55Valve"/&gt;<br></code>
+           <ul><pre>
+&lt;Engine name="Catalina" defaultHost="localhost"&gt;
+&lt;Valve className="com.jamontomcat.JAMonTomcat55Valve"/&gt;</pre>
            </ul>
     </ul>
     </ul>   
@@ -104,8 +87,9 @@ google_color_text = "000000";
         <li>Put jamon-2.7.jar (or higher) in the jboss instance 'lib' directory (ex. default/lib). </li>
         <li>Put jamon.war (or higher) in the jboss instance 'deploy' directory. (ex. default/deploy).</li>
         <li>Add the following Valve line to Tomcat's server.xml file (i.e. jbossweb-tomcat55.sar/server.xml). The 'Engine' line is used to show context.</li>
-          <ul><code>&lt;Engine name="Catalina" defaultHost="localhost"&gt;<br>
-              &lt;Valve className="com.jamonapi.http.JAMonTomcatValve"/&gt;</code>
+          <ul><pre>
+&lt;Engine name="Catalina" defaultHost="localhost"&gt;
+&lt;Valve className="com.jamonapi.http.JAMonTomcatValve"/&gt;</pre>
            </ul>
     </ul>
     </ul>
@@ -116,13 +100,13 @@ google_color_text = "000000";
         <li>Put jamon-2.77.jar (or higher) in the jetty 'lib/etc' directory.</li>
         <li>Put jamon.war in the jetty 'webapps' directory.</li>
         <li>Add the following Handler line to Jetty's jetty.xml file (i.e. etc/jetty.xml). The 'Engine' line is used to show context.</li>
-          <ul><code>&lt;Set name="handler"&gt;<br>
-             ...<br>
-             &lt;Item&gt;<br>
-            &lt;New id="JAMonHandler" class="com.jamonapi.http.JAMonJettyHandlerNew"/&gt;<br>
-            &lt;/Item&gt; <br>
-           &lt;/Set&gt; <br></code>
-
+          <ul><pre>
+&lt;Set name="handler"&gt;
+  ...
+  &lt;Item&gt;
+   &lt;New id="JAMonHandler" class="com.jamonapi.http.JAMonJettyHandlerNew"/&gt;
+  &lt;/Item&gt; 
+&lt;/Set&gt; </pre>
            </ul>
     </ul>
     </ul>    
@@ -133,12 +117,13 @@ google_color_text = "000000";
         <li>Put jamon-2.7.jar (or higher) in the jetty 'lib' directory. (note in later versions of jetty the jamon jar should be put in lib/ext)</li>
         <li>Put jamon.war in the jetty 'webapps' directory.</li>
         <li>Add the following Handler line to Jetty's jetty.xml file (i.e. etc/jetty.xml). The 'Engine' line is used to show context.</li>
-          <ul><code>&lt;Set name="handler"&gt;<br>
-             ...<br>
-             &lt;Item&gt;<br>
-            &lt;New id="JAMonHandler" class="com.jamonapi.http.JAMonJettyHandler"/&gt;<br>
-            &lt;/Item&gt; <br>
-           &lt;/Set&gt; <br></code>
+          <ul><pre>
+&lt;Set name="handler"&gt;
+  ...
+  &lt;Item&gt;
+     &lt;New id="JAMonHandler" class="com.jamonapi.http.JAMonJettyHandler"/&gt;
+  &lt;/Item&gt;
+&lt;/Set&gt;</pre>
 
            </ul>
     </ul>
@@ -147,19 +132,7 @@ google_color_text = "000000";
     <ul><li><b>Custom monitoring</b> - Should you use another container you can use the com.jamonapi.http.HttpMonFactory class to easily monitor any web container</li></ul>
    </ul>
    
- </td>
-</tr>
-
-<tr>
-<td><br><br></td>
-</tr>
-
-
-<tr>
-<th align="left"><h2><a name="interpretting">2. Interpretting JAMon HTTP Data</a></h2></th>
-</tr>
-<tr>
-<td>
+<h2><a name="interpretting">2. Interpretting JAMon HTTP Data</a></h2>
 
 
  <p>By default JAMon will track something similar to the following (The screen snapshot was taken while monitoring tomcat6). However, with simple configuration via
@@ -200,19 +173,8 @@ google_color_text = "000000";
   <p><img src="jamon_httpmon_details.jpg" border="1"> </p>
  
 
-</td>
-</tr>
+<h2><a name="configuring">3. Configuring the JAMon HTTP Monitor</a></h2>
 
-<tr>
-<td><br><br></td>
-</tr>
-
-
-<tr>
-<th align="left"><h2><a name="configuring">3. Configuring the JAMon HTTP Monitor</a></h2></th>
-</tr>
-<tr>
-<td>
 
 
  <p>JAMon can monitor various aspects of servlet requests and responses via declarative configuration.  This is done via specifying a comma delimitted string in the server.xml, or 
@@ -220,14 +182,14 @@ google_color_text = "000000";
  </p>
  
  <p>
- <code>
-     &lt;Engine name="Catalina" defaultHost="localhost"&gt;<br>
+ <pre>
+     &lt;Engine name="Catalina" defaultHost="localhost"&gt;
      &lt;Valve className="com.jamonapi.http.JAMonTomcatValve" summaryLabels="request.getRequestURI().ms as allPages, 
      request.getRequestURI().value.ms as page, 
      response.getContentCount().bytes, 
      response.getStatus().value.httpStatus, 
      request.contextpath.ms" /&gt;
-     </code>
+     </pre>
  </p>
  
  <p>The above causes the JAMonTomcatValve.setSummaryLabels method to be called with the comma delimitted String passed as an argument.  A '.' separates tokens within
@@ -284,15 +246,6 @@ google_color_text = "000000";
   
 
 
-</td>
-</tr>
-
-<tr>
-<td><br><br></td>
-</tr>
-</table>
-
-
 
 <p align="center">
 <a href="http://www.fdsapi.com"><img src="fds_logo_fulltext_blue2_150.jpg"
@@ -303,6 +256,6 @@ id="jamonbanner" border="1" /></a>
 </p>
 
 <!-- END JAMON SPECIFIC HTML -->
-
+</div>
 </body>
 </html>

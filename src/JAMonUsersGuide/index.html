@@ -90,8 +90,7 @@ See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to 
        <li><a href="http://sourceforge.net/project/project_donations.php?group_id=96550">Donate to JAMon</a></li>
 		</ol>
     <li><a href="spring_aop_monitoring.html">Monitoring Spring using JAMon and AOP (2.76)</a></li>
-    <li><a href="jamon272.html">What's new in JAMon 2.72 and 2.73?</a></li>
-    <li><a href="jamon271.html">What's new in JAMon 2.71?</a></li>
+
                 
        <li>What's new in JAMon 2.7?</li>
 	<ol type="a">
@@ -118,22 +117,6 @@ See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to 
 		<li><a href="#monitoringsqlcommandsdetails">Monitoring SQL Commands (SQL Details)</a></li>
 		<li><a href="#jamonmisc">JAMon 2.1 Miscellaneous</a></li>
 		</ol>
-	<li><a href="#WhatsNew">What's new in JAMon 2.0?</a></li>
-		<ol type="a">
-		<li><a href="#WhatIsJamon">What is JAMon 2.0?</a></li>
-		<li><a href="#AggregationIsInfo">Aggregation is Information/Details are Noise </a></li>
-		<li><a href="#JamonGood">JAMon 1.0 - Good</a></li>
-		<li><a href="#JamonBetter">JAMon 2.0 - Better</a></li>
-		<li><a href="#WhatElse">What else is JAMon?</a></li>
-		<li><a href="#HowCanIUse">How can I use JAMon?</a></li>
-		<li><a href="#Possibilities">Specific examples may help you understand the possibilities</a></li>
-		<li><a href="#NewAddMethod">How do I use the new MonitorFacatory.add(...) method?</a></li>
-		<li><a href="#MoreImprovements">What other improvements were made in JAMon 2.0?</a></li>
-		<li><a href="#JamonCompatibility">Incompatibilities with JAMon 1.0</a></li>
-		<li><a href="#Challenge1">JAMon challenge #1! Your Help is needed!</a></li>
-		<li><a href="#Challenge2">JAMon challenge #2! Your Help is needed!</a></li>
-		</ol>
-	<li><a href="#Advantages">Advantages of JAMon</a></li>
 	<li><a href="#ServletFilter">The JAMon servlet filter</a> - A no code solution to monitoring your Java web application in 5 minutes!</li>
                 <ol type="a">
                 <li><a href="#JAMonWAR">The JAMon Web Application (WAR)</a> - Viewing JAMon stats via jamonadmin.jsp</li>
@@ -141,7 +124,6 @@ See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to 
 	<li>JAMon examples</li>
 		<ol type="a">
 		<li><a href="#SimpleExamples">Simple Example</a></li>
-		<li><a href="#MonitoringJSPs">Monitoring a Servlet - Gathering page statistics</a></li>
 		</ol>
 	<li><a href="#ManagingJAMon">Managing JAMon - jamonadmin.jsp</a></li>
         <ol type="a">
@@ -149,15 +131,9 @@ See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to 
         <li><a href="#MeasuringOutliers">Measuring outliers (JAMon Time Ranges)</a></li>
         <li><a href="#ControllingJAMon">Controlling JAMon</a></li>
         </ol>
-	<li><a href="#UsingJAMon">Ways to use JAMon</a></li>
-	<li><a href="#FutureDirections">Future Directions</a></li>
 	<li><a href="#SampleCode">Sample Code</a></li>
 	<li><a href="#DownloadingJAMon">Downloading JAMon</a></li>
 	<li><a href="#Support">Support</a></li>
-	<li><a href="#JAMonTShirts">JAMon/FormattedDataSet T-Shirts</a></li>
-	<li><a href="#JAMonLicense">JAMon License Agreement</a></li>
-	<li><a href="#Acknowledgements">Acknowledgements/Contributors</a></li>
-	<li><a href="#AboutAuthor">About the Author</a></li>
 </ol>
 
 <h2><a name="Introduction">JAMon Introduction</a></h2>
@@ -165,31 +141,7 @@ See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to 
 <p>The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API
     that allows developers to easily monitor production applications.  </p>  
 
-    <ul>
-    <li>JAMon can be used to determine application performance bottlenecks, user/application interactions, track application scalability, and more. 
-    <li>JAMon 1.0 gathers aggregate performance statistics such as hits, execution times (total, average, minimum, 
-    maximum, standard deviation), as well as concurrency information such as simultaneous application requests. 
-    <li>JAMon 2.7 comes with several ways to monitor your application that require no application code changes.  Usually all that is required is to add a line to an xml file, and make
-    the jamon jar file available.  Some examples:
-     <ul>
-     <li>JDBC/SQL monitoring via the JAMon JDBC proxy driver (works with any other JDBC driver), 
-     <li>Log4j monitoring via the JAMon log4j Appender, 
-      <li>HTTP Monitoring.  Monitor requests/responses to Tomcat, Jetty, JBoss or any other 
-    JAVA web container. 
-      <li>EJB3 monitoring using the JAMon EJB interceptor.
-     </ul>
-    <li>JAMon 2.0 aggregates ANY numeric entity (such as bytes sent, dollars purchased, phone call duration) associated 
-    with a key (label and units).  
-    <li>JAMon 2.1 adds the ability to track both summary statistics and detils for Interfaces/JDBC/SQL/Exceptions.
-    <li>JAMon 2.2 adds the ability to track JDBC/SQL/Exceptions vi the new JAMonDriver JDBC Driver using a URL (not changing code)
-    <li>JAMon 2.3 minor bug fixes
-    <li>JAMon 2.4/2.5 Introduction of JAMon Buffer Listeners to track details of interest such as extreme values, or most recent values
-    <li>JAMon 2.6 log4j monitoring.  Track stats on log4j method calls, as well as have the ability to 'tail' data written to log4j through the JAMon web application.
-    <li>JAMon 2.7 Add the ability to flexibly monitor Tomcat, Jetty, Jboss.  More flexible detail tracking was added.  Also better exception tracking was added.
-    <li>JAMon data can also be programmatically accessed or queried and your program can take actions on the results.  
-    <li>JAMon statistics are displayed in the clickable JAMon Report.
-    </ul> 
-  
+   
 
     <p>JAMon was developed primarily for monitoring J2EE applications, however JAMon 1.0/2.0 can be used in any JDK 1.2
     or higher environment, and JAMon 2.1 can be used in any JDK 1.4 or higher environment.   JAMon can be used in Servlets, JSP's, EJB's and Java 
@@ -200,13 +152,7 @@ See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to 
     <p>Feel free to continue reading the user's guide or <a href="http://sourceforge.net/project/showfiles.php?group_id=96550">download JAMon</a> 
     and read the <a href="javadoc/index.html">Java Docs</a>.</p>
 
-    <p>Note:  The FormattedDataSet API generates dynamic text including HTML and XML.  It uses JAMon extensively
-    to monitor performance including all JDBC calls.  The FormattedDataSet is a powerful open source API in its
-    own right and is also a great primer in using JAMon.  Click this link to learn more about the 
-    <a href="http://www.fdsapi.com">FormattedDataSet</a>.
-
-    <p>Note: Possible <a href="WebSphereOro.html">WebSphere issue</a> with jamonadmin.jsp.</p>
-
+ 
 
 <h2><a name="ejbmonitoring">1. What's new in JAMon 2.7? HTTP and EJB Monitoring</a></h2>
 
@@ -239,16 +185,7 @@ See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to 
 
 
 
-   <p>JAMon 2.3 fixes a few bugs</p>
-     <ul>
-        <li>Made a change to MonProxy.equals method so it now works properly with DBCP in JBoss
-        <li>Added MonProxy.getMonitoredObject(obj) static method that returns the original object being monitored
-        <li>Fixed synchronization bug in FactoryEnabled
-        <li>Fixed synchronization bug in FactoryEnabled
-        <li>Added a percent range
-        <li>Fixed bugs that made it difficult for developers to user there on monitor keys
-    </ul>
-
+ 
     
      <p>JAMon 2.2 fixes a few bugs and adds the new JAMon JDBC driver which allows developers to monitor JDBC/SQL without changing any code. The JAMonDriver
      class is com.jamonapi.proxy.JAMonDriver and representative URLS follow. Note in the jamonrealdriver below the actual driver is used.</p>
@@ -295,29 +232,7 @@ See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to 
 
     </p>
 
-    <p>Bug Fixes:</p> 
-    <ul>
-        <li>Previously 'MonProxyFactory.monitor(object);' could only monitor interfaces that were immediately implemented by the passed in Object.  
-         Now any interface in the objects heirarchy can be monitored.   
-        <li>The Monitor class inadvertently had 'getLabel()', and 'getUnits()' removed from the last release, and they were returned in this release.
-    </ul>
-
-<h2><a name="WhatsNew21">3. What's new in JAMon 2.1?</a></h2>
-
-     <p>JAMon 2.1 introduces two easy to use, but powerful new capabilities: </p>
-     <ul>
-   	<li>The ability to monitor the method calls of ANY Java interface
-   	<li>The ability to monitor SQL statments and JDBC calls.  SQL/JDBC montoring does everything that interface monitoring does and then some.  
-        Note JAMon allows ANY vendors  JDBC driver to be monitored (Sybase, SQL Server, Oracle, MySQL, HSQLDB, etc).  The current version of JAMon 
-       requires that each database conneciton be wrapped by one line of code.  The next release will remove this limitation and allow monitoring to be enabled via a JDBC connection URL or DataSource.
-    </ul>
-
-    <p>JAMon can be enabled/disabled at runtime.  If it is disabled then the original object is simply returned, causing no run time monitoring performance.  
-     Having said that the monitoring is quite fast and can be enabled in most production systems.  </p>
-
-    <p>This version of JAMon requires JDK 1.4 or higher.  Previous versions were JDK 1.2 or higher. </p>
-
-
+ 
     <h2><a name="monitoringinterfaces">3.a Monitoring Interfaces</a></h2>
 
 
@@ -508,132 +423,9 @@ MonProxy-Interface (class=org.hsqldb.jdbcConnection): public abstract void java.
 
     <p>SQL details are viewable via sql.jsp.</p>
 
-
-<h2><a name="jamonlivedemo">3.j Live Demo</a></h2>
-
-
-    <p>A live demo is available that demonstrates Interface/JDBC/SQL monitoring. The live demo is also the application that you will use to view JAMon stats in 
-    your own environment.  Simply install jamon.war and place the jamon jar file in your servers class path (Note it should be put in your 
-    servers class path so you can monitor other apps).</p>
     
-<h2><a name="jamonmisc">3.k JAMon 2.1 Miscellaneous</a></h2>
 
-    <ul>
-    <li><b>Enabling/Disabling at runtime</b> - JAMon and MonProxy can be enabled/disabled at runtime.   In fact when totally disabled there is 
-      NO PERFORMANCE IMPACT whatsoever, as the actual object is returned and not a monitored object.  
-    <li><b>MonProxy Performance</b> - Even though you can turn off monitorying at runtime I would suggest that it be kept on at all times.  
-      There are various levels of monitoring that you can enable, so at a minimum I would monitor Exceptions and SQL summary statistics.  
-      The com.jamonapi.proxy.MonProxyTester class performs various performance tests.  The test executes 6000 queries agains HSQLDB for each test case.  
-      When monitoring is completely disabled this takes 500 ms., and when it is completely enabled it takes about 1000 ms.  
-      Disabling other capabilities falls somewhere in betweent the two.  Your mileage will vary so I encourage you to test yourself. 
-      The query time for 6000 queries on my computer was faster than I would expect in most applications, and as query time goes up I would expect monitoring
-      time to remain constant and so have a smaller impact on query performance. 
-    <li><b>Web Page Features</b> - All the jsp's in jamon.war have the ability to truncate strings for display.  This can be needed as some query and exception strings can be to long for display.  This truncation is purely for display and the underlying data is not truncated.  In addition every page has the following capabilities:  sort, query data, highlight text of interest.
-    <li>Note in this release I changed the name of jamon jar, and the case of the web app, and jamonadmin.jsp file.  They are now respectively:  jamon-2.1.jar, /jamon/jamonadmin.jsp (from /JAMon/JAMonAdmin.jsp)
-    </ul> 
-
-
-
-
-<h2><a name="WhatsNew">4. What's new in JAMon 2.0?</a></h2>
-
-
-    <p>The following subsections describe JAMon 2.0, and how it can be used to improve your programs.   
-    </p>
-
-    <h2><a name="WhatIsJamon">4.a What is JAMon 2.0?</a></h2>
-
-        <p>JAMon 2.0 can be thought of as an in-memory aggregate database.    Most databases store the details (rows)
-            and these details can be aggregated/summarized by writing SQL (using the 'group by' clause).  JAMon
-            takes the approach of throwing out the details and keeping the aggregates.  This allows JAMon to be
-            very fast and have a small memory footprint.
-        </p>
-
-    <h2><a name="AggregationIsInfo">4.b Aggregation is Information/Details are Noise</a></h2>
-
-    <p>Often people make decisions based on summary information (aggregates) and not detailed information.   Imagine
-            trying to figure out the performance of a particular query by looking through a multi-gigabyte log file
-            searching for the occurences of the query (buried among other log details).
-            Trying to understand this data would be impossible without aggregation.  Using aggregates such as averages,
-            mins and maxes would be much more useful to see if the query needed to be tuned.
-        </p>
-
-        <p>This concept of aggregating statistics is the basis of Decision Support Systems (DSS).
-            JAMon 2.0 allows you to easily aggregate ANYTHING that happens in your application.
-        </p>
-
-    <h2><a name="JamonGood">4.c JAMon 1.0 - Good</a></h2>
-
-        <p>JAMon 1.0 only tracked aggregate statistics for time (the units were in milliseconds/ms.).  For example,
-            if the following code was called 10 times: <br>
-            &nbsp;&nbsp;&nbsp;<b>Monitor mon=MonitorFactory.start("myPage.jsp");</b><br>
-            &nbsp;&nbsp;&nbsp;...page code...<br>
-            &nbsp;&nbsp;&nbsp;<b>mon.stop();</b><br>
-        </p>
-
-        <p>Representative performance statistics may look like this:   10 hits, average=100 milliseconds (ms.),
-            total=1000 ms., minimum=50 ms., maximum=200 ms.  This is very useful, but there are many things it
-            would be useful to aggregate that are not time based (i.e. money, MB, locks, rows, ...)
-        </p>
-
-    <h2><a name="JamonBetter">4.d JAMon 2.0 - Better</a></h2>
-
-        <p>In JAMon 2.0 the concept of aggregating a time associated with a String has been expanded to aggregate
-            any number associated with any arbitrary key.   The key can consist of any number of Objects.
-            Here are some examples of possible JAMon 2.0 keys:</p>
-        <ul>
-            <li> Probably the most common key you will use is: key=label, units.  In JAMon 1.0 key=label, ms. was a special case of this more general rule.  JAMon 2.0 keys could be:
-                <ul>
-                    <li> key=label, ms. (This was the only possibility in JAMon 1.0)
-                    <li> key=label, MB (example: bytessent, MB)
-                    <li> key=label, MB (example: freeMemory, MB)
-                    <li> key=label, $ (example: purchases, $)
-                    <li> key=label, Exception (example: InvalidArgumentExeception, Exception)
-                    <li> key=company, department, division (example: Sybase, HR, EEO - possibly summarizing salary)
-                </ul>
-        </ul>
-
-        <p>This is a simple, but powerful concept that allows developers to expose many things that are
-            happening inside their applications.  Because JAMon is easy to use and fast, developers can now unleash
-            the power of aggregation to improve their programs in many new, innovative ways.  Start aggregating!
-        </p>
-
-    <h2><a name="WhatElse">4.e What else is JAMon?</a></h2>
-
-        <p>Here are ways that I think of JAMon that helps me uncover ways to use it.  JAMon is...</p>
-        <ul>
-            <li><b>An in-memory aggregate database</b> - A database retains details, JAMon retains aggregates
-            <li><b>An in-memory aggregate log</b> - A log retains details, JAMon retains aggregates
-            <li><b>DSS for the application</b> - JAMon allows developers to unleash the power of statistics on the internals of their applications
-            <li><b>Similar to the SQL 'group by' clause</b> - Each call to JAMon aggregates information similar to the following select:
-                <ul><li>select key, count(*), sum(values), stddev(values), min(values), max(values), avg(values), min(date), max(date),mostRecentValue,...other stats too... from MyTable group by key</li></ul>
-            <li><b>A compromise between keeping details or just aggregates (enter JAMon Ranges)</b> - JAMon also has the concept
-                of ranges that allows you to keep track of summary statistics for subsets of data for a particular monitor.
-                (i.e. For example if you were tracking 'points per game' for NBA players you may have the following ranges
-                for 0-10 points, 10-20 points, 20-30 points, 30-40 points, 50-60 points, 70-80 points, 80-90 points,
-                90-100 points).  This can add extra information beyond basic summary data and still doesn't consume much memory.
-                It is a compromise between keeping all data or just summary data.  Developers can define their own ranges.
-        </ul>
-
-    <h2><a name="HowCanIUse">4.f How can I use JAMon?</a></h2>
-
-        <p>Here are a few of the many uses of JAMon.</p>
-        <ul>
-            <li><b>Self tuning/Self managing software</b> - Programs can interrogate JAMon statistics and take action if certain thresholds have been exceeded.  For example resources such as locks, memory, and file descriptors that are usually set when a database is booted could now change on the fly based on threshholds being exceeded.
-            <li><b>Self Monitoring software</b> - Software enabled with JAMon can alert/page when threshholds have been exceeded.  For example if an exception is thrown, a user fails to login, , or memory is low.
-            <li><b>Tracking business data</b> - Business events can be tracked in real-time.  For example if every time a purchase is made its value is passed to JAMon we could have real time purchase stats without accessing the database.
-            <li><b>Monitoring Servers and multi-threaded applications</b> - JAMon is particularly useful in multithreaded applications like database engines, JDBC drivers, frameworks, EJBs, Application Servers, web applications (In fact the JAMon servlet filter lets you monitor web application performance without changing a line of code), and more.
-            <li><b>Performance Statistics</b> - Execution times for JDBC calls, IO, page hits and any other Java calls can all be tracked.
-            <li><b>Concurrency/Scalability Statistics</b> - What is currently executing in your application and how it affects performance (i.e. scalability) can also be tracked.
-            <li><b>Understanding how users interact with your application</b> - What are the peak hours?  Is the system used on nights?  Weekends?  How many simultaneous users are there?  Who is logged in now? What are the most popular pages?  Are some pages not used?...
-            <li><b>Tracking phone calls on a Java enabled cell phone</b> - Monthly minutes, number of calls, calls to individual and more could all be tracked.
-        </ul>
-
-        <p>Note: Querying JAMon statistics - Between JAMon's API for extracting the aggregate data, and the
-            FormattedDataSet's 	<a href="/web/20131014022528/http://fdsapi.sourceforge.net/javadocs/com/fdsapi/arrays/ArraySQL.html">ArraySQL</a> class which allows you to query the JAMon statistics in a SQL like manner,
-            your programs can easily take action based on JAMon data.
-        </p>
-
+ 
     <h2><a name="Possibilities">4.g Specific examples may help you understand the possibilities</a></h2>
 
         <p>The simple syntax below demonstrates how easy it is to aggregate statistics for purchases (the units are in dollars).
@@ -764,99 +556,9 @@ MonProxy-Interface (class=org.hsqldb.jdbcConnection): public abstract void java.
                 mon.stop();
             </pre>
 
-    <h2><a name="MoreImprovements">4.i What other improvements were made in JAMon 2.0?</a></h2>
+ 
 
-        <p>
-        <ul>
-            <li><b>Improved Performance</b> – The following are performance characteristics when executing serially.  Tests were done on my
-                rather old IBM ThinkPad T30 Pentium IV NoteBook PC.  To execute performance tests execute:  "java -cp jamon-2.1.jar com.jamonapi.TestClassPerformance 1000000".
-                All tests call MonitorFactory.start("label"), and mon.stop() the specified number of times per second.
-                <ul>
-                    <li>JAMon 1.0 using JDK 1.2 - 195,000 calls per second</li>
-                    <li>JAMon 2.0 using JDK 1.2 - 225,000 calls per second</li>
-                    <li>JAMon 2.0 using JDK 1.4 - 405,000 calls per second</li>
-                    <li>JAMon 2.0 using JDK 1.5 - 550,000 calls per second</li>
-                    <li>JAMon 2.0 calling MonitorFactory.add(...) - 1,500,000 calls per second!</li>
-                </ul>
-            <li><b>Improved Synchronized Performance</b> - Improved performance when there is contention.
-            <li><b>More Flexibility</b> - JAMon 2.0 can now track ANY number associated with ANY key (not just time anymore).
-            <li><b>Simplified Code</b> - Though JAMon 2.0 can do more than JAMon 1.0 the code is simpler.
-            <li><b>More accessibility of JAMon statistics</b> - Values such as hits, avg, min, max and more are all accessible through the API now.  Also the FormattedDataSet's <a href="/web/20131014022528/http://fdsapi.sourceforge.net/javadocs/com/fdsapi/arrays/ArraySQL.html">ArraySQL</a> class allows developers to query JAMon data (see below).
-            <li><b>Improved Reporting</b> - Data can be queried, and displayed as XML/HTML/Excel
-            <li><b>ArraySQL - Querying JAMon Data</b> - Though ArraySQL is not part of JAMon it is used in jamonadmin.jsp and can
-                be used to query JAMon stats in a SQL like manner (i.e. select * from array where hits>1000 and total>50000).  Being able
-                to so easily get data out of JAMon will open up new ways to leverage the JAMon monitoring data.
-                ArraySQL is part of my FormattedDataSet API.  This link goes to the <a href="/web/20131014022528/http://fdsapi.sourceforge.net/javadocs/com/fdsapi/arrays/ArraySQL.html">ArraySQL</a> java docs, and from here you can also
-                view the code.  If you select the 'view code' link from the java docs and look at the code in the main method, you will see
-                various examples of the ArraySQL syntax.
-            <li><b>User Defined Ranges</b>
-        </ul>
-        </p>
-
-    <h2><a name="JamonCompatibility">4.j Incompatibilities with JAMon 1.0</a></h2>
-
-        <p>Due to the fact that JAMon 2.0 was a significant rewrite, quite a few (the majority) of JAMon 1.0's classes are no longer there,
-            and the methods of some classes have changed.  If you just use start()/stop() and jamonadmin.jsp this won't affect you.  In general
-            it is a good idea to hide calls to JAMon (or any other 3rd party software) in classes that you own. What follows is a list
-            of some of the major changes:
-        </p>
-        <ul>
-            <li>The Monitor.toString() method format is different
-            <li>In general all methods have been deprecated and perform noops in this release
-            <li>MonitorFactory.getComposite(String) previously queried the data and now it takes a range name for an argument
-            <li>MonitorFactory.getReport() previously threw an Exception
-            <li>MonitorFactory.getData() previously returned a String[][], but now returns an Object[][]
-            <li>MonitorFactory.getReport() and MonitorFactory.getData() previously returned range data and now they do not.
-            <li>MonitorFactory debug capabilities have changed.
-            <li>Many classes that probably weren't used, but were not explicitly restricted access to have been removed.
-            <li>Previously key names were case insensitive (i.e. MonitorFactory.start("PAGE") was the same as MonitorFactory.start("page")).
-                A case insensitive map can be supplied to MonitorFactory, however to provide this behaviour.
-            <li>Many methods in MonitorComposite were removed.
-            <li>Being as JAMon 2.0 was a complete rewrite many of the classes that should have been hidden as implementation details
-                (live and learn) were removed.  It is unlikely that developers used these classes directly though possible.
-        </ul>
-
-        </p>
-
-    <h2><a name="Challenge1">4.k JAMon challenge #1! Your Help is needed!</a></h2>
-
-        <p>I would like to incorporate JAMon into other open source projects.  Often this can be done very quickly.
-            I recommend hiding JAMon behind a class of the specific projects owning.  This allows the program to
-            work even if JAMon is not available at runtime.  HSQLDB used this approach
-        </p>
-
-        <p>JAMon has already been incorporated into HSQLDB, Fulcrum, and the Spring framework.  There are many other
-            projects that would benefit from JAMon stats such as JBoss, JDBC drivers, Struts, and TomCat.
-        </p>
-
-        <p>I will gladly assist in incorporating JAMon into your project.
-        </p>
-
-    <h2><a name="Challenge2">4.l JAMon challenge #2! Your Help is needed!</a></h2>
-
-        <p>The most important aspect of JAMon is not the current Java implementation, but the concept of aggregating ANY
-            number associated with ANY key using ANY language in ANY program on ANY platform.
-        </p>
-
-        <p>The JAMon code is simple enough to implement in many languages.  I would like to see JAMon coded in C++,
-            C##, Perl, Ruby and more.  I would even love to see JAMon-like aggregate stats at the operating system level!
-        </p>
-
-        <p>There could be various levels of compliance.  The simplest one could be done in a matter of hours in
-            just about any language (I have sample sample code for this if you would like to see it).  Here are the levels of compliance:
-        </p>
-
-        <ul>
-            <li><b>Basic JAMon</b> - Tracks basic aggregate data such as hits, min, max, total, average and a few more.
-            <li><b>Basic JAMon with synchronization</b> - Same as above, but with thread safety for multithreaded environments.
-                I will soon post a link here to this minimal implementation in Java, to get you started.
-            <li><b>Advanced JAMon</b> - Includes the concept of ranges.  This implementation becomes substantially more difficult.
-        </ul>
-
-        <p>I will gladly assist anyone wishing to port JAMon to another language.  This would be a great college project!
-        </p>
-
-
+    
     <h2><a name="Advantages">5. Advantages of JAMon</a></h2>
 
     <p><b>Using JAMon is easy.</b> Place the jamon jar file (80K) in your classpath, and surround the code that you
@@ -1034,117 +736,6 @@ MonProxy-Interface (class=org.hsqldb.jdbcConnection): public abstract void java.
     <p><b>First Access=5/2/02 10:11:48 AM</b> - Indicates when the monitor with the given monitor label was first executed.</p>
     <p><b>Last Access=5/2/02 10:11:49 AM</b> - Indicates when the monitor with the given monitor label was last executed.</p>
 
-    <h3><a name="MonitoringJSPs">8.b Monitoring a Servlet - Gathering page statistics</a></h3>
-    <p>In our second example we will use JAMon to gather page statistics for a servlet.  To gather page statistics a
-    developer places a start() at the top of the servlets doGet() or doPost() method, and a stop() in the finally
-    clause.   If a method that can throw an exception is being monitored, then the stop() method must be called
-    from the method's finally clause.   This ensures that the monitor is stopped when an exception is thrown.</p>
-
-   <p>The sample servlet doesn't do much.   It simply returns a list of musicians from three legendary reggae groups (<a href="JAMonDemoOutput.html" target="_blank">Sample Output</a>).
-    The servlet sleeps for three seconds which slows down processing enough to get simultaneous servlet instances
-    running.  The getMusicians() method sleeps an amount based on the number of servlet instances currently running.
-    This will help in demonstrating how JAMon can be used to measure application scalability.
-    The statistics generated by this example will be discussed in the next section. </p>
-    <p>The code for the example follows:</p>
-       <pre  class="pre-scrollable">
-
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.io.*;
-import java.util.*;
-import java.text.*;
-import com.jamonapi.*;
-
-public class JAMonDemo extends javax.servlet.http.HttpServlet {
-   private static int active;
-   protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException     {
-        Monitor primary=MonitorFactory.startPrimary("JAMonDemo.pageHits");
-        Monitor byDate=MonitorFactory.start("JAMonDemo.pageHits."+getDate());
-        Monitor byUsersIP=MonitorFactory.start("JAMonDemo.pageHits."+
-        getFormattedIP(request));
-        active++;
-
-        response.setContentType( "text/html" );
-        PrintWriter out = response.getWriter();
-
-        try {
-            Thread.sleep(3000);
-            out.println(getMusicians("Culture"));
-            out.println(getMusicians("Maytals"));
-            out.println(getMusicians("Wailers"));
-        }
-        catch(Exception e) {
-            throw new ServletException(e.getMessage());
-        }
-        finally {
-            byUsersIP.stop();
-            byDate.stop();
-            primary.stop();
-            active--;
-        }
-    }
-
-    // Returns date as a string in 05/10/02 format.
-    private String getDate()   {
-        return DateFormat.getDateInstance(DateFormat.SHORT).format(new Date());
-    }
-
-    /*
-      Replace the standard "." separated ip address with one separated by dashes.
-      i.e., 111.222.333.444 becomes 111-222-333-444.  This is done because "." has
-      special meaning to the monitor class and will consume more resources.
-      However this is not required.
-     */
-    private String getFormattedIP(HttpServletRequest request)    {
-        String ip=request.getRemoteAddr();
-        if (ip==null || "".equals(ip))
-            return "";
-        else
-            return ip.replace('.', '-');
-    }
-
-    private String getMusicians(String group) throws Exception {
-        Monitor mon=MonitorFactory.start("JAMonDemo.getMusicians("+group+")");
-        final String culture="Joseph Hill, Albert Walker, Kenneth Dayes";
-        final String maytals="Toots Hibbert, Raleigh Gordon, Jerry Matthias,"+
-        " Jackie Jackson, Winston Wright, Hux Brown, Rad Bryan, "+
-        "Paul Douglas, Winston Grennan";
-        final String wailers="Bob Marley, Peter Tosh, Bunny Wailer, "+
-        "Junior Braithwaite, Beverly Kelso";
-
-        String musicians=null;
-        if ("Culture".equals(group))
-            musicians="&ltb&gt"+group+"&lt/b&gt"+" - "+culture;
-        else if ("Maytals".equals(group))
-            musicians="&ltb&gt"+group+"&lt/b&gt"+" - "+maytals;
-        else if ("Wailers".equals(group))
-            musicians="&ltb&gt"+group+"&lt/b&gt"+" - "+wailers;
-
-        Thread.sleep(active*50);
-        mon.stop();
-        return musicians;
-    }
-}
-</pre>
-
-    <p>This example demonstrates the flexibility of the JAMon API, by incorporating runtime data such as date and
-    IP address into our monitor labels.   We are monitoring the following items in our servlet:</p>
-    <p><b>JAMonDemo.pageHits</b> - Every time the JAMonDemo servlet is executed another hit will be recorded for
-    this monitor label.  This monitor is recording page hits.  The consequences of starting this monitor with
-    the startPrimary() method will be discussed later.</p>
-    <p><b>JAMonDemo.pageHits.Month/Day/Year</b> - This monitor label will monitor page hits by day.  There will be one row
-    in the monitor report for each day.  Typical entries would be  "JAMonDemo.pageHits.5/12/02" and
-    "JAMonDemo.pageHits.5/13/02".</p>
-    <p><b>JAMonDemo.pageHits.UsersIPAddress</b> - This monitor label will monitor page hits by users IP address.
-    There will be one row in the monitor report for each IP address.  Typical entries would be
-    "JAMonDemo.pageHits.127-0-0-1" and "JAMonDemo.pageHits.205-130-238-40".
-    If the application has accounts then user names could be used instead of IP addresses.</p>
-    <p><b>JAMonDemo.getMusicians(group)</b> - This monitor label will monitor calls to the getMusicians() method.
-    The argument that is passed to the method is also incorporated into the monitor label.
-    This adds little value in this example, but in a more real world program this technique can be very powerful.
-    Incorporating class and method names into the monitor label  (i.e., MyClass.myMethod) makes it easier
-    to match monitors to the code they are monitoring.</p>
 
     <h2><a name="ManagingJAMon">9. Managing JAMon - jamonadmin.jsp</a></h2>
     <p>JAMon comes with a JSP that allows developers to view the JAMon report and control JAMon behavior.  jamonadmin.jsp can be found in the jamon.war download.</p>
@@ -1246,83 +837,6 @@ public class JAMonDemo extends javax.servlet.http.HttpServlet {
         <p><b>MonitorFactory.start("mon1"); // 5 global, 1 primary, and 2 mon1's are active</b></p>
         <p><b>MonitorFactory.startPrimary("mon5"); // 6 global, 2 primary</b></p>
 
-    <h3><a name="ControllingJAMon">9.c Controlling JAMon</a></h3>
-    <p>The jamonadmin.jsp page also allows a developer to control JAMon at runtime.  A description of the function of
-    each of the buttons follows:</p>
-    <p><b>Refresh</b> - Redisplays jamonadmin.jsp with the JAMon report in the default sort order.
-    Refreshing can also be accomplished by clicking a column header.</p>
-    <p><b>Reset</b> - Clears all monitors and their statistics.   The report will now be empty, and subsequent
-    calls to the start() method will repopulate JAMon statistics.</p>
-    <p><b>Enable and Disable</b> - JAMon can be enabled and disabled at runtime.   The default is enabled.
-    When the disabled button is pressed JAMon statistics will no longer be gathered, however existing statistics
-    will not be reset.  To begin gathering statistics again simply press the enabled button.</p>
-
-    <h2><a name="UsingJAMon">10. Ways to use JAMon - More than performance</a></h2>
-    <p>This section discusses the various ways JAMon can be used.  JAMon's most obvious use is in determining
-    application performance bottlenecks by gathering timing statistics. However, it can also be used in other ways
-    such as determining how users interact with an application, and determining application scalability.
-    Some ways that JAMon can be used follow.</p>
-    <p><b>To tune performance</b>  - Web applications can be difficult to tune due to the fact that there are many
-    possible bottlenecks including:  network IO, database IO, application code, poorly tuned queries, or even an
-    increased amount of site traffic.  To help pinpoint problems, performance diagnostics must be built into the
-    application.</p>
-    <p>Without performance measurements, developers will spend their time guessing where performance bottlenecks occur.
-    Performance problems typically occur in a small percentage of overall code.   Algorithm guru Donald Knuth
-    estimated that 4% of application code accounts for 50% of the performance.   With measurements, developers
-    can quickly locate that 4% of the code and get the biggest bang for their tuning buck.  Without measurements
-    developers waste effort tuning code that may have no significant impact on performance.</p>
-    <p><b>To improve code design</b> - <i>"More computing sins are committed in the name of efficiency than for any other
-    single reason-including blind stupidity" - W.A. Wulf</i></p>
-    <p><i>"...premature optimization is the root of all evil." - Donald Knuth</i></p>
-    <p>Often, when discussing code designs, developers say they don't want to implement certain elegant designs,
-    because of perceived performance problems.   JAMon supports the following argument: "Let's code the elegant
-    solution and measure its performance. If it doesn't perform well then we can try the other design."</p>
-    <p><b>To determine how users interact with the application</b> -   JAMon can be used to answer questions of the
-    following type:</p>
-    <ul>
-    <li>What is the application's peak usage time?</li>
-    <li>What is the maximum number of simultaneous users for the application?</li>
-    <li>Who are the application's "power users"?</li>
-    <li>Are certain application pages never used?</li>
-    <li>When did a specific user last login to the application?</li>
-    <li>What are the most commonly searched product categories?</li>
-    </ul>
-    <p><b>To set coding priorities</b> -  Coding priorities can be based on factors such as which features are
-    accessed the most often or what code is the slowest.</p>
-    <p><b>To detect programming and user errors</b> - JAMon can be used to track errors, such as when exceptions are thrown, 
-    when resources are not released or when a user error occurs such as forgetting a password.</p>  
-    <p>Developers can monitor code that gets and releases a resource, and check to see that the
-    number of hits for both are the same.  For example, if we get 1,000 database connections, we should also release 
-    1,000 database connections.  MonitorFactory.start("getConnection") would be called when a developer gets a 
-    connection and MonitorFactory.start("releaseConnection") would be called when the connection is released.  
-    If the hits don't match then we have a resource leak.</p>
-    <p>Developers can also monitor when Exceptions are thrown or when assertions are triggered.  One helpful way to 
-    track Exceptions would be by date by user (i.e., "Exception.IllegalArgumentException.05/15/02.jsmith").  This allows 
-    developers to determine when exceptions are thrown without depending on users for the information.</p>
-    <p><b>To test application scalability</b> - JAMon time ranges correlate performance to application load.  Using this
-    information a developer can measure how well an application scales.   See the description of JAMon time ranges
-    for more information on how to use JAMon for scalability testing.</p>
-    <p><b>To determine what is happening in an application at a snapshot in time</b> - Many monitoring tools monitor an
-    application from the "outside looking in", but because JAMon looks at the application from the inside we can
-    use statistics such as "Active", "First Access" and "Last Access" to determine what activities our application
-    is performing at any given time.</p>
-    <p><b><a href="testingwithjamon.html">To Assist Testsers in the Test/QA process</a></b> - This link describes how JAMon can be used in the testing process.</p>
-
-    <h2><a name="FutureDirections">11. Future Directions</a></h2>
-
-    <p>Currently JAMon does not persist its statistics.  When the JVM goes down the statisistics are lost.
-    A future version will be able to persist monitoring statistics to a database.   This will allow developers to
-    track how application usage and performance evolves.</p>
-
-    <p>Persisting statistics will also allow developers to run monitoring reports that span all tiers of an n-tier
-    application.   For example, if we have a clustered application using three web servers, three application servers
-    and one database, we could persist statistics from all these servers into one database.  This would allow us to
-    have one report that shows application monitoring statistics for all tiers.</p>
-
-   <p>Porting JAMon to other languages and putting JAMon into other open source programs would also be interesting future
-   initiatives
-   </p>
-
 
 <h2><a name="SampleCode">12. Sample Code</a></h2>
     <p>Java code can be called from both Java and non-Java environments.
@@ -1338,101 +852,18 @@ public class JAMonDemo extends javax.servlet.http.HttpServlet {
     interface then the valueBound(...) method is called when the object is put into the session, and valueUnbound(...) is called
     when the object is removed from the session.  This allows an application to use JAMon to monitor statistics related to 
     HTTP Sessions such as how many sessions are active, and which users are currently using the application.</p>
-    <p><b><a href="JAMon_PB.zip" target="_blank">Monitoring PowerBuilder Code</a></b> - The sample code contains a Monitor EJB
-    that acts as a thin wrapper for JAMon.  The PowerBuilder client takes a monitor label as input and has a start and stop button.  
-    The start button passes the monitor label to the EJB and the stop button stops the Monitor.  The jamon jar file must be accessible to the EJB
-    at runtime.</p>
-    <p><b><a href="ColdFusion_sample.html" target="_blank">ColdFusion sample</a></b></p>
-    <p><b><a href="BroadVision_sample.html" target="_blank">BroadVision sample</a></b></p>
-    <p>I will continue to add sample code to this document.</p>
 
-    <h2><a name="DownloadingJAMon">13. Downloading JAMon</a></h2>
-
-
-<!-- When not using javaperformancetuning.com version of this document remove this comment
-<td><p>Click here to downlaod <a href="JAMon.jar">JAMon jar</a>, which contains the JAMon API (approximately 90K).</p>
-    <p>Click here to download the <a href="JAMon.war">JAMon WAR</a> (Web Application Archive).  The WAR can be
-    installed in any J2EE compliant application server.  The WAR contains a servlet that generates monitoring
-    statistics (/JAMon/JAMonDemo), and a JSP that allows us to look at the statistics (/JAMon/JAMonAdmin.jsp).</p>
-
-    </td>
--->
-
-<!-- For the javaperformancetuning.com version of this document comment out the above
-section and replace it with the following code provided by Jack Shirazi.  This 
-section will track the number of downloads.
-
--->
-
-
-
-    <p>Click here to <a href="http://sourceforge.net/project/showfiles.php?group_id=96550">download JAMon</a>. This download contains: </p>
-    <ul>
-     <li>The jamon jar file - Contains the JAMon binary</li>
-     <li>The jamon war file </li>
-     <li>fdsapi.war - A sample Java Web Application that uses JAMon.  The war uses a servlet filter and JAMon to
-     monitor all accesses to file resources such as HTML, JSPs, GIFs, and JPGs.  JAMon also monitors all JDBC accesses
-     in the application.  The application uses the an open source product called the FormattedDataSet to generate dynamic
-     text including HTML and XML.  Click here to learn more about the <a href="http://www.fdsapi.com">FormattedDataSet</a>. 
-       </li>
-     <li><a href="javadoc/index.html">JAMon Java Docs</a></li>
-     <li>JAMon Source Code - The full source code used to build the jamon jar file.  There are approximately 1000 lines of code in JAMon, and it has some nice examples of 
-     the Gang of 4 design patterns including the creational, iterator, command and decorator patterns.</li>
-     <li>A JAMon Presentation - A PowerPoint presentation saved as an HTML file - Does not included JAMon 2.0 information</li>
-    </ul>
-
-
-<h2><a name="Support">14. Support</a></h2>
-    <p>Please submit any questions about JAMon to the sourceforge support forum, so that all users may benefit from the answers.
-    The following link will take you to the JAMon support forum <a href="http://sourceforge.net/forum/forum.php?forum_id=334830">JAMon Support Forum</a>.
-    If JAMon has been helpful please make a donation to help offset the costs of running the project:
-    <a href="http://sourceforge.net/project/project_donations.php?group_id=96550">Donate to JAMon</a>
-    </p>
-
-
-
+    
 <h2><a name="JAMonLicense">15. JAMon License Agreement</a></h2>
-    <p>JAMon has a very liberal license agreement. The spirit of the license is that there are no restrictions on its use.  Should something not
-be clear in the license feel free to contact me, and I can clarify. In general JAMon binaries can be used free of charge in any
+    <p>JAMon has a very liberal license. The spirit of the license is that there are no restrictions on its use.  Should something not
+be clear in the license please to contact <a href="mailto:admin@jamonapi.com">admin@jamonapi.com</a>. 
+In general JAMon binaries can be used free of charge in any
 software (commercial software too), and JAMon source code may be modified.
 The <a href="JAMonLicense.html" target="_blank">JAMon License</a> was adapted from the <a href='http://www.opensource.org/licenses/bsd-license.php'>BSD license.</a>
-It is requested that any modifications developers make to JAMon be sent to <a href="mailto:admin@jamonapi.com">admin@jamonapi.com</a>
-, so that all JAMon users may benefit.</p>
 
-    <h2><a name="Acknowledgements">16. Acknowledgements/Contributors</a></h2>
-    <p>I am indebted to the following for their support in improving JAMon.
-    </p> 
+    </p>
 
-    <ul>
-    <li>Ed Desrosiers - A coworker of 15 years that was involved in the early design of JAMon.  I also often use him as
-        a sounding board for ideas I have (he sat 5 feet from me in this cubicle based world).  In addition he came up 
-        with the idea of 'Last Value' in JAMon 2.0., and comes up with inventive ways to use JAMon and the FormattedDataSet.</li>
-    <li>Eric Laufer - Helped make the JAMon and FormattedDataSet screens look more professional.</li>
-    <li>Ron Weinstein - Another Sybase coworker that served as a sounding board.  His input in JAMon 2.0 helped
-        improve JAMon ranges.</li>
-    <li>Peter Blagrove - A college friend that is a great sounding board for ideas.</li>
-    <li>Jeroen Borgers - Jeroen suggested internationalizing dates and numbers in the JAMon 2.0 reports.</li>
-    <li>Jack Shirazi - Jack runs a great <a href="http://www.javaperformancetuning.com">Java Performance Tuning website</a>.  He saw the value of JAMon right away and hosted it during the initial release.
-    </li>
-    <li>Java Ranch - I am a regular contributor to the excellent <a href="http://saloon.javaranch.com/cgi-bin/ubb/ultimatebb.cgi?ubb=forum&f=15">
-    Java Ranch performance tuning forum</a>.  If you haven't checked out Java Ranch yet, I suggest you do as a lot of smart people post there.   
-    Here is a <a href="http://faq.javaranch.com/view?EnterprisePerformance">performance FAQ</a>/rant that summarizes 
-    most of my thoughts on performance tuning.  Java Ranch has also given me a venue to promote JAMon.
-    </li>
-    <li>Your name! - Your contribution!  See the JAMon Challenges section!
-    </li>
- 
-   </ul>
-  <h2><a name="AboutAuthor">17. About the Author </a></h2>
-
-    <p>Steve Souza has 20+ years of software and database development experience specializing in performance tuning.
-    </p> 
-
-    <p>Document last modified 01/2015.</p>
-
-
-
-
+    
 <p align="center">
 <a href="http://www.fdsapi.com"><img src="fds_logo_fulltext_blue2_150.jpg"
 id="fdsbanner" border="1" /></a>
