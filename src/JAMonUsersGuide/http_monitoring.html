@@ -12,22 +12,6 @@
 <body>
 <div class="container">
 
-    <script type="text/javascript"><!--
-google_ad_client = "pub-2677015225815089";
-google_ad_width = 728;
-google_ad_height = 90;
-google_ad_format = "728x90_as";
-google_ad_type = "text_image";
-google_ad_channel ="";
-google_color_border = "336699";
-google_color_bg = "FFFFFF";
-google_color_link = "0000FF";
-google_color_url = "008000";
-google_color_text = "000000";
-//--></script>
-<script type="text/javascript"
-  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
 
 
 <p align="center">
@@ -201,18 +185,21 @@ google_color_text = "000000";
     and also inherits from these classes.  For example any method from Tomcat's org.apache.catalina.connector.Request, or org.apache.catalina.connector.Response. The next value specifies to use
     the units of 'ms.' (milliseconds).  Implicitly these units also tell JAMon to time the request.  'ms.' are the only units that will time the request.  'as allPages' is an optional alias
     that will can be used to make the JAMon label more readable.  Example JAMon Label: com.jamonapi.http.JAMonTomcatValve.request.allPages, ms.</li>
-    
+    <br>
+
     <li><b>request.getRequestURI().value.ms as page</b> - This monitor is similar to the above except for the use of the keyword 'value'.  In this caes 'value' tells JAMon to take the value that 
     the 'request.getRequestURI()' method returns and use it in the JAMon label.  'getRequestURI()' returns the requested page name such as '/jamon/jamonadmin.jsp'.  The effect of this summary label
     is to create a JAMon label of the following format:  com.jamonapi.http.JAMonTomcatValve.request.page.value: /jamon/jamonadmin.jsp, ms.
     </li>
-    
+    <br>
+
     <li><b>response.getContentCount().bytes</b> - This label calls the HttpServletResponse.getContentCount() method and passes its return value (an int indicating bytes in the response)
     to the monitor.  This allows JAMon to track such stats as the average, and max bytes in a response.  The units are in 'bytes'.  Note any unit that is not 'ms.' will take the return
     value and use it as the JAMon value if it is a number or if the method returns a String it will simply pass the number 1 to JAMon having the effect of only 'counting' the label.  This summary label
     creates the JAMon label:  com.jamonapi.http.JAMonTomcatValve.response.getContentCount(), bytes
     </li>
-    
+    <br>
+
     <li><b>response.getStatus().value.httpStatus</b> - This label calls the HttpServletResponse.getStatus() method which returns the <a href="http://www.w3.org/Protocols/HTTP/HTRESP.html">http status code</a>
     of the request (i.e. 200=ok, 404=file not found).  It uses the special token 'value' to indicate that the value returned from the function (200, 404 etc) will be used as part of the JAMon key.  Remember JAMon 
     depends on keys being relatively unique, so don't use 'value' for something that can potentially generate a large number of keys (request.getQueryString() for example). 
@@ -221,22 +208,26 @@ google_color_text = "000000";
     If '0' is passed the number of HTTP monitors can grow unbounded. The units in this example are 'httpStatus'.  
     An example JAMon label: com.jamonapi.http.JAMonTomcatValve.response.getStatus().value: 404, httpStatus.
     </li>
-    
+    <br>
+
     <li><b>request.contextpath.ms</b> - In addition to 'value' there are two other keywords that allow you to generate a JAMon key.  They are 'url', and 'contextpath'.  'contextpath' will use
     the return value from 'request.getContextPath()' as part of the key.  An example of a return value is '/jamon'.  'url' will use 'request.getRequestURI()' as part of the key.  Any value other than 'request', 
     'response', 'methodName()', 'value', 'contextpath', 'url' and '.' will be used as the units.  'value', 'contextpath', and 'url' can be used in combination.  They will be used as part of the
     key in the order they are specified.  An example JAMon label: com.jamonapi.http.JAMonTomcatValve.request.contextpath: /jamon, ms.. 
     </li>
-    
+    <br>
+
     <li><b>An additional example - request.getStatus().contextpath.value.ms</b> Using the above mentioned keyworeds this summary label would return the 
     following representative JAMon label:  com.jamonapi.http.JAMonTomcatValve.request.getStatus().contextpath: /jamon, value: 404 (i.e. shows how many 404 errors occured in the jamon context).
     </li>
-    
+    <br>
+
     <li><b>'default' and 'demo'</b> - Using either 'default' or 'demo' as the summary label has special meaning to JAMon.  'default' uses the HTTP monitors defaults as you would expect.  However you can also
     add to default by providing a string like the following:  default, request.getStatus().contextpath.value.ms.   'demo' is only to be used so you can see many of the possible monitors and shouldn't be
     used in production.  'demo' is an easy way to see what other summary labels you may want to add.  Keep in mind some of the 'demo' labels may not be very helpful as it is really
     a dumb cartesian product of possibilities ignoring whether or not they are useful.
     </li>
+    <br>
 
     </ul>
     
