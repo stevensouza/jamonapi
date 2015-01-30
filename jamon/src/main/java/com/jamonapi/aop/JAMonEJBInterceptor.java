@@ -12,9 +12,9 @@ public class JAMonEJBInterceptor extends JAMonInterceptor{
      * Mimic the labels of the original implementation.
      */
     public JAMonEJBInterceptor() {
-        this.interceptorPrefix = "JAMonEJBInterceptor: ";
+        this.interceptorPrefix = "";
         this.hierarchyDelimiter = "";
-        this.exceptionLabel = "JAMonEJBInterceptor.EJBException";
+        this.exceptionLabel = "EJBException";
         this.unknownLabel = interceptorPrefix + hierarchyDelimiter + "???";
     }
 }

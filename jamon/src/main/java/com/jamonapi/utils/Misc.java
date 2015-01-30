@@ -44,21 +44,27 @@ public class Misc {
         else
             coll.add(objToAdd);
     }
-
-
+    
+    
     public static String getAsString(Object obj) {
-        if (obj==null)
-            return null;
-        else if (obj instanceof Collection)
-            return getCollAsString((Collection)obj);
-        else if (obj instanceof Object[])
-            return getArrAsString((Object[]) obj);
-        else if (obj instanceof ToArray)
-            return getArrAsString(((ToArray)obj).toArray());
-        else if (obj instanceof Throwable)
-            return getExceptionTrace((Throwable)obj);
-        else
-            return obj.toString();
+        try {
+            if (obj==null)
+                return null;
+            else if (obj instanceof Collection)
+                return getCollAsString((Collection)obj);
+            else if (obj instanceof Object[])
+                return getArrAsString((Object[]) obj);
+            else if (obj instanceof ToArray)
+                return getArrAsString(((ToArray)obj).toArray());
+            else if (obj instanceof Throwable)
+                return getExceptionTrace((Throwable)obj);
+            else
+                return obj.toString();
+        }
+        catch(Exception e) {
+            // ignore any exception here since
+            return "???";
+        }
     }
 
     private static String getCollAsString(Collection coll) {

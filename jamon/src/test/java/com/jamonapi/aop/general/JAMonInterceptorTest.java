@@ -79,7 +79,7 @@ public class JAMonInterceptorTest {
         JAMonInterceptor interceptor = new TestJAMonInterceptor();
         interceptor.onException(context, "JAMonInterceptor.???", new RuntimeException());
 
-        assertEquals("Expecting two exception label" ,2, MonitorFactory.getNumRows());
+        assertEquals("Expecting one exception label", 1, MonitorFactory.getNumRows());
     }
 
     class TestJAMonInterceptor extends JAMonInterceptor {
