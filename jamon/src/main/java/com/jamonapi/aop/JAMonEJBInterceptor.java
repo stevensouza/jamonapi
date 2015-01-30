@@ -14,7 +14,7 @@ public class JAMonEJBInterceptor extends JAMonInterceptor{
     public JAMonEJBInterceptor() {
         this.interceptorPrefix = "";
         this.hierarchyDelimiter = "";
-        this.exceptionLabel = "EJBException";
+        this.exceptionLabel = "javax.ejb.EJBException";
         this.unknownLabel = interceptorPrefix + hierarchyDelimiter + "???";
     }
 }

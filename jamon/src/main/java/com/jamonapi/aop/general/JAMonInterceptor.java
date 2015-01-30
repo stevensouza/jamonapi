@@ -114,7 +114,9 @@ public class JAMonInterceptor {
 
     /**
      * Default exception handling.
-     * Creates an JAMon exception monitor to keep track of the exceptions.
+     * Creates two  JAMon exception monitor to keep track of the exceptions - one
+     * monitor is used as overall exception count whereas the second one is used
+     * to track the EJB-related exceptions.
      * This method can be overridden.
      *
      * @param ctx Invocation context
@@ -125,8 +127,8 @@ public class JAMonInterceptor {
     protected Exception onException(InvocationContext ctx, String label, Exception exception) throws Exception {
         Object[] parameters = ctx.getParameters();
         Object[] details = createExceptionDetails(label, parameters, exception);
-        // TODO sgoeschl 2015-01-30 why we need the second MonKeyIml here?!
-        // MonitorFactory.add(new MonKeyImp(exceptionLabel, details, "Exception"), 1);
+        MonitorFactory.add(new MonKeyImp(exceptionLabel, details, "Exception"), 1);
+        // 
         MonitorFactory.add(new MonKeyImp(MonitorFactory.EXCEPTIONS_LABEL, details, "Exception"), 1);
         return exception;
     }
