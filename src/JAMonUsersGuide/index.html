@@ -6,6 +6,7 @@
 <meta name="description" content="The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.">
 <title>JAMon - Documentation</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="jamon_docs.css">
 
 </head>
 
@@ -128,18 +129,78 @@ See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to 
 <h2><a name="Introduction">JAMon Introduction</a></h2>
 
 <p>The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API
-    that allows developers to easily monitor production applications.  </p>  
+    that allows developers to easily monitor production applications.
+    </p>
 
-   
+    <ul>
+        <li>JAMon allows developers to track their applications
+            performance and behavior using predefined modules.  There are modules that automatically monitor
+            : SQL, HTTP page requests, Spring beans, method invocations, Log4j, and Exceptions.  Other modules are often easy to build.</li>
+        <li>JAMon keeps track of the following metrics for any of the items it tracks in the modules: hits, total, average,
+        min, max and concurrency (average, max, current/active) to name a few.</li>
+        <li>JAMon is fast and doesn't consume much memory and so it is suitable for production environments.</li>
+        <li>JAMon statistics, stack traces and more are viewable from the JAMon war, JMX and are also accessible via the JAMon API.</li>
+    </ul>
 
-    <p>JAMon was developed primarily for monitoring J2EE applications, however JAMon 1.0/2.0 can be used in any JDK 1.2
-    or higher environment, and JAMon 2.1 can be used in any JDK 1.4 or higher environment.   JAMon can be used in Servlets, JSP's, EJB's and Java 
-    Beans in various J2EE Application Servers (Sybase's EAServer, and BEA's WebLogic, WebSphere�), and can also be used in other programming
-    environments that can call Java code (ColdFusion, PowerBuilder, BroadVision, ...).  JAMon is particularly useful in multithreaded software like a 
-     database engine.</p>
+    <p>In addition to using modules developers can monitor anything the modules don't cover by using JAMon's simple API methods 'start/stop' and 'add'.</p>
 
-    <p>Feel free to continue reading the user's guide or <a href="http://sourceforge.net/project/showfiles.php?group_id=96550">download JAMon</a> 
-    and read the <a href="javadoc/index.html">Java Docs</a>.</p>
+
+    <p>Of course nobody wants to litter their code with calls to add and stop, so when possible JAMon monitoring modules should be used as they allow the easiest monitoring.
+        JAMon was developed primarily for monitoring web applications, however JAMon can be used in any JDK 1.6 or higher environment.
+    </p>
+
+    <p>Feel free to continue reading the user's guide or <a href="http://sourceforge.net/project/showfiles.php?group_id=96550">download JAMon</a>
+        and read the <a href="javadoc/index.html">Java Docs</a>.</p>
+
+    <h2><a name="simpleexample">API Examples - start/stop and add</a></h2>
+
+    <p><strong>MonitorFactory.start("myLabel");</strong> - The start/stop methods time any code that they surround.
+
+    <div class='indent'>
+     <pre>
+        import com.jamonapi.*;
+        ...
+        Monitor mon=MonitorFactory.start("myFirstMonitorLabel"); // using Strings is flexible as they can represent anything.
+        ...Code Being Timed...
+        mon.stop();
+     </pre>
+    "myFirstMonitorLabel" can be replaced by strings that represent...
+        <ul>
+         <li>Page names - "/mydirectory/myfantasticpage.jsp"</li>
+         <li>SQL statements - "select * from myawesometable"</li>
+         <li>or anything else you would like to time.</li>
+        </ul>
+    </div>
+
+
+    <p><strong>MonitorFactory.add("myLabel", "myUnits", myValue);</strong>Sometimes developers are interested
+        in counting the frequency of items (such as exceptions, or page requests with a certain status code).
+        In addition they are interested in measuring other concepts such as how many bytes are sent/received,
+        or how much free memory there is.  JAMon provides the 'add' method to handle these situations.
+    </p>
+    <div class='indent'>
+
+      <pre>
+        import com.jamonapi.*;
+        ...
+        double myValue=...
+        MonitorFactory.add("myBytesSentLabel", "MB", myValue); // units can be any string, and myValue can be any numeric
+       </pre>
+     </div>
+
+
+    <p>
+    <ul>
+        <li>JAMon keeps the label and units as a key in a Map and every time start or add are called with the
+        same key JAMon updates statistics for: hits, total, average, min, max and concurrency (average, max, current/active) to name a few.</li>
+        <li>JAMon is fast and doesn't consume much memory and so it is suitable for production environments. </li>
+        <li>JAMon statisics, stack traces and more are viewable from the JAMon war, JMX and
+        are also accessible via the JAMon API.</li>
+    </ul>
+    </p>
+
+
+
 
  
 
