@@ -22,6 +22,14 @@
 <body>
 <div class="container">
 
+    <ol>
+        <li><a href="#configuring">How do I monitor my SQL/JDBC?</a></li>
+        <li><a href="#monitoringsqlcommandssumm">Viewing SQL Summary Satistics</a></li>
+        <li><a href="#monitoringsqlcommandsdetails">Viewing SQL Details</a></li>
+        <li><a href="#jdbcmethodmonitoring">Viewing JDBC methods and exceptions</a></li>
+    </ol>
+
+
     <p>One of the most powerful aspects of JAMon 2.1 is that it can track performance for all queries issued by an application
         (see 'Monitoring SQL Commands - JAMon Summary Statistics') and allow developers to view all recent queries that have executed
         in a rolling buffer (see 'Monitoring SQL Commands - Details').  In addition it can track JDBC method calls to Statements, ResultsSets
@@ -81,7 +89,7 @@ Connection conn = DriverManager.getConnection(url, user, passWord);
 
     </p>
 
-<h2><a name="monitoringsqlcommandssumm">Monitoring SQL Commands (JAMon Summary Statistics)</a></h2>
+<h2><a name="monitoringsqlcommandssumm">Viewing SQL Summary Satistics</a></h2>
 
     <p>A number of different JAMon summary statistics will be kept for each query executed from a monitored Statement/PreparedStatement/CallableStatement. 
     JAMon labels for SQL summary statistics begin with:  <b>MonProxy-SQL</b>.  These summary statistics allow developers to see how many times a query has been 
@@ -117,7 +125,7 @@ Connection conn = DriverManager.getConnection(url, user, passWord);
     <p><img src="jamon_sql_summary.png" border="1"> </p>
     <br/>
 
-    <h2><a name="monitoringsqlcommandsdetails">Monitoring SQL Commands (SQL Details)</a></h2>
+    <h2><a name="monitoringsqlcommandsdetails">Viewing SQL Details</a></h2>
 
 
     <p>The details of the most recent N SQL commands issued are kept in a rolling buffer and are viewable via sql.jsp. 
@@ -145,10 +153,10 @@ Connection conn = DriverManager.getConnection(url, user, passWord);
     <br/>
 
 
-    <h2><a name="jdbcmethodmonitoring">JDBC method monitoring</a></h2>
+    <h2><a name="jdbcmethodmonitoring">Viewing JDBC methods and exceptions</a></h2>
 
 
-    <p>JDBC interface monitoring has all the capabilities mentioned in <a href="jamon_interface.html">interface monitoring</a> ,
+    <p>JDBC interface monitoring has all the capabilities mentioned in <a href="jamon_interface.html">interface monitoring</a>,
         but also a few extra capabilities. </p>
 
     <ul>
