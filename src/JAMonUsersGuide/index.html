@@ -27,17 +27,6 @@
 <p>The table of contents for JAMon documentaiton follows:</p>
 
 <ol>
-    <li>JAMon is now on Maven.  The Maven pom dependency follows (substitute the appropriate version):</li>
-    
-    <pre>
-    &lt;dependencies&gt;
-        &lt;dependency&gt;
-            &lt;groupId>com.jamonapi&lt;/groupId&gt;
-            &lt;artifactId>jamon&lt;/artifactId&gt;
-            &lt;version>2.80&lt;/version&gt;
-        &lt;/dependency&gt;
-    &lt;/dependencies&gt;
-    </pre>
 
 	   <li>JAMon Videos - Short YouTube videos showing how to use JAMon</li>
         <ol type="a">
@@ -163,7 +152,22 @@
     </ul>
     </p>
 
-<h2><a name="simpleexample">API Examples - start/stop and add</a></h2>
+    <h2><a name="maven">Maven</a></h2>
+    JAMon is on Maven.  The Maven pom dependency follows (substitute the appropriate version):
+
+    <pre>
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId>com.jamonapi&lt;/groupId&gt;
+            &lt;artifactId>jamon&lt;/artifactId&gt;
+            &lt;version>2.80&lt;/version&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    </pre>
+
+
+
+    <h2><a name="simpleexample">API Examples - start/stop and add</a></h2>
 
     <p><strong>MonitorFactory.start("myLabel");</strong> - The start/stop methods time any code that they surround.
 
@@ -207,7 +211,7 @@
 
 
     
-<h2><a name="JAMonLicense">15. JAMon License Agreement</a></h2>
+<h2><a name="JAMonLicense">JAMon License Agreement</a></h2>
     <p>JAMon has a very liberal license. The spirit of the license is that there are no restrictions on its use.  Should something not
 be clear in the license please to contact <a href="mailto:admin@jamonapi.com">admin@jamonapi.com</a>. 
 In general JAMon binaries can be used free of charge in any
