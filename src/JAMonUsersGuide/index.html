@@ -22,29 +22,7 @@
 <!-- START JAMON SPECIFIC HTML -->
 <body>
 <div class="container">
-<p>JAMon comes with several ways to monitor your application that require no application code changes.  Usually all that is required is to...
-    <ul>
-    <li>add a line to an xml file,</li>
-    <li>put the jamon jar file in your classpath, </li>
-    <li>and install the JAMon war to view JAMon metrics/monitors (or you
-    can view the metrics in a JMX console like jconsole).</li>
-    </ul>
-See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to monitor page requests in your web server.
-    You could be monitoring your code in a few minutes.  Happy monitoring!
-</p>
 
-<p>Some JAMon highlights follow:
-    <ul>
-        <li><a href="distributed_jamon.html">Distributed Application Monitoring</a> - View all the data from your organizations applications from a central monitoring web application (the JAMon web application).</li>
-        <li><a href="http_monitoring.html">HTTP Monitoring</a> - Monitor requests/responses to Tomcat, Jetty, JBoss or any other JAVA web container. Track page execution times, status codes,
-            bytes sent, exceptions thrown and more.</li>
-        <li><a href="spring_aop_monitoring.html">Spring Monitoring</a> - Monitor any Spring bean.  Track method invocations, arguments passed to methods, and  exceptions thrown.</li>
-        <li><a href="#monitoringsqlcommands">JDBC/SQL monitoring</a> - via the JAMon JDBC proxy driver (works with any other JDBC driver). Track SQL called, JDBC method calls, exceptions thrown and more.</li>
-        <li><a href="log4j_jamonappender.html">Log4j Monitoring</a> -  Monitor via the JAMon log4j Appender.  Track counts for ERROR, INFO, WARNING etc.  'Tail' the Log4j log from the JAMon web application</li>
-        <li><a href="#ejbmonitoring">EJB3 Monitoring</a> - Monitor EJBs using the JAMon EJB interceptor.</li>
-        <li><a href="jmx_jamon.html">JAMon JMX</a> - View JAMon data in a JMX tool like jconsole and visualvm. (2.80+)</li>
-    </ul>
-</p>
 
 <p>The table of contents for JAMon documentaiton follows:</p>
 
@@ -139,7 +117,7 @@ See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to 
         <li>JAMon keeps track of the following metrics for any of the items it tracks in the modules: hits, total, average,
         min, max and concurrency (average, max, current/active) to name a few.</li>
         <li>JAMon is fast and doesn't consume much memory and so it is suitable for production environments.</li>
-        <li>JAMon statistics, stack traces and more are viewable from the JAMon war, JMX and are also accessible via the JAMon API.</li>
+        <li>JAMon statistics, stack traces and more are viewable from the <a href="jamon_war.html">JAMon war</a>, JMX and are also accessible via the JAMon API.</li>
     </ul>
 
     <p>In addition to using modules developers can monitor anything the modules don't cover by using JAMon's simple API methods 'start/stop' and 'add'.</p>
@@ -152,7 +130,37 @@ See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to 
     <p>Feel free to continue reading the user's guide or <a href="http://sourceforge.net/project/showfiles.php?group_id=96550">download JAMon</a>
         and read the <a href="javadoc/index.html">Java Docs</a>.</p>
 
-    <h2><a name="simpleexample">API Examples - start/stop and add</a></h2>
+
+
+    <h2><a name="letsstart">How do I monitor my application?</a></h2>
+
+    <p>JAMon comes with several ways to monitor your application that require no application code changes.  Usually all that is required is to...
+    <ul>
+        <li>add a line to an xml file,</li>
+        <li>put the jamon jar file in your classpath, </li>
+        <li>and install the JAMon war to view JAMon metrics/monitors (or you
+            can view the metrics in a JMX console like jconsole).</li>
+    </ul>
+    See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to monitor page requests in your web server.
+    You could be monitoring your code in a few minutes.  Happy monitoring!
+    </p>
+
+    <p>Below are some quick links that show how to enable other types of monitoring and explain other aspects of JAMon:
+    <ul>
+
+        <li><a href="distributed_jamon.html">Distributed Application Monitoring</a> - View all the data from your organizations applications from a central monitoring web application (the JAMon web application).</li>
+        <li><a href="http_monitoring.html">HTTP Monitoring</a> - Monitor requests/responses to Tomcat, Jetty, JBoss or any other JAVA web container. Track page execution times, status codes,
+            bytes sent, exceptions thrown and more.  Alternatively if you would like to monitor only your Web app and not the whole server you can
+            use the <a href="jamon_servlet_filter.html">JAMonFilter</a> servlet filter or easily create your own.</li>
+        <li><a href="spring_aop_monitoring.html">Spring Monitoring</a> - Monitor any Spring bean.  Track method invocations, arguments passed to methods, and  exceptions thrown.</li>
+        <li><a href="#monitoringsqlcommands">JDBC/SQL monitoring</a> - via the JAMon JDBC proxy driver (works with any other JDBC driver). Track SQL called, JDBC method calls, exceptions thrown and more.</li>
+        <li><a href="log4j_jamonappender.html">Log4j Monitoring</a> -  Monitor via the JAMon log4j Appender.  Track counts for ERROR, INFO, WARNING etc.  'Tail' the Log4j log from the JAMon web application</li>
+        <li><a href="#ejbmonitoring">EJB3 Monitoring</a> - Monitor EJBs using the JAMon EJB interceptor.</li>
+        <li><a href="jmx_jamon.html">JAMon JMX</a> - View JAMon data in a JMX tool like jconsole and visualvm. (2.80+)</li>
+    </ul>
+    </p>
+
+<h2><a name="simpleexample">API Examples - start/stop and add</a></h2>
 
     <p><strong>MonitorFactory.start("myLabel");</strong> - The start/stop methods time any code that they surround.
 
@@ -170,6 +178,8 @@ See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to 
          <li>SQL statements - "select * from myawesometable"</li>
          <li>or anything else you would like to time.</li>
         </ul>
+    <p>JAMon keeps the label and units as a key in a Map and every time start or add are called with the
+        same key JAMon updates statistics for: hits, total, average, min, max and concurrency (average, max, current/active) to name a few.</p>
     </div>
 
 
@@ -188,16 +198,7 @@ See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to 
        </pre>
      </div>
 
-
-    <p>
-    <ul>
-        <li>JAMon keeps the label and units as a key in a Map and every time start or add are called with the
-        same key JAMon updates statistics for: hits, total, average, min, max and concurrency (average, max, current/active) to name a few.</li>
-        <li>JAMon is fast and doesn't consume much memory and so it is suitable for production environments. </li>
-        <li>JAMon statisics, stack traces and more are viewable from the JAMon war, JMX and
-        are also accessible via the JAMon API.</li>
-    </ul>
-    </p>
+    <p>Link to another <a href="additional_example.html">simple example.</a></p>
 
 
 
@@ -231,56 +232,7 @@ See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to 
            </ul>
     </ul>
 
-<h2><a name="WhatsNew22">2. What's new in JAMon 2.2 and 2.3?</a></h2>
 
-
-
- 
-    
-     <p>JAMon 2.2 fixes a few bugs and adds the new JAMon JDBC driver which allows developers to monitor JDBC/SQL without changing any code. The JAMonDriver
-     class is com.jamonapi.proxy.JAMonDriver and representative URLS follow. Note in the jamonrealdriver below the actual driver is used.</p>
-     <ul>
-   	<li>jdbc:<b>jamon</b>:sybase:Tds:localhost:2638?<b>jamonrealdriver=com.sybase.jdbc2.jdbc.SybDriver</b>
-        <li>jdbc:jamon:sybase:Tds:myserver.mycompany.com:2638?jamonrealdriver=com.sybase.jdbc2.jdbc.SybDriver&PROTOCOL_CAPTURE=/opt/sw/eas/eas5/sched.log
-        <li>jdbc:jamon:opena:jamonrealdriver=com.asgardsw.OpenA.OpenADriver&159.234.234.164:5000/USR/DB/ (OPENA)CONFIG/AMWEB/DEV ON SOFTWARE
-    </ul>
-
-    <p>
-    <b>JDBC Syntax Without JAMon:</b> An example of how to connect to a database using a JDBC driver follows (The example uses Sybase, but any vendors driver would do)<br>
-    <pre  class="pre-scrollable">
-        Class.forName("com.sybase.jdbc2.jdbc.SybDriver");
-        String url = "jdbc:sybase:Tds:MyServerDNS:2638";
-        Connection conn = DriverManager.getConnection(url, user, passWord);
-    </pre>
-
-    <b>JDBC Syntax With JAMon:</b> The following code will use JAMon as a proxy to track performance, but uses the underlying driver to perform the queris 
-    (The example uses Sybase, but any vendors driver would do).  Note no code changes would be required if connection strings were placed in a configuration 
-    file.  The JAMon jar file must also be placed in the classpath.<br>
-      <pre  class="pre-scrollable">
-    Class.forName("com.jamonapi.proxy.JAMonDriver");
-    String url = "jdbc:jamon:sybase.Tds:MyServerDNS:2638?jamonrealdriver=com.sybase.jdbc2.jdbc.SybDriver";
-    Connection conn = DriverManager.getConnection(url, user, passWord);
-    </pre>
-
-    </p>  
-
-    <p>Note JAMon simply removes 'jamon', and  'jamonrealdriver=XXXX' from the url, so the url should work with the underlying driver when they are removed.  Note the '?' above is 
-    not part of JAMon syntax, but instead part of the underlying Sybase driver syntax. In the Oracle example below, there is no 
-    delimiter between 'jamonreaddriver' and the previous part of the oracle driver, which looks odd, but it is appropriate.
-    </p>
-
-    
-    
-    <p>
-      <pre  class="pre-scrollable">
-
-    Class.forName("com.jamonapi.proxy.JAMonDriver");
-    String url = "jdbc:<b>jamon</b>:oracle:thin:@dbms:1521:DBjamonrealdriver=oracle.jdbc.OracleDriver";
-    Connection conn = DriverManager.getConnection(url, user, passWord);
-    </pre>
-  
-
-    </p>
 
  
     <h2><a name="monitoringinterfaces">3.a Monitoring Interfaces</a></h2>
@@ -376,532 +328,7 @@ MonProxy-Interface (class=org.hsqldb.jdbcConnection): public abstract void java.
   } catch (Exception e) {} 
 </pre>
 
-<h2><a name="monitoringinterfacesjdbc">3.f Monitoring Interfaces - JDBC Interfaces</a></h2>
 
-    <p>JDBC interface monitoring has all the capabilities mentioned above, but also a few extras. </p>  
-
-    <ul>
-    <li>Monitoring for Connection/Statement/PreparedStatement/CallableStatement/ResultSet JDBC interfaces does not require casting of the returned 
-    monitoring proxy.
-            <pre  class="pre-scrollable">
-
-	import com.jamonapi.proxy.*;
-
-	// The MyObject() class has to implement MyInterface for monitoring to work.
-	Connection monitoredConnection = MonProxyFactory.monitor(originalConnection);
-       </pre>
-    <li>If a Connection is monitored then any Statement/PreparedStatement/CallableStatement/ResultSet returned is automatically monitored, 
-        and need not be wrapped by a call to monitor(...) itself
-            <pre  class="pre-scrollable">
-
-	import com.jamonapi.proxy.*;
-
-	// The MyObject() class has to implement MyInterface for monitoring to work.
-	Connection monitoredConnection = MonProxyFactory.monitor(originalConnection);
-	// The following is not needed to monitor a Statement.  The statement is automatically monitored due to its connection being monitored
-	Statement statement=MonProxyFactory.monitor(monitoredConnection.createStatement());
-        </pre>
-
-    <li>Due to the standardized nature of SQLExceptions they have more information in the JAMon summary report than other Exceptions.  They include SQLError and SQLState 
-        information.  Example - MonProxy-Exception: Root cause exception=java.sql.SQLException,ErrorCode=-22,SQLState=S0002
-    </ul>
-
-
-    <h2><a name="monitoringsqlcommands">3.g Monitoring SQL Commands</a></h2>
-
-
-    <p>One of the most powerful aspects of JAMon 2.1 is that it can track performance for all queries issued by an application 
-      (see 'Monitoring SQL Commands - JAMon Summary Statistics') and allow developers to view all recent queries that have executed 
-      in a rolling buffer (see 'Monitoring SQL Commands - Details').  
-    </p>  
-
-<h2><a name="monitoringsqlcommandssumm">3.h Monitoring SQL Commands (JAMon Summary Statistics)</a></h2>
-
-    <p>A number of different JAMon summary statistics will be kept for each query executed from a monitored Statement/PreparedStatement/CallableStatement. 
-    JAMon labels for SQL summary statistics begin with:  <b>MonProxy-SQL</b>.  These summary statistics allow developers to see how many times a query has been 
-    executed, what its time statistics are (avg/total/min/max/...), whether or not it is currently executing and if so how 
-    many times, and more.</p>
- 
-    <p>For each SQL command the following JAMon summary labels will appear in the JAMonAdmin report.</p>
-
-    <ul>
-    <li><b>MonProxy-SQL-Type</b> - Statistics for SQL commands of the following types:  select, update, delete, insert, truncate, exec, create, drop, 
-        alter, commit, save, grant, revoke, and other.  Essentially this is the first word of the SQL command, and other 'types' may be added 
-        by developers via the JAMon API.  This monitor allows developers to see statistics (hits/avg time/concurrency/...) for 
-        select's/update's/delete's etc.   Example - MonProxy-SQL-Type: select
-     <li><b>MonProxy-SQL-PreparedStatement</b> - This monitor will give statistics for every SQL command issued against a 
-        PreparedStatement/CallableStatement.  Example - MonProxy-SQL-PreparedStatement: select * from SYSTEM_TYPEINFO where LOCAL_TYPE_NAME=?
-     <li><b>MonProxy-SQL-Statement</b> - This monitor will give statistics for every SQL command issued against a Statement.  To allow aggregation all 
-        SQL argument values are replaced with '?'.  For example, "select * from employee where name='steve'", and 
-        "select * from employee where name='jeff'" both become "select * from employee where name=?".  
-         Example - MonProxy-SQL-Statement: select * from employee where name=?  
-     <li><b>MonProxy-SQL-PreparedStatement Reuse</b> - Counts how many times PreparedStatements are reused.  One of the benefits of PreparedStatements 
-      is improved performance over Statements if they are reused.  This monitor allows developers to see if they are reusing their PreparedStatements.  
-      Note this is an overall number and it is not tracked for individual queries.
-     <li><b>MonProxy-SQL-Match</b> - The API allows developers to pass in any string and have a monitor show up if the string occurs in a query.  
-      The most obvious use of this is to pass in table names and see how many times the table occurs in queries and what the performance characteristics of these queries is.  
-      This can lead the way to detecting problem tables.  One row will show up in the JAMonAdmin report for each match. 
-      Example - MonProxy-SQL-Match: SYSTEM_TYPEINFO
-        </li>
-        </ul>
-
-
-    <p>SQL summary statistics are viewable via jamonadmin.jsp.</p>
-
-    <h2><a name="monitoringsqlcommandsdetails">3.i Monitoring SQL Commands (SQL Details)</a></h2>
-
-
-    <p>The details of the most recent N SQL commands issued are kept in a rolling buffer and are viewable via sql.jsp. 
-     The SQL buffer size is configurable via the web page, and defaults to the most recent 100 queries.  
-    </p>
-
-    <p>Each row in the report represents a recently executed SQL command. By default the report is sorted with the most recent queries 
-     showing at the top. Each row contains the following columns
-    </p>
-
-    <ul>
-    <li><b>ID</b> - An increasing integer that indicates the number of the query since the server was last booted.
-    <li><b>StartTime</b> - The time the query started
-    <li><b>ExecutionTime</b> - The time in milliseconds that the query took to run.
-    <li><b>StatementReuse</b> - Indicates how many times the PreparedStatement was reused. This value should be high to maximize the benefit of the PreparedStatement. The first time the PreparedStatement is used it will have a value of 0 and will increase with each reuse of the PreparedStatement. Statements will always have a value of 0 here as they aren't reused.
-    <li><b>SQL</b> - The query that executed. For statements it will include the parameter values. PreparedStatements will have '?' in place of values.
-    <li><b>ExceptionStackTrace</b> - If an error happened when executing the query this column will contain the stack trace. If no error occurred it will be empty.
-    <li><b>MethodName</b> - The JDBC method name that executed the query. 
-    </ul>
-
- 
-
-    <p>SQL details are viewable via sql.jsp.</p>
-
-    
-
- 
-    <h2><a name="Possibilities">4.g Specific examples may help you understand the possibilities</a></h2>
-
-        <p>The simple syntax below demonstrates how easy it is to aggregate statistics for purchases (the units are in dollars).
-            The number ($123.40) represents the dollar value of the individual purchase:
-            MonitorFactory.add("purchases", "$", 123.4);
-        </p>
-
-        <p>If the code above was called every time a purchase was made (with 123.4 replaced by a variable) then
-            the JAMon report would be able to show business users and developers, statistics on total purchases in
-            real time.  Using JAMon is that easy!
-        </p>
-
-        <p>Here are some other ideas for things to monitor in JAMon 2.0:
-        </p>
-
-        <ul>
-            <li>Timing Code - This is all JAMon 1.0 could do.
-                <ul>
-                    <li>Web Page performance: MonitorFactory.start("pageHit");
-                    <li>Web Page performance by user:  MonitorFactory.start("pageHit.ssouza"); (or dynamically getting user name from a variable:  MonitorFactory.start("pageHit."+userName);
-                    <li>Method performance:  MonitorFactory.start("com.mypackage.myMethod()");
-                </ul>
-        </ul>
-
-        <p>The following measurements/numbers can only be tracked in JAMon 2.0. Strings and numbers in the examples
-            below are hard coded, but variables can just as easily used:
-        </p>
-
-        <ul>
-            <li>Counting Items.
-                <ul>
-                    <li>Counting Exceptions/Errors/Warnings in your program (a useful log4J appender could be created to do this, or a base class application exception that calls JAMon in the constructor):  MonitorFactory.add("com.jamonapi.MyException","Exception",1)
-                    <li>Counting Logged in users:  MonitorFactory.add("users","count",24);
-                    <li>Counting Connections opened:  MonitorFactory.add("connection","jdbc", 5);
-                    <li>Counting currently opened connections
-                        <ul>
-                            <li>In the open method increment the openConnections counter:  MonitorFactory.add("openConnections","jdbc", 1);
-                            <li>In the close method decrement the openConnections counter:  MonitorFactory("openConnections","jdbc",-1);
-                        </ul>
-                </ul>
-            <li>Code metrics:  MonitorFactory.add("com.me.MyBigClass","lines of code",4000);
-            <li>Counting cache hits/misses:  MonitorFactory.add("cachehit", "count", 1);  MonitorFactory.add("cachemiss","count",1);
-            <li>Counting binary conditions such as true/false, yes/no, up/down, on/off etc (or more generally anything that has a limited number of outcomes):  MonitorFactory.add("ServerUp","boolean",1); or MonitorFactory.add("ServerUp,"boolean", 0)
-            <li>Business/Application Data
-                <ul>
-                    <li>Money statistics:  MonitorFactory.add("heatingcost", "$",70);
-                    <li>Song time in minutes:  MonitorFactory.add("songduration","minutes",4.5);
-                    <li>Phone call duration in minutes by phone number:  MonitorFactory.add("703-919-9000","phonenumber",16);
-                    <li>Scoring average: MonitorFactory.add("nbaPlayer","points",25);
-                    <li>BlackBox type data: MonitorFactory.add("breakingDistance","feet",200);
-                </ul>
-            <li>Internals of a Java program.  JAMon 2.0 shines when it comes to tracking data within a Java server program
-                such as an application server, web server or database server.  Here are some examples:
-                <ul>
-                    <li>Buffer size in bytes: MonitorFactory.add("bufferSize","bytes",list.size())
-                    <li>Number of rows in ResultSets: MonitorFactory.add("ResultSet.numRows","rows",4000);
-                    <li>Number of cells in a table: MonitorFactory.add("table","cells",rows*cols);
-                    <li>Free memory:  MonitorFactory.add("Free Memory", "MB", Runtime.getRuntime().freeMemory());
-                    <li>Free memory With Buffer Detail Info:  MonitorFactory.add(new MonKeyImp("Free Memory", "max memory="+Runtime.getRuntime().maxMemory()+", totalMemory="+Runtime.getRuntime().totalMemory(),"MB"), Runtime.getRuntime().freeMemory());
-                    <li>Count Updates/Deletes/Inserts/Selectcs against a Database table :  MonitorFactory.add("tablename","updates",1);
-                    <li>Number of open file descriptors:  MonitoFactory.add("openFileDescriptors","count",500);
-                    <li>Number of locks in use:  MonitorFactory.add("locksInUse","count", 250123);
-                    <li>Backup time:  MonitorFactory.add("backupTime","minutes",10);
-                </ul>
-        </ul>
-
-        <p>In general you can track any numbers!  A list of other ideas follows: </p>
-        <ul>
-            <li>Standard Measures that have properties and units
-                <ul>
-                    <li>property=distance, unit=mile, foot, centimeter, meter, kilometer, light year,...
-                    <li>property=weight, unit=pound, ounce, ton, gram, kilogram...
-                    <li>property=mass, unit=gram, kilogram,...
-                    <li>property=time, unit=ms., second, minute, hour, day, week, month, year, decade, century...
-                    <li>property=volume, unit=quart, gallon, litre,...
-                    <li>property=temperature, unit=degree fahrenheit, degree celsius
-                    <li>property=area, unit=square inch, square foot, square mile, square meter, square kilometer, acre,...
-                    <li>property=size, unit=byte,MB,GB,...
-                    <li>property=currentcy/money, unit=dollar, franc, peso, euro...
-                </ul>
-        </ul>
-
-        <p>Other numbers you could summarize:  quantity, percentage, count, total, min, max, grade, score, rating,
-            rank, price, cost,...
-        </p>
-
-
-<h2><a name="NewAddMethod">4.h How do I use the new MonitorFacatory.add(...) method?</a></h2>
-
-        <p>Here is an example of how you could use the new MonitorFactory.add(...) method to perform the functionality of JAMon 1.0's
-            start/stop timer.  In fact this is more or less the way this capability is implemented in JAMon 2.0. The first
-            example does not allow you to tell if the code being monitored is currently running (i.e. active),
-            whereas the second example would.  Example 3) is the proper way to do timed monitors, the other examples are
-            merely demonstrative.
-        </p>
-
-            <pre  class="pre-scrollable">
-
-                import com.jamonapi.*;
-                //Example 1) Using add to mimic MonitorFactory.start("myCodeTimer").
-                // This approach DOESN'T allow you to tell that this code is currently
-                // running (i.e. active)
-
-                long startTime=System.currentTimeMillis();
-                ...Code Being Timed...
-                MonitorFactory.add("myCodeTimer","ms.",System.currentTimeMillis()-startTime);
-         </pre>
-
-            <pre  class="pre-scrollable">
-
-                //Example 2)Using add to mimic MonitorFactory.start("myCodeTimer").
-                // This approach DOES allow you to tell that this code is currently
-                // running (i.e. active)
-
-                Monitor mon=MonitorFactory.getMonitor("myCodeTimer","ms.").start();
-                long startTime=System.currentTimeMillis();
-                ...Code Being Timed...
-                mon.add(System.currentTimeMillis()-startTime);
-                mon.stop();
-            </pre>
-
-            <pre  class="pre-scrollable">
-
-                //Example 3) Example #2 is equivalent to this
-
-                Monitor mon=MonitorFactory.start("myCodeTimer")
-                ...Code Being Timed...
-                mon.stop();
-            </pre>
-
- 
-
-    
-    <h2><a name="Advantages">5. Advantages of JAMon</a></h2>
-
-    <p><b>Using JAMon is easy.</b> Place the jamon jar file (80K) in your classpath, and surround the code that you
-    wish to monitor with the JAMon API's start() and stop() methods.  See the code sample below:</p>
-
-        <pre  class="pre-scrollable">
-
-    import com.jamonapi.*;
-    ...
-    Monitor mon=MonitorFactory.start("myFirstMonitor");
-    ...Code Being Timed...
-    mon.stop();
-</pre>
-
-    <p>For example, to collect statistics for all JSP pages in a Web Application, a developer would place
-    a call to the start() method at the top of every JSP, and a call to the stop() method at the bottom.
-    With a few minutes work the developer will have statistics for all  application pages.  The statistics
-    will include number of page hits, average page execution times, and the number of users simultaneously
-    accessing each page.   The statistics can be displayed as an HTML table by calling the getReport() method,
-    or using jamonadmin.jsp.</p>
-
-    <p><b>JAMon requires no special administration accounts.</b>  Many monitoring tools require administrative accounts
-    to install monitoring software, and to view statistics.  Due to the complexity of these tools,
-    developers typically go through specially trained administrators to access monitoring statistics.
-    Many of these monitoring tools also require holes punched in firewalls.</p>
-
-    <p>JAMon has none of these problems.   Statistics gathered via JAMon are available to all developers via
-    jamonadmin.jsp.  No administrative accounts, rights, or set-up are required for gathering and viewing
-    statistics.   Because the JAMon API is part of the application code, developers can switch J2EE App Servers
-    and monitoring will continue to work.  jamonadmin.jsp is accessed via HTTP and so can be viewed without
-    punching any additional holes in firewalls.</p>
-
-    <p><b>JAMon can be used to monitor production systems.</b>  Monitoring production systems is important 
-    because it is the only way we can see how our code is being executed by real users.  
-    Also, many times the configuration of the production environment is different from the test environment, 
-    so the performance numbers between the two environments may be considerably different.  For both these 
-    reasons monitoring only the test environment is not enough.</p>
-    <p>Unlike many monitoring tools, JAMon, due to its minimal performance overhead and multi-threaded 
-    capabilities, can be used in production systems.  JAMon can be disabled at runtime 
-    (using jamonadmin.jsp), further reducing performance overhead. On a 2 Ghz Pentium IV, 
-    JAMon's start(), and stop() methods execute 550,000 times per second.  After disabling, 
-    the methods execute 15,000,000 times per second.</p>
-    <p>To test JAMon's performance download the jamon jar and execute the following command.  The number
-    represents how many times start(), and stop() should be called in the various tests (100,000 will
-    be used as the default if a number is not provided).</p>
-    <p><code>java -cp jamon-2.1.jar com.jamonapi.TestClassPerformance 500000</code></p>
-    <p>The last label ("Full Factory TimingMonitor()") in the output indicates how long it takes to run when 
-    monitoring is enabled, and the label starting with "NullMonitor2()" indicates how long it takes to run 
-    when monitoring is disabled.</p>
-
-    <p><b>JAMon is flexible.</b>  Many monitoring tools specialize in monitoring specific parts of an application.
-    This can force a developer to resort to using multiple monitoring tools to cover all of their monitoring needs.
-    For example, a developer may have to use different tools to monitor each of the following:  page hits,
-    EJB invocations, method calls, memory consumption, locks used, database connections consumed,... .</p>
-
-    <p>JAMon's start(), and add() methods take a string/label as an argument.  This string can be a JSP page name, an EJB name,
-    a method name or any other code or concept that can be represented by a string.</p>
-    <p>Also, because strings are passed, a developer can decide what to monitor based on
-    runtime data.  Using this technique we can monitor trends as well as performance bottlenecks.
-    Some examples of JAMon's flexibility:</p>
-    <ul>
-    <li>Keep statistics for a JSP home page</li>
-        <ul><li>Monitor mon=MonitorFactory.start("HomePage");</li></ul>
-    <li>Keep statistics for a DataAccess class's openConnection() method (which opens a database connection)</li>
-        <ul><li>Monitor mon=MonitorFactory.start("DataAccess.openConnection()");</li></ul>
-    <li>Keep statistics for each user that logs into our system</li>
-        <ul><li>Monitor mon=MonitorFactory.start(getUserName());</li></ul>
-    <li>Keep statistics for all page accesses by date.  For example,  "pageAccesses.05/10/02"</li>
-        <ul><li>Monitor mon=MonitorFactory.start("pageAccesses."+getTodaysDate());</li></ul>
-    </ul>
-    <h2><a name="ServletFilter">6. The JAMon servlet filter</a> - Begin monitoring in 5 minutes!</h2>
-    <p>A Servlet filters is a simple piece of Java code that is executed whenever a Java Web Application
-       resource is accessed. Resources include Servlets, JSP's, GIFs, JPeg's, and HTML documents. The 
-       simple filter example will monitor all of these. By using JAMon the filter becomes a powerful web 
-       site hit counter.  Statistics for pages will be gathered such as hits, and execution time (avg, min, max).
-       In addition you can see which pages are currently executing.  
-    </p>
-
-    <p>The JAMon servlet filter does not require ANY code changes.  You simply put jamon's jar file in your
-      servers classpath, put the following entry into your web.xml file, and install the JAMon war so you can view your statistics.  
-      Note you can choose what types of pages you would like to monitor by altering the 'url-pattern' element below.  
-      See Java documentation for more info on how servlet filters work.
-    </p>
-
-    <p>Note:  The order of entries of your web.xml files is important.  
-      <br><br>
-      &lt;web-app&gt;<br>
-      &nbsp;   &lt;display-name&gt;YourApp&lt;/display-name&gt;<br>
-      <b>
-      &nbsp;&nbsp;   &lt;filter&gt;<br>
-      &nbsp;&nbsp;&nbsp;    &lt;filter-name&gt;JAMonFilter&lt;/filter-name&gt;<br>
-      &nbsp;&nbsp;&nbsp;    &lt;filter-class&gt;com.jamonapi.JAMonFilter&lt;/filter-class&gt;<br>
-      &nbsp;&nbsp;   &lt;/filter&gt;<br><br>
-	
-      &nbsp;&nbsp;   &lt;filter-mapping&gt;<br>
-      &nbsp;&nbsp;&nbsp;     &lt;filter-name&gt;JAMonFilter&lt;/filter-name&gt;<br>
-      &nbsp;&nbsp;&nbsp;     &lt;url-pattern&gt;/*&lt;/url-pattern&gt;<br>
-      &nbsp;   &lt;/filter-mapping&gt;<br><br>
-      </b>
-      &lt;!--<br>
-      Servlet filter elements come before servlet elements<br>
-      &nbsp;&nbsp;   &lt;servlet&gt;<br>
-      &nbsp;&nbsp;&nbsp;    &lt;servlet-name&gt;demo&lt;/servlet-name&gt;<br>
-      &nbsp;&nbsp;&nbsp;    &lt;jsp-file&gt;/demo.jsp&lt;/jsp-file&gt;<br>
-      &nbsp;&nbsp;   &lt;/servlet&gt;<br>
-      --&gt;<br><br>
-
-      &lt;/web-app&gt;<br>
-
-</p>
-
-    <h3><a name="JAMonWAR">7.a The JAMon Web Application (WAR)</a> - Viewing JAMon stats via jsmonadmin.jsp</a></h3>
-    <p>JAMon comes with the jamon.war web application (Web Application Archive).  This application
-    contains jamonadmin.jsp, which enables you to view/query the JAMon statistics via a sortable HTML report, XML or an Excel spreadsheet.  
-    To view JAMon statistics you must put the jamon jar file in your server's classpath 
-    (In Tomcat you can put the jamon jar file in common/lib), and install jamon.war.  If your own application 
-    uses the JAMon servlet filter you will be able to view the statistics by running jamonadmin.jsp 
-    (http://host:port/jamon/jamonadmin.jsp).
-   </p>
-    <h2>8. JAMon Examples</h2>
-
-    <h3><a name="SimpleExamples">8.a Simple Example</a></h3>
-    <p>JAMon gathers statistics for any code that comes between start() and stop() methods.
-    In our first somewhat artificial example we will be timing how long our program sleeps when calling
-    the Java Thread.sleep() method ten times from within a "for" loop.</p>
-     <pre  class="pre-scrollable">
-         import com.jamonapi.*;
-
-         public class MonitorTest {
-
-         public static void main(String[] args) throws Exception {
-        Monitor mon=null;
-        for (int i=1; i<=10; i++) {
-            mon = MonitorFactory.start("myFirstMonitor");
-            Thread.sleep(100+i);
-            mon.stop();
-        }
-        System.out.println(mon);  // toString() method called
-    }
-}
-</pre>
-
-
-    <p>MonitorFactory.start("myFirstMonitor") both creates a monitor  and begins gathering monitoring statistics.
-    The start() method takes a monitor name/label as an argument.  Summary statistics are gathered for all monitors that are
-    passed identical labels.   In our example the start() method is called 10 times with the same label, so the
-    summary statistics will include data from all 10 calls.</p>
-    <p>The next line in the example is the sleep() method.  The sleep() method takes one argument, which is the
-    number of milliseconds the active thread should sleep.   The loop has the effect of sleeping the thread
-    for 101,102,...,and 110 ms.  Finally comes the stop() method which will stop gathering statistics.</p>
-    <p>After the loop we print the statistics to the console, taking advantage of the monitor's toString() method.
-    Let's take a look at what these statistics mean: </p>
-    <img src="console1.gif" border="0">
-    <p><b>110 ms.</b> - The execution time (in milliseconds) of the last monitor that was stopped.
-    (There are 1,000 milliseconds in one second.)</p>
-    <p>The rest of the line contains summary statistics for the ten monitor calls. Considering our logic timed
-    the sleep method 10 times with values ranging from 101 to 110 ms. the following results seem reasonable.</p>
-
-    <p><b>Hits=10</b> - A hit occurs whenever the start() method is called with an identical label.  In this case
-    "myFirstMonitor" is the monitor label.</p>
-    <p><b>Avg =106 ms.</b> - Average is the total execution time divided by hits (i.e., Total/Hits).</p>
-    <p><b>Total=1,062 ms.</b> - Total represents the total accumulated time for all 10 monitors that were executed.
-    If we add 101 through 110 we get 1,055 ms., which is close to the total time the monitor calculated.
-    The sleep() method is approximate, so our total is not exactly 1,055 ms.</p>
-    <p><b>Min=100 ms.</b>  - Min is the minimum execution time for the 10 hits.</p>
-    <p><b>Max =111 ms.</b> - Max is the maximum execution time for the 10 hits.</p>
-    <p><b>Active=0</b> - The "Active" statistics have meaning in a multi-threaded environment.
-    It indicates the number of current simultaneously executing monitors with identical monitor labels.
-    This information could be used in a JSP to tell how many users are currently executing a page.
-    In our example all monitors have been stopped prior to calling toString(), so no monitors are active.</p>
-    <p><b>Avg Active=1</b> - Average active indicates the average number of simultaneously executing monitors
-    with identical monitor labels.  In our single threaded example we would expect this to be one.</p>
-    <p><b>Max Active=1</b> - Max active indicates the maximum number of simultaneously executing monitors with
-    identical monitor labels.</p>
-    <p><b>First Access=5/2/02 10:11:48 AM</b> - Indicates when the monitor with the given monitor label was first executed.</p>
-    <p><b>Last Access=5/2/02 10:11:49 AM</b> - Indicates when the monitor with the given monitor label was last executed.</p>
-
-
-    <h2><a name="ManagingJAMon">9. Managing JAMon - jamonadmin.jsp</a></h2>
-    <p>JAMon comes with a JSP that allows developers to view the JAMon report and control JAMon behavior.  jamonadmin.jsp can be found in the jamon.war download.</p>
-
-    <h3><a name="JAMonReport">9.a The JAMon Report</a></h3>
-    <p>The JAMon report has one row for each unique monitor label that was passed to the MonitorFactory.start("mylabel") method.
-    This row is called a "JAMon report entry".  The JAMon report displays all monitor information in one HTML table.
-    The following statistics were discussed in enough detail in the previous example and won't be covered here:
-    monitor label, hits, average, total, minimum, maximum, first access and last access.</p>
-    <p>We will be referring to the <b><a href="JAMonAdmin.html" target="_blank">JAMon report</a></b> in the
-    following text (note sorting will only work when viewing the JAMon report from jamonadmin.jsp).</p>
-    <p>Looking at "JAMonDemo.pageHits" JAMon report entry we can see that the servlet had 30 page hits taking on
-    average 3,441 ms.  Some other statistics that require further discussion follow:</p>
-    <p><b>Std Dev ms. - 208 ms.</b> - This is the standard deviation for the execution time of the 30 hits.
-    If the statistical distribution is a normal distribution then we would expect 68% of the our hits to be within
-    one standard deviation of the average, and 95% of our hits to be within two standard deviations.</p>
-    <p><b>Active - 0</b> - Indicates the number of monitors with this label that are currently
-    executing (i.e., "Active" indicates concurrency).   In the example when the JAMon report was run, no users were
-    waiting for the JAMonDemo servlet to return, so "Active" was 0.  However, if five requests were currently being
-    handled by the servlet then the "Active" value would be 5.</p>
-    <p><b>Avg Active - 2.8</b> - Indicates the average number of monitors with this label that
-    were simultaneously executing.   In this example, of the 30 page hits, there were on average 2.8 simultaneously
-    executing pages.</p>
-    <p><b>Max Active - 5</b> - Indicates the maximum number of monitors with this label that were
-    simultaneously executing.  In this example, of the 30 page hits,  the most that were executing simultaneously
-    was 5.</p>
-    <p>Note the JAMon report in jamonadmin.jsp can be sorted by clicking column headers.   Clicking will toggle between ascending
-    and descending sorts, based on column values.  An up arrow indicates ascending, and a down arrow indicates
-    descending.</p>
-    <p>The JAMon report can be displayed in a number of different ways.  Two of the ways follow:</p>
-    <p><b>MonitorFactory.getReport()</b> - Returns the JAMon report as an HTML table in alphabetical order by
-    monitor label.</p>
-    <p><b>MonitorFactory.getRootMonitor().getReport(int sortCol, String sortOrder)</b> - Returns the report formatted
-    as an HTML table.  The method is passed the column number to sort by, and whether the sort should be
-    in ascending ("asc") or descending ("desc") order.</p>
-    <h3><a name="MeasuringOutliers">9.b Measuring outliers (JAMon Time Ranges)</a></h3>
-    <p>A problem with the statistics previously mentioned is that they hide extreme data points (i.e., outliers).
-    When application performance degrades we become more interested in outliers.  JAMon time ranges contain
-    information about these outliers.</p>
-    <p>Ideally we would like the average time for a monitor to be close to its minimum. However many
-    factors (such as number of simultaneous users) can cause performance degradation.  For example, we would
-    expect our servlet to respond faster with two simultaneous requests than with 5,000.</p>
-    <p>There are 13 JAMon time ranges.  The ranges are measured on an exponential scale.  The first range is from 0 to
-    10 ms., and subsequent ranges double, until the final range, which includes values greater than 20,480 ms.
-    We will use the JAMon report entry "JAMonDemo.getMusicians(Wailers)" and its "81-160ms." time range to discuss the
-    five time range variables.  The time range values are <b>"7/114 (1/2.3/7.9)"</b>.</p>
-    <p><b>Hits</b> - The number of hits within the given time range.   All time range hits sum to the total hits for
-    the JAMon report entry.  The value for hits in the example is 7.  This means that of this report entries 30 hits,
-    7 of them fell in the "81-160ms." range and averaged 114 ms.</p>
-    <p><b>Average</b> - The average time in ms. for all hits within the given range. (see Hits for further info).</p>
-    <p><b>(Avg Active/Primary Active/Global Active)</b> - All three of the time range "Active" statistics provide
-    information about application scalability, by correlating application performance to monitors that are
-    currently running.   When a monitor is started the various active values are increased by one (based on the
-    rules specified below) and when a monitor is stopped the active values are decremented by one.  In general we
-    expect performance to degrade with increasing activity.  The time range "Active" statistics are all averages.</p>
-    <p><b>Avg Active</b> - Indicates how many monitors with this label were on average
-    "Active" when a hit occurred within the given time range.  This allows us to correlate
-    performance of this monitor to itself.  This is similar to the "Avg Active" entry that comes
-    earlier in the report.  The difference is that this average is only for the hits that occur within this
-    time range.  In our example for the 7 hits within this time range on average only one monitor
-    with the label "JAMonDemo.getMusicians(Wailers)" was executing concurrently.</p>
-    <p><b>Primary Active</b> - Indicates how many primary monitors were "Active" on average, when a hit occurred
-    within the given time range.  A primary monitor is simply a monitor started with the startPrimary() method
-    instead of the start() method (See the second example).  This feature allows a developer to correlate the
-    performance of all of their different monitors to a primary monitor.  Primary monitors should be chosen to
-    correlate highly with performance.</p>
-    <p>Page hits is a good choice for a primary monitor.  We would expect as the number of simultaneous page
-    hits increases performance will decrease.  In the example we used page hits as our primary monitor
-    ( MonitorFactory.startPrimary("JAMonDemo.pageHits") ).</p>
-    <p>In our example there were an average of 2.3 pages executing when the monitor labeled
-    "JAMonDemo.getMusicians(Wailers)" had an execution time in the "81-160ms." range.  The time ranges indicate
-    that this method may have problems scaling.  Notice how performance is decreasing with an increased number
-    of active pages.</p>
-        <p><b>41-80ms.</b> - When hits were within this time range there was an average of 1 page active.</p>
-        <p><b>81-160ms.</b> - When hits were within this time range there was an  average of 2.3 pages active.</p>
-        <p><b>161-320ms.</b> - When hits were within this time range there was an  average of 4.1 pages active.</p>
-    <p>"Avg Active" and "Primary Active" will be the same for primary monitors.  If a primary monitor is not chosen then
-    "Primary Active" will be 0.</p>
-    <p><b>Global Active</b> - Indicates how many total monitors were "Active" on average, when a hit occurred within the
-    given time range.  The global active counter is incremented whenever a start() or startPrimary() method is
-    executed (regardless of the monitor label), and decremented whenever the stop() method is executed.
-    This feature allows a developer to correlate performance to the number of things being monitored in the
-    application.</p>
-    <p>Notice how performance is decreasing with an increased number of global active monitors: </p>
-        <p><b>41-80ms.</b> - When hits were within this time range there was an average of  4 monitors active.</p>
-        <p><b>81-160ms.</b> - When hits were within this time range there was an  average of 7.9 monitors active.</p>
-        <p><b>161-320ms.</b> - When hits were within this time range there was an  average of 13.4 monitors active.</p>
-    <p>Measuring "Primary Active" has an advantage over "Global Active".   If we start monitoring more things then
-    "Global Active" will artificially increase.   In the above example if we decided to monitor "JAMonDemo.pageHits.UsersIPAddress.Month/Day/Year" 
-    then all of the "Global Active" variables discussed above would increase even
-    though there is really no more activity on the server.  This is not true of "Primary Active".</p>
-    <p>To summarize the concept of "Active" monitors let's look at another example.  If the following code were
-    executed there would be six active global monitors, two active primary monitors, two active monitors 
-    for "mon1", and one active monitor for all of the other monitors.</p>
-        <p><b>MonitorFactory.start("mon1");  // 1 global</b></p>
-        <p><b>MonitorFactory.start("mon2"); // 2 global</b></p>
-        <p><b>MonitorFactory.start("mon3"); // 3 global</b></p>
-        <p><b>MonitorFactory.startPrimary("mon4"); // 4 global, 1 primary</b></p>
-        <p><b>MonitorFactory.start("mon1"); // 5 global, 1 primary, and 2 mon1's are active</b></p>
-        <p><b>MonitorFactory.startPrimary("mon5"); // 6 global, 2 primary</b></p>
-
-
-<h2><a name="SampleCode">12. Sample Code</a></h2>
-    <p>Java code can be called from both Java and non-Java environments.
-    JAMon can be used in any environment that can call JDK 1.2 code.  JAMon has been successfully used in ColdFusion
-    script, BroadVision JavaScript and PowerBuilder.  JAMon should also work in Active Server Pages,
-    Java in the database, and many other environments.  Sample code follows:</p>
-    <p><b><a href="MonitorFilter.html" target="_blank">Servlet Filters</a></b> - A Servlet filters is a simple piece of
-    Java code that is executed whenever a Java Web Application resource is accessed.  Resources include Servlets,
-    JSP's, GIFs, JPeg's, and HTML documents.  The simple filter example will monitor all of these.  By using JAMon the filter 
-    becomes a powerful web site hit counter. Note the jamon jar file now comes with its own servlet filter class (com.jamonapi.JAMonFilter)</p>
-    <p><b><a href="httpsession_sample.html" target="_blank">HTTP Sessions</a></b> - The servlet API provides an interface that 
-    allows developers to track when an object is bound to an HttpSession.  If the object implements the HttpSessionBindingListener
-    interface then the valueBound(...) method is called when the object is put into the session, and valueUnbound(...) is called
-    when the object is removed from the session.  This allows an application to use JAMon to monitor statistics related to 
-    HTTP Sessions such as how many sessions are active, and which users are currently using the application.</p>
 
     
 <h2><a name="JAMonLicense">15. JAMon License Agreement</a></h2>
@@ -910,8 +337,7 @@ be clear in the license please to contact <a href="mailto:admin@jamonapi.com">ad
 In general JAMon binaries can be used free of charge in any
 software (commercial software too), and JAMon source code may be modified.
 The <a href="JAMonLicense.html" target="_blank">JAMon License</a> was adapted from the <a href='http://www.opensource.org/licenses/bsd-license.php'>BSD license.</a>
-
-    </p>
+</p>
 
     
 <p align="center">

@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+<meta name="keywords" lang="en-us" content="java, performance tuning, monitor, bottleneck, scale, scalability, monitoring tools, page hits, page counter, currentTimeMillis, benchmark, jamonapi, free, freeware, shareware, open source, measure, fdsapi, formatteddataset, servlet filter">
+<meta name="description" content="The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.">
+<title>JAMon - Documentation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="jamon_docs.css">
+
+</head>
+
+
+<p align="center">
+<img src="jamon1.jpg" id="fdsbanner1" border="0" /></a>
+</p>
+
+<h1 align='center'>JAMon Web App</h1>
+<h2 align='center'>Viewing JAMon data</h2>
+
+
+<!-- START JAMON SPECIFIC HTML -->
+<body>
+<div class="container">
+
+
+ 
+
+    <h3><a name="JAMonWAR">7.a The JAMon Web Application (WAR)</a> - Viewing JAMon stats via jsmonadmin.jsp</a></h3>
+    <p>JAMon comes with the jamon.war web application (Web Application Archive).  This application
+    contains jamonadmin.jsp, which enables you to view/query the JAMon statistics via a sortable HTML report, XML or an Excel spreadsheet.  
+    To view JAMon statistics you must put the jamon jar file in your server's classpath 
+    (In Tomcat you can put the jamon jar file in common/lib), and install jamon.war.  If your own application 
+    uses the JAMon servlet filter you will be able to view the statistics by running jamonadmin.jsp 
+    (http://host:port/jamon/jamonadmin.jsp).
+   </p>
+    <h2>8. JAMon Examples</h2>
+
+
+    <h2><a name="ManagingJAMon">9. Managing JAMon - jamonadmin.jsp</a></h2>
+    <p>JAMon comes with a JSP that allows developers to view the JAMon report and control JAMon behavior.  jamonadmin.jsp can be found in the jamon.war download.</p>
+
+    <h3><a name="JAMonReport">9.a The JAMon Report</a></h3>
+    <p>The JAMon report has one row for each unique monitor label that was passed to the MonitorFactory.start("mylabel") method.
+    This row is called a "JAMon report entry".  The JAMon report displays all monitor information in one HTML table.
+    The following statistics were discussed in enough detail in the previous example and won't be covered here:
+    monitor label, hits, average, total, minimum, maximum, first access and last access.</p>
+    <p>We will be referring to the <b><a href="JAMonAdmin.html" target="_blank">JAMon report</a></b> in the
+    following text (note sorting will only work when viewing the JAMon report from jamonadmin.jsp).</p>
+    <p>Looking at "JAMonDemo.pageHits" JAMon report entry we can see that the servlet had 30 page hits taking on
+    average 3,441 ms.  Some other statistics that require further discussion follow:</p>
+    <p><b>Std Dev ms. - 208 ms.</b> - This is the standard deviation for the execution time of the 30 hits.
+    If the statistical distribution is a normal distribution then we would expect 68% of the our hits to be within
+    one standard deviation of the average, and 95% of our hits to be within two standard deviations.</p>
+    <p><b>Active - 0</b> - Indicates the number of monitors with this label that are currently
+    executing (i.e., "Active" indicates concurrency).   In the example when the JAMon report was run, no users were
+    waiting for the JAMonDemo servlet to return, so "Active" was 0.  However, if five requests were currently being
+    handled by the servlet then the "Active" value would be 5.</p>
+    <p><b>Avg Active - 2.8</b> - Indicates the average number of monitors with this label that
+    were simultaneously executing.   In this example, of the 30 page hits, there were on average 2.8 simultaneously
+    executing pages.</p>
+    <p><b>Max Active - 5</b> - Indicates the maximum number of monitors with this label that were
+    simultaneously executing.  In this example, of the 30 page hits,  the most that were executing simultaneously
+    was 5.</p>
+    <p>Note the JAMon report in jamonadmin.jsp can be sorted by clicking column headers.   Clicking will toggle between ascending
+    and descending sorts, based on column values.  An up arrow indicates ascending, and a down arrow indicates
+    descending.</p>
+    <p>The JAMon report can be displayed in a number of different ways.  Two of the ways follow:</p>
+    <p><b>MonitorFactory.getReport()</b> - Returns the JAMon report as an HTML table in alphabetical order by
+    monitor label.</p>
+    <p><b>MonitorFactory.getRootMonitor().getReport(int sortCol, String sortOrder)</b> - Returns the report formatted
+    as an HTML table.  The method is passed the column number to sort by, and whether the sort should be
+    in ascending ("asc") or descending ("desc") order.</p>
+    <h3><a name="MeasuringOutliers">9.b Measuring outliers (JAMon Time Ranges)</a></h3>
+    <p>A problem with the statistics previously mentioned is that they hide extreme data points (i.e., outliers).
+    When application performance degrades we become more interested in outliers.  JAMon time ranges contain
+    information about these outliers.</p>
+    <p>Ideally we would like the average time for a monitor to be close to its minimum. However many
+    factors (such as number of simultaneous users) can cause performance degradation.  For example, we would
+    expect our servlet to respond faster with two simultaneous requests than with 5,000.</p>
+    <p>There are 13 JAMon time ranges.  The ranges are measured on an exponential scale.  The first range is from 0 to
+    10 ms., and subsequent ranges double, until the final range, which includes values greater than 20,480 ms.
+    We will use the JAMon report entry "JAMonDemo.getMusicians(Wailers)" and its "81-160ms." time range to discuss the
+    five time range variables.  The time range values are <b>"7/114 (1/2.3/7.9)"</b>.</p>
+    <p><b>Hits</b> - The number of hits within the given time range.   All time range hits sum to the total hits for
+    the JAMon report entry.  The value for hits in the example is 7.  This means that of this report entries 30 hits,
+    7 of them fell in the "81-160ms." range and averaged 114 ms.</p>
+    <p><b>Average</b> - The average time in ms. for all hits within the given range. (see Hits for further info).</p>
+    <p><b>(Avg Active/Primary Active/Global Active)</b> - All three of the time range "Active" statistics provide
+    information about application scalability, by correlating application performance to monitors that are
+    currently running.   When a monitor is started the various active values are increased by one (based on the
+    rules specified below) and when a monitor is stopped the active values are decremented by one.  In general we
+    expect performance to degrade with increasing activity.  The time range "Active" statistics are all averages.</p>
+    <p><b>Avg Active</b> - Indicates how many monitors with this label were on average
+    "Active" when a hit occurred within the given time range.  This allows us to correlate
+    performance of this monitor to itself.  This is similar to the "Avg Active" entry that comes
+    earlier in the report.  The difference is that this average is only for the hits that occur within this
+    time range.  In our example for the 7 hits within this time range on average only one monitor
+    with the label "JAMonDemo.getMusicians(Wailers)" was executing concurrently.</p>
+    <p><b>Primary Active</b> - Indicates how many primary monitors were "Active" on average, when a hit occurred
+    within the given time range.  A primary monitor is simply a monitor started with the startPrimary() method
+    instead of the start() method (See the second example).  This feature allows a developer to correlate the
+    performance of all of their different monitors to a primary monitor.  Primary monitors should be chosen to
+    correlate highly with performance.</p>
+    <p>Page hits is a good choice for a primary monitor.  We would expect as the number of simultaneous page
+    hits increases performance will decrease.  In the example we used page hits as our primary monitor
+    ( MonitorFactory.startPrimary("JAMonDemo.pageHits") ).</p>
+    <p>In our example there were an average of 2.3 pages executing when the monitor labeled
+    "JAMonDemo.getMusicians(Wailers)" had an execution time in the "81-160ms." range.  The time ranges indicate
+    that this method may have problems scaling.  Notice how performance is decreasing with an increased number
+    of active pages.</p>
+        <p><b>41-80ms.</b> - When hits were within this time range there was an average of 1 page active.</p>
+        <p><b>81-160ms.</b> - When hits were within this time range there was an  average of 2.3 pages active.</p>
+        <p><b>161-320ms.</b> - When hits were within this time range there was an  average of 4.1 pages active.</p>
+    <p>"Avg Active" and "Primary Active" will be the same for primary monitors.  If a primary monitor is not chosen then
+    "Primary Active" will be 0.</p>
+    <p><b>Global Active</b> - Indicates how many total monitors were "Active" on average, when a hit occurred within the
+    given time range.  The global active counter is incremented whenever a start() or startPrimary() method is
+    executed (regardless of the monitor label), and decremented whenever the stop() method is executed.
+    This feature allows a developer to correlate performance to the number of things being monitored in the
+    application.</p>
+    <p>Notice how performance is decreasing with an increased number of global active monitors: </p>
+        <p><b>41-80ms.</b> - When hits were within this time range there was an average of  4 monitors active.</p>
+        <p><b>81-160ms.</b> - When hits were within this time range there was an  average of 7.9 monitors active.</p>
+        <p><b>161-320ms.</b> - When hits were within this time range there was an  average of 13.4 monitors active.</p>
+    <p>Measuring "Primary Active" has an advantage over "Global Active".   If we start monitoring more things then
+    "Global Active" will artificially increase.   In the above example if we decided to monitor "JAMonDemo.pageHits.UsersIPAddress.Month/Day/Year" 
+    then all of the "Global Active" variables discussed above would increase even
+    though there is really no more activity on the server.  This is not true of "Primary Active".</p>
+    <p>To summarize the concept of "Active" monitors let's look at another example.  If the following code were
+    executed there would be six active global monitors, two active primary monitors, two active monitors 
+    for "mon1", and one active monitor for all of the other monitors.</p>
+        <p><b>MonitorFactory.start("mon1");  // 1 global</b></p>
+        <p><b>MonitorFactory.start("mon2"); // 2 global</b></p>
+        <p><b>MonitorFactory.start("mon3"); // 3 global</b></p>
+        <p><b>MonitorFactory.startPrimary("mon4"); // 4 global, 1 primary</b></p>
+        <p><b>MonitorFactory.start("mon1"); // 5 global, 1 primary, and 2 mon1's are active</b></p>
+        <p><b>MonitorFactory.startPrimary("mon5"); // 6 global, 2 primary</b></p>
+
+
+
+    
+<p align="center">
+<a href="http://www.fdsapi.com"><img src="fds_logo_fulltext_blue2_150.jpg"
+id="fdsbanner" border="1" /></a>
+<a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=96550&amp;type=4" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a>
+<a href="http://www.jamonapi.com"><img src="jamon_banner3.jpg"
+id="jamonbanner" border="1" /></a>
+</p>
+
+<!-- END JAMON SPECIFIC HTML -->
+</div>
+</body>
+</html>
