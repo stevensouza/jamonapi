@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+<meta name="keywords" lang="en-us" content="java, performance tuning, monitor, bottleneck, scale, scalability, monitoring tools, page hits, page counter, currentTimeMillis, benchmark, jamonapi, free, freeware, shareware, open source, measure, fdsapi, formatteddataset, servlet filter">
+<meta name="description" content="The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.">
+<title>JAMon - Documentation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="jamon_docs.css">
+
+</head>
+
+
+<p align="center">
+<img src="jamon1.jpg" id="fdsbanner1" border="0" /></a>
+</p>
+
+<h1 align='center'>Simple JAMon API Example</h1>
+
+
+<!-- START JAMON SPECIFIC HTML -->
+<body>
+<div class="container">
+
+
+    <p>JAMon gathers statistics for any code that comes between start() and stop() methods.
+    In our first somewhat artificial example we will be timing how long our program sleeps when calling
+    the Java Thread.sleep() method ten times from within a "for" loop.</p>
+     <pre  class="pre-scrollable">
+         import com.jamonapi.*;
+
+         public class MonitorTest {
+
+           public static void main(String[] args) throws Exception {
+             Monitor mon=null;
+
+             for (int i=1; i<=10; i++) {
+                mon = MonitorFactory.start("myFirstMonitor");
+                Thread.sleep(100+i);
+                mon.stop();
+             }
+
+             System.out.println(mon);  // toString() method called
+           }
+         }
+</pre>
+
+
+    <p>MonitorFactory.start("myFirstMonitor") both creates a monitor  and begins gathering monitoring statistics.
+    The start() method takes a monitor name/label as an argument.  Summary statistics are gathered for all monitors that are
+    passed identical labels.   In our example the start() method is called 10 times with the same label, so the
+    summary statistics will include data from all 10 calls.</p>
+    <p>The next line in the example is the sleep() method.  The sleep() method takes one argument, which is the
+    number of milliseconds the active thread should sleep.   The loop has the effect of sleeping the thread
+    for 101,102,...,and 110 ms.  Finally comes the stop() method which will stop gathering statistics.</p>
+    <p>After the loop we print the statistics to the console, taking advantage of the monitor's toString() method.
+    Let's take a look at what these statistics mean: </p>
+    <div class="indent">
+    <img src="console1.gif" border="0">
+    <p><b>110 ms.</b> - The execution time (in milliseconds) of the last monitor that was stopped.
+    (There are 1,000 milliseconds in one second.)</p>
+    <p>The rest of the line contains summary statistics for the ten monitor calls. Considering our logic timed
+    the sleep method 10 times with values ranging from 101 to 110 ms. the following results seem reasonable.</p>
+
+    <p><b>Hits=10</b> - A hit occurs whenever the start() method is called with an identical label.  In this case
+    "myFirstMonitor" is the monitor label.</p>
+    <p><b>Avg =106 ms.</b> - Average is the total execution time divided by hits (i.e., Total/Hits).</p>
+    <p><b>Total=1,062 ms.</b> - Total represents the total accumulated time for all 10 monitors that were executed.
+    If we add 101 through 110 we get 1,055 ms., which is close to the total time the monitor calculated.
+    The sleep() method is approximate, so our total is not exactly 1,055 ms.</p>
+    <p><b>Min=100 ms.</b>  - Min is the minimum execution time for the 10 hits.</p>
+    <p><b>Max =111 ms.</b> - Max is the maximum execution time for the 10 hits.</p>
+    <p><b>Active=0</b> - The "Active" statistics have meaning in a multi-threaded environment.
+    It indicates the number of current simultaneously executing monitors with identical monitor labels.
+    This information could be used in a JSP to tell how many users are currently executing a page.
+    In our example all monitors have been stopped prior to calling toString(), so no monitors are active.</p>
+    <p><b>Avg Active=1</b> - Average active indicates the average number of simultaneously executing monitors
+    with identical monitor labels.  In our single threaded example we would expect this to be one.</p>
+    <p><b>Max Active=1</b> - Max active indicates the maximum number of simultaneously executing monitors with
+    identical monitor labels.</p>
+    <p><b>First Access=5/2/02 10:11:48 AM</b> - Indicates when the monitor with the given monitor label was first executed.</p>
+    <p><b>Last Access=5/2/02 10:11:49 AM</b> - Indicates when the monitor with the given monitor label was last executed.</p>
+
+    </div>
+    
+<p align="center">
+<a href="http://www.fdsapi.com"><img src="fds_logo_fulltext_blue2_150.jpg"
+id="fdsbanner" border="1" /></a>
+<a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=96550&amp;type=4" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a>
+<a href="http://www.jamonapi.com"><img src="jamon_banner3.jpg"
+id="jamonbanner" border="1" /></a>
+</p>
+
+<!-- END JAMON SPECIFIC HTML -->
+</div>
+</body>
+</html>

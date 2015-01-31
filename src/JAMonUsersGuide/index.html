@@ -16,7 +16,7 @@
 </p>
 
 <h1 align='center'>JAMon (Java Application Monitor) Users Guide</h1>
-<h2 align='center'>A Monitoring API</h2>
+<h2 align='center'>A Java Monitoring API</h2>
 
 
 <!-- START JAMON SPECIFIC HTML -->
@@ -24,27 +24,21 @@
 <div class="container">
 
 
-<p>The table of contents for JAMon documentaiton follows:</p>
-
-<ol>
-
-	   <li>JAMon Videos - Short YouTube videos showing how to use JAMon</li>
-        <ol type="a">
-         <li><a href="http://youtu.be/zzKvI6otyMQ">Monitoring Distributed Applications with JAMon</a></li>
-         <li><a href="http://www.youtube.com/watch?v=fKooex0ZPcw">JAMon 101</a> - An intro video to JAMon. Shows how to use start/stop/add and also other highlights of using JAMon.</li>
-         <li><a href="http://www.youtube.com/watch?v=BfIuoy8mP5c">JAMon GUI</a> - Shows how to access the information in JAMon via the JAMon WAR. Also shows data captured by the JAMon servlet filter and JDBC Proxy driver.</li>
-         <li><a href="http://www.youtube.com/watch?v=Drf3d9m5zss">JAMon Operating System monitoring</a> -  Monitor your unix/linux/mac scripts with JAMon. Introduced in JAMon 2.72.</li>
+    <ol>
+        <li><a href="#introduction">JAMon Introduction</a></li>
+        <li><a href="#monitoringyourapp">Monitoring your application</a></li>
+        <li><a href="#maven">Maven</a></li>
+        <li><a href="#quicklinks">Quick Links</a></li>
+        <li>API</li>
+        <ol>
+        <li><a href="#simpleexample1">start/stop methods</a></li>
+        <li><a href="#simpleexample2">add method</a></li>
+        <li><a href="#simpleexample3">Capturing details/context</a></li>
         </ol>
-	<li>Quick Links</li>
-		<ol type="a">
-		<li><a href="http://sourceforge.net/project/showfiles.php?group_id=96550">Download JAMon</a></li>
-        <li><a href="https://sourceforge.net/p/jamonapi/discussion/334830/">Get support for JAMon</a></li>
-		<li><a href="javadoc/index.html">JAMon JavaDocs</a></li>
-		<li><a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/">JAMon Source Code</a></li>
-		</ol>
+        <li><a href="#license">JAMon License Agreement</a></li>
+    </ol>
 
-</ol>
-<h2><a name="Introduction">JAMon Introduction</a></h2>
+<h2><a name="introduction">JAMon Introduction</a></h2>
 
 <p>The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API
     that allows developers to easily monitor production applications.
@@ -68,9 +62,13 @@
     </p>
 
     <p>Feel free to continue reading the user's guide or <a href="http://sourceforge.net/project/showfiles.php?group_id=96550">download JAMon</a>
-        and read the <a href="javadoc/index.html">Java Docs</a>.</p>
+        and read the <a href="javadoc/index.html">Java Docs</a>. The following is a screen snapshot of jamonadmin.jsp from the <a href="jamon_war.html">JAMon WAR</a>.
+        It gives an idea of the type of information JAMon collects such as metrics on: SQL, JDBC, http page requests, http status codes, garbage collections, and exceptions.
+   </p>
 
-
+    <div class="indent">
+        <p><img src="jamon_war_admin.png" border="1"> </p>
+    </div>
 
     <h2><a name="monitoringyourapp">Monitoring your application</a></h2>
 
@@ -83,25 +81,6 @@
     </ul>
     See <a href="http_monitoring.html">HTTP Monitoring</a> for directions on how to monitor page requests in your web server.
     You could be monitoring your code in a few minutes.  Happy monitoring!
-    </p>
-
-    <p>Below are some quick links that show how to enable other types of monitoring and explain other aspects of JAMon:
-    <ul>
-
-        <li><a href="distributed_jamon.html">Distributed Application Monitoring</a> - View all the data from your organizations applications from a central monitoring web application (the JAMon web application).</li>
-        <li><a href="http_monitoring.html">HTTP Monitoring</a> - Monitor requests/responses to Tomcat, Jetty, JBoss or any other JAVA web container. Track page execution times, status codes,
-            bytes sent, exceptions thrown and more.  Alternatively if you would like to monitor only your Web app and not the whole server you can
-            use the <a href="jamon_servlet_filter.html">JAMonFilter</a> servlet filter or easily create your own.</li>
-        <li><a href="spring_aop_monitoring.html">Spring Monitoring</a> - Monitor any Spring bean.  Track method invocations, arguments passed to methods, and  exceptions thrown.</li>
-        <li><a href="jamon_sql.html">JDBC/SQL monitoring</a> - via the JAMon JDBC proxy driver (works with any other JDBC driver). Track SQL called, JDBC method calls, exceptions thrown and more.</li>
-        <li><a href="log4j_jamonappender.html">Log4j Monitoring</a> -  Monitor via the JAMon log4j Appender.  Track counts for ERROR, INFO, WARNING etc.  'Tail' the Log4j log from the JAMon web application</li>
-        <li><a href="jamon_ejb.html">EJB3 Monitoring</a> - Monitor EJBs using the JAMon EJB interceptor.</li>
-        <li><a href="jamon_interface.html">Interface Monitoring</a> - Monitor any class implementing a Java interface.
-        As this capability requires code changes it is best to use other forms of method monitoring such as AOP, or EJB monitoring if they are available.  Like
-        these approaches interface monitoring tracks method performance and thrown exceptions.</li>
-        <li><a href="jmx_jamon.html">JAMon JMX</a> - View JAMon data in a JMX tool like jconsole and visualvm. (2.80+)</li>
-    <li><a href="jamonlisteners.html">What's new in JAMon 2.4 and 2.5 - JAMonListeners</a></li>
-    </ul>
     </p>
 
     <h2><a name="maven">Maven</a></h2>
@@ -118,19 +97,70 @@
     </pre>
 
 
+    <h2><a name="quicklinks">Quick Links</a></h2>
 
-    <h2><a name="simpleexample1">API - start/stop</a></h2>
+    <p><strong>JAMon Modules</strong> - The following links show how to enable monitoring with JAMon's preconfigured modules:
+    <ul>
+
+        <li><a href="http_monitoring.html">HTTP Monitoring</a> - Monitor requests/responses to Tomcat, Jetty, JBoss or any other JAVA web container. Track page execution times, status codes,
+            bytes sent, exceptions thrown and more.  Alternatively if you would like to monitor only your Web app and not the whole server you can
+            use the <a href="jamon_servlet_filter.html">JAMonFilter</a> servlet filter or easily create your own.</li>
+        <li><a href="spring_aop_monitoring.html">Spring Monitoring</a> - Monitor any Spring bean.  Track method invocations, arguments passed to methods, and  exceptions thrown.</li>
+        <li><a href="jamon_sql.html">JDBC/SQL monitoring</a> - via the JAMon JDBC proxy driver (works with any other JDBC driver). Track SQL called, JDBC method calls, exceptions thrown and more.</li>
+        <li><a href="log4j_jamonappender.html">Log4j Monitoring</a> -  Monitor via the JAMon log4j Appender.  Track counts for ERROR, INFO, WARNING etc.  'Tail' the Log4j log from the JAMon web application</li>
+        <li><a href="jamon_ejb.html">EJB3 Monitoring</a> - Monitor EJBs using the JAMon EJB interceptor.</li>
+        <li><a href="jamon_interface.html">Interface Monitoring</a> - Monitor any class implementing a Java interface.
+        As this capability requires code changes it is best to use other forms of method monitoring such as AOP, or EJB monitoring if they are available.  Like
+        these approaches interface monitoring tracks method performance and thrown exceptions.</li>
+
+</ul>
+    </p>
+
+
+    <p><strong>Features</strong> - The following contain links to useful JAMon features:
+    <ul>
+
+        <li><a href="jamon_war.html">JAMon WAR</a> - View & manage JAMon data with the JAMon web application</li>
+        <li><a href="jmx_jamon.html">JAMon JMX</a> - View JAMon data in a JMX tool like jconsole and visualvm. (2.80+)</li>
+        <li><a href="jamonlisteners.html">JAMonListeners - Capture context about each monitor.</a></li>
+        <li><a href="distributed_jamon.html">Distributed Application Monitoring</a> - View all the data from your organizations applications from a central monitoring web application (the JAMon web application).</li>
+
+    </ul>
+    </p>
+
+
+    <p><strong>Videos</strong> - Short YouTube tutorials showing how to use JAMon
+        <ul>
+            <li><a href="http://youtu.be/zzKvI6otyMQ">Monitoring Distributed Applications with JAMon</a></li>
+            <li><a href="http://www.youtube.com/watch?v=fKooex0ZPcw">JAMon 101</a> - An intro video to JAMon. Shows how to use start/stop/add and also other highlights of using JAMon.</li>
+            <li><a href="http://www.youtube.com/watch?v=BfIuoy8mP5c">JAMon GUI</a> - Shows how to access the information in JAMon via the JAMon WAR. Also shows data captured by the JAMon servlet filter and JDBC Proxy driver.</li>
+            <li><a href="http://www.youtube.com/watch?v=Drf3d9m5zss">JAMon Operating System monitoring</a> -  Monitor your unix/linux/mac scripts with JAMon. Introduced in JAMon 2.72.</li>
+        </ul>
+    </p>
+
+    <p><strong>Using JAMon</strong>
+        <ul>
+            <li><a href="http://sourceforge.net/project/showfiles.php?group_id=96550">Download JAMon</a></li>
+            <li><a href="https://sourceforge.net/p/jamonapi/discussion/334830/">Get support for JAMon</a></li>
+            <li><a href="javadoc/index.html">JAMon JavaDocs</a></li>
+            <li><a href="https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/">JAMon Source Code</a></li>
+        </ul>
+    </p>
+
+
+
+    <h2><a name="simpleexample1">API - start/stop methods</a></h2>
 
     <p><strong>MonitorFactory.start("myLabel");</strong> - The start/stop methods time any code that they surround.
 
     <div class='indent'>
-     <pre>
-        import com.jamonapi.*;
-        ...
-        Monitor mon=MonitorFactory.start("myFirstMonitorLabel"); // using Strings is flexible as they can represent anything.
-        ...Code Being Timed...
-        mon.stop();
-     </pre>
+<pre>
+import com.jamonapi.*;
+...
+Monitor mon=MonitorFactory.start("myFirstMonitorLabel"); // using Strings is flexible as they can represent anything.
+...Code Being Timed...
+mon.stop();
+</pre>
     "myFirstMonitorLabel" can be replaced by strings that represent...
         <ul>
          <li>Page names - "/mydirectory/myfantasticpage.jsp"</li>
@@ -141,22 +171,22 @@
         same key JAMon updates statistics for: hits, total, average, min, max and concurrency (average, max, current/active) to name a few.</p>
     </div>
 
-    <h2><a name="simpleexample2">API - add</a></h2>
+    <h2><a name="simpleexample2">API - add method</a></h2>
 
 
-    <p><strong>MonitorFactory.add("myLabel", "myUnits", myValue);</strong>Sometimes developers are interested
+    <p><strong>MonitorFactory.add("myLabel", "myUnits", myValue);</strong> - Sometimes developers are interested
         in counting the frequency of items (such as exceptions, or page requests with a certain status code).
         In addition they are interested in measuring other concepts such as how many bytes are sent/received,
         or how much free memory there is.  JAMon provides the 'add' method to handle these situations.
     </p>
     <div class='indent'>
 
-      <pre>
-        import com.jamonapi.*;
-        ...
-        double myValue=...
-        MonitorFactory.add("myBytesSentLabel", "MB", myValue); // units can be any string, and myValue can be any numeric
-       </pre>
+<pre>
+import com.jamonapi.*;
+...
+double myValue=...
+MonitorFactory.add("myBytesSentLabel", "MB", myValue); // units can be any string, and myValue can be any numeric
+</pre>
      </div>
 
     <p>JAMon keeps the label and units as a key in a Map and every time start or add are called with the same key
@@ -166,7 +196,31 @@
     <p>Link to another <a href="additional_example.html">simple example.</a></p>
 
 
+    <h2><a name="simpleexample3">API - Capturing details/context</a></h2>
 
+    <p><strong>MonitorFactory.add(new MonKeyImp(label, details, units), myValue);</strong> - An alternative way of calling JAMon start/stop
+        or add methods is to pass in an explicit key.   The advantage
+        of passing in the key (MonKey) is that you can also pass in 'details'. 'details' can can be any context information that is useful
+        information fo the developer.  For example a stacktrace, method arguments, or http parameters could be passed in.</p>
+
+    <p>JAMon typically deals with aggregate data, however the power of <a href="jamonlisteners.html">JAMonListeners.</a>
+        all data passed in as a 'detail' can later be viewed via the JAMon web application.  To get more information
+        about this capability see <a href="jamonlisteners.html#example">JAMonListener example.</a>
+    </p>
+
+    <div class='indent'>
+
+<pre>
+import com.jamonapi.*;
+...
+double myValue=...
+String stackTrace=...
+
+MonKey key=new MonKeyImp("com.jamonapi.pageHits", stackTrace, "ms.");
+Monitor mon=MonitorFactory.add(key, myValue);
+</pre>
+
+    </div>
 
     
 <h2><a name="license">JAMon License Agreement</a></h2>
