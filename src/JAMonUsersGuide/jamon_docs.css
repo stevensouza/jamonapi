@@ -5,3 +5,17 @@
 h2 {
     color: #337ab7;
 }
+
+#menu {
+    position: fixed;
+    right: 0;
+    top: 10%;
+    width: 15em;
+    margin-top: -2.5em;
+    color: #000099;
+}
+
+.homedoc {
+    width: 90%;
+}
+
