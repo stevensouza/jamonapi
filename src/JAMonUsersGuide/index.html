@@ -72,7 +72,7 @@
 
 
 
-    <h2><a name="letsstart">How do I monitor my application?</a></h2>
+    <h2><a name="monitoringyourapp">Monitoring your application</a></h2>
 
     <p>JAMon comes with several ways to monitor your application that require no application code changes.  Usually all that is required is to...
     <ul>
@@ -119,7 +119,7 @@
 
 
 
-    <h2><a name="simpleexample">API Examples - start/stop and add</a></h2>
+    <h2><a name="simpleexample1">API - start/stop</a></h2>
 
     <p><strong>MonitorFactory.start("myLabel");</strong> - The start/stop methods time any code that they surround.
 
@@ -141,6 +141,8 @@
         same key JAMon updates statistics for: hits, total, average, min, max and concurrency (average, max, current/active) to name a few.</p>
     </div>
 
+    <h2><a name="simpleexample2">API - add</a></h2>
+
 
     <p><strong>MonitorFactory.add("myLabel", "myUnits", myValue);</strong>Sometimes developers are interested
         in counting the frequency of items (such as exceptions, or page requests with a certain status code).
@@ -157,13 +159,17 @@
        </pre>
      </div>
 
+    <p>JAMon keeps the label and units as a key in a Map and every time start or add are called with the same key
+        JAMon updates statistics for: hits, total, average, min, max and concurrency (average, max, current/active)
+        to name a few.</p>
+
     <p>Link to another <a href="additional_example.html">simple example.</a></p>
 
 
 
 
     
-<h2><a name="JAMonLicense">JAMon License Agreement</a></h2>
+<h2><a name="license">JAMon License Agreement</a></h2>
     <p>JAMon has a very liberal license. The spirit of the license is that there are no restrictions on its use.  Should something not
 be clear in the license please to contact <a href="mailto:admin@jamonapi.com">admin@jamonapi.com</a>. 
 In general JAMon binaries can be used free of charge in any
