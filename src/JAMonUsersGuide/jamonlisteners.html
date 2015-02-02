@@ -6,6 +6,7 @@
 <meta name="description" content="The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.">
 <title>JAMon - Documentation</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="jamon_docs.css">
 
 </head>
 <body>
@@ -23,15 +24,17 @@
 
 <!-- START JAMON SPECIFIC HTML -->
 
-<ol>
+<ul id="menu">
    <li><a href="#Intro">What are JAMon Listeners?</a></li>
    <li><a href="#listenertypes">Listeners that come with JAMon</a></li>
    <li><a href="#monkey">JAMon MonKeys (not the animal)</a></li>
    <li><a href="#monkeydetails">JAMon MonKey Business</a></li>
    <li><a href="#example">JAMon Listeners - An Example</a></li>
-</ol>
+</ul>
 
-    <h2><a name="Intro">1. What are JAMon Listeners?</a></h2>
+    <div class="homedoc">
+
+    <h2><a name="Intro">What are JAMon Listeners?</a></h2>
     <p> Previous versions of JAMon simply aggregated data.  This was useful, but oftentimes we also want to see the details associated
         with an event of interest.  The idea behind JAMonListeners is to keep details of more interesting events such as the values associated with 
         the most recent calls to a monitor, or the calls that had the highest or lowest values.  Recent and extreme values are often the most important in 
@@ -59,7 +62,7 @@
 
       </p>
 
-    <h2><a name="Intro">2. Listeners that come with JAMon</a></h2>
+    <h2><a name="listenertypes">Listeners that come with JAMon</a></h2>
 
      <p>The JAMon 2.5 release ships with the following JAMonListeners.  They all inherit from JAMonBufferListener, which is a configurable buffer 
       that allows you to view detail data such as the N most recent monitor values, or the N highest monitor values and more (N represesents the 
@@ -111,7 +114,7 @@
        this functionality.
      </p>  
 
-<h2><a name="monkey">3. JAMon MonKeys (not the animal)</a></h2>
+<h2><a name="monkey">JAMon MonKeys (not the animal)</a></h2>
 
    <p> JAMon takes a key as an argument and aggregates the passed in number whenever the same key is passed.  Here are some examples:</p>
 
@@ -165,7 +168,7 @@
       }
         </pre>
 
-    <h2><a name="monkeydetails">4. JAMon MonKey Business</a></h2>
+    <h2><a name="monkeydetails">JAMon MonKey Business</a></h2>
 
 
    <p>JAMon depends on uniqueness of strings to aggregate by this common key.   For example the following is used in com.jamonapi.JAMonServlet filter 
@@ -195,7 +198,7 @@
      into the JAMonBufferListener buffer.
    </p>  
 
-    <h2><a name="example">5. JAMon Listeners - An Example</a></h2>
+    <h2><a name="example">JAMon Listeners - An Example</a></h2>
 
    
    <p>Let's work through an example of assigning a FIFOBuffer (An example of a JAMonBufferListener) to a value and max event.  
@@ -224,7 +227,7 @@
 
     <p>The top row in the JAMon report shows how this monitor would look.</p>
 
-     <img src="jamon_listener1.jpg" border="0">
+     <img width="100%" src="jamon_listener1.jpg" border="0">
 
     <p>We will now click on the blue square icon to modify the monitor and add a value and max JAMonBufferListener.  This will pull up the 
     monmanage.jsp page and allow us to manage the "com.jamonapi.pageHits" monitor.
@@ -281,6 +284,7 @@ id="jamonbanner" border="1" /></a>
 </p>
 
 <!-- END JAMON SPECIFIC HTML -->
+        </div>
 </div>
 </body>
 </html>

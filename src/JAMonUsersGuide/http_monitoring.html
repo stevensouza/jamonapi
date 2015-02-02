@@ -7,6 +7,7 @@
 <meta name="description" content="The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.">
 <title>HTTP Monitoring</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="jamon_docs.css">
 
 </head>
 <body>
@@ -23,18 +24,22 @@
 
 <!-- START JAMON SPECIFIC HTML -->
 
-<ol>
+<ul id="menu">
    <li><a href="#intro">Monitoring HTTP Requests</a></li>
    <li><a href="#interpretting">Interpretting JAMon HTTP Data</a></li>
    <li><a href="#configuring">Configuring the JAMon HTTP Monitor</a></li>
-   <li><a href="tomcat6_server.xml">Sample Tomcat 6 server.xml file</a></li>   
-   <li><a href="jboss_server.xml">Sample JBoss 4.0.5 server.xml file</a></li>   
-   <li><a href="jetty.xml">Sample Jetty 6.1.5 jetty.xml file</a></li>   
-</ol>
+    <li>Sample config files</li>
+    <ul>
+      <li><a href="tomcat6_server.xml">Sample Tomcat 6 server.xml file</a></li>
+      <li><a href="jboss_server.xml">Sample JBoss 4.0.5 server.xml file</a></li>
+      <li><a href="jetty.xml">Sample Jetty 6.1.5 jetty.xml file</a></li>
+    </ul>
+</ul>
 
 
+    <div class="homedoc">
 
-<h2><a name="intro">1. Monitoring HTTP Requests</a></h2>
+<h2><a name="intro">Monitoring HTTP Requests</a></h2>
 
    <p>JAMon 2.7 introduces HTTP monitoring.  JAMon HTTP Monitoring uses reflection to monitor different aspects of the containers HttpServletRequest, and HttpServletResponse objects.  
    With JAMon you can monitor individual page performance, frequency of each http status code (200, 404 etc.), number of bytes returned in a response, Servlet exceptions and much more.  As is always the case with JAMon HTTP monitoring can be enabled/disabled
@@ -116,7 +121,7 @@
     <ul><li><b>Custom monitoring</b> - Should you use another container you can use the com.jamonapi.http.HttpMonFactory class to easily monitor any web container</li></ul>
    </ul>
    
-<h2><a name="interpretting">2. Interpretting JAMon HTTP Data</a></h2>
+<h2><a name="interpretting">Interpretting JAMon HTTP Data</a></h2>
 
 
  <p>By default JAMon will track something similar to the following (The screen snapshot was taken while monitoring tomcat6). However, with simple configuration via
@@ -141,7 +146,7 @@
  </li>
  </ul>
  
- <p><img src="jamon_httpmon.jpg" border="1"> </p>
+ <p><img width="100%" src="jamon_httpmon.jpg" border="1"> </p>
 
  <p>Any JAMon buffer listener can be attached to any JAMon monitor.  This allows you to not only look at the aggregate stats above, but look at interesting details such
  as the details of when the slowest page was executed, or the ServletException stack trace, or the most recent N page requests.  See other parts of the JAMon documenation to
@@ -157,7 +162,7 @@
   <p><img src="jamon_httpmon_details.jpg" border="1"> </p>
  
 
-<h2><a name="configuring">3. Configuring the JAMon HTTP Monitor</a></h2>
+<h2><a name="configuring">Configuring the JAMon HTTP Monitor</a></h2>
 
 
 
@@ -247,6 +252,7 @@ id="jamonbanner" border="1" /></a>
 </p>
 
 <!-- END JAMON SPECIFIC HTML -->
+        </div>
 </div>
 </body>
 </html>

@@ -6,6 +6,7 @@
 <meta name="description" content="The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.">
 <title>JAMon - JAMonAppender for Log4j</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="jamon_docs.css">
 
 </head>
 <body>
@@ -21,7 +22,7 @@
 
 <!-- START JAMON SPECIFIC HTML -->
 
-<ol>
+<ul id="menu">
    <li><a href="#problems">Some Problems with Log Files</a></li>
    <li><a href="#jamonenhances">How does JAMon enhance Log4j?</a></li>
    <li><a href="#background">Background on Log4j Appenders</a></li>
@@ -32,10 +33,12 @@
    <li><a href="#generalizing">Using the JAMonAppender to aggregate and 'tail' individual messages - Generalizing</a></li>
    <li><a href="log4j_jamonappender.xml">JAMonAppender Sample Log4j XML file</a></li>   
 
-</ol>
+</ul>
+
+    <div class="homedoc">
 
 
-<h2><a name="problems">1. Some Problems with Log Files</a></h2>
+    <h2><a name="problems">Some Problems with Log Files</a></h2>
 
 
    <p>Logs although useful, can be difficult to gather information from because:</p>
@@ -54,7 +57,7 @@
   <p>The Log4j JAMonAppender solves these problems and more as it allows you to view a "summarized" version of your log, as well as the 
    details of your most recent log messags, all via the sortable/searchable JAMon web application.</p>
 
-    <h2><a name="jamonenhances">2. How does JAMon enhance Log4j?</a></h2>
+    <h2><a name="jamonenhances">How does JAMon enhance Log4j?</a></h2>
 
 
 
@@ -89,7 +92,7 @@
      grow as large as a log file, however it can work like tail in that it can keep the most recent N rows in memory for viewing via a web page.</li>
   </ul>
 
-    <h2><a name="background">3. Background on Log4j Appenders</a></h2>
+    <h2><a name="background">Background on Log4j Appenders</a></h2>
 
   <p>
    <a href="http://logging.apache.org/log4j/docs/">Log4j</a> allows logging requests to be sent to multiple destinations including a console, 
@@ -105,7 +108,7 @@
    "Date", and the "Exception Stacktrace" (In the case of "Exception" if the overloaded methods such as "logger.error(message, exception)" were called).
   </p>
 
-    <h2><a name="primer">4. A Very Brief JAMon Primer</a></h2>
+    <h2><a name="primer">A Very Brief JAMon Primer</a></h2>
 
   <p>
    JAMon is based on a very simple concept of passing a key and a numeric value to an add method (MonitorFactory.add(key, numericValue)) 
@@ -144,7 +147,7 @@
 
 
 
-<h2><a name="defaultbehaviour">5. Setting up the JAMonAppender - Default Behaviour</a></h2>
+<h2><a name="defaultbehaviour">Setting up the JAMonAppender - Default Behaviour</a></h2>
 
 
  <p>Setting up the JAMonAppender should only take a few minutes.  The steps follow:</p>
@@ -169,7 +172,7 @@
  </p>
 
  <p>jamonadmin.jsp from JAMon.war
-       <img src="jamon_log4j_min.jpg" border="1">
+       <img width="100%" src="jamon_log4j_min.jpg" border="1">
  <p>
 
  <p>This behaviour is by default enabled, but if you wish to turn it off you can set the following JAMonAppender property:  
@@ -187,7 +190,7 @@
   it would be by grepping or tailing a log file.
  </p>
 
-    <h2><a name="tail">6. Using the JAMonAppender to mimic 'tail'</a></h2>
+    <h2><a name="tail">Using the JAMonAppender to mimic 'tail'</a></h2>
 
 
 
@@ -237,10 +240,10 @@
    </p>
    
   <p>mondetail.jsp from JAMon.war
-       <img src="jamon_log4j_bufflistener.jpg" border="1">
+       <img width="100%" src="jamon_log4j_bufflistener.jpg" border="1">
   </p>
 
-    <h2><a name="generalizing">7. Using the JAMonAppender to aggregate and 'tail' individual messages - Generalizing</a></h2>
+    <h2><a name="generalizing">Using the JAMonAppender to aggregate and 'tail' individual messages - Generalizing</a></h2>
 
   <p>
    JAMon can also keep aggregate stats, and the N most recent detailed messages based on content within the logged message itself.  
@@ -310,7 +313,7 @@
 
 
   <p>The following screen snapsot from jamonadmin.jsp shows that the generalized form of the log message was called 20,000 times.
-       <img src="jamon_log4j_generalize1.jpg" border="1">
+       <img width="100%" src="jamon_log4j_generalize1.jpg" border="1">
   </p>
 
   <br>
@@ -319,7 +322,7 @@
     to the buffer via mondetail.jsp. Note the nongeneralized form is put in the buffer (In this case that can be identified by 'aeinstein'.  Unfortunately
     at this time the only way to enable buffer listeners for log message monitors is via the JAMon web app or programmatically (i.e. it can't be done
     via Log4j configuration files)
-       <img src="jamon_log4j_generalize2.jpg" border="1">
+       <img width="100%" src="jamon_log4j_generalize2.jpg" border="1">
   </p>
 
   <br>
@@ -363,7 +366,7 @@ id="jamonbanner" border="1" /></a>
 </p>
 
 <!-- END JAMON SPECIFIC HTML -->
-
+</div>
     </div>
 </body>
 </html>

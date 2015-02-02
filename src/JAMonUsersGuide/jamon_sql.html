@@ -22,13 +22,14 @@
 <body>
 <div class="container">
 
-    <ol>
+    <ul id="menu">
         <li><a href="#configuring">How do I monitor my SQL/JDBC?</a></li>
         <li><a href="#monitoringsqlcommandssumm">Viewing SQL Summary Satistics</a></li>
         <li><a href="#monitoringsqlcommandsdetails">Viewing SQL Details</a></li>
         <li><a href="#jdbcmethodmonitoring">Viewing JDBC methods and exceptions</a></li>
-    </ol>
+    </ul>
 
+<div class="homedoc">
 
     <p>One of the most powerful aspects of JAMon 2.1 is that it can track performance for all queries issued by an application
         (see 'Monitoring SQL Commands - JAMon Summary Statistics') and allow developers to view all recent queries that have executed
@@ -122,7 +123,7 @@ Connection conn = DriverManager.getConnection(url, user, passWord);
 
     <p>SQL summary statistics are viewable via jamonadmin.jsp. as this screen snapshot shows.</p>
 
-    <p><img src="jamon_sql_summary.png" border="1"> </p>
+    <p><img  width="100%" src="jamon_sql_summary.png" border="1"> </p>
     <br/>
 
     <h2><a name="monitoringsqlcommandsdetails">Viewing SQL Details</a></h2>
@@ -149,7 +150,7 @@ Connection conn = DriverManager.getConnection(url, user, passWord);
  
 
     <p>SQL details are viewable via sql.jsp which is available from the JAMon web application home screen.  This is a screen snapshot of sql.jsp</p>
-    <p><img src="jamon_sql_details.png" border="1"> </p>
+    <p><img  width="100%" src="jamon_sql_details.png" border="1"> </p>
     <br/>
 
 
@@ -186,7 +187,7 @@ Statement statement=MonProxyFactory.monitor(monitoredConnection.createStatement(
 
     <p>This is a screen snapshot of of the type of information that can be seen in jamonadmin.jsp. Methods and Exceptions are
         annotated in the example below.</p>
-    <p><img src="jamon_sql_jdbc.png" border="1"> </p>
+    <p><img  width="100%" src="jamon_sql_jdbc.png" border="1"> </p>
     <br/>
 
 
@@ -200,6 +201,7 @@ id="jamonbanner" border="1" /></a>
 </p>
 
 <!-- END JAMON SPECIFIC HTML -->
+    </div>
 </div>
 </body>
 </html>

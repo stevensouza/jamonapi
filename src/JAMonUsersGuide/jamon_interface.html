@@ -22,14 +22,15 @@
 <body>
 <div class="container">
 
-    <ol>
+    <ul id="menu">
         <li><a href="#monitoringinterfaces">Monitoring Interfaces</a></li>
         <li><a href="#monitoringinterfacesmethodcalls">Method Calls (JAMon Summary Statistics)</a></li>
         <li><a href="#monitoringinterfacesexceptionssumm">Exceptions (JAMon Summary Statistics)</a></li>
         <li><a href="#monitoringinterfacesexceptionsdetails">Exceptions (Exception Details)</a></li>
-        <li><a href="monitoringinterfacesexceptionnote">Note on Exception Monitoring</a></li>
-    </ol>
+        <li><a href="#monitoringinterfacesexceptionnote">Note on Exception Monitoring</a></li>
+    </ul>
 
+    <div class="homedoc">
 
 
     <h2><a name="monitoringinterfaces">Monitoring Interfaces</a></h2>
@@ -55,7 +56,7 @@ myObject.myMethod();// method call will be monitored with JAMon.
 
     <p>Any methods on the interface will be timed and any exceptions they throw will be tracked.  The following jamonadmin.jsp screenshot
     shows methods called against JDBC interfaces.  Any methods you call against your custom interfaces should look similar.</p>
-    <p><img src="jamon_sql_jdbc.png" border="1"> </p>
+    <p><img width="100%" src="jamon_sql_jdbc.png" border="1"> </p>
     <br/>
 
     <h2><a name="monitoringinterfacesmethodcalls">Method Calls (JAMon Summary Statistics)</a></h2>
@@ -127,7 +128,6 @@ MonProxy-Interface (class=org.hsqldb.jdbcConnection): public abstract void java.
   try {
    // get a query to throw an Exception.  If enabled will show in jamon report and sql details.
    st.executeQuery("select * from i_do_not_exist");
-
   } catch (Exception e) {}
 </pre>
 
@@ -143,5 +143,6 @@ id="jamonbanner" border="1" /></a>
 
 <!-- END JAMON SPECIFIC HTML -->
 </div>
+    </div>
 </body>
 </html>

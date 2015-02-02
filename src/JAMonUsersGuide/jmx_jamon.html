@@ -6,6 +6,7 @@
     <meta name="description" content=" The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.">
     <title>Monitoring Spring with Jamon</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="jamon_docs.css">
 
 </head>
 <body>
@@ -19,7 +20,17 @@
 
 
 <!-- START JAMON SPECIFIC HTML -->
-
+    <ul id="menu">
+        <li><a href="#log4j">Log4j</a></li>
+        <li><a href="#pagerequests">HTTP Page Requests</a></li>
+        <li><a href="#sql">SQL</a></li>
+        <li><a href="#exceptions">Exceptions</a></li>
+        <li><a href="#gc">Garbage Collection info (For Oracle JVM's)</a></li>
+        <li><a href="#custommetrics">JAMon Custom Metrics</a></li>
+        <li><a href="#managing">Managing JAMon</a></li>
+        <li><a href="#deltas">Deltas</a></li>
+    </ul>
+    <div class="homedoc">
 
             <p>The Java Management Extensions (JMX) technology is a standard part of the Java Platform.  With JMX developers can expose and manage their application
             via any JMX enabled console (Examples of these consoles are jconsole and visualvm).</p>
@@ -182,5 +193,6 @@ their average time per invocation was 102 ms. </p>
 
 <!-- END JAMON SPECIFIC HTML -->
 </div>
+    </div>
 </body>
 </html>
