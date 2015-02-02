@@ -73,6 +73,21 @@ public class MonitorComposite extends Monitor implements DetailData  {
         }
     }
 
+    /**
+     *
+     * @return A collection of all the unit types that are currently in this object (i.e. ms., ns., Exception,...)
+     * @since  2.81
+     */
+    public Collection<String> getDistinctUnits() {
+        Set<String> units = new TreeSet<String>();
+        int size=monitors.length;
+        for (int i=0;i<size;i++) {
+            units.add(monitors[i].getMonKey().getRangeKey());
+        }
+
+        return units;
+    }
+
     public MonitorComposite filterByUnits(String units) {
         return new MonitorComposite(getMonitorsWithUnits(units)).setInstanceName(getInstanceName()).setDateCreated(getDateCreated());
     }

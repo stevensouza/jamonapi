@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
+import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -84,6 +85,17 @@ public class MonitorCompositeTest {
        assertThat(composite.filterByUnits("count").getNumRows()).isEqualTo(BUFFER_SIZE+1);
        assertThat(composite.filterByUnits("no_exist_units").getMonitors()).isNull();
     }
+
+    @Test
+    public void testGetDistinctUnits() {
+        MonitorFactory.start("timelabel1").stop();
+        MonitorFactory.start("timelabel2").stop();
+        MonitorFactory.start("timelabel3").stop();
+
+        Collection<String> units = MonitorFactory.getRootMonitor().getDistinctUnits();
+        assertThat(units).containsExactly("Exception", "count", "ms.", "ns.");
+    }
+
 
     @Test
     public void testMonitorExists() {
@@ -169,9 +181,6 @@ public class MonitorCompositeTest {
             }
         }
     }
-
-
-
 
 
 }
