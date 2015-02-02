@@ -546,18 +546,22 @@ private static ArrayConverter getArrayConverter(String[] header, String pattern,
 
 // This version of the FormattedDataSet requires a value as well as the display value.  The same column is used for both 
 // below.
-private static Object[][] getRangeNames() {
-   Object[][] range=MonitorFactory.getRangeNames();
-   Object[][] data=new Object[range.length][];
-   for (int i=0;i<range.length;i++) {
-      data[i]=new Object[2];
-      data[i][0]=data[i][1]=range[i][0];
-   }
-  
-   return data;
-     
 
-}
+    private static Object[][] getRangeNames() {
+        TreeSet<String> distinctUnits=new TreeSet<String>(MonitorFactory.getRootMonitor().getDistinctUnits());
+        distinctUnits.add("AllMonitors");
+        int size = distinctUnits.size();
+        Object[][] data=new Object[size][];
+
+        Iterator<String> iter = distinctUnits.iterator();
+        int i=0;
+        while (iter.hasNext()) {
+            data[i]=new Object[2];
+            data[i][0]=data[i][1]=iter.next();
+            i++;
+        }
+        return data;
+    }
 
     private static List<String> getParatemersAsList(String[] params, String defaultValue) {
         if (params==null) {
