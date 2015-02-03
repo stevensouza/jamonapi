@@ -20,7 +20,6 @@ public class MiscTest {
 
         // examples using shorter functions
         assertThat(Misc.getMonth(date)).isEqualTo("10");
-        assertThat(Misc.getDayOfWeek(date)).isEqualTo("Tue");
         assertThat(Misc.getShortDate(date)).isEqualTo("10/01/13");
         assertThat(Misc.getFormattedDate("dd-MMM-yy",date)).isEqualTo("01-Oct-13");
     }
