@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+<meta name="keywords" lang="en-us" content="java, performance tuning, monitor, bottleneck, scale, scalability, monitoring tools, page hits, page counter, currentTimeMillis, benchmark, jamonapi, free, freeware, shareware, open source, measure, fdsapi, formatteddataset, servlet filter">
+<meta name="description" content="The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.">
+<title>JAMon - Documentation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="jamon_docs.css">
+
+</head>
+
+
+<p align="center">
+<img src="jamon1.jpg" id="fdsbanner1" border="0" /></a>
+</p>
+
+<h1 align='center'>JAMon Web App</h1>
+
+<!-- START JAMON SPECIFIC HTML -->
+<body>
+<div class="container">
+
+
+    <ul id="menu">
+        <li><a href="#jamonwar">The JAMon Web Application (WAR)</a></li>
+        <li><a href="#jamonadmin">Viewing JAMon Summary Data</a></li>
+        <li><a href="#jamonranges">Ranges</a></li>
+    </ul>
+
+    <div class="homedoc">
+
+    <h3><a name="jamonwar">The JAMon Web Application (WAR)</a></a></h3>
+    <p>JAMon comes with the jamon.war web application.  This application allows developers to view JAMon statistics and manage
+        JAMon. The main menu can be accessed at http://host:port/jamon/. See the online help in the JAMon web application for more information. The home screen follows.</p>
+
+        <div class="indent">
+    <p><img src="jamon_war_menu.png" border="1"> </p>
+            </div>
+
+    <h3><a name="jamonadmin">Viewing JAMon Summary Data - jamonadmin.jsp</a></a></h3>
+
+    <p>jamonadmin.jsp allows you to view/query the JAMon statistics via a sortable HTML report, XML or an Excel spreadsheet.
+    To view JAMon statistics you must put the jamon jar file in your server's classpath and configure your server. A snapshot of
+    jamonadmin.jsp follows.
+   </p>
+
+        <div class="indent">
+     <p><img width="100%" src="jamon_war_admin.png" border="1"> </p>
+            </div>
+
+
+    <h3><a name="jamonranges">Ranges</a></a></h3>
+
+    <p>jamonadmin.jsp above displays aggregate statistics such as hits, average, min, max and others. JAMon also has the concept of ranges that
+    allow developers to see a better breakdown of the monitoring data.  For example the screen snapshot below shows different ranges associated with all
+        monitors with 'ms.' units.</p>
+
+    <p>As an example the SQL select statement (monitor label 'MonProxy-SQL-Type: select') was executed 45 times
+    and averaged 2 ms.  By looking at the 14 range columns (LessThan_0ms, 0_10ms, 10_20ms, 20_40ms...) you can see this further breaks
+    down to
+    <ul>
+        <li>0_10ms  - 43 queries taking an average of 1.2 ms. took between 0 and 10 ms.</li>
+        <li>10_20ms - 1 query taking 11 ms. took between 10 and 20 ms.</li>
+        <li>20_40ms - 1 query taking 28 ms. took between 20 and 40 ms.</li>
+    </ul>
+    </p>
+
+
+    <p>Ranges combined with <a href="jamonlisteners.html">JAMon listeners</a> (which let you see the details of individual invocations) are a great way to help you better see
+        the anomalies in your data.</p>
+
+    <div class="indent">
+        <p><img width="100%" src="jamon_war_ranges.png" border="1"> </p>
+    </div>
+
+
+
+
+    
+<p align="center">
+<a href="http://www.fdsapi.com"><img src="fds_logo_fulltext_blue2_150.jpg"
+id="fdsbanner" border="1" /></a>
+<a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=96550&amp;type=4" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a>
+<a href="http://www.jamonapi.com"><img src="jamon_banner3.jpg"
+id="jamonbanner" border="1" /></a>
+</p>
+
+<!-- END JAMON SPECIFIC HTML -->
+</div>
+    </div>
+</body>
+</html>

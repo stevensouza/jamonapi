@@ -339,13 +339,13 @@ private static Object[][] getMonProxyBody() {
 
    String enableInfo="No Action (currently="+
       (MonProxyFactory.isSQLSummaryEnabled() ? "T" : "F")+
-      (MonProxyFactory.isExceptionSummaryEnabled() ? "T" : "F")+
+      (MonProxyFactory.isSQLDetailEnabled() ? "T" : "F")+
       (MonProxyFactory.isInterfaceEnabled() ? "T" : "F")+
       (MonProxyFactory.isResultSetEnabled() ? "T" : "F")+")";
 
 
-   String sql=enabledMessage(MonProxyFactory.isSQLSummaryEnabled())+"SQL";
-   String exceptions=enabledMessage(MonProxyFactory.isExceptionSummaryEnabled())+"Exceptions";
+   String sql=enabledMessage(MonProxyFactory.isSQLSummaryEnabled())+"SQL Summary";
+   String sqlDetails=enabledMessage(MonProxyFactory.isSQLDetailEnabled())+"SQL Details";
    String interfaces=enabledMessage(MonProxyFactory.isInterfaceEnabled())+"Interfaces";
    String resultSet=enabledMessage(MonProxyFactory.isResultSetEnabled())+"ResultSet";
 
@@ -353,11 +353,11 @@ private static Object[][] getMonProxyBody() {
              {"No Action", enableInfo},
              {"Enable All", "Enable All"},
              {"Disable All", "Disable All"},
-	         {sql,sql}, 
-	         {exceptions,exceptions}, 
-	         {interfaces,interfaces}, 
+	         {sql,sql},
+             {sqlDetails,sqlDetails},
+             {interfaces,interfaces},
 	         {resultSet,resultSet}, 
-                };
+           };
 }
 
 
@@ -457,30 +457,23 @@ private static void executeAction(String action) {
 // Enable/Disable jamon summary stats for MonProxyFactory
 private static void enableMonProxy(String monProxyAction) {
 if ("Enable All".equals(monProxyAction)) {
+  MonProxyFactory.enableAll(true);
+} else if ("Enable SQL Summary".equals(monProxyAction))
   MonProxyFactory.enableSQLSummary(true);
-  MonProxyFactory.enableExceptionSummary(true);
-  MonProxyFactory.enableInterface(true);
-  MonProxyFactory.enableResultSet(true);
- 
-} else if ("Enable SQL".equals(monProxyAction))
-  MonProxyFactory.enableSQLSummary(true);
-else if ("Enable Exceptions".equals(monProxyAction))  
-  MonProxyFactory.enableExceptionSummary(true);
-else if ("Enable Interfaces".equals(monProxyAction))  
+else if ("Enable SQL Details".equals(monProxyAction))
+    MonProxyFactory.enableSQLDetail(true);
+else if ("Enable Interfaces".equals(monProxyAction))
   MonProxyFactory.enableInterface(true);
 else if ("Enable ResultSet".equals(monProxyAction))  
   MonProxyFactory.enableResultSet(true);
 
 else if ("Disable All".equals(monProxyAction)) {
+  MonProxyFactory.enableAll(false);
+} else if ("Disable SQL Summary".equals(monProxyAction))
   MonProxyFactory.enableSQLSummary(false);
-  MonProxyFactory.enableExceptionSummary(false);
-  MonProxyFactory.enableInterface(false);
-  MonProxyFactory.enableResultSet(false);
-} else if ("Disable SQL".equals(monProxyAction))
-  MonProxyFactory.enableSQLSummary(false);
-else if ("Disable Exceptions".equals(monProxyAction))  
-  MonProxyFactory.enableExceptionSummary(false);
-else if ("Disable Interfaces".equals(monProxyAction))  
+else if ("Disable SQL Details".equals(monProxyAction))
+  MonProxyFactory.enableSQLDetail(false);
+else if ("Disable Interfaces".equals(monProxyAction))
   MonProxyFactory.enableInterface(false);
 else if ("Disable ResultSet".equals(monProxyAction))  
   MonProxyFactory.enableResultSet(false);
@@ -553,18 +546,22 @@ private static ArrayConverter getArrayConverter(String[] header, String pattern,
 
 // This version of the FormattedDataSet requires a value as well as the display value.  The same column is used for both 
 // below.
-private static Object[][] getRangeNames() {
-   Object[][] range=MonitorFactory.getRangeNames();
-   Object[][] data=new Object[range.length][];
-   for (int i=0;i<range.length;i++) {
-      data[i]=new Object[2];
-      data[i][0]=data[i][1]=range[i][0];
-   }
-  
-   return data;
-     
 
-}
+    private static Object[][] getRangeNames() {
+        TreeSet<String> distinctUnits=new TreeSet<String>(MonitorFactory.getRootMonitor().getDistinctUnits());
+        distinctUnits.add("AllMonitors");
+        int size = distinctUnits.size();
+        Object[][] data=new Object[size][];
+
+        Iterator<String> iter = distinctUnits.iterator();
+        int i=0;
+        while (iter.hasNext()) {
+            data[i]=new Object[2];
+            data[i][0]=data[i][1]=iter.next();
+            i++;
+        }
+        return data;
+    }
 
     private static List<String> getParatemersAsList(String[] params, String defaultValue) {
         if (params==null) {

@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+<meta name="keywords" lang="en-us" content="java, performance tuning, monitor, bottleneck, scale, scalability, monitoring tools, page hits, page counter, currentTimeMillis, benchmark, jamonapi, free, freeware, shareware, open source, measure, fdsapi, formatteddataset, servlet filter">
+<meta name="description" content="The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.">
+<title>JAMon - Documentation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="jamon_docs.css">
+
+</head>
+
+
+<p align="center">
+<img src="jamon1.jpg" id="fdsbanner1" border="0" /></a>
+</p>
+
+<h1 align='center'>Monitoring Interfaces</h1>
+
+
+<!-- START JAMON SPECIFIC HTML -->
+<body>
+<div class="container">
+
+    <ul id="menu">
+        <li><a href="#monitoringinterfaces">Monitoring Interfaces</a></li>
+        <li><a href="#monitoringinterfacesmethodcalls">Method Calls (JAMon Summary Statistics)</a></li>
+        <li><a href="#monitoringinterfacesexceptionssumm">Exceptions (JAMon Summary Statistics)</a></li>
+        <li><a href="#monitoringinterfacesexceptionsdetails">Exceptions (Exception Details)</a></li>
+        <li><a href="#monitoringinterfacesexceptionnote">Note on Exception Monitoring</a></li>
+    </ul>
+
+    <div class="homedoc">
+
+
+    <h2><a name="monitoringinterfaces">Monitoring Interfaces</a></h2>
+
+<p>Interface monitoring is useful, but if it is possible it is better to use JAMon and capabilities of Spring, AOP, EJB's to monitor your interfaces.</p>
+
+    <p>With one line of code you can monitor ANY java interface.  Any interface means you can easily monitor
+        standard java interfaces such as JDBC, open source interfaces such as the log4J appender interface or your own custom interfaces.
+        To monitor an interface you simply have to call the following JAMon method:</p>
+
+    <pre  class="pre-scrollable">
+
+import com.jamonapi.proxy.*;
+
+// The MyObject() class has to implement MyInterface for monitoring to work.
+MyInterface myObject = (MyInterface) MonProxyFactory.monitor(new MyObject());
+myObject.myMethod();// method call will be monitored with JAMon.
+</pre>
+
+
+    <p>That's it!  Simply make method calls to myObject as you normally would, and the calls will be monitored.  (Note it is best to hide the use of JAMon in a monitoring class of your own
+        creation).</p>
+
+    <p>Any methods on the interface will be timed and any exceptions they throw will be tracked.  The following jamonadmin.jsp screenshot
+    shows methods called against JDBC interfaces.  Any methods you call against your custom interfaces should look similar.</p>
+    <p><img width="100%" src="jamon_sql_jdbc.png" border="1"> </p>
+    <br/>
+
+    <h2><a name="monitoringinterfacesmethodcalls">Method Calls (JAMon Summary Statistics)</a></h2>
+
+
+    <p>JAMon summary statistics such as hits, time statistics (avg,total,min,max), concurrency statistics and more will be tracked for all
+        of methods of the interface.  The JAMon label for monitoring of interface method calls always begins with: <b>MonProxy-Interface</b>.  JAMon statistics are viewable via the jamonadmin.jsp page in jamon.war
+        (discussed later).  The following is an example of the JAMon label associated with the Connection classes close() method.  Note the JAMon label consists of the
+        concrete class as well as the interfaces method signature.</p>
+
+	    <pre  class="pre-scrollable">
+MonProxy-Interface (class=org.hsqldb.jdbcConnection): public abstract void java.sql.Connection.close() throws java.sql.SQLException</pre>
+
+    <p>Interface summary statistics are viewable via jamonadmin.jsp.
+    </p>
+
+    <h2><a name="monitoringinterfacesexceptionssumm">Exceptions (JAMon Summary Statistics)</a></h2>
+
+
+    <p>JAMon summary statistics are kept whenever a monitored interface throws an Exception.
+    </p>
+
+    <p>Any time a monitored interface throws an exception several JAMon summary records will be added. JAMon labels for Exception summary statistics
+        begin with:  <b>MonProxy-Exception</b>.  These summary statistics allow developers to easily see how many Exceptions the application has thrown. For
+        each exception that the interface throws the the following three types of JAMon summary labels will appear in the report.</p>
+
+    <ul>
+        <li>How many Exceptions were thrown by all monitored interfaces.  This allows you to easily see how many Exceptions your applications have thrown as well
+            as when it last threw one - MonProxy-Exception: InvocationTargetException
+        <li>How many Exceptions of each exception type was thrown.  For SQL exceptions the ErrorCode and SQLState are also added.  This will be discussed further
+            below. Example - MonProxy-Exception: Root cause exception=java.sql.SQLException,ErrorCode=-22,SQLState=S0002
+        <li>How many exceptions were thrown by each method of the monitored interfaces.  Example -
+            MonProxy-Exception: (class=org.hsqldb.jdbcStatement) Exception: public abstract java.sql.ResultSet java.sql.Statement.executeQuery(java.lang.String) throws java.sql.SQLException
+    </ul>
+
+    <p>Exception summary statistics are viewable via jamonadmin.jsp.</p>
+
+
+    <h2><a name="monitoringinterfacesexceptionsdetails">Exceptions (Exception Details)</a></h2>
+
+    <p>The details of the N most recent Exceptions thrown by monitored interfaces (including the stack trace) are kept in a
+        rolling buffer and viewable via exceptions.jsp. The exception buffer size is configurable via the web page, and defaults to the most
+        recent 50 exceptions.  Typically such stack trace information is only available in a log which a developer might not have access to and
+        even if they do the log must be parsed to view the stack traces.</p>
+
+    <p>Each row in the report represents a recent Exception thrown from a monitored inteface. Each row contains the following columns</p>
+
+    <ul>
+        <li><b>ID</b> - An increasing integer that indicates the number of the exception since the server was last booted.
+        <li><b>StartTime</b> - The time the exception was thrown
+        <li><b>ExceptionStackTrace</b> - The stack trace of the exception.
+        <li><b>MethodName</b> - The method name of the monitored interfaces method that threw the exception
+    </ul>
+
+    <p>Exception details statistics are viewable via exceptions.jsp.</p>
+
+
+
+    <h2><a name="monitoringinterfacesexceptionnote">Note on Exception Monitoring</a></h2>
+
+
+    <p>One nice thing about Exception monitoring is that even when developers gobble/hide exceptions in the following manner they
+        will show up in the JAMonAdmin report and exception detail report.  The following example is taken from the JAMon demo. </p>
+
+    <pre  class="pre-scrollable">
+
+  // Throw an exception and show that it is also monitored in jamonadmin.jsp and exceptions.jsp
+  // Note also even though the catch block is empty it will show up in these pages.
+  try {
+   // get a query to throw an Exception.  If enabled will show in jamon report and sql details.
+   st.executeQuery("select * from i_do_not_exist");
+  } catch (Exception e) {}
+</pre>
+
+
+    
+<p align="center">
+<a href="http://www.fdsapi.com"><img src="fds_logo_fulltext_blue2_150.jpg"
+id="fdsbanner" border="1" /></a>
+<a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=96550&amp;type=4" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a>
+<a href="http://www.jamonapi.com"><img src="jamon_banner3.jpg"
+id="jamonbanner" border="1" /></a>
+</p>
+
+<!-- END JAMON SPECIFIC HTML -->
+</div>
+    </div>
+</body>
+</html>

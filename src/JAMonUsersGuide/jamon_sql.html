@@ -1,0 +1,207 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+<meta name="keywords" lang="en-us" content="java, performance tuning, monitor, bottleneck, scale, scalability, monitoring tools, page hits, page counter, currentTimeMillis, benchmark, jamonapi, free, freeware, shareware, open source, measure, fdsapi, formatteddataset, servlet filter">
+<meta name="description" content="The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.">
+<title>JAMon - Documentation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="jamon_docs.css">
+
+</head>
+
+
+<p align="center">
+<img src="jamon1.jpg" id="fdsbanner1" border="0" /></a>
+</p>
+
+<h1 align='center'>Monitoring SQL and JDBC calls</h1>
+
+
+<!-- START JAMON SPECIFIC HTML -->
+<body>
+<div class="container">
+
+    <ul id="menu">
+        <li><a href="#configuring">How do I monitor my SQL/JDBC?</a></li>
+        <li><a href="#monitoringsqlcommandssumm">Viewing SQL Summary Satistics</a></li>
+        <li><a href="#monitoringsqlcommandsdetails">Viewing SQL Details</a></li>
+        <li><a href="#jdbcmethodmonitoring">Viewing JDBC methods and exceptions</a></li>
+    </ul>
+
+<div class="homedoc">
+
+    <p>One of the most powerful aspects of JAMon 2.1 is that it can track performance for all queries issued by an application
+        (see 'Monitoring SQL Commands - JAMon Summary Statistics') and allow developers to view all recent queries that have executed
+        in a rolling buffer (see 'Monitoring SQL Commands - Details').  In addition it can track JDBC method calls to Statements, ResultsSets
+        and Connections and track any exceptions they throw.</p>
+
+    <p>The home screen of the JAMon web application allows you to generate
+        and monitor SQL traffic to play with the capabilities without configuring your own database connection.  The data in the screens below
+        was generated this way, and the screen snapshots were taken from the JAMon web application too.
+    </p>
+
+    <h2><a name="configuring">How do I monitor my SQL/JDBC?</a></h2>
+
+
+    <p>The JAMon JDBC driver allows developers to monitor JDBC/SQL without changing any code. The JAMonDriver
+        class is com.jamonapi.proxy.JAMonDriver and representative URLS follow. Note JAMon simply sits in front of the the
+        real JDBC driver (jamonrealdriver) intercepts calls and then reroutes the calls to the real driver.
+       </p>
+    <ul>
+        <li>jdbc:<b>jamon</b>:sybase:Tds:localhost:2638?<b>jamonrealdriver=com.sybase.jdbc2.jdbc.SybDriver</b>
+        <li>jdbc:jamon:sybase:Tds:myserver.mycompany.com:2638?jamonrealdriver=com.sybase.jdbc2.jdbc.SybDriver&PROTOCOL_CAPTURE=/opt/sw/eas/eas5/sched.log
+        <li>jdbc:jamon:opena:jamonrealdriver=com.asgardsw.OpenA.OpenADriver&159.234.234.164:5000/USR/DB/ (OPENA)CONFIG/AMWEB/DEV ON SOFTWARE
+    </ul>
+
+    <p>
+        <b>JDBC Syntax Without JAMon:</b> An example of how to connect to a database using a JDBC driver follows (The example uses Sybase, but any vendors driver would do)<br>
+    <pre  class="pre-scrollable">
+Class.forName("com.sybase.jdbc2.jdbc.SybDriver");
+String url = "jdbc:sybase:Tds:MyServerDNS:2638";
+Connection conn = DriverManager.getConnection(url, user, passWord);
+    </pre>
+
+    <b>JDBC Syntax With JAMon:</b> The following code will use JAMon as a proxy to track performance, but uses the underlying driver to perform the queris
+    (The example uses Sybase, but any vendors driver would do).  Note no code changes would be required if connection strings were placed in a configuration
+    file.  The JAMon jar file must also be placed in the classpath.<br>
+      <pre  class="pre-scrollable">
+Class.forName("com.jamonapi.proxy.JAMonDriver");
+String url = "jdbc:jamon:sybase.Tds:MyServerDNS:2638?jamonrealdriver=com.sybase.jdbc2.jdbc.SybDriver";
+Connection conn = DriverManager.getConnection(url, user, passWord);
+    </pre>
+
+    </p>
+
+    <p>Note JAMon simply removes 'jamon', and  'jamonrealdriver=XXXX' from the url, so the url should work with the underlying driver when they are removed.  Note the '?' above is
+        not part of JAMon syntax, but instead part of the underlying Sybase driver syntax. In the Oracle example below, there is no
+        delimiter between 'jamonreaddriver' and the previous part of the oracle driver, which looks odd, but it is appropriate.
+    </p>
+
+
+
+    <p>
+      <pre  class="pre-scrollable">
+Class.forName("com.jamonapi.proxy.JAMonDriver");
+String url = "jdbc:<b>jamon</b>:oracle:thin:@dbms:1521:DBjamonrealdriver=oracle.jdbc.OracleDriver";
+Connection conn = DriverManager.getConnection(url, user, passWord);
+    </pre>
+
+
+    </p>
+
+<h2><a name="monitoringsqlcommandssumm">Viewing SQL Summary Satistics</a></h2>
+
+    <p>A number of different JAMon summary statistics will be kept for each query executed from a monitored Statement/PreparedStatement/CallableStatement. 
+    JAMon labels for SQL summary statistics begin with:  <b>MonProxy-SQL</b>.  These summary statistics allow developers to see how many times a query has been 
+    executed, what its time statistics are (avg/total/min/max/...), whether or not it is currently executing and if so how 
+    many times, and more.</p>
+ 
+    <p>For each SQL command the following JAMon summary labels will appear in the JAMonAdmin report.</p>
+
+    <ul>
+    <li><b>MonProxy-SQL-Type</b> - Statistics for SQL commands of the following types:  select, update, delete, insert, truncate, exec, create, drop, 
+        alter, commit, save, grant, revoke, and other.  Essentially this is the first word of the SQL command, and other 'types' may be added 
+        by developers via the JAMon API.  This monitor allows developers to see statistics (hits/avg time/concurrency/...) for 
+        select's/update's/delete's etc.   Example - MonProxy-SQL-Type: select
+     <li><b>MonProxy-SQL-PreparedStatement</b> - This monitor will give statistics for every SQL command issued against a 
+        PreparedStatement/CallableStatement.  Example - MonProxy-SQL-PreparedStatement: select * from SYSTEM_TYPEINFO where LOCAL_TYPE_NAME=?
+     <li><b>MonProxy-SQL-Statement</b> - This monitor will give statistics for every SQL command issued against a Statement.  To allow aggregation all 
+        SQL argument values are replaced with '?'.  For example, "select * from employee where name='steve'", and 
+        "select * from employee where name='jeff'" both become "select * from employee where name=?".  
+         Example - MonProxy-SQL-Statement: select * from employee where name=?  
+     <li><b>MonProxy-SQL-PreparedStatement Reuse</b> - Counts how many times PreparedStatements are reused.  One of the benefits of PreparedStatements 
+      is improved performance over Statements if they are reused.  This monitor allows developers to see if they are reusing their PreparedStatements.  
+      Note this is an overall number and it is not tracked for individual queries.
+     <li><b>MonProxy-SQL-Match</b> - The API allows developers to pass in any string and have a monitor show up if the string occurs in a query.  
+      The most obvious use of this is to pass in table names and see how many times the table occurs in queries and what the performance characteristics of these queries is.  
+      This can lead the way to detecting problem tables.  One row will show up in the JAMonAdmin report for each match. 
+      Example - MonProxy-SQL-Match: SYSTEM_TYPEINFO
+        </li>
+        </ul>
+
+
+    <p>SQL summary statistics are viewable via jamonadmin.jsp. as this screen snapshot shows.</p>
+
+    <p><img  width="100%" src="jamon_sql_summary.png" border="1"> </p>
+    <br/>
+
+    <h2><a name="monitoringsqlcommandsdetails">Viewing SQL Details</a></h2>
+
+
+    <p>The details of the most recent N SQL commands issued are kept in a rolling buffer and are viewable via sql.jsp. 
+     The SQL buffer size is configurable via the web page, and defaults to the most recent 100 queries.  
+    </p>
+
+    <p>Each row in the report represents a recently executed SQL command. By default the report is sorted with the most recent queries 
+     showing at the top. Each row contains the following columns
+    </p>
+
+    <ul>
+    <li><b>ID</b> - An increasing integer that indicates the number of the query since the server was last booted.
+    <li><b>StartTime</b> - The time the query started
+    <li><b>ExecutionTime</b> - The time in milliseconds that the query took to run.
+    <li><b>StatementReuse</b> - Indicates how many times the PreparedStatement was reused. This value should be high to maximize the benefit of the PreparedStatement. The first time the PreparedStatement is used it will have a value of 0 and will increase with each reuse of the PreparedStatement. Statements will always have a value of 0 here as they aren't reused.
+    <li><b>SQL</b> - The query that executed. For statements it will include the parameter values. PreparedStatements will have '?' in place of values.
+    <li><b>ExceptionStackTrace</b> - If an error happened when executing the query this column will contain the stack trace. If no error occurred it will be empty.
+    <li><b>MethodName</b> - The JDBC method name that executed the query. 
+    </ul>
+
+ 
+
+    <p>SQL details are viewable via sql.jsp which is available from the JAMon web application home screen.  This is a screen snapshot of sql.jsp</p>
+    <p><img  width="100%" src="jamon_sql_details.png" border="1"> </p>
+    <br/>
+
+
+    <h2><a name="jdbcmethodmonitoring">Viewing JDBC methods and exceptions</a></h2>
+
+
+    <p>JDBC interface monitoring has all the capabilities mentioned in <a href="jamon_interface.html">interface monitoring</a>,
+        but also a few extra capabilities. </p>
+
+    <ul>
+        <li>Monitoring for Connection/Statement/PreparedStatement/CallableStatement/ResultSet JDBC interfaces does not require casting of the returned
+            monitoring proxy.
+<pre  class="pre-scrollable">
+import com.jamonapi.proxy.*;
+
+// The MyObject() class has to implement MyInterface for monitoring to work.
+Connection monitoredConnection = MonProxyFactory.monitor(originalConnection);
+</pre>
+
+        <li>If a Connection is monitored then any Statement/PreparedStatement/CallableStatement/ResultSet returned is automatically monitored,
+            and need not be wrapped by a call to monitor(...) itself
+            <pre  class="pre-scrollable">
+import com.jamonapi.proxy.*;
+
+// The MyObject() class has to implement MyInterface for monitoring to work.
+Connection monitoredConnection = MonProxyFactory.monitor(originalConnection);
+// The following is not needed to monitor a Statement.  The statement is automatically monitored due to its connection being monitored
+Statement statement=MonProxyFactory.monitor(monitoredConnection.createStatement());
+</pre>
+
+        <li>Due to the standardized nature of SQLExceptions they have more information in the JAMon summary report than other Exceptions.  They include SQLError and SQLState
+            information.  Example - MonProxy-Exception: Root cause exception=java.sql.SQLException,ErrorCode=-22,SQLState=S0002
+    </ul>
+
+    <p>This is a screen snapshot of of the type of information that can be seen in jamonadmin.jsp. Methods and Exceptions are
+        annotated in the example below.</p>
+    <p><img  width="100%" src="jamon_sql_jdbc.png" border="1"> </p>
+    <br/>
+
+
+    
+<p align="center">
+<a href="http://www.fdsapi.com"><img src="fds_logo_fulltext_blue2_150.jpg"
+id="fdsbanner" border="1" /></a>
+<a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=96550&amp;type=4" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a>
+<a href="http://www.jamonapi.com"><img src="jamon_banner3.jpg"
+id="jamonbanner" border="1" /></a>
+</p>
+
+<!-- END JAMON SPECIFIC HTML -->
+    </div>
+</div>
+</body>
+</html>

@@ -64,20 +64,20 @@ ArrayConverter ac=getArrayConverter(textSize, highlightString );
 fds.setArrayConverter(ac);
 
 
-if (rsc.isEmpty())
+if (rsc==null || rsc.isEmpty())
   outputText="<div align='center'><br><br><b>No data was returned</b></div>";
 else {  
  if ("xml".equalsIgnoreCase(outputType)) {
-   rsc=new ResultSetConverter(rsc.getMetaData(), rsc.getResultSet());
-   outputText=fds.getFormattedDataSet(rsc, map, "xml1");
+     rsc=new ResultSetConverter(rsc.getMetaData(), rsc.getResultSet());
+     outputText=fds.getFormattedDataSet(rsc, map, "xml1");
  } else if  ("csv".equalsIgnoreCase(outputType)) {
      rsc=new ResultSetConverter(rsc.getMetaData(), ac.convert(rsc.getResultSet()));
      outputText=fds.getFormattedDataSet(rsc, map, "csv");
  } else if ("excel".equalsIgnoreCase(outputType) || "spreadsheet".equalsIgnoreCase(outputType)) {
-   rsc=new ResultSetConverter(rsc.getMetaData(), ac.convert(rsc.getResultSet()));
-   outputText=fds.getFormattedDataSet(rsc, map, "basicHtmlTable");
+     rsc=new ResultSetConverter(rsc.getMetaData(), ac.convert(rsc.getResultSet()));
+     outputText=fds.getFormattedDataSet(rsc, map, "basicHtmlTable");
  } else 
-   outputText=fds.getSortedText(rsc.getMetaData(), rsc.getResultSet(), map, sortCol, sortOrder, getJAMonTemplate(fds));
+     outputText=fds.getSortedText(rsc.getMetaData(), rsc.getResultSet(), map, sortCol, sortOrder, getJAMonTemplate(fds));
 }
 
 %>
@@ -220,9 +220,7 @@ Object[][] outputTypeBody={
 String[] actionHeader={"action","actionDisplay"};
 Object[][] actionBody={
                  {"Refresh", "Refresh"}, 
-                 {"Reset", "Reset"}, 
-	         {"Enable","Enable"}, 
-	         {"Disable","Disable"}, 
+                 {"Reset", "Reset"},
                 };
 
 
@@ -231,7 +229,7 @@ Object[][] bufferSizeBody={
                  {"No Action", "No Action"}, 
                  {"50", "50 rows"}, 
                  {"100", "100 rows"}, 
-	         {"250","250 rows"}, 
+	             {"250","250 rows"},
                };
 
 
@@ -274,13 +272,9 @@ private static int getNum(String value, String defaultValue) {
 
 private static void executeAction(String action) {
 
-  if ("Reset".equals(action))
-    MonProxyFactory.resetExceptionDetail();
-  else if ("Enable".equals(action)) 
-    MonProxyFactory.enableExceptionDetail(true);
-  else if ("Disable".equals(action))  
-    MonProxyFactory.enableExceptionDetail(false);
-
+  if ("Reset".equals(action)) {
+      MonProxyFactory.resetExceptionDetail();
+  }
 
 }
 
@@ -297,10 +291,13 @@ private static void setBufferSize(String bufferSize) {
 }
 
 private static ResultSetConverter getResultSetConverter(String[] header, Object[][] data, String arraySQLExec) {
-     ArraySQL asql=new ArraySQL(header, arraySQLExec );
-
-     ResultSetConverter rsc = new ResultSetConverter(header, asql.execute(data));
-     //MonitorFactory.add("cellCount","count",rsc.getColumnCount()*rsc.getRowCount());
+     if (data==null) {
+         return null;
+     }
+     ResultSetConverter rsc = new ResultSetConverter(header, data).
+             execute("select Label as exceptionStackTrace, Date from array"). // only take data of interest and rename
+             execute(arraySQLExec). // honor users filter/query
+             execute("select rowNum() as RowNum, * from array");// add rownumbers
      return rsc;
 }
 

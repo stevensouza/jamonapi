@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+<meta name="keywords" lang="en-us" content="java, performance tuning, monitor, bottleneck, scale, scalability, monitoring tools, page hits, page counter, currentTimeMillis, benchmark, jamonapi, free, freeware, shareware, open source, measure, fdsapi, formatteddataset, servlet filter">
+<meta name="description" content="The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.">
+<title>JAMon - Documentation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="jamon_docs.css">
+
+</head>
+
+
+<p align="center">
+<img src="jamon1.jpg" id="fdsbanner1" border="0" /></a>
+</p>
+
+<h1 align='center'>EJB Monitoring</h1>
+
+
+<!-- START JAMON SPECIFIC HTML -->
+<body>
+<div class="container">
+
+   <p>EJB methods as well as any exceptions they throw will be monitored.   The information can be viewed in /jamon/jamonadmin.jsp.  EJB requires no
+   coding changes to your EJBs.  Simply follow these steps to enable the EJB interceptor on your app server:</p>
+   
+    <ul>
+        <li>Make jamon-2.80.jar (or higher) available to your app server </li>
+        <li>Install jamon.war (or higher), so you can view the statistics. </li>
+        <li>Put the following information in your ejb-jar.xml file. This will monitor all EJBs.  </li>
+           <ul><pre  class="pre-scrollable">
+&lt;?xml version="1.0" encoding="UTF-8"?r&gt
+&lt;ejb-jar version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/ejb-jar_3_0.xsd"&gt;
+    &lt;assembly-descriptor&gt;
+      &lt;!-- Default interceptor that will apply to all methods for all beans in deployment --&gt;
+      &lt;interceptor-binding&gt;
+         &lt;ejb-name&gt;*&lt;/ejb-name&gt;
+         &lt;interceptor-class&gt;com.jamonapi.aop.JAMonEJBInterceptor&lt;/interceptor-class&gt;
+      &lt;/interceptor-binding&gt;
+    &lt;/assembly-descriptor&gt;
+&lt;/ejb-jar&gt;
+</pre>
+           </ul>
+    </ul>
+
+    
+<p align="center">
+<a href="http://www.fdsapi.com"><img src="fds_logo_fulltext_blue2_150.jpg"
+id="fdsbanner" border="1" /></a>
+<a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=96550&amp;type=4" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a>
+<a href="http://www.jamonapi.com"><img src="jamon_banner3.jpg"
+id="jamonbanner" border="1" /></a>
+</p>
+
+<!-- END JAMON SPECIFIC HTML -->
+</div>
+</body>
+</html>

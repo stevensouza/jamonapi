@@ -1,32 +1,16 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<!DOCTYPE HTML>
+<html lang="en">
 <head>
+    <meta charset="utf-8"/>
 <meta name="keywords" lang="en-us" content="java, performance tuning, jamonlistener, log4j, jboss, appender, JAMonAppender, listener, monitor, bottleneck, scale, scalability, monitoring tools, page hits, page counter, currentTimeMillis, benchmark, jamonapi, free, freeware, shareware, open source, measure, fdsapi, formatteddataset, servlet filter">
 <meta name="description" content="The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.">
 <title>JAMon - JAMonAppender for Log4j</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="jamon_docs.css">
+
 </head>
-<body bgcolor="#FFFFFF">
-
-<div align="center">
-<script type="text/javascript"><!--
-google_ad_client = "pub-2677015225815089";
-google_ad_width = 728;
-google_ad_height = 90;
-google_ad_format = "728x90_as";
-google_ad_type = "text_image";
-google_ad_channel ="";
-google_color_border = "336699";
-google_color_bg = "FFFFFF";
-google_color_link = "0000FF";
-google_color_url = "008000";
-google_color_text = "000000";
-//--></script>
-<script type="text/javascript"
-  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-</div>
-
-<hr>
+<body>
+<div class="container">
 
 
 <p align="center">
@@ -38,11 +22,7 @@ google_color_text = "000000";
 
 <!-- START JAMON SPECIFIC HTML -->
 
-<table border="0" width="80%" align="center">
-<tr>
-</tr>
-<tr align="left">
-<th><ol>
+<ul id="menu">
    <li><a href="#problems">Some Problems with Log Files</a></li>
    <li><a href="#jamonenhances">How does JAMon enhance Log4j?</a></li>
    <li><a href="#background">Background on Log4j Appenders</a></li>
@@ -52,29 +32,14 @@ google_color_text = "000000";
 
    <li><a href="#generalizing">Using the JAMonAppender to aggregate and 'tail' individual messages - Generalizing</a></li>
    <li><a href="log4j_jamonappender.xml">JAMonAppender Sample Log4j XML file</a></li>   
-   <li>Thanks to Ed Desrosiers for his invaluable contributions to the JAMonAppender.</li>   
 
-</ol>
+</ul>
 
-
-
-</th>
-</tr>
-<tr>
-<td><br><br></td>
-</tr>
-</table>
-
-<table border="0" width="80%" align="center">
+    <div class="homedoc">
 
 
+    <h2><a name="problems">Some Problems with Log Files</a></h2>
 
-
-<tr>
-<th align="left"><h2><a name="problems">1. Some Problems with Log Files</a></h2></th>
-</tr>
-<tr>
-<td>
 
    <p>Logs although useful, can be difficult to gather information from because:</p>
 
@@ -92,19 +57,8 @@ google_color_text = "000000";
   <p>The Log4j JAMonAppender solves these problems and more as it allows you to view a "summarized" version of your log, as well as the 
    details of your most recent log messags, all via the sortable/searchable JAMon web application.</p>
 
-</td>
-</tr>
+    <h2><a name="jamonenhances">How does JAMon enhance Log4j?</a></h2>
 
-<tr>
-<td><br><br></td>
-</tr>
-
-
-<tr>
-<th align="left"><h2><a name="jamonenhances">2. How does JAMon enhance Log4j?</a></h2></th>
-</tr>
-<tr>
-<td>
 
 
  <p>Wouldn't it be nice to be able to do the following with your Log4j log files?</p>
@@ -138,22 +92,8 @@ google_color_text = "000000";
      grow as large as a log file, however it can work like tail in that it can keep the most recent N rows in memory for viewing via a web page.</li>
   </ul>
 
+    <h2><a name="background">Background on Log4j Appenders</a></h2>
 
-
-</td>
-</tr>
-
-<tr>
-<td><br><br></td>
-</tr>
-
-
-<tr>
-<th align="left"><h2><a name="background">3. Background on Log4j Appenders</a></h2></th>
-</tr>
-<tr>
-<td>
-   
   <p>
    <a href="http://logging.apache.org/log4j/docs/">Log4j</a> allows logging requests to be sent to multiple destinations including a console, 
    file, database, or even a Socket Server.   Log4j uses its <a href="http://logging.apache.org/log4j/docs/api/org/apache/log4j/Appender.html">Appender</a> 
@@ -168,20 +108,7 @@ google_color_text = "000000";
    "Date", and the "Exception Stacktrace" (In the case of "Exception" if the overloaded methods such as "logger.error(message, exception)" were called).
   </p>
 
-</td>
-</tr>
-
-<tr>
-<td><br><br></td>
-</tr>
-
-
-<tr>
-<th align="left"><h2><a name="primer">4. A Very Brief JAMon Primer</a></h2></th>
-</tr>
-<tr>
-<td>
-
+    <h2><a name="primer">A Very Brief JAMon Primer</a></h2>
 
   <p>
    JAMon is based on a very simple concept of passing a key and a numeric value to an add method (MonitorFactory.add(key, numericValue)) 
@@ -220,20 +147,8 @@ google_color_text = "000000";
 
 
 
+<h2><a name="defaultbehaviour">Setting up the JAMonAppender - Default Behaviour</a></h2>
 
-</td>
-</tr>
-
-<tr>
-<td><br><br></td>
-</tr>
-
-
-<tr>
-<th align="left"><h2><a name="defaultbehaviour">5. Setting up the JAMonAppender - Default Behaviour</a></h2></th>
-</tr>
-<tr>
-<td>
 
  <p>Setting up the JAMonAppender should only take a few minutes.  The steps follow:</p>
 
@@ -257,7 +172,7 @@ google_color_text = "000000";
  </p>
 
  <p>jamonadmin.jsp from JAMon.war
-       <img src="jamon_log4j_min.jpg" border="1">
+       <img width="100%" src="jamon_log4j_min.jpg" border="1">
  <p>
 
  <p>This behaviour is by default enabled, but if you wish to turn it off you can set the following JAMonAppender property:  
@@ -275,19 +190,8 @@ google_color_text = "000000";
   it would be by grepping or tailing a log file.
  </p>
 
-</td>
-</tr>
+    <h2><a name="tail">Using the JAMonAppender to mimic 'tail'</a></h2>
 
-<tr>
-<td><br><br></td>
-</tr>
-
-
-<tr>
-<th align="left"><h2><a name="tail">6. Using the JAMonAppender to mimic 'tail'</a></h2></th>
-</tr>
-<tr>
-<td>
 
 
   <p>
@@ -296,21 +200,17 @@ google_color_text = "000000";
   <p>
 
    
-   <blockquote>
-    <code title="jamonappenderxml">
-       &lt;appender name="JAMONAPPENDER" class="com.jamonapi.log4j.JAMonAppender"&gt;<br>
-        &nbsp;&lt;param name="EnableListeners" value="BASIC"/&gt;<br>
-       &lt;/appender&gt;<br>
+   <pre>
+       &lt;appender name="JAMONAPPENDER" class="com.jamonapi.log4j.JAMonAppender"&gt;
+          &lt;param name="EnableListeners" value="BASIC"/&gt;
+       &lt;/appender&gt;
 
-       <br>
-
-       &lt;root&gt;<br>
-         &nbsp;&lt;appender-ref ref="CONSOLE"/&gt;<br>
-         &nbsp;&lt;appender-ref ref="FILE"/&gt;<br>
-         &nbsp;&lt;appender-ref ref="JAMONAPPENDER"/&gt;<br>
-       &lt;/root&gt;<br>
-    </code>
-   </blockquote>
+       &lt;root&gt;
+          &lt;appender-ref ref="CONSOLE"/&gt;
+          &lt;appender-ref ref="FILE"/&gt;
+          &lt;appender-ref ref="JAMONAPPENDER"/&gt;
+       &lt;/root&gt;
+   </pre>
 
 
 
@@ -322,17 +222,14 @@ google_color_text = "000000";
   Note these are additive in the XML file and so you can enable any combination of the values by using an approach like the one below:
   </p>
 
-   <blockquote>
-    <code title="jamonappenderxml2">
+   <pre>
+      &lt;appender name="jamonAppender" class="com.jamonapi.log4j.JAMonAppender"&gt;
+         &lt;param name="EnableListeners" value="ERROR"/&gt;
+         &lt;param name="EnableListeners" value="FATAL"/&gt;
+         &lt;param name="EnableListeners" value="WARN"/&gt;
+      &lt;/appender&gt;
+       </pre>
 
-      &lt;appender name="jamonAppender" class="com.jamonapi.log4j.JAMonAppender">
-        &nbsp;&lt;param name="EnableListeners" value="ERROR"/&gt;<br>
-        &nbsp;&lt;param name="EnableListeners" value="FATAL"/&gt;<br>
-        &nbsp;&lt;param name="EnableListeners" value="WARN"/&gt;<br>
-      &lt;/appender&gt;<br>
-
-    </code>
-   </blockquote>
 
 
    <p>To view the Log4jBufferListener click on the blue square labeled "Modify" on the jamonadmin.jsp page (see image above).  From the "Modify" from the 
@@ -343,23 +240,10 @@ google_color_text = "000000";
    </p>
    
   <p>mondetail.jsp from JAMon.war
-       <img src="jamon_log4j_bufflistener.jpg" border="1">
+       <img width="100%" src="jamon_log4j_bufflistener.jpg" border="1">
   </p>
 
-
-
-</td>
-</tr>
-
-<tr>
-<td><br><br></td>
-</tr>
-
-<tr>
-<th align="left"><h2><a name="generalizing">7. Using the JAMonAppender to aggregate and 'tail' individual messages - Generalizing</a></h2></th>
-</tr>
-<tr>
-<td>
+    <h2><a name="generalizing">Using the JAMonAppender to aggregate and 'tail' individual messages - Generalizing</a></h2>
 
   <p>
    JAMon can also keep aggregate stats, and the N most recent detailed messages based on content within the logged message itself.  
@@ -414,27 +298,22 @@ google_color_text = "000000";
      <p>&nbsp;&nbsp;&nbsp;&nbsp;ERROR.com.mypackage - Invalid password provided by user ?</p>
 
     <p>And create a JAMon entry with the new String and put the original detailed String in a buffer for this monitor label (if enabled).  
-     The following information shows the xml configuration file used to do this this.
+     The following information shows the xml configuration file used to do this.
     </p>
 
-   <blockquote>
-    <code title="jamonappenderxml3">
-
-     &lt;appender name="jamonAppender" class="com.jamonapi.log4j.JAMonAppender"&gt;<br>
-       &nbsp;&lt;param name="EnableListeners" value="BASIC"/&gt;<br>
-       &nbsp;&lt;param name="generalize" value="true"/&gt;<br>
-       &nbsp;&lt;layout class="org.apache.log4j.PatternLayout"&gt;<br>
-         &nbsp;&nbsp;&lt;param name="ConversionPattern" value="%p.%c-%m"/&gt;<br>
-       &nbsp;&lt;/layout&gt;<br>
-     &lt;/appender&gt;<br>
-
-    </code>
-   </blockquote>
-
+    <pre>
+     &lt;appender name="jamonAppender" class="com.jamonapi.log4j.JAMonAppender"&gt;
+        &lt;param name="EnableListeners" value="BASIC"/&gt;
+        &lt;param name="generalize" value="true"/&gt;
+        &lt;layout class="org.apache.log4j.PatternLayout"&gt;
+           &lt;param name="ConversionPattern" value="%p.%c-%m"/&gt;
+        &lt;/layout&gt;
+     &lt;/appender&gt;
+</pre>
 
 
   <p>The following screen snapsot from jamonadmin.jsp shows that the generalized form of the log message was called 20,000 times.
-       <img src="jamon_log4j_generalize1.jpg" border="1">
+       <img width="100%" src="jamon_log4j_generalize1.jpg" border="1">
   </p>
 
   <br>
@@ -443,7 +322,7 @@ google_color_text = "000000";
     to the buffer via mondetail.jsp. Note the nongeneralized form is put in the buffer (In this case that can be identified by 'aeinstein'.  Unfortunately
     at this time the only way to enable buffer listeners for log message monitors is via the JAMon web app or programmatically (i.e. it can't be done
     via Log4j configuration files)
-       <img src="jamon_log4j_generalize2.jpg" border="1">
+       <img width="100%" src="jamon_log4j_generalize2.jpg" border="1">
   </p>
 
   <br>
@@ -454,35 +333,27 @@ google_color_text = "000000";
    'ERROR.com.mypackage':
   </p>
 
-<appender name="jamonAppender" class="com.jamonapi.log4j.JAMonAppender">
-  <param name="EnableListeners" value="BASIC"/>
-  <param name="generalize" value="true"/>
-  <param name="enableDefaultGeneralizer" value="false"/>
-  <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%p.%c"/>
-     </layout>
-</appender>
+<pre>
+&lt;appender name="jamonAppender" class="com.jamonapi.log4j.JAMonAppender"&gt;
+  &lt;param name="EnableListeners" value="BASIC"/&gt;
+  &lt;param name="generalize" value="true"/&gt;
+  &lt;param name="enableDefaultGeneralizer" value="false"/&gt;
+  &lt;layout class="org.apache.log4j.PatternLayout"&gt;
+            &lt;param name="ConversionPattern" value="%p.%c"/&gt;
+  &lt;/layout&gt;
+&lt;/appender&gt;
+</pre>
 
 Finally if you want to provide your own Generalizer simply provide a default noarg constructor and pass the class name into the JAMonAppender via the Log4j configuration file.
-
-<appender name="jamonAppender" class="com.jamonapi.log4j.JAMonAppender">
-   <param name="generalize" value="true"/>
-   <param name="GeneralizerDynamic" value="com.mypackage.MyGeneralizer"/>
-  <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%p.%c-%m"/>
-    </layout>
-</appender>
-
-</td>
-</tr>
-
-<tr>
-<td><br><br></td>
-</tr>
-
-
-
-</table>
+<pre>
+&lt;appender name="jamonAppender" class="com.jamonapi.log4j.JAMonAppender"&gt;
+    &lt;param name="generalize" value="true"/&gt;
+    &lt;param name="GeneralizerDynamic" value="com.mypackage.MyGeneralizer"/&gt;
+    &lt;layout class="org.apache.log4j.PatternLayout"&gt;
+            &lt;param name="ConversionPattern" value="%p.%c-%m"/&gt;
+    &lt;/layout&gt;
+&lt;/appender&gt;
+</pre>
 
 
 
@@ -495,6 +366,7 @@ id="jamonbanner" border="1" /></a>
 </p>
 
 <!-- END JAMON SPECIFIC HTML -->
-
+</div>
+    </div>
 </body>
 </html>

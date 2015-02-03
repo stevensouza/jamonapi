@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+<meta name="keywords" lang="en-us" content="java, performance tuning, monitor, bottleneck, scale, scalability, monitoring tools, page hits, page counter, currentTimeMillis, benchmark, jamonapi, free, freeware, shareware, open source, measure, fdsapi, formatteddataset, servlet filter">
+<meta name="description" content="The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.">
+<title>JAMon - Documentation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="jamon_docs.css">
+
+</head>
+
+
+<p align="center">
+<img src="jamon1.jpg" id="fdsbanner1" border="0" /></a>
+</p>
+
+<h1 align='center'>The JAMon servlet filter</h1>
+
+
+<!-- START JAMON SPECIFIC HTML -->
+<body>
+<div class="container">
+
+
+    <p>A Servlet filters is a simple piece of Java code that is executed whenever a Java Web Application
+       resource is accessed. Resources include Servlets, JSP's, GIFs, JPeg's, and HTML documents. The 
+       simple filter example will monitor all of these. By using JAMon the filter becomes a powerful web 
+       site hit counter.  Statistics for pages will be gathered such as hits, and execution time (avg, min, max).
+       In addition you can see which pages are currently executing.  
+    </p>
+
+    <p>The JAMon servlet filter does not require ANY code changes.  You simply put jamon's jar file in your
+      servers classpath, put the following entry into your web.xml file, and install the JAMon war so you can view your statistics.  
+      Note you can choose what types of pages you would like to monitor by altering the 'url-pattern' element below.  
+      See Java documentation for more info on how servlet filters work.
+    </p>
+
+    <p>Note:  The order of entries of your web.xml files is important.  
+      <br><br>
+      &lt;web-app&gt;<br>
+      &nbsp;   &lt;display-name&gt;YourApp&lt;/display-name&gt;<br>
+      <b>
+      &nbsp;&nbsp;   &lt;filter&gt;<br>
+      &nbsp;&nbsp;&nbsp;    &lt;filter-name&gt;JAMonFilter&lt;/filter-name&gt;<br>
+      &nbsp;&nbsp;&nbsp;    &lt;filter-class&gt;com.jamonapi.JAMonFilter&lt;/filter-class&gt;<br>
+      &nbsp;&nbsp;   &lt;/filter&gt;<br><br>
+	
+      &nbsp;&nbsp;   &lt;filter-mapping&gt;<br>
+      &nbsp;&nbsp;&nbsp;     &lt;filter-name&gt;JAMonFilter&lt;/filter-name&gt;<br>
+      &nbsp;&nbsp;&nbsp;     &lt;url-pattern&gt;/*&lt;/url-pattern&gt;<br>
+      &nbsp;   &lt;/filter-mapping&gt;<br><br>
+      </b>
+      &lt;!--<br>
+      Servlet filter elements come before servlet elements<br>
+      &nbsp;&nbsp;   &lt;servlet&gt;<br>
+      &nbsp;&nbsp;&nbsp;    &lt;servlet-name&gt;demo&lt;/servlet-name&gt;<br>
+      &nbsp;&nbsp;&nbsp;    &lt;jsp-file&gt;/demo.jsp&lt;/jsp-file&gt;<br>
+      &nbsp;&nbsp;   &lt;/servlet&gt;<br>
+      --&gt;<br><br>
+
+      &lt;/web-app&gt;<br>
+
+</p>
+
+
+    
+<p align="center">
+<a href="http://www.fdsapi.com"><img src="fds_logo_fulltext_blue2_150.jpg"
+id="fdsbanner" border="1" /></a>
+<a href="http://sourceforge.net"><img src="http://sourceforge.net/sflogo.php?group_id=96550&amp;type=4" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a>
+<a href="http://www.jamonapi.com"><img src="jamon_banner3.jpg"
+id="jamonbanner" border="1" /></a>
+</p>
+
+<!-- END JAMON SPECIFIC HTML -->
+</div>
+</body>
+</html>
