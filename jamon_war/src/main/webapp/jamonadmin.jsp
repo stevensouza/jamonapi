@@ -138,6 +138,10 @@ else {
     } else if  ("csv".equalsIgnoreCase(outputType)) {
        rsc=new ResultSetConverter(rsc.getMetaData(), ac.convert(rsc.getResultSet()));
        outputText=fds.getFormattedDataSet(rsc, map, "csv");
+    } else if  ("csv1".equalsIgnoreCase(outputType)) {
+        map.put("delimiter", ";");
+        rsc=new ResultSetConverter(rsc.getMetaData(), ac.convert(rsc.getResultSet()));
+        outputText=fds.getFormattedDataSet(rsc, map, "delimited");
     } else if ("excel".equalsIgnoreCase(outputType) || "spreadsheet".equalsIgnoreCase(outputType)) {
       rsc=new ResultSetConverter(rsc.getMetaData(), ac.convert(rsc.getResultSet()));
       outputText=fds.getFormattedDataSet(rsc, map, "basicHtmlTable");
@@ -376,7 +380,8 @@ String[] outputTypeHeader={"outputTypeValue","outputType"};
 Object[][] outputTypeBody={
                  {"html", "HTML"}, 
                  {"xml", "XML"}, 
-                 {"csv", "CSV"},
+                 {"csv", "CSV(,)"},
+                 {"csv1", "CSV1(;)"},
 	             {"excel","MS Excel"}, 
                 };
 
