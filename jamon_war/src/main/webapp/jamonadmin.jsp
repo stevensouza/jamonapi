@@ -1,8 +1,8 @@
 <%@ page language="java" buffer="8kb" autoFlush="true" isThreadSafe="true" isErrorPage="false"  %>
+<%@ page trimDirectiveWhitespaces="true" %>
 <%@ page import="com.fdsapi.*, com.fdsapi.arrays.*, net.sf.xsshtmlfilter.HTMLFilter, java.text.DateFormat, java.text.DecimalFormat, java.util.*,  java.util.regex.Matcher" %>
 <%@ page import="java.util.regex.Pattern" %>
 <%@ page import="com.jamonapi.*, com.jamonapi.proxy.*, com.jamonapi.utils.*, com.jamonapi.distributed.*" %>
-
 <%
 
 FormattedDataSet fds=new FormattedDataSet();
