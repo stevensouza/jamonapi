@@ -75,7 +75,7 @@ if (generateData) {
 <br>
 <div align="center" style="padding-top : 30px;">
 <hr width="580" align="center" />
-<a href="menu.jsp">Home</a> | <a href="jamonadmin.jsp">JAMonAdmin</a> | <a href="monmanage.jsp">Manage Mon</a> | <a href="mondetail.jsp">View Listener</a> |<a href="sql.jsp">SQL Buffer</a> | <a href="exceptions.jsp">Exceptions</a>
+<a href="menu.jsp">Home</a> | <a href="jamonadmin.jsp">JAMonAdmin</a>  | <a href="sql.jsp">SQL Buffer</a> | <a href="exceptions.jsp">Exceptions</a>
 <hr width="580" align="center" />
 </div>
 

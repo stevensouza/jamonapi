@@ -232,7 +232,7 @@ function helpWin() {
 <br>
 <div align="center" style="padding-top : 30px;">
 <hr width="580" align="center" />
-<a href="menu.jsp">Home</a> | <a href="jamonadmin.jsp">JAMonAdmin</a> | <a href="monmanage.jsp">Manage Mon</a> | View Listener | <a href="sql.jsp">SQL Details</a> | <a href="exceptions.jsp">Exception Details</a>
+<a href="menu.jsp">Home</a> | <a href="jamonadmin.jsp">JAMonAdmin</a> | <a href="sql.jsp">SQL Details</a> | <a href="exceptions.jsp">Exception Details</a>
 <hr width="580" align="center" />
 </div>
 

@@ -65,12 +65,6 @@ if ("Enable Monitoring!".equals(enableAll)) {
 
 </tr>
 <tr>
-<td><a href="monmanage.jsp">Manage Monitor page </a> - Manage previously selected monitor. To select a monitor use <a href="jamonadmin.jsp">jamonadmin.jsp</a></td>
-</tr>
-<tr>
-<td><a href="mondetail.jsp">View Listener Details</a> - View previously selected listener. To select a monitor listener use <a href="jamonadmin.jsp">jamonadmin.jsp</a></td>
-</tr>
-<tr>
 <td><a href="sql.jsp">SQL Details page </a> - Manage the most recent <%=MonProxyFactory.getSQLBufferSize() %> SQL commands executed. (currently <%=enabled(MonProxyFactory.isSQLDetailEnabled())%>)</td>
 </tr>
 <tr>
