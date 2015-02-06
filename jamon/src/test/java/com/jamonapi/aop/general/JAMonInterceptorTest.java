@@ -61,7 +61,7 @@ public class JAMonInterceptorTest {
         // Mockito can't mock final classes
         when(context.getMethod()).thenReturn(null);
 
-        JAMonInterceptor interceptor = new TestJAMonInterceptor();
+        JAMonInterceptor interceptor = new JAMonInterceptor();
         interceptor.intercept(context);
 
         assertThat(MonitorFactory.getNumRows()).describedAs("Expecting one invocation label").isEqualTo(2);
@@ -76,23 +76,10 @@ public class JAMonInterceptorTest {
         // Mockito can't mock final classes
         when(context.getMethod()).thenReturn(null);
 
-        JAMonInterceptor interceptor = new TestJAMonInterceptor();
+        JAMonInterceptor interceptor = new JAMonInterceptor();
         interceptor.onException(context, "JAMonInterceptor.???", new RuntimeException());
 
-        assertThat( MonitorFactory.getNumRows()).describedAs("Expecting two exception labels").isEqualTo(2);
-    }
-
-    class TestJAMonInterceptor extends JAMonInterceptor {
-
-        @Override
-        public Exception onException(InvocationContext ctx, String label, Exception exception) throws Exception {
-            return super.onException(ctx, label, exception);
-        }
-
-        @Override
-        public Object intercept(InvocationContext ctx) throws Exception {
-            return super.intercept(ctx);
-        }
+        assertThat(MonitorFactory.getNumRows()).describedAs("Expecting two exception labels").isEqualTo(2);
     }
 
     class ExceptionGenerator {
