@@ -50,11 +50,26 @@ public class JAMonInterceptor {
      */
     protected String unknownTimeLabel = getClass().getName()+"."+UNKNOWN;
 
+
+    /** Enable/disable saving method parameters in the details (stacktrace) sent to jamon.  It is enabled by default
+     *
+     */
+    protected boolean useParametersInDetails = true;
+
     protected JAMonInterceptor(String exceptionLabel) {
         this.exceptionLabel = exceptionLabel;
     }
 
     public JAMonInterceptor() {
+    }
+
+
+    public boolean useParametersInDetails() {
+        return useParametersInDetails;
+    }
+
+    public void setUseParametersInDetails(boolean useParametersInDetails) {
+        this.useParametersInDetails = useParametersInDetails;
     }
 
     @AroundInvoke
@@ -92,7 +107,6 @@ public class JAMonInterceptor {
     protected String getJamonLabel(InvocationContext ctx) {
         String methodName = (ctx.getMethod() != null ? ctx.getMethod().toString() : unknownTimeLabel);
         return methodName;
-       // return interceptorPrefix + hierarchyDelimiter + methodName;
     }
 
     /**
@@ -148,7 +162,7 @@ public class JAMonInterceptor {
         StringBuilder temp = new StringBuilder();
         temp.append(label).append(",").append(lineSeparator);
 
-        if(parameters != null) {
+        if(parameters != null && useParametersInDetails()) {
             temp.append("=== Parameters ===").append(lineSeparator);
             for(int i=0; i<parameters.length; i++) {
                 Object parameter = parameters[i];
