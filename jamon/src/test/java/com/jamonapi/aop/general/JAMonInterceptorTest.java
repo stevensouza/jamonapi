@@ -27,8 +27,9 @@ public class JAMonInterceptorTest {
     @Before
     public void setUp() {
 
-        // reset JAMon statistics before each run
-        MonitorFactory.reset();
+        // reset JAMon statistics before each run.
+        // clear ensures all monitors are removed. reset would add back the exception monitor automatically
+        MonitorFactory.getMap().clear();
 
         char[] array = new char[1024 * 1024 * 1];
         int pos = 0;
@@ -53,34 +54,68 @@ public class JAMonInterceptorTest {
         args[5] = new ExceptionGenerator();
     }
 
+    
+
     @Test
     public void testIntercept() throws Exception {
-
         InvocationContext context = mock(InvocationContext.class);
-        when(context.getParameters()).thenReturn(args);
-        when(context.getTarget()).thenReturn(this);
-        // Mockito can't mock final classes
-        when(context.getMethod()).thenReturn(null);
 
         JAMonInterceptor interceptor = new JAMonInterceptor();
         interceptor.intercept(context);
 
-        assertThat(MonitorFactory.getNumRows()).describedAs("Expecting one invocation label").isEqualTo(2);
+        assertThat(MonitorFactory.getNumRows()).describedAs("Expecting one invocation label").isEqualTo(1);
+        assertThat(MonitorFactory.getReport("ms.")).describedAs("Method wasn't specified").contains(JAMonInterceptor.UNKNOWN);
+    }
+
+    @Test
+    public void testIntercept_WithException() throws Exception {
+        InvocationContext context = mock(InvocationContext.class);
+        when(context.getParameters()).thenReturn(args);
+        Throwable exception = new RuntimeException("my great exception");
+        when(context.proceed()).thenThrow(exception);
+        String EXCEPTION_LABEL = "javax.ejb.EJBException";
+
+        JAMonInterceptor interceptor = new JAMonInterceptor(EXCEPTION_LABEL);
+        try {
+            interceptor.intercept(context);
+        } catch (Throwable e) {
+            assertThat(e).hasMessage("my great exception");
+        }
+
+        assertThat(MonitorFactory.getNumRows()).describedAs("Should have 4 monitors").isEqualTo(4);
+        assertThat(MonitorFactory.getComposite("ms.").getNumRows()).describedAs("Should have 1 method").isEqualTo(1);
+        assertThat(MonitorFactory.getComposite(JAMonInterceptor.EXCEPTION_UNITS).getNumRows()).describedAs("Should have 3 exceptions").isEqualTo(3);
+
+        assertThat(MonitorFactory.getReport("ms.")).describedAs("Method wasn't specified").contains(JAMonInterceptor.UNKNOWN);
+        assertThat(MonitorFactory.getMonitor(MonitorFactory.EXCEPTIONS_LABEL, JAMonInterceptor.EXCEPTION_UNITS).getHits())
+                .describedAs("The most general exception monitor should have been created")
+                .isEqualTo(1);
+        assertThat(MonitorFactory.getMonitor(EXCEPTION_LABEL, JAMonInterceptor.EXCEPTION_UNITS).getHits())
+                .describedAs("The 2nd most general exception monitor should have been created")
+                .isEqualTo(1);
+        assertThat(MonitorFactory.getMonitor(exception.getClass().getName(), JAMonInterceptor.EXCEPTION_UNITS).getHits())
+                .describedAs("The java.lang.Runtime exception monitor should have been created")
+                .isEqualTo(1);
     }
 
     @Test
     public void testOnException() throws Exception {
-
+        String METHOD_NAME = "JAMonInterceptor.???";
         InvocationContext context = mock(InvocationContext.class);
         when(context.getParameters()).thenReturn(args);
-        when(context.getTarget()).thenReturn(this);
-        // Mockito can't mock final classes
-        when(context.getMethod()).thenReturn(null);
 
-        JAMonInterceptor interceptor = new JAMonInterceptor();
-        interceptor.onException(context, "JAMonInterceptor.???", new RuntimeException());
+        JAMonInterceptor interceptor = new JAMonInterceptor("javax.ejb.EJBException");
+        String details = interceptor.onException(context, METHOD_NAME, new RuntimeException());
 
         assertThat(MonitorFactory.getNumRows()).describedAs("Expecting three exception labels").isEqualTo(3);
+        assertThat(details).describedAs("details should have the method name").contains(METHOD_NAME);
+        assertThat(details).describedAs("details should have all parameters").contains(stringParameter);
+        assertThat(details).describedAs("details should have all parameters").contains(JAMonInterceptor.DEFAULT_MAX_STRING_ENDING);
+        assertThat(details).describedAs("details should have all parameters").contains("array.0", "array.3");
+        assertThat(details).describedAs("details should have all parameters").contains("collection.0", "collection.4");
+        assertThat(details).describedAs("details should have all parameters").contains(JAMonInterceptor.NULL_STR);
+        assertThat(details).describedAs("details should have all parameters").contains(JAMonInterceptor.UNKNOWN);
+        assertThat(details).describedAs("details should have stacktrace").contains("java.lang.RuntimeException");
     }
 
     @Test

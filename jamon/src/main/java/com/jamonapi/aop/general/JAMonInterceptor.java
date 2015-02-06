@@ -1,6 +1,5 @@
 package com.jamonapi.aop.general;
 
-import com.jamonapi.MonKey;
 import com.jamonapi.MonKeyImp;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
@@ -17,17 +16,7 @@ public class JAMonInterceptor {
     /**
      * Default exception label
      */
-    public static final String DEFAULT_EXCEPTION_LABEL ="Exception";
-
-    /** 
-     * Hierarchy delimiter in Monitor name.
-     */
-    public static final String DEFAULT_HIERARCHY_DELIMITER = ".";
-    
-    /**
-     * Default prefix for JAMon interceptor if no "prefix" init parameter is used.
-     */
-    public static final String DEFAULT_INTERCEPTOR_PREFIX = "";
+    public static final String EXCEPTION_UNITS ="Exception";
 
     /**
      * Returned when a method parameter is null
@@ -39,10 +28,6 @@ public class JAMonInterceptor {
      */
     protected static final String UNKNOWN =  "???";
 
-    /**
-     * Default label for an unknown method
-     */
-    public static final String DEFAULT_UNKNOWN_LABEL = DEFAULT_INTERCEPTOR_PREFIX + DEFAULT_HIERARCHY_DELIMITER + UNKNOWN;
 
     /**
      * Maximum length for parameters in the exception dump
@@ -56,37 +41,27 @@ public class JAMonInterceptor {
     public static final String DEFAULT_MAX_STRING_ENDING = "...";
 
     /**
-     * JAMon name prefix - can be overridden in subclasses.
-     */
-    protected String interceptorPrefix;
-
-    /**
-     * JAMon hierarchy prefix - can be overridden in subclasses.
-     */
-    protected String hierarchyDelimiter;
-
-    /**
      * JAMon exception label - can be overridden in subclasses.
      */
-    protected String exceptionLabel;
+    protected String exceptionLabel = getClass().getName();
 
     /**
      * JAMon unknown label - can be overridden in subclasses.
      */
-    protected String unknownLabel;
+    protected String unknownTimeLabel = getClass().getName()+"."+UNKNOWN;
+
+    protected JAMonInterceptor(String exceptionLabel) {
+        this.exceptionLabel = exceptionLabel;
+    }
 
     public JAMonInterceptor() {
-        this.interceptorPrefix = DEFAULT_INTERCEPTOR_PREFIX;
-        this.hierarchyDelimiter = DEFAULT_HIERARCHY_DELIMITER;
-        this.exceptionLabel = DEFAULT_EXCEPTION_LABEL;
-        this.unknownLabel = DEFAULT_UNKNOWN_LABEL;
     }
 
     @AroundInvoke
     public Object intercept(InvocationContext ctx) throws Exception {
         Monitor mon=null;
         MonKeyImp key=null;
-        String label=unknownLabel;
+        String label=null;
 
         if(!isMonitored(ctx)) {
             return ctx.proceed();
@@ -115,8 +90,9 @@ public class JAMonInterceptor {
      * @return fully qualified label
      */
     protected String getJamonLabel(InvocationContext ctx) {
-        String methodName = (ctx.getMethod() != null ? ctx.getMethod().toString() : unknownLabel);
-        return interceptorPrefix + hierarchyDelimiter + methodName;
+        String methodName = (ctx.getMethod() != null ? ctx.getMethod().toString() : unknownTimeLabel);
+        return methodName;
+       // return interceptorPrefix + hierarchyDelimiter + methodName;
     }
 
     /**
@@ -147,12 +123,12 @@ public class JAMonInterceptor {
         Object[] parameters = ctx.getParameters();
         String details = createExceptionDetails(label, parameters, exception);
         // most general counter: com.jamonapi.Exceptions
-        MonitorFactory.add(new MonKeyImp(MonitorFactory.EXCEPTIONS_LABEL, details, DEFAULT_EXCEPTION_LABEL), 1);
+        MonitorFactory.add(new MonKeyImp(MonitorFactory.EXCEPTIONS_LABEL, details, EXCEPTION_UNITS), 1);
         // counter specific to this class of exceptions such as ejb. example:  com.jamonapi.EjbExceptions
-        MonitorFactory.add(new MonKeyImp(exceptionLabel, details, DEFAULT_EXCEPTION_LABEL), 1);
+        MonitorFactory.add(new MonKeyImp(exceptionLabel, details, EXCEPTION_UNITS), 1);
         // most specific exception counter.  Example:  com.myapp.MyGreatException
         if (exception!=null) {
-            MonitorFactory.add(new MonKeyImp(exception.getClass().getName(), details, DEFAULT_EXCEPTION_LABEL), 1);
+            MonitorFactory.add(new MonKeyImp(exception.getClass().getName(), details, EXCEPTION_UNITS), 1);
         }
         return details;
     }
