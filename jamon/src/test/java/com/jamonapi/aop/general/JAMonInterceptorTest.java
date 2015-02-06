@@ -80,7 +80,7 @@ public class JAMonInterceptorTest {
         JAMonInterceptor interceptor = new JAMonInterceptor();
         interceptor.onException(context, "JAMonInterceptor.???", new RuntimeException());
 
-        assertThat(MonitorFactory.getNumRows()).describedAs("Expecting two exception labels").isEqualTo(2);
+        assertThat(MonitorFactory.getNumRows()).describedAs("Expecting three exception labels").isEqualTo(3);
     }
 
     @Test
@@ -111,8 +111,8 @@ public class JAMonInterceptorTest {
     @Test
     public void testcreateExceptionDetails_WithNulls() throws Exception {
         JAMonInterceptor interceptor = new JAMonInterceptor();
-        Object[] array = interceptor.createExceptionDetails("mylabel", null, null);
-        assertThat(Misc.getAsString(array))
+        String details = interceptor.createExceptionDetails("mylabel", null, null);
+        assertThat(details)
             .describedAs("Should contain label and only label")
             .isEqualTo("mylabel,\n");
     }
@@ -120,8 +120,7 @@ public class JAMonInterceptorTest {
     @Test
     public void testcreateExceptionDetails_WithParameters() throws Exception {
         JAMonInterceptor interceptor = new JAMonInterceptor();
-        Object[] array = interceptor.createExceptionDetails("mylabel", new Object[]{new Integer(1962), "hello"}, null);
-        String details = Misc.getAsString(array);
+        String details = interceptor.createExceptionDetails("mylabel", new Object[]{new Integer(1962), "hello"}, null);
         assertThat(details).contains("mylabel");
         assertThat(details).contains("1962");
         assertThat(details).contains("hello");
@@ -131,8 +130,7 @@ public class JAMonInterceptorTest {
     public void testcreateExceptionDetails_WithParametersAndException() throws Exception {
         JAMonInterceptor interceptor = new JAMonInterceptor();
         RuntimeException e = new RuntimeException("my fancy error message");
-        Object[] array = interceptor.createExceptionDetails("mylabel", new Object[]{new Integer(1962), "hello"}, e);
-        String details = Misc.getAsString(array);
+        String details = interceptor.createExceptionDetails("mylabel", new Object[]{new Integer(1962), "hello"}, e);
         assertThat(details).contains("mylabel");
         assertThat(details).contains("1962");
         assertThat(details).contains("hello");
@@ -143,8 +141,7 @@ public class JAMonInterceptorTest {
     public void testcreateExceptionDetails_WithException() throws Exception {
         JAMonInterceptor interceptor = new JAMonInterceptor();
         RuntimeException e = new RuntimeException("my fancy error message");
-        Object[] array = interceptor.createExceptionDetails("mylabel", null, e);
-        String details = Misc.getAsString(array);
+        String details = interceptor.createExceptionDetails("mylabel", null, e);
         assertThat(details).contains("mylabel");;
         assertThat(details).contains("my fancy error message");
     }

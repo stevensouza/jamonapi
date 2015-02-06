@@ -1,5 +1,6 @@
 package com.jamonapi.aop.general;
 
+import com.jamonapi.MonKey;
 import com.jamonapi.MonKeyImp;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
@@ -47,6 +48,11 @@ public class JAMonInterceptor {
      * Maximum length for parameters in the exception dump
      */
     public static final int DEFAULT_ARG_STRING_MAX_LENGTH = 125;
+
+    /**
+     * Parameters kept in the details section are capped at a max length and this string is put at the end of it to
+     * indicate there is more data that is not shown.
+     */
     public static final String DEFAULT_MAX_STRING_ENDING = "...";
 
     /**
@@ -79,6 +85,7 @@ public class JAMonInterceptor {
     @AroundInvoke
     public Object intercept(InvocationContext ctx) throws Exception {
         Monitor mon=null;
+        MonKeyImp key=null;
         String label=unknownLabel;
 
         if(!isMonitored(ctx)) {
@@ -87,11 +94,12 @@ public class JAMonInterceptor {
 
         try {
             label = getJamonLabel(ctx);
-            Object details = new Object[]{label, ""};
-            mon = MonitorFactory.start(new MonKeyImp(label, details, "ms."));
+            key = new MonKeyImp(label, "ms.");
+            mon = MonitorFactory.start(key);
             return ctx.proceed();
         } catch (Exception e) {
-            throw onException(ctx, label, e);
+            key.setDetails(onException(ctx, label, e));
+            throw e;
         } finally {
             if(mon != null) {
                 mon.stop();
@@ -124,22 +132,29 @@ public class JAMonInterceptor {
 
     /**
      * Default exception handling.
-     * Creates two  JAMon exception monitor to keep track of the exceptions - one
-     * monitor is used as overall exception count whereas the second one is used
-     * to track the EJB-related exceptions.
+     * Creates three JAMon exception monitor to keep track of the exceptions - one
+     * monitor is used as overall exception count, a second one is used
+     * to track the EJB-related exceptions, and a third the specific exception classname
      * This method can be overridden.
      *
      * @param ctx Invocation context
      * @param label the label used for this method invocation
      * @param exception the offending exception
-     * @return exception the offending exception
+     * @return Detailed string representing the exception.  It can have the method call, stacktrace and function parameters
+     *  or anything else of use.
      */
-    protected Exception onException(InvocationContext ctx, String label, Exception exception) throws Exception {
+    protected String onException(InvocationContext ctx, String label, Exception exception) throws Exception {
         Object[] parameters = ctx.getParameters();
-        Object[] details = createExceptionDetails(label, parameters, exception);
-        MonitorFactory.add(new MonKeyImp(exceptionLabel, details, DEFAULT_EXCEPTION_LABEL), 1);
+        String details = createExceptionDetails(label, parameters, exception);
+        // most general counter: com.jamonapi.Exceptions
         MonitorFactory.add(new MonKeyImp(MonitorFactory.EXCEPTIONS_LABEL, details, DEFAULT_EXCEPTION_LABEL), 1);
-        return exception;
+        // counter specific to this class of exceptions such as ejb. example:  com.jamonapi.EjbExceptions
+        MonitorFactory.add(new MonKeyImp(exceptionLabel, details, DEFAULT_EXCEPTION_LABEL), 1);
+        // most specific exception counter.  Example:  com.myapp.MyGreatException
+        if (exception!=null) {
+            MonitorFactory.add(new MonKeyImp(exception.getClass().getName(), details, DEFAULT_EXCEPTION_LABEL), 1);
+        }
+        return details;
     }
 
     /**
@@ -152,10 +167,10 @@ public class JAMonInterceptor {
      * @param exception the offending exception
      * @return exception the offending exception thrown to the caller
      */
-    protected  Object[] createExceptionDetails(String label, Object[] parameters, Exception exception) {
-        
-        StringBuilder temp = new StringBuilder();
+    protected  String createExceptionDetails(String label, Object[] parameters, Exception exception) {
         String lineSeparator = "\n";
+        StringBuilder temp = new StringBuilder();
+        temp.append(label).append(",").append(lineSeparator);
 
         if(parameters != null) {
             temp.append("=== Parameters ===").append(lineSeparator);
@@ -173,7 +188,7 @@ public class JAMonInterceptor {
             temp.append(Misc.getExceptionTrace(exception));
         }
 
-        return new Object[] {label, temp.toString()};
+        return temp.toString();
     }
     
     /**
