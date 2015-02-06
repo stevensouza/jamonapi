@@ -19,7 +19,7 @@ public class JAMonInterceptor {
     public static final String DEFAULT_EXCEPTION_LABEL ="Exception";
 
     /** 
-     * Hierarchy delimiter in Simon name.
+     * Hierarchy delimiter in Monitor name.
      */
     public static final String DEFAULT_HIERARCHY_DELIMITER = ".";
     
@@ -67,7 +67,6 @@ public class JAMonInterceptor {
 
     @AroundInvoke
     public Object intercept(InvocationContext ctx) throws Exception {
-
         Monitor mon=null;
         String label=unknownLabel;
 
@@ -127,9 +126,8 @@ public class JAMonInterceptor {
     protected Exception onException(InvocationContext ctx, String label, Exception exception) throws Exception {
         Object[] parameters = ctx.getParameters();
         Object[] details = createExceptionDetails(label, parameters, exception);
-        MonitorFactory.add(new MonKeyImp(exceptionLabel, details, "Exception"), 1);
-        // 
-        MonitorFactory.add(new MonKeyImp(MonitorFactory.EXCEPTIONS_LABEL, details, "Exception"), 1);
+        MonitorFactory.add(new MonKeyImp(exceptionLabel, details, DEFAULT_EXCEPTION_LABEL), 1);
+        MonitorFactory.add(new MonKeyImp(MonitorFactory.EXCEPTIONS_LABEL, details, DEFAULT_EXCEPTION_LABEL), 1);
         return exception;
     }
 
