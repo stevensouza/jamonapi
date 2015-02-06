@@ -28,8 +28,7 @@ public class JAMonInterceptorTest {
     public void setUp() {
 
         // reset JAMon statistics before each run.
-        // clear ensures all monitors are removed. reset would add back the exception monitor automatically
-        MonitorFactory.getMap().clear();
+        MonitorFactory.reset();
 
         char[] array = new char[1024 * 1024 * 1];
         int pos = 0;
@@ -54,7 +53,7 @@ public class JAMonInterceptorTest {
         args[5] = new ExceptionGenerator();
     }
 
-    
+
 
     @Test
     public void testIntercept() throws Exception {
@@ -63,7 +62,7 @@ public class JAMonInterceptorTest {
         JAMonInterceptor interceptor = new JAMonInterceptor();
         interceptor.intercept(context);
 
-        assertThat(MonitorFactory.getNumRows()).describedAs("Expecting one invocation label").isEqualTo(1);
+        assertThat(MonitorFactory.getNumRows()).describedAs("Expecting one invocation label").isEqualTo(2);
         assertThat(MonitorFactory.getReport("ms.")).describedAs("Method wasn't specified").contains(JAMonInterceptor.UNKNOWN);
     }
 
