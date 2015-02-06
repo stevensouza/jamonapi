@@ -27,7 +27,7 @@ public class JAMonInterceptorTest {
     public void setUp() {
         
         // reset JAMon statistics before each run
-        MonitorFactory.getMap().clear();
+        MonitorFactory.reset();
 
         char[] array = new char[1024 * 1024 * 1];
         int pos = 0;
