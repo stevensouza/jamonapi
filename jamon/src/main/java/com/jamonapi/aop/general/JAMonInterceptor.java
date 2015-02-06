@@ -29,15 +29,26 @@ public class JAMonInterceptor {
     public static final String DEFAULT_INTERCEPTOR_PREFIX = "";
 
     /**
+     * Returned when a method parameter is null
+     */
+    protected static final String NULL_STR = "<null>";
+
+    /**
+     * used when a value isn't returned, and yet we don't want to throw an exception (hey it's just monitoring)
+     */
+    protected static final String UNKNOWN =  "???";
+
+    /**
      * Default label for an unknown method
      */
-    public static final String DEFAULT_UNKNOWN_LABEL = DEFAULT_INTERCEPTOR_PREFIX + DEFAULT_HIERARCHY_DELIMITER + "???";
+    public static final String DEFAULT_UNKNOWN_LABEL = DEFAULT_INTERCEPTOR_PREFIX + DEFAULT_HIERARCHY_DELIMITER + UNKNOWN;
 
     /**
      * Maximum length for parameters in the exception dump
      */
     public static final int DEFAULT_ARG_STRING_MAX_LENGTH = 125;
-    
+    public static final String DEFAULT_MAX_STRING_ENDING = "...";
+
     /**
      * JAMon name prefix - can be overridden in subclasses.
      */
@@ -141,10 +152,10 @@ public class JAMonInterceptor {
      * @param exception the offending exception
      * @return exception the offending exception thrown to the caller
      */
-    protected Object[] createExceptionDetails(String label, Object[] parameters, Exception exception) {
+    protected  Object[] createExceptionDetails(String label, Object[] parameters, Exception exception) {
         
         StringBuilder temp = new StringBuilder();
-        String lineSeparator = System.getProperty("line.separator");
+        String lineSeparator = "\n";
 
         if(parameters != null) {
             temp.append("=== Parameters ===").append(lineSeparator);
@@ -171,20 +182,19 @@ public class JAMonInterceptor {
      * ignore any exceptions.
      */
     protected String toString(Object parameter) {
-    
         if(parameter == null) {
-            return "<null>";
+            return NULL_STR;
         }
         
         try {
             String result = Misc.getAsString(parameter);
             if(result.length() > DEFAULT_ARG_STRING_MAX_LENGTH) {
-                result = result.substring(0, DEFAULT_ARG_STRING_MAX_LENGTH) + "...";
+                result = result.substring(0, DEFAULT_ARG_STRING_MAX_LENGTH) + DEFAULT_MAX_STRING_ENDING;
             }
             return result;
         }
-        catch(RuntimeException e) {
-            return "???";
+        catch(Throwable e) {
+            return UNKNOWN;
         }
     }
     

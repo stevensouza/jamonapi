@@ -1,6 +1,7 @@
 package com.jamonapi.aop.general;
 
 import com.jamonapi.MonitorFactory;
+import com.jamonapi.utils.Misc;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,7 +50,7 @@ public class JAMonInterceptorTest {
         args[2] = stringArray;
         args[3] = collectionParameter;
         args[4] = null;
-        args[4] = new ExceptionGenerator();
+        args[5] = new ExceptionGenerator();
     }
 
     @Test
@@ -82,7 +83,75 @@ public class JAMonInterceptorTest {
         assertThat(MonitorFactory.getNumRows()).describedAs("Expecting two exception labels").isEqualTo(2);
     }
 
-    class ExceptionGenerator {
+    @Test
+    public void testToString_WithANull() throws Exception {
+        JAMonInterceptor interceptor = new JAMonInterceptor();
+        assertThat(interceptor.toString(null)).isEqualTo(JAMonInterceptor.NULL_STR);
+    }
+
+    @Test
+    public void testToString_WithALongString() throws Exception {
+        JAMonInterceptor interceptor = new JAMonInterceptor();
+        assertThat(interceptor.toString(longStringParameter).length())
+                .describedAs("Should return <null>")
+                .isEqualTo(JAMonInterceptor.DEFAULT_ARG_STRING_MAX_LENGTH + JAMonInterceptor.DEFAULT_MAX_STRING_ENDING.length());
+        assertThat(interceptor.toString(longStringParameter))
+                .describedAs("Should return truncate a long string")
+                .endsWith(JAMonInterceptor.DEFAULT_MAX_STRING_ENDING);
+    }
+
+    @Test
+    public void testToString_WithExceptionThrown() throws Exception {
+        JAMonInterceptor interceptor = new JAMonInterceptor();
+        assertThat(interceptor.toString(new ExceptionGenerator()))
+                .describedAs("When an exception is thrown in the method it should succeed and return a value")
+                .isEqualTo(JAMonInterceptor.UNKNOWN);
+    }
+
+    @Test
+    public void testcreateExceptionDetails_WithNulls() throws Exception {
+        JAMonInterceptor interceptor = new JAMonInterceptor();
+        Object[] array = interceptor.createExceptionDetails("mylabel", null, null);
+        assertThat(Misc.getAsString(array))
+            .describedAs("Should contain label and only label")
+            .isEqualTo("mylabel,\n");
+    }
+
+    @Test
+    public void testcreateExceptionDetails_WithParameters() throws Exception {
+        JAMonInterceptor interceptor = new JAMonInterceptor();
+        Object[] array = interceptor.createExceptionDetails("mylabel", new Object[]{new Integer(1962), "hello"}, null);
+        String details = Misc.getAsString(array);
+        assertThat(details).contains("mylabel");
+        assertThat(details).contains("1962");
+        assertThat(details).contains("hello");
+    }
+
+    @Test
+    public void testcreateExceptionDetails_WithParametersAndException() throws Exception {
+        JAMonInterceptor interceptor = new JAMonInterceptor();
+        RuntimeException e = new RuntimeException("my fancy error message");
+        Object[] array = interceptor.createExceptionDetails("mylabel", new Object[]{new Integer(1962), "hello"}, e);
+        String details = Misc.getAsString(array);
+        assertThat(details).contains("mylabel");
+        assertThat(details).contains("1962");
+        assertThat(details).contains("hello");
+        assertThat(details).contains("my fancy error message");
+    }
+
+    @Test
+    public void testcreateExceptionDetails_WithException() throws Exception {
+        JAMonInterceptor interceptor = new JAMonInterceptor();
+        RuntimeException e = new RuntimeException("my fancy error message");
+        Object[] array = interceptor.createExceptionDetails("mylabel", null, e);
+        String details = Misc.getAsString(array);
+        assertThat(details).contains("mylabel");;
+        assertThat(details).contains("my fancy error message");
+    }
+
+
+
+    private class ExceptionGenerator {
         @Override
         public String toString() {
             throw new RuntimeException("[toString] Always throwing an exception ...");
