@@ -8,7 +8,7 @@ import javax.interceptor.InvocationContext;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -25,7 +25,7 @@ public class JAMonInterceptorTest {
 
     @Before
     public void setUp() {
-        
+
         // reset JAMon statistics before each run
         MonitorFactory.reset();
 
@@ -36,13 +36,13 @@ public class JAMonInterceptorTest {
             pos++;
         }
         longStringParameter = new String(array);
-        
+
         collectionParameter = new ArrayList<String>();
         collectionParameter.add("collection.0");
         collectionParameter.add(null);
         collectionParameter.add("");
         collectionParameter.add("collection.4");
-        
+
         args = new Object[6];
         args[0] = stringParameter;
         args[1] = longStringParameter;
@@ -51,7 +51,7 @@ public class JAMonInterceptorTest {
         args[4] = null;
         args[4] = new ExceptionGenerator();
     }
-    
+
     @Test
     public void testIntercept() throws Exception {
 
@@ -60,11 +60,11 @@ public class JAMonInterceptorTest {
         when(context.getTarget()).thenReturn(this);
         // Mockito can't mock final classes
         when(context.getMethod()).thenReturn(null);
-        
+
         JAMonInterceptor interceptor = new TestJAMonInterceptor();
         interceptor.intercept(context);
 
-        assertEquals("Expecting one invocation label", 1, MonitorFactory.getNumRows());
+        assertThat(MonitorFactory.getNumRows()).describedAs("Expecting one invocation label").isEqualTo(2);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class JAMonInterceptorTest {
         JAMonInterceptor interceptor = new TestJAMonInterceptor();
         interceptor.onException(context, "JAMonInterceptor.???", new RuntimeException());
 
-        assertEquals("Expecting two exception label", 2, MonitorFactory.getNumRows());
+        assertThat( MonitorFactory.getNumRows()).describedAs("Expecting two exception labels").isEqualTo(2);
     }
 
     class TestJAMonInterceptor extends JAMonInterceptor {
