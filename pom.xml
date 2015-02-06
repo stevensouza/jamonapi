@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
-    <version>7</version>
+    <version>9</version>
   </parent>
   
   <groupId>com.jamonapi</groupId>
@@ -40,7 +40,7 @@
     <url>https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/</url>
     <connection>scm:git:git://git.code.sf.net/p/jamonapi/jamonapi</connection>
   </scm>
-
+  
   
   <developers>
     <developer>
@@ -51,41 +51,31 @@
   </developers>
 
      <properties>
+         <!-- Maven setting -->
+         <maven.compiler.source>1.6</maven.compiler.source>
+         <maven.compiler.target>1.6</maven.compiler.target>        
          <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-         <junit.version>4.11</junit.version>
-         <log4j.version>1.2.15</log4j.version>
-         <jakarta-oro.version>2.13.1</jakarta-oro.version>
-         <mockito.version>1.9.5</mockito.version>
-         <servlet.version>2.4</servlet.version>
-         <jsp.version>2.0</jsp.version>
-         <tomcat-catalina.version>6.0.26</tomcat-catalina.version>
-         <javaee.version>6.0</javaee.version>
-         <jetty6.version>6.1.25</jetty6.version>
-         <jetty9.version>9.2.1.v20140609</jetty9.version>
-         <hsqldb.version>2.3.2</hsqldb.version>
-         <jdk.version>1.6</jdk.version>
-         <jamon.version>2.81-SNAPSHOT</jamon.version>
-         <spring.aop.version>1.8.0</spring.aop.version>
-         <spring.version>4.0.2.RELEASE</spring.version>
+         <!-- Version settings -->         
+         <assertj.version>1.7.0</assertj.version>
          <commons.version>3.3.2</commons.version>
          <hazelcast.version>3.2.5</hazelcast.version>
-         <assertj.version>1.7.0</assertj.version>
+         <hsqldb.version>2.3.2</hsqldb.version>
+         <jakarta-oro.version>2.13.1</jakarta-oro.version>
+         <javaee.version>6.0</javaee.version>
+         <jdk.version>1.6</jdk.version>
+         <jetty6.version>6.1.25</jetty6.version>
+         <jetty9.version>9.2.1.v20140609</jetty9.version>
+         <jsp.version>2.0</jsp.version>
+         <junit.version>4.11</junit.version>
+         <log4j.version>1.2.15</log4j.version>
+         <mockito.version>1.9.5</mockito.version>
+         <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
+         <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
+         <servlet.version>2.4</servlet.version>
+         <spring.aop.version>1.8.0</spring.aop.version>
+         <spring.version>4.0.2.RELEASE</spring.version>
+         <tomcat-catalina.version>6.0.26</tomcat-catalina.version>
      </properties>
-
-     <build>
-         <plugins>
-             <plugin>
-                 <groupId>org.apache.maven.plugins</groupId>
-                 <artifactId>maven-compiler-plugin</artifactId>
-                 <version>2.3.2</version>
-                 <configuration>
-                     <source>${jdk.version}</source>
-                     <target>${jdk.version}</target>
-                 </configuration>
-             </plugin>
-         </plugins>
-     </build>
-
      <distributionManagement>
          <snapshotRepository>
              <id>sonatype-nexus-snapshots</id>
@@ -150,14 +140,14 @@
          <dependency>
              <groupId>javax.servlet</groupId>
              <artifactId>servlet-api</artifactId>
-             <version>2.4</version>
+             <version>${servlet.version}</version>
              <scope>provided</scope>
          </dependency>
 
          <dependency>
              <groupId>javax.servlet.jsp</groupId>
              <artifactId>jsp-api</artifactId>
-             <version>2.0</version>
+             <version>${jsp.version}</version>
              <scope>provided</scope>
          </dependency>
 
