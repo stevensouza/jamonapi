@@ -61,7 +61,7 @@ public class Misc {
             else
                 return obj.toString();
         }
-        catch(Exception e) {
+        catch(Throwable e) {
             // ignore any exception here since
             return "???";
         }
