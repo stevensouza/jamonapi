@@ -21,7 +21,7 @@ public class JAMonInterceptor {
     /**
      * Exception units
      */
-    public static final String EXCEPTION_UNITS ="Exception";
+    protected static final String EXCEPTION_UNITS ="Exception";
 
     /**
      * Returned when a method parameter is null
@@ -37,15 +37,15 @@ public class JAMonInterceptor {
     /**
      * Maximum length for a parameter in the exception dump
      */
-    public static final int DEFAULT_ARG_STRING_MAX_LENGTH = 125;
+    protected static final int DEFAULT_ARG_STRING_MAX_LENGTH = 125;
 
     /**
      * Parameters kept in the details section are capped at a max length and this string is put at the end of
      * the string after the truncation point to indicate there is more data that is not shown.
      */
-    public static final String DEFAULT_MAX_STRING_ENDING = "...";
+    protected static final String DEFAULT_MAX_STRING_ENDING = "...";
 
-    private static final String MONITOR_PREFIX="JAMonInterceptor.";
+    protected static final String MONITOR_PREFIX="JAMonInterceptor.";
 
     /**
      * JAMon exception label - can be overridden in subclasses. This name should represent a class of errors such as
@@ -61,16 +61,16 @@ public class JAMonInterceptor {
      *
      *  Example default value: com.jamonapi.aop.general.JAMonInterceptor.???
      */
-    private String unknownTimeLabel = getClass().getName()+"."+UNKNOWN;
+    private final String unknownTimeLabel = getClass().getName()+"."+UNKNOWN;
 
-    private static final String LINE_SEPARATOR = "\n";
+    protected static final String LINE_SEPARATOR = "\n";
 
 
     /** Enable/disable saving method parameter names and values in the 'detail' data created when an exception is thrown.
      * 'detail' always contains the method name and the stacktrace and optionally it can contain the parameter names
      * and values too.  This is enabled by default
      */
-    protected boolean useParametersInDetails = true;
+    private boolean useParametersInDetails = true;
 
     protected JAMonInterceptor(String exceptionLabel) {
         this.exceptionLabel = exceptionLabel;
