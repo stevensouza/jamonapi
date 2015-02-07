@@ -45,6 +45,8 @@ public class JAMonInterceptor {
      */
     public static final String DEFAULT_MAX_STRING_ENDING = "...";
 
+    private static final String MONITOR_PREFIX="JAMonInterceptor.";
+
     /**
      * JAMon exception label - can be overridden in subclasses. This name should represent a class of errors such as
      *  EJB errors as opposed to other types such as jdbc, or http errors.
@@ -132,7 +134,7 @@ public class JAMonInterceptor {
      */
     protected String getJamonLabel(InvocationContext ctx) {
         String methodName = (ctx.getMethod() != null ? ctx.getMethod().toString() : unknownTimeLabel);
-        return methodName;
+        return MONITOR_PREFIX+methodName;
     }
 
     /**
