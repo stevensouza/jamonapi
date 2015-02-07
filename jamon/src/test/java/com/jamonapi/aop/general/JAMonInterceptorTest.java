@@ -82,7 +82,7 @@ public class JAMonInterceptorTest {
         }
 
         assertThat(MonitorFactory.getNumRows()).describedAs("Should have 4 monitors").isEqualTo(4);
-        assertThat(MonitorFactory.getComposite("ms.").getNumRows()).describedAs("Should have 1 method").isEqualTo(1);
+        assertThat(MonitorFactory.getComposite("ms.").getNumRows()).describedAs("Should have 1 method monitor").isEqualTo(1);
         assertThat(MonitorFactory.getComposite(JAMonInterceptor.EXCEPTION_UNITS).getNumRows()).describedAs("Should have 3 exceptions").isEqualTo(3);
 
         assertThat(MonitorFactory.getReport("ms.")).describedAs("Method wasn't specified").contains(JAMonInterceptor.UNKNOWN);
@@ -152,7 +152,7 @@ public class JAMonInterceptorTest {
     }
 
     @Test
-    public void testcreateExceptionDetails_WithParameters() throws Exception {
+    public void testCreateExceptionDetails_WithParameters() throws Exception {
         JAMonInterceptor interceptor = new JAMonInterceptor();
         String details = interceptor.createExceptionDetails("mylabel", new Object[]{new Integer(1962), "hello"}, null);
         assertThat(details).contains("mylabel");
@@ -161,7 +161,7 @@ public class JAMonInterceptorTest {
     }
 
     @Test
-    public void testcreateExceptionDetails_WithParametersAndException() throws Exception {
+    public void testCreateExceptionDetails_WithParametersAndException() throws Exception {
         JAMonInterceptor interceptor = new JAMonInterceptor();
         RuntimeException e = new RuntimeException("my fancy error message");
         String details = interceptor.createExceptionDetails("mylabel", new Object[]{new Integer(1962), "hello"}, e);
@@ -172,7 +172,18 @@ public class JAMonInterceptorTest {
     }
 
     @Test
-    public void testcreateExceptionDetails_WithException() throws Exception {
+    public void testCreateExceptionDetails_WithExceptionButParametersDisabled() throws Exception {
+        JAMonInterceptor interceptor = new JAMonInterceptor().setUseParametersInDetails(false);
+        RuntimeException e = new RuntimeException("my fancy error message");
+        String details = interceptor.createExceptionDetails("mylabel", new Object[]{new Integer(1962), "hello"}, e);
+        assertThat(details).contains("mylabel");
+        assertThat(details).doesNotContain("1962");
+        assertThat(details).doesNotContain("hello");
+        assertThat(details).contains("my fancy error message");
+    }
+
+    @Test
+    public void testCreateExceptionDetails_WithException() throws Exception {
         JAMonInterceptor interceptor = new JAMonInterceptor();
         RuntimeException e = new RuntimeException("my fancy error message");
         String details = interceptor.createExceptionDetails("mylabel", null, e);

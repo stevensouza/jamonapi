@@ -82,12 +82,12 @@ public class JAMonInterceptor {
         return useParametersInDetails;
     }
 
-    /** Enable/disable saving parameter names and values in the 'detail' data section.
-     *
-     * @param useParametersInDetails
+    /**
+     * @param useParametersInDetails Enable/disable saving parameter names and values in the 'detail' data section.
      */
-    public void setUseParametersInDetails(boolean useParametersInDetails) {
+    public JAMonInterceptor setUseParametersInDetails(boolean useParametersInDetails) {
         this.useParametersInDetails = useParametersInDetails;
+        return this;
     }
 
     /** Decorates method calls by monitoring them for performance and exceptions
@@ -112,7 +112,9 @@ public class JAMonInterceptor {
             mon = MonitorFactory.start(key);
             return ctx.proceed();
         } catch (Exception e) {
-            key.setDetails(onException(ctx, label, e));
+            if (key != null) {
+                key.setDetails(onException(ctx, label, e));
+            }
             throw e;
         } finally {
             if(mon != null) {
@@ -220,7 +222,7 @@ public class JAMonInterceptor {
             return UNKNOWN;
         }
     }
-    
+
     private void addJamonLabelToDetails(StringBuilder temp, String label) {
         temp.append(label).append(",").append(LINE_SEPARATOR);
     }
