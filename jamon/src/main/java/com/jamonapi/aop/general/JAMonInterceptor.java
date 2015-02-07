@@ -9,12 +9,17 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 
 /** 
- * JAMon Interceptor measuring method execution time - can be used in EJB, or CDI in general.
+ * JAMon Interceptor for measuring method execution time, and tracking any exceptions the method calls:
+ *  can be used in EJB, or CDI in general.  Note when an exception occurs several exception monitors are
+ *  created from very general (com.jamonapi.Exceptions) to specific (for example com.mypackage.MyException).
+ *  Also a 'detail' data string is created so more context can be viewed when an exception is thrown.  The 'detail'
+ *  contains the method name, stacktrace, and optionally (enabled by deafault)
+ *  all of the method parameter names and values.
  */
 public class JAMonInterceptor {
 
     /**
-     * Default exception label
+     * Exception units
      */
     public static final String EXCEPTION_UNITS ="Exception";
 
@@ -30,29 +35,38 @@ public class JAMonInterceptor {
 
 
     /**
-     * Maximum length for parameters in the exception dump
+     * Maximum length for a parameter in the exception dump
      */
     public static final int DEFAULT_ARG_STRING_MAX_LENGTH = 125;
 
     /**
-     * Parameters kept in the details section are capped at a max length and this string is put at the end of it to
-     * indicate there is more data that is not shown.
+     * Parameters kept in the details section are capped at a max length and this string is put at the end of
+     * the string after the truncation point to indicate there is more data that is not shown.
      */
     public static final String DEFAULT_MAX_STRING_ENDING = "...";
 
     /**
-     * JAMon exception label - can be overridden in subclasses.
+     * JAMon exception label - can be overridden in subclasses. This name should represent a class of errors such as
+     *  EJB errors as opposed to other types such as jdbc, or http errors.
+     *
+     * Example default value: com.jamonapi.aop.general.JAMonInterceptor
      */
     protected String exceptionLabel = getClass().getName();
 
     /**
-     * JAMon unknown label - can be overridden in subclasses.
-     */
-    protected String unknownTimeLabel = getClass().getName()+"."+UNKNOWN;
-
-
-    /** Enable/disable saving method parameters in the details (stacktrace) sent to jamon.  It is enabled by default
+     * JAMon unknown label - Used when a monitored method is unknown. Note I think the only
+     * situation this is needed is in testing though
      *
+     *  Example default value: com.jamonapi.aop.general.JAMonInterceptor.???
+     */
+    private String unknownTimeLabel = getClass().getName()+"."+UNKNOWN;
+
+    private static final String LINE_SEPARATOR = "\n";
+
+
+    /** Enable/disable saving method parameter names and values in the 'detail' data created when an exception is thrown.
+     * 'detail' always contains the method name and the stacktrace and optionally it can contain the parameter names
+     * and values too.  This is enabled by default
      */
     protected boolean useParametersInDetails = true;
 
@@ -68,10 +82,20 @@ public class JAMonInterceptor {
         return useParametersInDetails;
     }
 
+    /** Enable/disable saving parameter names and values in the 'detail' data section.
+     *
+     * @param useParametersInDetails
+     */
     public void setUseParametersInDetails(boolean useParametersInDetails) {
         this.useParametersInDetails = useParametersInDetails;
     }
 
+    /** Decorates method calls by monitoring them for performance and exceptions
+     *
+      * @param ctx
+     * @return
+     * @throws Exception
+     */
     @AroundInvoke
     public Object intercept(InvocationContext ctx) throws Exception {
         Monitor mon=null;
@@ -99,7 +123,7 @@ public class JAMonInterceptor {
     
     /**
      * Returns JAMon's label for the specified Invocation context.
-     * By default it contains "prefix.method(args.length)"
+     * By default it contains "method(args.length)"
      *
      * @param ctx Invocation context
      * @return fully qualified label
@@ -122,35 +146,43 @@ public class JAMonInterceptor {
 
     /**
      * Default exception handling.
-     * Creates three JAMon exception monitor to keep track of the exceptions - one
-     * monitor is used as overall exception count, a second one is used
-     * to track the EJB-related exceptions, and a third the specific exception classname
+     * This method creates a 'detail' string for viewing and creates three JAMon exception monitor to
+     * keep track of the exceptions -
+     * 1) one monitor is used as overall exception count,
+     * 2) another monitors tracks the EJB-related exceptions,
+     * 3) And a third tracks specific exception such as java.lang.RuntimeException.
+     *
      * This method can be overridden.
      *
      * @param ctx Invocation context
      * @param label the label used for this method invocation
      * @param exception the offending exception
-     * @return Detailed string representing the exception.  It can have the method call, stacktrace and function parameters
-     *  or anything else of use.
+     * @return Detailed string representing the exception.  It has the method call, stacktrace and function parameter
+     * names and values (but anything can be returned that is useful context for debugging)
      */
     protected String onException(InvocationContext ctx, String label, Exception exception) throws Exception {
         Object[] parameters = ctx.getParameters();
         String details = createExceptionDetails(label, parameters, exception);
+
         // most general counter: com.jamonapi.Exceptions
         MonitorFactory.add(new MonKeyImp(MonitorFactory.EXCEPTIONS_LABEL, details, EXCEPTION_UNITS), 1);
+
         // counter specific to this class of exceptions such as ejb. example:  com.jamonapi.EjbExceptions
         MonitorFactory.add(new MonKeyImp(exceptionLabel, details, EXCEPTION_UNITS), 1);
+
         // most specific exception counter.  Example:  com.myapp.MyGreatException
         if (exception!=null) {
             MonitorFactory.add(new MonKeyImp(exception.getClass().getName(), details, EXCEPTION_UNITS), 1);
         }
+
         return details;
     }
 
     /**
      * Default exception handling.
-     * Creates the array used to display exception information in
-     * JAMon's "Exception Details" view.
+     * Creates the String used to display exception information in
+     * JAMon's "Exception Details" view.  This logic creates a string representation of the stacktrace as well as
+     * all method parameter names and values.
      *
      * @param label the label used for this method invocation
      * @param parameters the method invocation parameters
@@ -158,29 +190,15 @@ public class JAMonInterceptor {
      * @return exception the offending exception thrown to the caller
      */
     protected  String createExceptionDetails(String label, Object[] parameters, Exception exception) {
-        String lineSeparator = "\n";
         StringBuilder temp = new StringBuilder();
-        temp.append(label).append(",").append(lineSeparator);
 
-        if(parameters != null && useParametersInDetails()) {
-            temp.append("=== Parameters ===").append(lineSeparator);
-            for(int i=0; i<parameters.length; i++) {
-                Object parameter = parameters[i];
-                temp.append("[").append(i).append("]={");
-                temp.append(toString(parameter));
-                temp.append("}");
-                temp.append(lineSeparator);
-            }
-        }
-
-        if(exception != null) {
-            temp.append("=== Stack Trace ===").append(lineSeparator);
-            temp.append(Misc.getExceptionTrace(exception));
-        }
+        addJamonLabelToDetails(temp, label);
+        addParameterInfoToDetails(temp, parameters);
+        addExceptionStackTraceToDetails(temp, exception);
 
         return temp.toString();
     }
-    
+
     /**
      * Turns a single method parameter into a string. To keep
      * the functionality safe we truncate overly long strings and
@@ -200,6 +218,30 @@ public class JAMonInterceptor {
         }
         catch(Throwable e) {
             return UNKNOWN;
+        }
+    }
+    
+    private void addJamonLabelToDetails(StringBuilder temp, String label) {
+        temp.append(label).append(",").append(LINE_SEPARATOR);
+    }
+
+    private void addExceptionStackTraceToDetails(StringBuilder temp,Exception exception) {
+        if(exception != null) {
+            temp.append("=== Stack Trace ===").append(LINE_SEPARATOR);
+            temp.append(Misc.getExceptionTrace(exception));
+        }
+    }
+
+    private void addParameterInfoToDetails(StringBuilder temp, Object[] parameters) {
+        if(parameters != null && useParametersInDetails()) {
+            temp.append("=== Parameters ===").append(LINE_SEPARATOR);
+            for(int i=0; i<parameters.length; i++) {
+                Object parameter = parameters[i];
+                temp.append("[").append(i).append("]={");
+                temp.append(toString(parameter));
+                temp.append("}");
+                temp.append(LINE_SEPARATOR);
+            }
         }
     }
     
