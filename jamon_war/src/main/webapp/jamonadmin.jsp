@@ -419,7 +419,7 @@ private String now() {
 }
 
     private String getFileName() {
-        return "jamon-data-"+Misc.getFormattedDate("yyyy-MM-dd-HH-mm-ss", new Date());
+        return "jamon-data-"+Misc.getFormattedDate("yyyy-MM-dd-HHmmss", new Date());
     }
 
     private Template getTabDelimitedTemplate() {
