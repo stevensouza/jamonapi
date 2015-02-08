@@ -4,8 +4,28 @@
 <%@ page import="java.util.regex.Pattern" %>
 <%@ page import="com.jamonapi.*, com.jamonapi.proxy.*, com.jamonapi.utils.*, com.jamonapi.distributed.*" %>
 <%
+String outputType= getValue(request.getParameter("outputTypeValue"),"html");
+if ("csv".equalsIgnoreCase(outputType) || "csv1".equalsIgnoreCase(outputType)) {
+    response.setContentType("text/csv");
+    response.setHeader("Content-disposition",
+            "attachment; filename="+getFileName()+".csv" );
+} else if ("tab".equalsIgnoreCase(outputType) || "tsv".equalsIgnoreCase(outputType)) {
+    response.setContentType("text/tab-separated-values");
+    response.setHeader("Content-disposition",
+            "attachment; filename="+getFileName()+".tsv" );
+} else if ("excel".equalsIgnoreCase(outputType) || "spreadsheet".equalsIgnoreCase(outputType)) {
+    response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    response.setHeader("Content-disposition",
+            "attachment; filename="+getFileName()+".xls" );
+} else if ("xml".equalsIgnoreCase(outputType)) {
+    response.setContentType("text/xml");
+    response.setHeader("Content-disposition",
+            "attachment; filename=" + getFileName() + ".xml");
+} else {
+    response.setContentType("text/html");
+}
 
-FormattedDataSet fds=new FormattedDataSet();
+    FormattedDataSet fds=new FormattedDataSet();
 
 // Set formatting rules per the requests Locale (as opposed to the servers locale).
 // This will format data per the users preference (note this sets it for the given thread/servlet)
@@ -17,7 +37,6 @@ List<String> instanceName    = getParatemersAsList(request.getParameterValues("i
 String action    = getValue(request.getParameter("action"),"Refresh");
 String monProxyAction = getValue(request.getParameter("monProxyAction"),"No Action");
 String cache    = getValue(request.getParameter("cache"),"false");
-String outputType= getValue(request.getParameter("outputTypeValue"),"html");
 String formatter = getValue(request.getParameter("formatterValue"), "#,###");
 String arraySQL  = getValue(request.getParameter("ArraySQL"),"");
 String sortOrder = getValue(request.getParameter("sortOrder"), "asc");
@@ -142,9 +161,10 @@ else {
         map.put("delimiter", ";");
         rsc=new ResultSetConverter(rsc.getMetaData(), ac.convert(rsc.getResultSet()));
         outputText=fds.getFormattedDataSet(rsc, map, "delimited");
-    } else if ("excel".equalsIgnoreCase(outputType) || "spreadsheet".equalsIgnoreCase(outputType)) {
-      rsc=new ResultSetConverter(rsc.getMetaData(), ac.convert(rsc.getResultSet()));
-      outputText=fds.getFormattedDataSet(rsc, map, "basicHtmlTable");
+    } else if ("excel".equalsIgnoreCase(outputType) || "spreadsheet".equalsIgnoreCase(outputType) || "tab".equalsIgnoreCase(outputType) || "tsv".equalsIgnoreCase(outputType)) {
+        map.put("delimiter", "\t");
+        rsc=new ResultSetConverter(rsc.getMetaData(), ac.convert(rsc.getResultSet()));
+        outputText=fds.getFormattedDataSet(rsc, map, getTabDelimitedTemplate());
     }
     else  {
         ac=getArrayConverter(rsc.getMetaData(), formatter, textSize, highlightString, true);
@@ -301,15 +321,9 @@ function helpWin() {
 <?xml version="1.0"?>
 <%=outputText%>
 <%
-} else {
-  response.setContentType("application/vnd.ms-excel");
+} else { // excel/csv/csv1
 %>
-
-
 <%=outputText%>
-
-
-
 <%
 }
 %>
@@ -381,7 +395,8 @@ Object[][] outputTypeBody={
                  {"html", "HTML"}, 
                  {"xml", "XML"}, 
                  {"csv", "CSV(,)"},
-                 {"csv1", "CSV1(;)"},
+                {"csv1", "CSV1(;)"},
+                {"tab", "TSV"},
 	             {"excel","MS Excel"}, 
                 };
 
@@ -403,8 +418,22 @@ private String now() {
   return LocaleContext.getDateFormatter().format(new Date());
 }
 
+    private String getFileName() {
+        return "jamon-data-"+Misc.getFormattedDate("yyyy-MM-dd-HH-mm-ss", new Date());
+    }
 
+    private Template getTabDelimitedTemplate() {
+        Template template=new Template();
+        // creates tab delimeted file which can also create a spreadsheet
+        template.initialize("<!-- HEADER_CELL_PREFIX -->##delimiter<!-- HEADER_CELL_PREFIX -->");
+        template.initialize("<!-- HEADER_CELL_PREFIX 0,1 --><!-- HEADER_CELL_PREFIX 0,1 -->");
+        template.initialize("<!-- HEADER_ROW_SUFFIX -->\n<!-- HEADER_ROW_SUFFIX -->");
 
+        template.initialize("<!-- BODY_CELL_PREFIX -->##delimiter<!-- BODY_CELL_PREFIX -->");
+        template.initialize("<!-- BODY_CELL_PREFIX 0,1 --><!-- BODY_CELL_PREFIX 0,1 -->");
+        template.initialize("<!-- BODY_ROW_SUFFIX -->\n<!-- BODY_ROW_SUFFIX -->");
+        return template;
+    }
 
 private synchronized Template getJAMonTemplate(FormattedDataSet fds) {
    // start from sortedHTMLTable template and add some jamon display capabilities (highlighting and descriptive text appearing where the mouse is)
