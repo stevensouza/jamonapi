@@ -18,8 +18,10 @@ class JettyHttpMonItem extends HttpMonItem {
     }
 
 
-    /** Jetty Handlers does not let jamon start/stop time them.  It seems the request is done by the time jamon gets it.  To overcome this use the jetty api
-     * to get the time of a request for a page.  If it isn't a jetty request then call the parent.
+    /** Jetty Handlers does not let jamon start/stop time them.  It seems the request is done by the time jamon gets it.
+     * To overcome this use the jetty api to get the time of a request for a page.  If it isn't a jetty request then call
+     * the parent.  Note although start is called because the timing for jetty is done after the request is finished
+     * 'active' statistics will not be accurate.
      */
     @Override
     // Only called if this is a time monitor i.e units are 'ms.'
