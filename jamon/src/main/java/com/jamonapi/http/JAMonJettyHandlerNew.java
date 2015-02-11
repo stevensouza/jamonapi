@@ -13,11 +13,11 @@ import java.io.IOException;
  * This is class works with Jetty version 9.
  * 
  */
-public class JAMonJettyHandlerNew extends HandlerWrapper implements HttpMonManage{
+public class JAMonJettyHandlerNew extends HandlerWrapper implements HttpMonManage {
 
     private static final String PREFIX="com.jamonapi.http.JAMonJettyHandlerNew";
 
-    private static final String DEFAULT_SUMMARY="default, response.getContentCount().bytes, response.getStatus().value.ms";
+    private static final String DEFAULT_SUMMARY="default, response.getContentCount().bytes, response.getStatus().value.httpStatus";
 
     private HttpMonFactory httpMonFactory=new JettyHttpMonFactoryNew(PREFIX);
 

@@ -15,11 +15,11 @@ import java.io.IOException;
  * add this handler to the jetty.xml file.  This is a wrapper class for the true monitoring class of HttpMonFactory.
  * 
  */
-public class JAMonJettyHandler extends HandlerWrapper implements HttpMonManage{
+public class JAMonJettyHandler extends HandlerWrapper implements HttpMonManage {
 
     private static final String PREFIX="com.jamonapi.http.JAMonJettyHandler";
 
-    private static final String DEFAULT_SUMMARY="default, response.getContentCount().bytes, response.getStatus().value.ms";
+    private static final String DEFAULT_SUMMARY="default, response.getContentCount().bytes, response.getStatus().value.httpStatus";
 
     private HttpMonFactory httpMonFactory=new JettyHttpMonFactory(PREFIX);
 
