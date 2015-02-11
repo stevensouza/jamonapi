@@ -19,7 +19,7 @@ public class JAMonJettyHandlerNew extends HandlerWrapper implements HttpMonManag
 
     private static final String DEFAULT_SUMMARY="default, response.getContentCount().bytes, response.getStatus().value.httpStatus";
 
-    private HttpMonFactory httpMonFactory=new JettyHttpMonFactoryNew(PREFIX);
+    private HttpMonFactory httpMonFactory=new HttpMonFactory(PREFIX);
 
     private String jamonSummaryLabels="default";
 
