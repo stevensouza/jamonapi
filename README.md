@@ -4,4 +4,7 @@ The Java Application Monitor (JAMon) is a free, simple, high performance, thread
 
 see www.jamonapi.com for more information.
 
-Another repo for jamonapi.com which is primarily hosted on sourceforge
+The JAMon repositories on both sourceforge and github are the latest version of JAMon.
+* https://github.com/stevensouza/jamonapi
+* https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/
+
