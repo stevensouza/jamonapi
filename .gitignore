@@ -19,9 +19,5 @@ CVS/
 
 
 # Maven
-/log/
-/target/
-/jamon_core/target
-/jamon/target
-/jamon_war/target
-/jamon_osmon/target
+log/
+target/
