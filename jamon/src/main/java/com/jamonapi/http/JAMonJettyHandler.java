@@ -35,7 +35,6 @@ public class JAMonJettyHandler extends HandlerWrapper implements HttpMonManage {
         HttpMon httpMon=null;
         try {
             httpMon=httpMonFactory.start(baseRequest, baseResponse);
-
             super.handle(target, request, response, dispatch);
         } catch (Throwable e) {
             httpMon.throwException(e);
