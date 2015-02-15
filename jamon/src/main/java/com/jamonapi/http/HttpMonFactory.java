@@ -59,7 +59,6 @@ import java.util.Iterator;
  * 
  */
 public class HttpMonFactory implements HttpMonManage, Serializable {
-
     private static final String DEFAULT_SUMMARY="request.getRequestURI().ms as allPages, request.getRequestURI().value.ms as page";
     private static final long serialVersionUID = 278L;
     private static final HttpMon NULL_HTTP_MON=new HttpMonNull();// used when monitoring is disabled.
