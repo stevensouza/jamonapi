@@ -221,6 +221,8 @@ import java.util.*;
             mBeanServer.unregisterMBean(ExceptionDeltaMXBeanImp.getObjectName());
             mBeanServer.unregisterMBean(Log4jDeltaMXBeanImp.getObjectName());
             mBeanServer.unregisterMBean(JamonMXBeanImp.getObjectName());
+            mBeanServer.unregisterMBean(HttpStatusMXBeanImp.getObjectName());
+            mBeanServer.unregisterMBean(HttpStatusDeltaMXBeanImp.getObjectName());
             unregisterGcMXBean(mBeanServer);
             unregisterMbeansFromPropsFile(mBeanServer);
         } catch (Exception e) {
