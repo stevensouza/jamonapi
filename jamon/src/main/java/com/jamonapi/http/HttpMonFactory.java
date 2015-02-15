@@ -62,27 +62,20 @@ public class HttpMonFactory implements HttpMonManage, Serializable {
 
     private static final String DEFAULT_SUMMARY="request.getRequestURI().ms as allPages, request.getRequestURI().value.ms as page";
     private static final long serialVersionUID = 278L;
+    private static final HttpMon NULL_HTTP_MON=new HttpMonNull();// used when monitoring is disabled.
 
     private String jamonSummaryLabels="default";// will do the above monitors if the word default is used in this variable.
-
     private Collection httpMonItemsHolder=new ArrayList();// Holds HttpMonItems
-
     private boolean ignoreHttpParams=true;// ignore http params if getRequestURI, or getRequestURL are called.  This done to primarily to prevent
-
     // jsessionid from becoming part of a jamon label.  By default params are removed (i.e. true)
     private String labelPrefix; // prefix used for jamon labels
-
     private boolean enabled=true; //Enable/Disable httpMonitoring. By default it is on
-
     private int numTimeMons=0;// The Number of monitors that are time based ones.
 
     // The size value will not allow any more http stats to be put into jamon if the total number of jamon entries exceeds 5000 entries.
     // This value may be changed to anything.  Note jamon entries can still be added via standard jamon calls (might want to add this feature
     // there too).  This is to prevent a buffer overflow should someone keep submitting invalid pages when a record is created for each page.
     private int size=5000;
-
-    private static final HttpMon NULL_HTTP_MON=new HttpMonNull();// used when monitoring is disabled.
-
     /** Create an HttpMonFactory by passing in text that occurs at the beginning of all jamon labels. ex com.jamonapi.http.JAMonTomcatValve */
     public HttpMonFactory(String labelPrefix) {
         this.labelPrefix=labelPrefix;

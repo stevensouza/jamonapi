@@ -33,7 +33,6 @@ public class JAMonTomcatValve extends org.apache.catalina.valves.ValveBase imple
     private static final String DEFAULT_SUMMARY="default, response.getStatus().value.httpStatus, request.contextpath.ms";
 
     private HttpMonFactory httpMonFactory=new HttpMonFactory(PREFIX);
-
     private final String jamonSummaryLabels="default";
 
     public JAMonTomcatValve() {

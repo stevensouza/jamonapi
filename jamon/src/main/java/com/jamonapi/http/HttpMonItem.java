@@ -18,17 +18,11 @@ import java.lang.reflect.Method;
 class HttpMonItem  {
 
     private boolean isTimeMon;//used in JettyHttpMonItem
-
     private String units="noUnitsProvided";// units used by jamon
-
     private String label;// label used as a base by jamon
-
     private String methodName;// method name that monitoring calls. getStatus, getRequestURI etc.
-
     private String additionToLabel="";// u=url, v=value. possibilities are empty, u,v,uv,vu
-
     private boolean isResponse=true;// Are we monitoring an HttpServletRequest or an HttpServletResponse
-
     private Method method;
 
     // containers put jessionid (and other params) as part of what is returned by getRequestURI, and getRequestURL.  This can make
@@ -64,7 +58,6 @@ class HttpMonItem  {
     private void parseLabel(String localLabel, HttpMonFactory httpMonFactory) {
         String colAlias=colAlias(localLabel); // brings back anything after 'as', if it exists, null otherwise:  request.getMethod().bytes as ColName
         String nonAlias=nonAlias(localLabel); // brings back what is before 'as alias'.  i.e. request.getMethod().bytes
-
         String[] parsedLabel=nonAlias.split("[.]");
 
         label=httpMonFactory.getLabelPrefix()+".response.";// default label

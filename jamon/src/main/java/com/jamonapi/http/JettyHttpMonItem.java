@@ -18,7 +18,10 @@ class JettyHttpMonItem extends HttpMonItem {
     }
 
 
-    /** Jetty Handlers does not let jamon start/stop time them.  It seems the request is done by the time jamon gets it.
+    /**
+     * Note.  I am no longer sure that the following statements still hold true for jetty. 2/15/15
+     *
+     * Jetty Handlers does not let jamon start/stop time them.  It seems the request is done by the time jamon gets it.
      * To overcome this use the jetty api to get the time of a request for a page.  If it isn't a jetty request then call
      * the parent.  Note although start is called because the timing for jetty is done after the request is finished
      * 'active' statistics will not be accurate.

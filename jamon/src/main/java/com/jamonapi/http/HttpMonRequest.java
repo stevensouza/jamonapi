@@ -21,23 +21,14 @@ import java.util.Iterator;
 
 final class HttpMonRequest implements HttpMon {
     private static final String EXCEPTION_ATTR="javax.servlet.error.exception";// seems to be standarad exception property for tocmat, and jetty
-
     private final Object request;//HttpServletRequest or child of it
-
     private final Object response;//HttpServletResponse or a child of it
-
     private final HttpMonFactory httpMonFactory;
-
     private Monitor[] timeMons;// an array that is created for each time monitor
-
     private int timeMonIndex=0;// index used in start/stop methods to keep track of the current time monitor
-
     private String keyReadyURI;// uri that has params removed such as jsessionid.  This can be used as a jamon key.
-
     private String detailLabel;
-
     private String stackTrace;
-
     private Throwable requestException;
 
     HttpMonRequest(Object request, Object response, HttpMonFactory httpMonFactory) {
