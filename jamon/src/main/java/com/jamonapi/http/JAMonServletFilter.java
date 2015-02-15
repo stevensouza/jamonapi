@@ -28,7 +28,7 @@ public class JAMonServletFilter extends HttpServlet implements HttpMonManage, Fi
     private static final String PREFIX="com.jamonapi.http.JAMonServletFilter";
     private HttpMonFactory httpMonFactory=new HttpMonFactory(PREFIX);
 
-    private final String jamonSummaryLabels="request.getRequestURI().ms as allPages, request.getRequestURI().value.ms as page, request.contextpath.ms";
+    private final String jamonSummaryLabels="request.getRequestURI().ms as allPages, request.getRequestURI().value.ms as page, request.contextpath.ms, response.getStatus().summary.httpStatus";
 
     public JAMonServletFilter() {
         setSummaryLabels(jamonSummaryLabels);

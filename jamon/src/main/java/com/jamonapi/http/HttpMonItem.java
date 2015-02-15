@@ -21,7 +21,10 @@ class HttpMonItem  {
     private String units="noUnitsProvided";// units used by jamon
     private String label;// label used as a base by jamon
     private String methodName;// method name that monitoring calls. getStatus, getRequestURI etc.
-    private String additionToLabel="";// u=url, v=value. possibilities are empty, u,v,uv,vu
+    // u=url, v=value. s=summary (http 2xx etc) possibilities are empty, u,v,uv,vu (as well as s)
+    // s does a mod and is meant only for http status values to put 2xx, 3xx etc in the key.  It will be a noop for values
+    // other than Numeric and not return an error.
+    private String additionToLabel="";
     private boolean isResponse=true;// Are we monitoring an HttpServletRequest or an HttpServletResponse
     private Method method;
 
@@ -51,19 +54,15 @@ class HttpMonItem  {
 
     }
 
-
-
     // parse passed in string and build HttpMonItems from it to be used to monitor
     // The request. Note general form is request or response followed by a method name and units.  Special defined tokes are value, contextpath, url and units
     private void parseLabel(String localLabel, HttpMonFactory httpMonFactory) {
         String colAlias=colAlias(localLabel); // brings back anything after 'as', if it exists, null otherwise:  request.getMethod().bytes as ColName
         String nonAlias=nonAlias(localLabel); // brings back what is before 'as alias'.  i.e. request.getMethod().bytes
         String[] parsedLabel=nonAlias.split("[.]");
-
         label=httpMonFactory.getLabelPrefix()+".response.";// default label
 
         for (int i=0;i<parsedLabel.length;i++) {
-
             String token=parsedLabel[i].trim();
 
             if ("request".equalsIgnoreCase(token)) { // request.
@@ -77,6 +76,15 @@ class HttpMonItem  {
                 methodName=token.replaceFirst("[(][)]", "");
             } else if ("value".equalsIgnoreCase(token)) { // response.methodName().value
                 additionToLabel+="v";// indicates value
+            }  else if ("summary".equalsIgnoreCase(token)) { // response.getStatus().summary - does a mod 100 so probably only applicable to status
+                // this is a bit of a hack.  note that label doesn't concatenate here, but replaces.  This means that it must
+                // provaide getStatus() and also shows summary only applies to http status.  This was done so jmx diddn't have to worry
+                // about the normal differences between different package names being part of the key (say jetty and tomcat).  In the future
+                // i could resolve this by getting rid of keynames like 'com.jamonapi.http.JAMonJettyHandlerNew.response.getStatus().summary: 5xx, httpStatus'
+                // and instead using something more generic like com.jamonapi.http.response.getStatus().summary'  I would have done this but was
+                // afraid to break other developers code that was depedendent on this keyName.
+                label = "com.jamonapi.http.response.getStatus()";
+                additionToLabel+="s";// indicates httpsummary should be added i.e. summary: 4xx
             } else if ("url".equalsIgnoreCase(token)) { // response.methodName().url (note both value and url can be on the same line)
                 additionToLabel+="u";// indicates url
             } else if ("contextpath".equalsIgnoreCase(token)) { // response.methodName().url (note both value and url can be on the same line)
@@ -88,8 +96,6 @@ class HttpMonItem  {
                 units=token;
                 isTimeMon=false;
             }
-
-
         }
 
         // gets rid of jsessionid from jamon summary labels if ignorehttpparams is true and we are monitoring
@@ -196,6 +202,8 @@ class HttpMonItem  {
 
             if (additionToLabel.charAt(i)=='v')//value
                 sb.append("value: ").append(getValueLabel(httpMonBase));
+            else if (additionToLabel.charAt(i)=='s')//summary i.e. 2xx, 4xx etc.
+                sb.append("summary: ").append(getHttpStatusSummaryLabel(httpMonBase));
             else if (additionToLabel.charAt(i)=='u')//url
                 sb.append("url: ").append(httpMonBase.getKeyReadyURI());
             else if (additionToLabel.charAt(i)=='p')//path
@@ -215,6 +223,17 @@ class HttpMonItem  {
 
         return valLabel;
     }
+
+    String getHttpStatusSummaryLabel(HttpMonRequest httpMonBase) {
+        Object obj=executeMethod(httpMonBase);
+        if (obj instanceof Number) {
+            int httpStatusCode = ((Number) obj).intValue();
+            int httpStatusSummary = httpStatusCode/100; // take something like http status 404 and convert to the first digit i.e. 4.
+            return String.valueOf(httpStatusSummary)+"xx"; // 4xx
+        } else {
+            return "";
+        }
+   }
 
 
     /* Return value to be added to jamon.  Note this is not called when it is a time monitor.  If the object returned is a number
@@ -242,7 +261,6 @@ class HttpMonItem  {
 
     // return method that we are getting monitoring info from.
     Method getMethod(HttpMonRequest httpMonBase) {
-
         try {
             if (method==null)
                 method = getObjectToExecute(httpMonBase).getClass().getMethod(methodName, (Class[])null);

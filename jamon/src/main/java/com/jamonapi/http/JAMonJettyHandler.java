@@ -18,7 +18,7 @@ import java.io.IOException;
 public class JAMonJettyHandler extends HandlerWrapper implements HttpMonManage {
 
     private static final String PREFIX="com.jamonapi.http.JAMonJettyHandler";
-    private static final String DEFAULT_SUMMARY="default, response.getContentCount().bytes, response.getStatus().value.httpStatus";
+    private static final String DEFAULT_SUMMARY="default, response.getContentCount().bytes, response.getStatus().value.httpStatus, response.getStatus().summary.httpStatus";
     private HttpMonFactory httpMonFactory=new JettyHttpMonFactory(PREFIX);
     private String jamonSummaryLabels="default";
 

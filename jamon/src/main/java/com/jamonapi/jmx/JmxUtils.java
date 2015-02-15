@@ -169,6 +169,8 @@ import java.util.*;
             mBeanServer.registerMBean(new ExceptionDeltaMXBeanImp(), ExceptionDeltaMXBeanImp.getObjectName());
             mBeanServer.registerMBean(new Log4jDeltaMXBeanImp(), Log4jDeltaMXBeanImp.getObjectName());
             mBeanServer.registerMBean(new JamonMXBeanImp(), JamonMXBeanImp.getObjectName());
+            mBeanServer.registerMBean(new HttpStatusMXBeanImp(), HttpStatusMXBeanImp.getObjectName());
+            mBeanServer.registerMBean(new HttpStatusDeltaMXBeanImp(), HttpStatusDeltaMXBeanImp.getObjectName());
 
             // gcMXBean gets notifications from gc events and saves results in jamon.
             registerGcMXBean(mBeanServer);
