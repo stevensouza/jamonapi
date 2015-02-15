@@ -163,7 +163,6 @@ import java.util.*;
      *  Register all jamon related mbeans with the passed in MBeanServer
      */
     public static  void registerMbeans(MBeanServer mBeanServer) {
-        MonitorMXBeanImp mxBeanImp = null;
         try {
             mBeanServer.registerMBean(new Log4jMXBeanImp(), Log4jMXBeanImp.getObjectName());
             mBeanServer.registerMBean(new ExceptionMXBeanImp(), ExceptionMXBeanImp.getObjectName());
