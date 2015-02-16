@@ -71,8 +71,8 @@
     <ul>
     <li>To enable this capability <a href="http_monitoring.html">JAMon http monitoring</a>
     must be enabled.</li>
-    <li>If the web container is Jetty then the the JMX labeled 'Jamon.PageRequests.Jetty' will have metrics in it, and if Tomcat is the container then 'Jamon.PageRequests.Tomcat'
-    will have metrics.  Note: If you are using a different web container you can still track page request metrics by using <a href="#custommetrics">JAMon Custom Metrics</a>.</li>
+    <li>The metrics can either appear as 'Jamon.HttpPageRequests' or a label associated with the server type such as 'Jamon.PageRequests.Jetty' or 'Jamon.PageRequests.Tomcat'.
+      Note: If you are using a different web container you can still track page request metrics by using <a href="#custommetrics">JAMon Custom Metrics</a>.</li>
     <li>As you can see below the following are tracked for the page requests: hits, average execution time, max execution time and all the other standard JAMon metrics.  '_Count08_640_1280ms'
     contains the count of page hits that took between 640 and 1280 ms.  The same principal applies to the other similarly named fields.</li>
     </ul>
