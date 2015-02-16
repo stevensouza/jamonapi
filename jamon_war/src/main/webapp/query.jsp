@@ -82,7 +82,7 @@ MonProxyFactory.setMatchStrings(tables);
 // All SQL, Exceptions and method calls on JDBC interfaces will now be monitored!
 Connection conn = MonProxyFactory.monitor(DriverManager.getConnection("jdbc:hsqldb:.",  "sa", ""));
 Statement st=conn.createStatement();
-ResultSet rs=st.executeQuery("select * from SYSTEM_TYPEINFO where LOCAL_TYPE_NAME IN ('INTEGER', 'DECIMAL', 'TINYINT') order by 1 desc"); 	  
+ResultSet rs=st.executeQuery("select * from INFORMATION_SCHEMA.SYSTEM_TYPEINFO where LOCAL_TYPE_NAME IN ('INTEGER', 'DECIMAL', 'TINYINT') order by 1 desc");
 
 
 // The formattedDataSet is another API of mine that renders TabularData among other things.        
@@ -93,7 +93,7 @@ st.close();
 
 // Monitor the PreparedStatement.  Note the SQL Detail report will show how many times the PreparedStatement 
 // was reused.
-PreparedStatement ps=conn.prepareStatement("select * from SYSTEM_TYPEINFO where LOCAL_TYPE_NAME=?");
+PreparedStatement ps=conn.prepareStatement("select * from INFORMATION_SCHEMA.SYSTEM_TYPEINFO where LOCAL_TYPE_NAME=?");
 ps.setString(1, "INTEGER");
 
 rs = ps.executeQuery();
@@ -115,11 +115,11 @@ html1=fds.getFormattedDataSet(new ResultSetConverter(rs), "htmlTable");
 
 // Run and Monitor another couple queries
 st=conn.createStatement();
-rs=st.executeQuery("select * from SYSTEM_TABLES"); 
+rs=st.executeQuery("select TABLE_CAT, TABLE_SCHEM, TABLE_NAME, TABLE_TYPE from INFORMATION_SCHEMA.SYSTEM_TABLES");
 String html2="";
 html2=fds.getFormattedDataSet(new ResultSetConverter(rs), "htmlTable");      	  
 
-rs=st.executeQuery("select * from SYSTEM_USERS"); 
+rs=st.executeQuery("select * from INFORMATION_SCHEMA.SYSTEM_USERS");
 String html3="";
 html3=fds.getFormattedDataSet(new ResultSetConverter(rs), "htmlTable");    
 
@@ -147,19 +147,19 @@ myObj.myClose();
 
 <p><b>You can see the results from these queries in the various JAMon support pages.</b></p>
 
-Query=select * from SYSTEM_TYPEINFO where LOCAL_TYPE_NAME IN ('INTEGER', 'DECIMAL', 'TINYINT') order by 1 desc
+Query=select * from INFORMATION_SCHEMA.SYSTEM_TYPEINFO where LOCAL_TYPE_NAME IN ('INTEGER', 'DECIMAL', 'TINYINT') order by 1 desc
 <%=html%>
 
 <br>
-Query=select * from SYSTEM_TYPEINFO where LOCAL_TYPE_NAME=?
+Query=select * from INFORMATION_SCHEMA.SYSTEM_TYPEINFO where LOCAL_TYPE_NAME=?
 <%=html1%>
 
 <br>
-Query=select * from SYSTEM_TABLES
+Query=select * from INFORMATION_SCHEMA.SYSTEM_TABLES
 <%=html2%>
 
 <br>
-Query=select * from SYSTEM_USERS
+Query=select * from INFORMATION_SCHEMA.SYSTEM_USERS
 <%=html3%>
 
 <%
