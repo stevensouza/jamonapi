@@ -8,6 +8,7 @@ import javax.management.ObjectName;
  * MXBean that exposes jamon httpStatus metrics deltas.  It tracks counts in between invocations for the httpStatus
  *  1xx, 2xx, 3xx, 4xx and 5xx
  *
+ *  http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
  */
 public class HttpStatusDeltaMXBeanImp extends HttpStatusMXBeanImp {
     private NumberDelta status1xx = new NumberDelta();
@@ -19,7 +20,6 @@ public class HttpStatusDeltaMXBeanImp extends HttpStatusMXBeanImp {
     public static ObjectName getObjectName() {
        return JmxUtils.getObjectName(HttpStatusDeltaMXBeanImp.class.getPackage().getName() + ":type=delta,name=HttpStatus");
     }
-
 
     @Override
     public long get1xx() {
