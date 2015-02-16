@@ -142,11 +142,14 @@
  <li><b>com.jamonapi.http.JAMonTomcatValve.response.getStatus().value: 200, httpStatus </b>- Number of resources that return a particular http status code.  In this example the http status code 
  is 200.
  </li>
+  <li><b>com.jamonapi.http.response.getStatus().summary: 5xx, httpStatus </b>- Number of resources that return the more general http status code categories of 1xx, 2xx, 3xx, 4xx, 5xx.
+      In this example the http status code is 5xx.
+  </li>
  <li><b>com.jamonapi.http.JAMonTomcatValve.ServletException</b> - Number of servlet exceptions thrown by the container. (Not in the report below)
  </li>
  </ul>
  
- <p><img width="100%" src="jamon_httpmon.jpg" border="1"> </p>
+ <p><img width="100%" src="jamon_httpmon.png" border="1"> </p>
 
  <p>Any JAMon buffer listener can be attached to any JAMon monitor.  This allows you to not only look at the aggregate stats above, but look at interesting details such
  as the details of when the slowest page was executed, or the ServletException stack trace, or the most recent N page requests.  See other parts of the JAMon documenation to

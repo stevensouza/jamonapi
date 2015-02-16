@@ -23,6 +23,7 @@
     <ul id="menu">
         <li><a href="#log4j">Log4j</a></li>
         <li><a href="#pagerequests">HTTP Page Requests</a></li>
+        <li><a href="#httpstatuscodes">HTTP Status Code Summary</a></li>
         <li><a href="#sql">SQL</a></li>
         <li><a href="#exceptions">Exceptions</a></li>
         <li><a href="#gc">Garbage Collection info (For Oracle JVM's)</a></li>
@@ -46,6 +47,7 @@
             <ol>
                 <li><a href="#log4j">Log4j</a> - Counts for for Log4j log levels: TRACE, DEBUG, WARNING, INFO, ERROR, FATAL,...</li>
                 <li><a href="#pagerequests">HTTP Page Requests</a> - Metrics for page hits in a web application.  Metrics include count, average time, total time, max time, min time and more.</li>
+                <li><a href="#httpstatuscodes">HTTP Status Code Summary</a> - A count of http status codes in the general categories 1xx, 2xx, 3xx, 4xx, 5xx.</li>
                 <li><a href="#sql">SQL</a> - Metrics for SQL statements including select, insert, delete, update and more.  Metrics include count, average time, total time, max time, min time and more.</li>
                 <li><a href="#exceptions">Exceptions</a> - A count of exceptions thrown by the application.  You can also view the most recent stack trace.</li>
                 <li><a href="#gc">Garbage Collection info (For Oracle JVM's)</a> -  Metrics for the garbage collector are automatically stored in JAMon.  This allows developers to look at details of the
@@ -78,7 +80,13 @@
 
     <p><img src="jamon_jmx_pagerequests.png" border="1"></p>
 
-<h2><a name="sql">3. SQL</a></h2>
+<h2><a name="httpstatuscodes">3. HTTP Status Code Summary</a></h2>
+
+        <p> The example below shows how the frequency of returned <a href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes">http status codes</a> from the web server.</p>
+        </p>
+        <p><img src="jamon_jmx_httpstatuscodes.png" border="1"></p>
+
+<h2><a name="sql">4. SQL</a></h2>
 
 <p> This section represents any SQL commands executed by the application.
 <ul>
@@ -91,7 +99,7 @@
 </p>
     <p><img src="jamon_jmx_sql.png" border="1"></p>
 
-<h2><a name="exceptions">4. Exceptions</a></h2>
+<h2><a name="exceptions">5. Exceptions</a></h2>
 <p> This section represents any Exceptions thrown by the application.
 <ul>
     <li>To enable this capability one of the JAMon capbilities that tracks exceptions must be enabled.  This includes SQL, HTTP Page Request, interface monitoring, or Sring AOP monitoring.</li>
@@ -105,7 +113,7 @@
 </ul>
     <p><img src="jamon_jmx_exceptions.png" border="1"></p>
 
-<h2><a name="gc">5. Garbage Collection info</a></h2>
+<h2><a name="gc">6. Garbage Collection info</a></h2>
 <p> This section represents information associated with garbage collection invocations.
 <ul>
     <li>This capability only works for the Oracle JVM</li>
@@ -146,7 +154,7 @@ below.</p>
 
 <p><img src="jamon_jmx_gc_mem.png" border="1"></p>
 
-<h2><a name="custommetrics">6. JAMon Custom Metrics</a></h2>
+<h2><a name="custommetrics">7. JAMon Custom Metrics</a></h2>
 
 <p>Developers can use JAMon's custom JMX metrics capabilities to add any JAMon monitor to JMX. In fact that is exactly how the JMX entries we have discussed that start with 'Jamon.' were added.
     For example <a href="#pagerequests">'Jamon.PageRequests.Jetty'</a> was added this way.  To add your own custom JMX monitors simply add them to the
@@ -161,12 +169,12 @@ JMX metrics discussed above to still appear they must also be in the jamonapi.pr
 <p><img src="jamon_jmx_custommetrics.png" border="1"></p>
 
 
-<h2><a name="managing">7. Managing JAMon</a></h2>
+<h2><a name="managing">8. Managing JAMon</a></h2>
 <p>The 'Jamon' JMX bean allows developers to enable/disable JAMon, view the JAMon version and reset JAMon data via the 'reset' Operation.</p>
 
     <p><img src="jamon_jmx_managing.png" border="1"></p>
 
-<h2><a name="deltas">8. Deltas</a></h2>
+<h2><a name="deltas">9. Deltas</a></h2>
 <p>Normally JAMon numbers continually grow.  The 'Delta' capability allows a developer to determine how much the JAMon metrics have changed since the
 last time they were checked.  All 'Delta' JMX beans reside within the 'deltas' jmx directory structure as seen below.
 </p>
