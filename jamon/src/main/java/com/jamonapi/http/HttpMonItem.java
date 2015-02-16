@@ -55,7 +55,8 @@ class HttpMonItem  {
     }
 
     // parse passed in string and build HttpMonItems from it to be used to monitor
-    // The request. Note general form is request or response followed by a method name and units.  Special defined tokes are value, contextpath, url and units
+    // The request. Note general form is request or response followed by a method name and units.
+    // Special defined tokes are value, contextpath, url, summary (for http status 4xx etc)  and units
     private void parseLabel(String localLabel, HttpMonFactory httpMonFactory) {
         String colAlias=colAlias(localLabel); // brings back anything after 'as', if it exists, null otherwise:  request.getMethod().bytes as ColName
         String nonAlias=nonAlias(localLabel); // brings back what is before 'as alias'.  i.e. request.getMethod().bytes
@@ -76,15 +77,15 @@ class HttpMonItem  {
                 methodName=token.replaceFirst("[(][)]", "");
             } else if ("value".equalsIgnoreCase(token)) { // response.methodName().value
                 additionToLabel+="v";// indicates value
-            }  else if ("summary".equalsIgnoreCase(token)) { // response.getStatus().summary - does a mod 100 so probably only applicable to status
-                // this is a bit of a hack.  note that label doesn't concatenate here, but replaces.  This means that it must
-                // provaide getStatus() and also shows summary only applies to http status.  This was done so jmx diddn't have to worry
-                // about the normal differences between different package names being part of the key (say jetty and tomcat).  In the future
+            }  else if ("summary".equalsIgnoreCase(token)) { // response.getStatus().summary - does a mod 100  - only applicable to http status
+                // This is a bit of a hack.  note that label doesn't concatenate here, but replaces.  This means that it must
+                // provaide getStatus() and also shows summary only applies to http status.  This was done so jmx didn't have to worry
+                // about the differences between different package names being part of the key (say jetty and tomcat).  In the future
                 // i could resolve this by getting rid of keynames like 'com.jamonapi.http.JAMonJettyHandlerNew.response.getStatus().summary: 5xx, httpStatus'
                 // and instead using something more generic like com.jamonapi.http.response.getStatus().summary'  I would have done this but was
-                // afraid to break other developers code that was depedendent on this keyName.
+                // afraid to break other developers code that was dependent on this keyName.
                 label = "com.jamonapi.http.response.getStatus()";
-                additionToLabel+="s";// indicates httpsummary should be added i.e. summary: 4xx
+                additionToLabel+="s";// indicates httpsummary should be added to the key label i.e. summary: 4xx
             } else if ("url".equalsIgnoreCase(token)) { // response.methodName().url (note both value and url can be on the same line)
                 additionToLabel+="u";// indicates url
             } else if ("contextpath".equalsIgnoreCase(token)) { // response.methodName().url (note both value and url can be on the same line)
@@ -98,8 +99,7 @@ class HttpMonItem  {
             }
         }
 
-        // gets rid of jsessionid from jamon summary labels if ignorehttpparams is true and we are monitoring
-        // the pagehits.
+        // gets rid of jsessionid from jamon summary labels if ignorehttpparams is true and we are monitoring the pagehits.
         if (httpMonFactory.getIgnoreHttpParams() && ("getRequestURI".equals(methodName) || "getRequestURL".equals(methodName)))
             removeHttpParams=true;
 
@@ -183,26 +183,32 @@ class HttpMonItem  {
         return new MonKeyImp(getLabel(httpMonBase), httpMonBase.getDetailLabel(), getUnits());
     }
 
-    /** If a value label is to be used then append it to the end of the label, else just return the label.  The results will be used to create
-     * a jamon record.  Ex:  request.getMethod() or request.getMethod().post
-     * @return
+    /** Append the key if needed (for example with something like .value (value: /jamon/jamonadmin.jsp)) or
+     *  .summary (summary: 4xx), or simply return the label.  The results will be used to create
+     * a jamon monitor.  Ex:  request.getMethod() or request.getMethod().post (uses value)
+     *
+     * @return jamon monitor label
      */
     String getLabel(HttpMonRequest httpMonBase) {
         if ("".equals(additionToLabel))
             return label;
 
-        // add value and/or url if they are required in the label.
+        return appendToLabel(httpMonBase);
+    }
+
+    private String appendToLabel(HttpMonRequest httpMonBase) {
+        // add value, summary and/or url if they are required in the label.
         StringBuffer sb=new StringBuffer(label);
         if ( !(label.charAt(label.length()-1)=='.'))// in some cases if this isn't done then the label has no dots, or 2 consecutive ones.
             sb.append(".");
 
         for (int i=0;i<additionToLabel.length();i++) {
-            if (i>=1)// i.e. both u and v are specified
+            if (i>=1)// i.e. multiple additions are specified such as u and v
                 sb.append(", ");
 
-            if (additionToLabel.charAt(i)=='v')//value
+            if (additionToLabel.charAt(i)=='v')//value. ex1: value: post, ex2: value: 404
                 sb.append("value: ").append(getValueLabel(httpMonBase));
-            else if (additionToLabel.charAt(i)=='s')//summary i.e. 2xx, 4xx etc.
+            else if (additionToLabel.charAt(i)=='s')//summary ex1: summary: 2xx, ex2: summary: 4xx
                 sb.append("summary: ").append(getHttpStatusSummaryLabel(httpMonBase));
             else if (additionToLabel.charAt(i)=='u')//url
                 sb.append("url: ").append(httpMonBase.getKeyReadyURI());
@@ -224,10 +230,11 @@ class HttpMonItem  {
         return valLabel;
     }
 
+    // use mod on the returned http status code (i.e. 404) to return one of the following: 1xx, 2xx, 3xx, 4xx, 5xx
     String getHttpStatusSummaryLabel(HttpMonRequest httpMonBase) {
-        Object obj=executeMethod(httpMonBase);
-        if (obj instanceof Number) {
-            int httpStatusCode = ((Number) obj).intValue();
+        Object status=executeMethod(httpMonBase);
+        if (status instanceof Number) {
+            int httpStatusCode = ((Number) status).intValue();
             int httpStatusSummary = httpStatusCode/100; // take something like http status 404 and convert to the first digit i.e. 4.
             return String.valueOf(httpStatusSummary)+"xx"; // 4xx
         } else {

@@ -60,15 +60,21 @@ public class HttpMonItemTest {
 
         assertThat(mon.getHits()).isEqualTo(2);
         assertThat(mon.getAvg()).isEqualTo(404);
+    }
 
+    @Test
+    public void testHttpStatusSummaryWithEndPoints() {
         when(response.getStatus()).thenReturn(200);
+        HttpMonItem monItem = new HttpMonItem("response.getStatus().summary.httpStatus", monFactory);
         monItem.start(monRequest);
         monItem.stop(monRequest);
+
         when(response.getStatus()).thenReturn(299);
         monItem.start(monRequest);
         monItem.stop(monRequest);
 
-        mon = MonitorFactory.getMonitor("com.jamonapi.http.response.getStatus().summary: 2xx", "httpStatus");
+        Monitor mon = MonitorFactory.getMonitor("com.jamonapi.http.response.getStatus().summary: 2xx", "httpStatus");
+
         assertThat(mon.getHits()).isEqualTo(2);
         assertThat(mon.getAvg()).isEqualTo(249.5);
     }
