@@ -8,3 +8,12 @@ The JAMon repositories on both sourceforge and github are the latest version of 
 * https://github.com/stevensouza/jamonapi
 * https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/
 
+```xml
+   <dependencies>
+        <dependency>
+            <groupId>com.jamonapi</groupId>
+            <artifactId>jamon</artifactId>
+            <version>2.81</version>
+        </dependency>
+    </dependencies>
+```
