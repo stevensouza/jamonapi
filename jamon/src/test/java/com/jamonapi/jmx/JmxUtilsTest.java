@@ -186,6 +186,12 @@ public class JmxUtilsTest {
         JamonMXBean versionMxBeanImp = JMX.newMXBeanProxy(mBeanServer, JamonMXBeanImp.getObjectName(), JamonMXBean.class);
         assertThat(versionMxBeanImp.getVersion()).isEqualTo(MonitorFactory.getVersion());
 
+        HttpStatusMXBean httpStatusProxy = JMX.newMXBeanProxy(mBeanServer, HttpStatusMXBeanImp.getObjectName(), HttpStatusMXBean.class);
+        assertThat(httpStatusProxy.get1xx()).isEqualTo(0);
+
+        HttpStatusMXBean httpStatusDeltaProxy = JMX.newMXBeanProxy(mBeanServer, HttpStatusDeltaMXBeanImp.getObjectName(), HttpStatusMXBean.class);
+        assertThat(httpStatusDeltaProxy.get1xx()).isEqualTo(0);
+        
         JmxUtils.unregisterMbeans();
     }
 
