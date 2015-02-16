@@ -18,7 +18,7 @@ public class HttpStatusDeltaMXBeanImp extends HttpStatusMXBeanImp {
     private NumberDelta status5xx = new NumberDelta();
 
     public static ObjectName getObjectName() {
-       return JmxUtils.getObjectName(HttpStatusDeltaMXBeanImp.class.getPackage().getName() + ":type=delta,name=HttpStatus");
+       return JmxUtils.getObjectName(HttpStatusDeltaMXBeanImp.class.getPackage().getName() + ":type=delta,name=HttpStatusCodes");
     }
 
     @Override

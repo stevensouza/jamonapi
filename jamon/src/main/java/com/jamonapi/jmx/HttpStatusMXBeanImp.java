@@ -11,7 +11,7 @@ import javax.management.ObjectName;
  */
 public class HttpStatusMXBeanImp implements HttpStatusMXBean {
     public static ObjectName getObjectName() {
-       return JmxUtils.getObjectName(HttpStatusMXBeanImp.class.getPackage().getName() + ":type=current,name=HttpStatus");
+       return JmxUtils.getObjectName(HttpStatusMXBeanImp.class.getPackage().getName() + ":type=current,name=HttpStatusCodes");
     }
 
     private long getCount(String label) {
