@@ -25,16 +25,27 @@ public class JamonServletContextListener implements ServletContextListener  {
     public void contextInitialized(ServletContextEvent event) {
         ServletContext context = event.getServletContext();
         if (context != null) {
-            addListeners();
+        	
+        	String jamonPropertiesLocation = context.getInitParameter("jamonPropertiesLocation");
+        	context.log("Initialize the JamonServletContextListener, jamonPropertiesLocation: " + jamonPropertiesLocation);
+        	
+        	JamonPropertiesLoader loader = null;
+        	if (jamonPropertiesLocation != null) {
+        		loader = new JamonPropertiesLoader(jamonPropertiesLocation);
+        	}
+        	else {
+            	loader = new JamonPropertiesLoader();
+        	}
+        	
+            addListeners(loader);
             addJmxBeans();
-            JamonDataPersisterTimerTask saveTask = getDistributedJamonTimerTask();
-            int refreshRate = getRefreshRate();
+            JamonDataPersisterTimerTask saveTask = getDistributedJamonTimerTask(loader);
+            int refreshRate = getRefreshRate(loader);
             saveTask.schedule(refreshRate);
         }
     }
 
-    private void addListeners() {
-        JamonPropertiesLoader loader = new JamonPropertiesLoader();
+    private void addListeners(JamonPropertiesLoader loader) {
         MonitorFactory.addListeners(loader.getListeners());
     }
 
@@ -42,17 +53,20 @@ public class JamonServletContextListener implements ServletContextListener  {
        JmxUtils.registerMbeans();
     }
 
-    JamonDataPersisterTimerTask getDistributedJamonTimerTask() {
-        return new JamonDataPersisterTimerTask(getJamonData());
+    JamonDataPersisterTimerTask getDistributedJamonTimerTask(final JamonPropertiesLoader loader) {
+        return new JamonDataPersisterTimerTask(getJamonData(loader));
     }
 
-    JamonDataPersister getJamonData() {
+    JamonDataPersister getJamonData(final JamonPropertiesLoader loader) {
+    	// set the properties
+    	JamonDataPersisterFactory.setJamonProperties(loader.getJamonProperties());
+    	
         return JamonDataPersisterFactory.get();
     }
 
 
-    int getRefreshRate() {
-        Properties properties = new JamonPropertiesLoader().getJamonProperties();
+    int getRefreshRate(JamonPropertiesLoader loader) {
+        Properties properties = loader.getJamonProperties();
         return MINUTES * Integer.valueOf(properties.getProperty("distributedDataRefreshRateInMinutes"));
     }
 

@@ -28,7 +28,7 @@ public class JamonPropertiesLoader {
         this("jamonapi.properties");
     }
 
-    JamonPropertiesLoader(String fileName) {
+    public JamonPropertiesLoader(String fileName) {
         this.fileName = fileName;
     }
 

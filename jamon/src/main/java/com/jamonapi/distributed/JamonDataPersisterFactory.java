@@ -19,23 +19,37 @@ public class JamonDataPersisterFactory {
     private Properties jamonProperties;
 
     private JamonDataPersisterFactory() {
-        jamonProperties = new JamonPropertiesLoader().getJamonProperties();
-        jamonDataPersisterName = jamonProperties.getProperty("jamonDataPersister");
+//        jamonProperties = new JamonPropertiesLoader().getJamonProperties();
+//        jamonDataPersisterName = jamonProperties.getProperty("jamonDataPersister");
     }
 
     public static JamonDataPersister get() {
-        if (factory.jamonDataPersister ==null) {
+        if (factory.jamonDataPersister == null) {
             factory.initialize();
         }
          return factory.jamonDataPersister;
     }
 
     public static Properties getJamonProperties() {
+    	
+    	if (factory.jamonProperties == null) {
+    		factory.jamonProperties = new JamonPropertiesLoader().getJamonProperties();
+    	}
+    	
         return factory.jamonProperties;
+    }
+    
+    public static void setJamonProperties(final Properties jamonProperties) {
+        factory.jamonProperties = jamonProperties;
     }
 
     // initialize with HazelCast implementation if you can.  If not use the local implementation.
     private void initialize() {
+    	if (jamonProperties == null) {
+    		jamonProperties = new JamonPropertiesLoader().getJamonProperties();
+    	}
+        jamonDataPersisterName = jamonProperties.getProperty("jamonDataPersister");
+    	
         jamonDataPersister =  create(jamonDataPersisterName);
         if (jamonDataPersister ==null) {
            jamonDataPersister = new LocalJamonFilePersister();
