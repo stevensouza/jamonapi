@@ -41,9 +41,8 @@ public class JamonServletContextListener implements ServletContextListener  {
         	String jamonPropertiesLocation = context.getInitParameter("jamonPropertiesLocation");
         	context.log("Initialize the JamonServletContextListener, jamonPropertiesLocation: " + jamonPropertiesLocation);
 
-        	LOGGER.info(">> Initialize the JamonServletContextListener, jamonPropertiesLocation: " + jamonPropertiesLocation);
+        	LOGGER.info(">> Initialize the JamonServletContextListener, jamonPropertiesLocation: {}", jamonPropertiesLocation);
         	
-//        	JamonPropertiesLoader loader = null;
         	if (jamonPropertiesLocation != null) {
         		loader = new JamonPropertiesLoader(jamonPropertiesLocation);
         		// load the properties
