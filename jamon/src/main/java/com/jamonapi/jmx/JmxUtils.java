@@ -155,14 +155,14 @@ import java.util.*;
     /**
      *  register all jamon related mbeans
      */
-    public static  void registerMbeans() {
-        registerMbeans(ManagementFactory.getPlatformMBeanServer());
+    public static  void registerMbeans(final JamonPropertiesLoader loader) {
+        registerMbeans(ManagementFactory.getPlatformMBeanServer(), loader);
     }
 
      /**
      *  Register all jamon related mbeans with the passed in MBeanServer
      */
-    public static  void registerMbeans(MBeanServer mBeanServer) {
+    public static  void registerMbeans(MBeanServer mBeanServer, final JamonPropertiesLoader loader) {
         try {
             mBeanServer.registerMBean(new Log4jMXBeanImp(), Log4jMXBeanImp.getObjectName());
             mBeanServer.registerMBean(new ExceptionMXBeanImp(), ExceptionMXBeanImp.getObjectName());
@@ -174,7 +174,7 @@ import java.util.*;
 
             // gcMXBean gets notifications from gc events and saves results in jamon.
             registerGcMXBean(mBeanServer);
-            registerMbeansFromPropsFile(mBeanServer);
+            registerMbeansFromPropsFile(mBeanServer, loader);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -185,8 +185,8 @@ import java.util.*;
      * If there are no configurable monitors taken from the file then a set of default
      * ones will be created (pageHits, sql).
      */
-    private static  void registerMbeansFromPropsFile(MBeanServer mBeanServer) throws Exception {
-        JamonPropertiesLoader loader = new JamonPropertiesLoader();
+    private static  void registerMbeansFromPropsFile(MBeanServer mBeanServer, final JamonPropertiesLoader loader) throws Exception {
+//        JamonPropertiesLoader loader = new JamonPropertiesLoader();
         List<String> jamonJmxBeanProperties = loader.getMxBeans();
         Iterator<String> iter = jamonJmxBeanProperties.iterator();
 
@@ -206,15 +206,15 @@ import java.util.*;
     /**
      * unRegister all jamon related mbeans
      */
-    public static void unregisterMbeans() {
-        unregisterMbeans(ManagementFactory.getPlatformMBeanServer());
+    public static void unregisterMbeans(final JamonPropertiesLoader loader) {
+        unregisterMbeans(ManagementFactory.getPlatformMBeanServer(), loader);
     }
 
 
     /**
      * unRegister all jamon related mbeans
      */
-    public static void unregisterMbeans(MBeanServer mBeanServer) {
+    public static void unregisterMbeans(MBeanServer mBeanServer, final JamonPropertiesLoader loader) {
         try {
             mBeanServer.unregisterMBean(Log4jMXBeanImp.getObjectName());
             mBeanServer.unregisterMBean(ExceptionMXBeanImp.getObjectName());
@@ -224,7 +224,7 @@ import java.util.*;
             mBeanServer.unregisterMBean(HttpStatusMXBeanImp.getObjectName());
             mBeanServer.unregisterMBean(HttpStatusDeltaMXBeanImp.getObjectName());
             unregisterGcMXBean(mBeanServer);
-            unregisterMbeansFromPropsFile(mBeanServer);
+            unregisterMbeansFromPropsFile(mBeanServer, loader);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -237,8 +237,8 @@ import java.util.*;
      * @param mBeanServer
      * @throws Exception
      */
-    private static  void unregisterMbeansFromPropsFile(MBeanServer mBeanServer) throws Exception {
-        JamonPropertiesLoader loader = new JamonPropertiesLoader();
+    private static void unregisterMbeansFromPropsFile(MBeanServer mBeanServer, final JamonPropertiesLoader loader) throws Exception {
+//        JamonPropertiesLoader loader = new JamonPropertiesLoader();
         List<String> jamonJmxBeanProperties = loader.getMxBeans();
         Iterator<String> iter = jamonJmxBeanProperties.iterator();
 

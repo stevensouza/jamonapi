@@ -1,13 +1,20 @@
 package com.jamonapi;
 
-import com.jamonapi.utils.Misc;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.ResourceUtils;
+
+import com.jamonapi.utils.Misc;
 
 /**
  * Load jamon properties.  The order of loading is to look in the file named jamonapi.properties in the classpath.
@@ -18,6 +25,7 @@ import java.util.Properties;
  * Created by stevesouza on 7/13/14.
  */
 public class JamonPropertiesLoader {
+	private static final Logger LOGGER = LoggerFactory.getLogger(JamonPropertiesLoader.class);
 
     private String fileName;
     private Properties jamonProps;
@@ -39,6 +47,7 @@ public class JamonPropertiesLoader {
      */
     public Properties getJamonProperties() {
         if (jamonProps==null) {
+        	LOGGER.info("jamonProps are not assiged, call initialize.");
             initialize();
         }
         return jamonProps;
@@ -85,17 +94,46 @@ public class JamonPropertiesLoader {
 
 
     private  Properties propertyLoader(String fileName)  {
+    	
         Properties properties = new Properties();
         InputStream input = null;
-        try {
-            input = getClass().getClassLoader().getResourceAsStream(fileName);
-            if (input!=null) {
-                properties.load(input);
-            }
-        } catch (Throwable t) {
-            // want to ignore exception and proceed with loading with CLI props or defaults.
-        } finally{
-            close(input);
+        
+		if (ResourceUtils.isUrl(fileName)) {
+        
+	        try {
+	        	LOGGER.info("Try to load jamonapi properties from file location: {}", fileName);
+	        	File file = ResourceUtils.getFile(fileName);
+	        	if (file.exists()) {
+	        		input = new FileInputStream(file);
+	        		properties.load(input);
+	            	LOGGER.info("Load jamonapi properties from file location passed: {}", fileName);
+	        	}
+	        	else {
+	        		LOGGER.warn("The file was not found: {}", fileName);
+	        		throw new FileNotFoundException();
+	        	}
+	        }
+	        catch (Exception ex) {
+	        	LOGGER.warn("Load jamonapi properties from file failed: {}", fileName, ex);
+	        }
+	        finally {
+	        	close(input);
+	        }
+		}
+		
+        if (properties.isEmpty()) {
+        	LOGGER.info("Try to load the jamonapi properties from: {}", fileName);
+        	
+	        try {
+	            input = getClass().getClassLoader().getResourceAsStream(fileName);
+	            if (input!=null) {
+	                properties.load(input);
+	            }
+	        } catch (Throwable t) {
+	            // want to ignore exception and proceed with loading with CLI props or defaults.
+	        } finally{
+	            close(input);
+	        }
         }
 
         return properties;
