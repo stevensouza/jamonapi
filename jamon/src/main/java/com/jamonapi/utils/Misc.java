@@ -171,7 +171,7 @@ public class Misc {
     /** Formats the passed in date with the passed in date format String.  See the main method for
      * sample Formats.  */
     public static String getFormattedDate(String format, Date date) {
-        return new SimpleDateFormat(format).format(date);    // 02
+        return new SimpleDateFormat(format, Locale.ENGLISH).format(date);    // 02
     }
 
     private static Format monthFormat=new SimpleDateFormat("MM");
