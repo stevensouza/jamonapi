@@ -1,28 +1,47 @@
 package com.jamonapi.distributed;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.jamonapi.JamonPropertiesLoader;
 import com.jamonapi.MonitorComposite;
 import com.jamonapi.MonitorFactory;
 import com.jamonapi.utils.FileUtils;
 import com.jamonapi.utils.SerializationUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
 /** Persist/serialize jamon data (MonitorComposite) to a local file.
  *
  * Created by stevesouza on 8/10/14.
  */
 public class LocalJamonFilePersister extends LocalJamonDataPersister {
+	
+	private static final Log LOGGER = LogFactory.getLog(LocalJamonFilePersister.class);
+	
     private static final String FILE_EXT = ".ser";
-    private JamonPropertiesLoader jamonPropertiesLoader = new JamonPropertiesLoader();
+    private Properties jamonProperties;
     private Map<String, String> fileNameMap=new HashMap<String, String>();
     static final String JAMON_FILE_NAME = INSTANCE+"-saved";
 
+    public LocalJamonFilePersister(final Properties jamonProperties) {
+    	this.jamonProperties = jamonProperties;
+    	
+    	LOGGER.info("Create LocalJamonFilePersister with jamonProperties: " + jamonProperties);
+    }
+
+    public LocalJamonFilePersister() {
+    	this(new JamonPropertiesLoader().getJamonProperties());
+
+    	LOGGER.warn("Created LocalJamonFilePersister with default properties.");
+    }
+    
     /** Get instances by looking in directory for any saved files and also add local in memory instance */
     @Override
     public Set<String> getInstances() {
@@ -97,7 +116,7 @@ public class LocalJamonFilePersister extends LocalJamonDataPersister {
      * @return  Directory where jamon data is stored
      */
     protected String getDirectoryName() {
-        String rootDir  = jamonPropertiesLoader.getJamonProperties().getProperty("jamonDataPersister.directory");
+        String rootDir  = jamonProperties.getProperty("jamonDataPersister.directory");
         if (rootDir.endsWith(File.separator)) {
           return rootDir;
         }
