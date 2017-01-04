@@ -1,30 +1,38 @@
 package com.jamonapi.jmx;
 
-import com.jamonapi.MonitorFactory;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import javax.management.JMX;
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import javax.management.JMX;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import com.jamonapi.JamonPropertiesLoader;
+import com.jamonapi.MonitorFactory;
 
 
 public class JmxUtilsTest {
     private MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
     private List<JamonJmxBeanProperty> beanPropertyList;
 
+    private JamonPropertiesLoader loader;
+
+    
     @Before
     public void setUp() throws Exception {
+    	loader = new JamonPropertiesLoader();
+    	
         MonitorFactory.reset();
         JamonJmxBeanProperty property = mock(JamonJmxBeanProperty.class);
         when(property.getLabel()).thenReturn("I_EXIST");
@@ -169,7 +177,7 @@ public class JmxUtilsTest {
 
     @Test
     public void testRegisterMbeans() throws Exception {
-        JmxUtils.registerMbeans();
+        JmxUtils.registerMbeans(loader);
 
         Log4jMXBean log4jProxy = JMX.newMXBeanProxy(mBeanServer, Log4jMXBeanImp.getObjectName(), Log4jMXBean.class);
         assertThat(log4jProxy.getDebug()).isEqualTo(0);
@@ -192,12 +200,12 @@ public class JmxUtilsTest {
         HttpStatusMXBean httpStatusDeltaProxy = JMX.newMXBeanProxy(mBeanServer, HttpStatusDeltaMXBeanImp.getObjectName(), HttpStatusMXBean.class);
         assertThat(httpStatusDeltaProxy.get1xx()).isEqualTo(0);
         
-        JmxUtils.unregisterMbeans();
+        JmxUtils.unregisterMbeans(loader);
     }
 
     @Test
     public void testQueryMbeans() throws Exception {
-        JmxUtils.registerMbeans();
+        JmxUtils.registerMbeans(loader);
 
         Set<ObjectName> set = JmxUtils.queryMBeans(mBeanServer, "name");
         assertThat(set).isNotEmpty();
@@ -205,13 +213,13 @@ public class JmxUtilsTest {
             assertThat(obj.toString()).contains("name");
         }
 
-        JmxUtils.unregisterMbeans();
+        JmxUtils.unregisterMbeans(loader);
     }
 
 
     @Test
     public void testQueryGcDependentMbeansCreatedAndDestroyed() throws Exception {
-        JmxUtils.registerMbeans();
+        JmxUtils.registerMbeans(loader);
         // gc call
         System.gc();
         Thread.sleep(100);
@@ -219,29 +227,29 @@ public class JmxUtilsTest {
         Set set = JmxUtils.queryMBeans(mBeanServer, "Jamon.Gc.");
         assertThat(set).isNotEmpty();
 
-        JmxUtils.unregisterMbeans();
+        JmxUtils.unregisterMbeans(loader);
         set = JmxUtils.queryMBeans(mBeanServer, "Jamon.Gc.");
         assertThat(set).isEmpty();
     }
 
     @Test(expected = RuntimeException.class)
     public void testUnregisterMbeans() throws Exception {
-        JmxUtils.registerMbeans();
-        JmxUtils.unregisterMbeans();
+        JmxUtils.registerMbeans(loader);
+        JmxUtils.unregisterMbeans(loader);
         Log4jMXBean log4jProxy = JMX.newMXBeanProxy(mBeanServer, Log4jMXBeanImp.getObjectName(), Log4jMXBean.class);
         log4jProxy.getDebug();
     }
 
     @Test
     public void shouldFireGcNotification() throws Exception {
-        JmxUtils.registerMbeans();
+        JmxUtils.registerMbeans(loader);
         System.gc();
         // sleep to ensure notification is called.
         Thread.sleep(3000);
         GcMXBean gcProxy = JMX.newMXBeanProxy(mBeanServer, GcMXBeanImp.getObjectName(), GcMXBean.class);
         assertThat(gcProxy.getGcInfo()).contains("Name","Cause","Action","Duration","Sequence","When","BeforeGc","AfterGc");
         assertThat(gcProxy.getDuration()).isGreaterThan(0);
-        JmxUtils.unregisterMbeans();
+        JmxUtils.unregisterMbeans(loader);
     }
 
 }
