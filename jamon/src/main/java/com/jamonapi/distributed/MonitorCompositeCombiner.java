@@ -1,8 +1,8 @@
 package com.jamonapi.distributed;
 
-import com.jamonapi.MonitorComposite;
-import com.jamonapi.MonitorCompositeIterator;
+import com.jamonapi.*;
 import com.jamonapi.utils.Misc;
+import com.jamonapi.utils.SerializationUtils;
 
 import java.util.*;
 
@@ -25,6 +25,14 @@ public class MonitorCompositeCombiner {
      * @return MonitorComposite
      */
     public MonitorComposite get(String... instanceKeys) {
+        return append(getMonitorComposites(instanceKeys));
+    }
+
+    public MonitorComposite aggregate(String... instanceKeys) {
+        return aggregate(getMonitorComposites(instanceKeys));
+    }
+
+    private List<MonitorComposite> getMonitorComposites(String[] instanceKeys) {
         List<MonitorComposite> monitorCompositeList = new ArrayList<MonitorComposite>();
         for (int i=0;i<instanceKeys.length;i++) {
             MonitorComposite monitorComposite = persister.get(instanceKeys[i]);
@@ -32,18 +40,17 @@ public class MonitorCompositeCombiner {
                 monitorCompositeList.add(monitorComposite);
             }
         }
-
-        return combine(monitorCompositeList);
+        return monitorCompositeList;
     }
 
 
     /**
-     * Combine MonitorComposites 1 MonitorComposite.
+     * Combine multiple MonitorComposites into 1 MonitorComposite.
      *
      * @param monitorCompositeList
      * @return MonitorComposite
      */
-    public static MonitorComposite combine(Collection<MonitorComposite> monitorCompositeList) {
+    public static MonitorComposite append(Collection<MonitorComposite> monitorCompositeList) {
         Date previousDate = null;
         Date finalDate = null; // assign the date of all the results as the most recent of all monitorComposite dates
         Iterator<MonitorComposite> iter = monitorCompositeList.iterator();
@@ -66,12 +73,29 @@ public class MonitorCompositeCombiner {
         return mc.setInstanceName(Misc.getAsString(instanceNameList));
     }
 
-    /**
-     * Remove any of the MonitorComposites associated with the key.  This data could be in memory,  on HazelCast
-     * or in a file for example.
-     *
-     * @param instanceKey
-     */
+    public static MonitorComposite aggregate(Collection<MonitorComposite> monitorCompositeList) {
+        FactoryEnabled factory = new FactoryEnabled();
+        MonitorComposite mc = append(monitorCompositeList);
+        Monitor[] monitors = mc.getMonitors();
+        // 1) iterate data creating monitors and and setup listeners
+        // 2) loop through a second time and merge monitor values and populate listeners (maybe done in same method)
+        for (Monitor monitor : monitors) {
+            MonKey key = SerializationUtils.deepCopy(monitor.getMonKey());
+            key.setInstanceName("aggregate");
+            factory.getMonitor(key).add(1);
+            //monitor.getMonKey().clone();
+            // iterator for append sets instancename....monitor.getMonKey().setInstanceName("aggregate");
+        }
+        return factory.getRootMonitor();
+    }
+
+
+        /**
+         * Remove any of the MonitorComposites associated with the key.  This data could be in memory,  on HazelCast
+         * or in a file for example.
+         *
+         * @param instanceKey
+         */
     public void remove(String... instanceKey) {
         for (int i=0;i<instanceKey.length;i++) {
             persister.remove(instanceKey[i]);

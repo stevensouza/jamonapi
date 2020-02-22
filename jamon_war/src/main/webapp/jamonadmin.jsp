@@ -37,6 +37,7 @@ List<String> instanceName    = getParatemersAsList(request.getParameterValues("i
 String action    = getValue(request.getParameter("action"),"Refresh");
 String monProxyAction = getValue(request.getParameter("monProxyAction"),"No Action");
 String cache    = getValue(request.getParameter("cache"),"false");
+String aggregateInstances    = getValue(request.getParameter("aggregateInstances"),"false");
 String formatter = getValue(request.getParameter("formatterValue"), "#,###");
 String arraySQL  = getValue(request.getParameter("ArraySQL"),"");
 String sortOrder = getValue(request.getParameter("sortOrder"), "asc");
@@ -77,6 +78,7 @@ query+="&ArraySQL="+java.net.URLEncoder.encode(arraySQL);
 query+="&TextSize="+textSize;
 query+="&highlight="+highlightString;
 query+="&cache="+cache;
+query+="&aggregateInstances="+aggregateInstances;
 
 
 String outputText;
@@ -98,8 +100,19 @@ Object[][] instanceNamesSelectBoxData = (Object[][]) session.getAttribute("insta
 List<String> prevInstanceName = (List<String>) session.getAttribute("prevInstanceName");
 
 // the way html works is if cache is false it is not passed in hence the not true check on cache.
-if (mc==null || !"true".equalsIgnoreCase(cache) || prevInstanceName==null || !prevInstanceName.equals(instanceName) ) {
-    mc = new MonitorCompositeCombiner(jamonDataPersister).get(instanceName.toArray(new String[0]));
+// we need to get new data (not use cached data) under the following conditions.
+if (mc==null || // first time on page so no data exists
+        !"true".equalsIgnoreCase(cache) ||  // user explicitly selected not to cache the data
+        prevInstanceName==null || // There wasn't a previous instance of data selected
+        !prevInstanceName.equals(instanceName) // we don't have the data if the user just changed selected instance(s)
+) {
+    // get new data (i.e don't use cached data)
+    // Note the combiner is used get get the data even if one instance is selected.
+    if ("true".equalsIgnoreCase(aggregateInstances)) { // aggregate/merge
+        mc = new MonitorCompositeCombiner(jamonDataPersister).aggregate(instanceName.toArray(new String[0]));
+    } else { // append/combine
+        mc = new MonitorCompositeCombiner(jamonDataPersister).get(instanceName.toArray(new String[0]));
+    }
     prevInstanceName = instanceName;
     session.setAttribute("prevInstanceName", prevInstanceName);
     instanceNamesSelectBoxData = getInstanceData(jamonDataPersister.getInstances());
@@ -230,6 +243,7 @@ function helpWin() {
     <tr class="sectHead">
     <th>Submit</th>
     <th>Instances</th>
+    <th>Aggregate Instances</th>
     <th>Cache Results</th>
     <th>JAMon Action</th>
     <th>Mon Proxy Action</th>
@@ -245,6 +259,7 @@ function helpWin() {
     <tr class="even">
     <td><input type="submit" name="actionSbmt" value="Go !" ></td>
     <th><%=fds.getMultiSelectListBox(instanceNameHeader, instanceNamesSelectBoxData, instanceName.toArray(new String[0]), 4)%></th>
+    <th><input type="checkbox" name="aggregateInstances" value="true" <%="true".equalsIgnoreCase(aggregateInstances) ? "checked" : ""%>></th>
     <th><input type="checkbox" name="cache" value="true" <%="true".equalsIgnoreCase(cache) ? "checked" : ""%>></th>
     <th><%=fds.getDropDownListBox(actionHeader, actionBody, "")%></th>
     <th><%=fds.getDropDownListBox(monProxyHeader, getMonProxyBody() , "")%></th>

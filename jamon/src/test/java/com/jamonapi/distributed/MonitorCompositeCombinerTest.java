@@ -63,7 +63,7 @@ public class MonitorCompositeCombinerTest {
         MonitorComposite mc3 = MonitorFactory.getRootMonitor().copy();
 
         List<MonitorComposite> list = Arrays.asList(mc1, mc2, mc3);
-        MonitorComposite monitorComposite = MonitorCompositeCombiner.combine(list);
+        MonitorComposite monitorComposite = MonitorCompositeCombiner.append(list);
         assertThat(monitorComposite.getNumRows()).isEqualTo(12);
     }
 

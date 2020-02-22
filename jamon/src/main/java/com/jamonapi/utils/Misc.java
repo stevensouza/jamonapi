@@ -1,5 +1,7 @@
 package com.jamonapi.utils;
 
+import com.jamonapi.*;
+
 import java.lang.reflect.Constructor;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -234,6 +236,28 @@ public class Misc {
         }
 
         return map;
+    }
+
+    public static Monitor merge(Monitor from, Monitor to) {
+        to.setHits(to.getHits()+from.getHits());//?
+        to.setTotal(to.getTotal()+from.getTotal());//?
+        to.setMin(Math.min(to.getMin(), from.getMin())); //?
+        to.setMax(Math.max(to.getMax(),  from.getMax())); //?
+        to.setMaxActive(Math.max(to.getMaxActive(), from.getMaxActive()));
+        to.setActive(to.getActive()+from.getActive());//?
+       // to.setTotalActive();//?
+        to.setFirstAccess(from.getFirstAccess());// ?
+        to.setLastAccess(from.getLastAccess());//?
+        to.setLastValue(from.getLastValue());
+        to.getAvgActive();//?
+        to.getAvgGlobalActive();//?
+        to.getAvgPrimaryActive();//?
+        to.setPrimary(from.isPrimary());//?
+        return to;
+    }
+
+    public static void main(String [] args) {
+
     }
 
 }
