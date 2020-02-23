@@ -82,7 +82,8 @@ public class MonitorCompositeCombiner {
         for (Monitor monitor : monitors) {
             MonKey key = SerializationUtils.deepCopy(monitor.getMonKey());
             key.setInstanceName("aggregate");
-            factory.getMonitor(key).add(1);
+//            factory.getMonitor(key).add(1);
+            merge(monitor, factory.getMonitor(key));
             //monitor.getMonKey().clone();
             // iterator for append sets instancename....monitor.getMonKey().setInstanceName("aggregate");
         }
@@ -100,6 +101,25 @@ public class MonitorCompositeCombiner {
         for (int i=0;i<instanceKey.length;i++) {
             persister.remove(instanceKey[i]);
         }
+    }
+
+
+    public static Monitor merge(Monitor from, Monitor to) {
+        to.setHits(to.getHits()+from.getHits());//?
+        to.setTotal(to.getTotal()+from.getTotal());//?
+        to.setMin(Math.min(to.getMin(), from.getMin())); //?
+        to.setMax(Math.max(to.getMax(),  from.getMax())); //?
+        to.setMaxActive(Math.max(to.getMaxActive(), from.getMaxActive()));
+        to.setActive(to.getActive()+from.getActive());//?
+        // to.setTotalActive();//?
+        to.setFirstAccess(from.getFirstAccess());// ?
+        to.setLastAccess(from.getLastAccess());//?
+        to.setLastValue(from.getLastValue()); // last access date more recent use that value
+        to.getAvgActive();//?
+        to.getAvgGlobalActive();//?
+        to.getAvgPrimaryActive();//?
+        to.setPrimary(from.isPrimary());//?
+        return to;
     }
 
 }
