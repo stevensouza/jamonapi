@@ -1,7 +1,5 @@
 package com.jamonapi.utils;
 
-import com.jamonapi.*;
-
 import java.lang.reflect.Constructor;
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -236,6 +234,45 @@ public class Misc {
         }
 
         return map;
+    }
+
+    private static int compare(Date date1, Date date2) {
+        final int  BEFORE = -1;
+        final int  AFTER = 1;
+        final Date NULL_DATE = new Date(0);
+
+        if (date1==null) {
+            date1 = NULL_DATE;
+        }
+
+        if (date2==null) {
+            date2 = NULL_DATE;
+        }
+
+        if (date1==NULL_DATE && date2==NULL_DATE) {
+            return 0;
+        }
+
+        if (date1==NULL_DATE) {
+            return BEFORE;
+        }
+
+        if (date2==NULL_DATE) {
+            return AFTER;
+        }
+
+        return date1.compareTo(date2);
+    }
+
+
+    public static Date min(Date date1, Date date2) {
+        // null and null_date should never be the min or max if the other one has a value.
+        // ??????
+        return compare(date1, date2) < 0 ? date1 : date2;
+    }
+
+    public static Date max(Date date1, Date date2) {
+        return compare(date1, date2) > 0 ? date1 : date2;
     }
 
 }

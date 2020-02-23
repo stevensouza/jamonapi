@@ -105,15 +105,16 @@ public class MonitorCompositeCombiner {
 
 
     public static Monitor merge(Monitor from, Monitor to) {
-        to.setHits(to.getHits()+from.getHits());//?
-        to.setTotal(to.getTotal()+from.getTotal());//?
-        to.setMin(Math.min(to.getMin(), from.getMin())); //?
-        to.setMax(Math.max(to.getMax(),  from.getMax())); //?
+        to.setHits(to.getHits()+from.getHits());
+        to.setTotal(to.getTotal()+from.getTotal());
+        to.setMin(Math.min(to.getMin(), from.getMin()));
+        to.setMax(Math.max(to.getMax(),  from.getMax()));
         to.setMaxActive(Math.max(to.getMaxActive(), from.getMaxActive()));
-        to.setActive(to.getActive()+from.getActive());//?
+        to.setActive(to.getActive()+from.getActive());
         // to.setTotalActive();//?
-        to.setFirstAccess(from.getFirstAccess());// ?
-        to.setLastAccess(from.getLastAccess());//?
+        // to.globalactive....
+        to.setFirstAccess(Misc.min(to.getFirstAccess(), from.getFirstAccess()));// ?
+        to.setLastAccess(Misc.max(to.getLastAccess(), from.getLastAccess()));//?
         to.setLastValue(from.getLastValue()); // last access date more recent use that value
         to.getAvgActive();//?
         to.getAvgGlobalActive();//?
@@ -121,5 +122,6 @@ public class MonitorCompositeCombiner {
         to.setPrimary(from.isPrimary());//?
         return to;
     }
+
 
 }
