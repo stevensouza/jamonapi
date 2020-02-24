@@ -7,6 +7,8 @@ import java.util.*;
 
 /** Difficult to group Utilities **/
 public class Misc {
+    static final Date NULL_DATE = new Date(0);
+
     /** Returns an Objects ClassName minus the package name
      * 
      *  <p>Sample Call:</p>
@@ -236,43 +238,72 @@ public class Misc {
         return map;
     }
 
-    private static int compare(Date date1, Date date2) {
+    /**
+     * Compare 2 dates.  A null, or Date(0) are both considered null.
+     * @param date1 first date to compare
+     * @param date2 2nd date to comparee
+     * @return returns -1,0,1 (date1 is less than/before date2, date1 is equalto date2, date1 is greater than/after date2 respectively)
+     */
+    static int compare(Date date1, Date date2) {
         final int  BEFORE = -1;
         final int  AFTER = 1;
-        final Date NULL_DATE = new Date(0);
 
-        if (date1==null) {
-            date1 = NULL_DATE;
-        }
-
-        if (date2==null) {
-            date2 = NULL_DATE;
-        }
-
-        if (date1==NULL_DATE && date2==NULL_DATE) {
+        if (isDateNull(date1) && isDateNull(date2)) {
             return 0;
         }
 
-        if (date1==NULL_DATE) {
+        if (isDateNull(date1)) {
             return BEFORE;
         }
 
-        if (date2==NULL_DATE) {
+        if (isDateNull(date2)) {
             return AFTER;
         }
 
         return date1.compareTo(date2);
     }
 
-
-    public static Date min(Date date1, Date date2) {
-        // null and null_date should never be the min or max if the other one has a value.
-        // ??????
-        return compare(date1, date2) < 0 ? date1 : date2;
+    private static boolean isDateNull(Date date) {
+        return date==null || NULL_DATE.equals(date);
     }
 
+
+    /**
+     * Which of the 2 dates is smaller. null or Date(0) are both considered null and are never the minimum
+     *
+     * @param date1
+     * @param date2
+     * @return The minimum of date1 or date2
+     */
+    public static Date min(Date date1, Date date2) {
+        if (isDateNull(date1)) {
+            return date2;
+        }
+
+        if (isDateNull(date2)) {
+            return date1;
+        }
+
+        return compare(date1, date2) <= 0 ? date1 : date2;
+    }
+
+    /**
+     * Which of the 2 dates is greater. null or Date(0) are both considered null and are never the maximum
+     *
+     * @param date1
+     * @param date2
+     * @return The maximum of date1 or date2
+     */
     public static Date max(Date date1, Date date2) {
-        return compare(date1, date2) > 0 ? date1 : date2;
+        if (isDateNull(date1)) {
+            return date2;
+        }
+
+        if (isDateNull(date2)) {
+            return date1;
+        }
+
+        return compare(date1, date2) >= 0 ? date1 : date2;
     }
 
 }

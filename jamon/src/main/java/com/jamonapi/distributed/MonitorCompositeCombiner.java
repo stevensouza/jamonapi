@@ -105,6 +105,18 @@ public class MonitorCompositeCombiner {
 
 
     public static Monitor merge(Monitor from, Monitor to) {
+        // next
+        //  - unit tests
+        //  - null and null date
+        //  - active stats?
+        //  - std dev?
+        //  - listeners/buffers
+        //    - save full monitor for each server?
+        //    - save numinstances as well as buffer of the names
+        //    - save most recent n.  configurable?
+        //    - save other buffers? max, min, ...
+        //  - log4j
+        //  - steps for jetty, automon, tomcat
         to.setHits(to.getHits()+from.getHits());
         to.setTotal(to.getTotal()+from.getTotal());
         to.setMin(Math.min(to.getMin(), from.getMin()));
@@ -113,15 +125,35 @@ public class MonitorCompositeCombiner {
         to.setActive(to.getActive()+from.getActive());
         // to.setTotalActive();//?
         // to.globalactive....
+        // null and null_date should never be the min or max if the other one has a value.
+        // ??????
         to.setFirstAccess(Misc.min(to.getFirstAccess(), from.getFirstAccess()));// ?
         to.setLastAccess(Misc.max(to.getLastAccess(), from.getLastAccess()));//?
+        // need to do a date compare to use the max dates lastValue
         to.setLastValue(from.getLastValue()); // last access date more recent use that value
         to.getAvgActive();//?
         to.getAvgGlobalActive();//?
         to.getAvgPrimaryActive();//?
-        to.setPrimary(from.isPrimary());//?
+        to.getStdDev(); // ?
+        to.setPrimary(to.isPrimary() || from.isPrimary());//?
         return to;
     }
 
-
+//    x public double getTotal();
+//    x public double getAvg();
+//    x public double getMin();
+//   x  public double getMax();
+//    x public double getHits();
+//    public double getStdDev();
+//    x public Date getFirstAccess();
+//    x public Date getLastAccess();
+//    x public double getLastValue();
+//? public boolean isEnabled();
+// x public double getActive();
+//   x public double getMaxActive();
+//    public void setTotalActive(double value);
+//    public double getAvgActive();
+//    public boolean isPrimary();
+//public boolean hasListeners(String listenerTypeName);
+//    public boolean hasListeners();
 }
