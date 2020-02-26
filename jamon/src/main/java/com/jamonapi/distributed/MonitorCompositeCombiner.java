@@ -1,19 +1,22 @@
 package com.jamonapi.distributed;
 
 import com.jamonapi.*;
-import com.jamonapi.utils.*;
+import com.jamonapi.utils.BufferList;
+import com.jamonapi.utils.Misc;
+import com.jamonapi.utils.SerializationUtils;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Combines multiple MonitorComposite objects into one by getting them from the @link JamonDataPersister.
- *
+ * <p>
  * Created by stevesouza on 8/16/14.
  */
 public class MonitorCompositeCombiner {
     private JamonDataPersister persister;
 
-    private static final String SUMMARY_LISTENER = "InstanceSummaryFIFOBuffer";
+    private static final String SUMMARY_LISTENER = "FIFOBufferInstanceSummary";
 
     public MonitorCompositeCombiner(JamonDataPersister persister) {
         this.persister = persister;
@@ -35,9 +38,9 @@ public class MonitorCompositeCombiner {
 
     private List<MonitorComposite> getMonitorComposites(String[] instanceKeys) {
         List<MonitorComposite> monitorCompositeList = new ArrayList<MonitorComposite>();
-        for (int i=0;i<instanceKeys.length;i++) {
+        for (int i = 0; i < instanceKeys.length; i++) {
             MonitorComposite monitorComposite = persister.get(instanceKeys[i]);
-            if (monitorComposite!=null) {
+            if (monitorComposite != null) {
                 monitorCompositeList.add(monitorComposite);
             }
         }
@@ -51,7 +54,7 @@ public class MonitorCompositeCombiner {
      * @param monitorCompositeList
      * @return MonitorComposite
      */
-    public static MonitorComposite append(Collection<MonitorComposite> monitorCompositeList) {
+    public MonitorComposite append(Collection<MonitorComposite> monitorCompositeList) {
         Date previousDate = null;
         Date finalDate = null; // assign the date of all the results as the most recent of all monitorComposite dates
         Iterator<MonitorComposite> iter = monitorCompositeList.iterator();
@@ -74,130 +77,93 @@ public class MonitorCompositeCombiner {
         return mc.setInstanceName(Misc.getAsString(instanceNameList));
     }
 
-    public static MonitorComposite aggregate(Collection<MonitorComposite> monitorCompositeList) {
+    public MonitorComposite aggregate(Collection<MonitorComposite> monitorCompositeList) {
         FactoryEnabled factory = new FactoryEnabled();
-        factory.remove(new MonKeyImp(MonitorFactory.EXCEPTIONS_LABEL, "Exception"));
+        // get rid of following remove.  might not need it now with the following haslistener check.  also
+        // wouldn't need to change autoload of exception
+        // change hasListener below
+        // configurable sizes and features
+        // stddev average
+        //  others too
+        // break out merge and header functions somehow
+        // tests
+        // other jamonlisteners
+        //        // next
+//        //  - unit tests
+//        //  - null and null date
+//        //  - active stats?
+//        //  - std dev?
+//        //  - listeners/buffers
+//        //    - save full monitor for each server?
+//        //    - save numinstances as well as buffer of the names
+//        //    - save most recent n.  configurable?
+//        //    - save other buffers? max, min, ...
+//        //  - log4j
+//        //  - steps for jetty, automon, tomcat
+        factory.remove(new MonKeyImp(MonitorFactory.EXCEPTIONS_LABEL, "Exception")); //??????
+        // ???count monitorCompositeList and or add the instancename to the details - fifobuffer????
+        //    MonitorFactory.add("com.jamonapi.instances", "count", monitorCompositeList.size());
         MonitorComposite mc = append(monitorCompositeList);
         Monitor[] monitors = mc.getMonitors();
         // 1) iterate data creating monitors and and setup listeners
         // 2) loop through a second time and merge monitor values and populate listeners (maybe done in same method)
         for (Monitor monitor : monitors) {
+            // make a copy of the key as we have to change the instance name and don't want to change it for the local instance
             MonKey key = SerializationUtils.deepCopy(monitor.getMonKey());
-            key.setInstanceName("aggregate");
-//            List row=new ArrayList();
-//            mon.getBasicRowData(row);
-//            return row.toArray();
-//            key.setDetails(String.format("instanceName=%s, %s - %s", monitor.getMonKey().getInstanceName(), monitor, getRowData(monitor))); // make tablular
+            key.setInstanceName("aggregated");
 
-//            key.setDetails(getRowData(monitor).toArray()); // make tablular
-//            key.getBasicHeader()
-            // exception instnace name is local - when creating factory?
-//            factory.getMonitor(key).add(1);
-            /*
-                    Monitor mon =  getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception");
-        if (!mon.hasListener("value", "FIFOBuffer")) {
-            mon.addListener("value", JAMonListenerFactory.get("FIFOBuffer"));
-        }
-            private static JAMonBufferListener getFIFO() {
-        BufferHolder bufferHolder=new FIFOBufferHolder();
-        BufferList bufferList=new BufferList(JAMonBufferListener.DEFAULT_HEADER,bufferHolder);
-        return new JAMonBufferListener("FIFOBuffer", bufferList);
-
-
-    }
-             */
-
-            /*
-              Returns label, value, time as an Object[] of 3 values.
-              JAMonDetailValue
-            public Object[] toArray() {
-                if (row==null) {
-                    if (keyToString)
-                        row = new Object[]{Misc.getAsString(key.getDetails()),new Double(value), new Double(active), new Date(time)};
-                    else {
-                        List list=new ArrayList();
-                        Misc.addTo(list, key.getDetails());
-                        list.add(new Double(value));
-                        list.add(new Double(active));
-                        list.add(new Date(time));
-                        row=list.toArray();
-                    }
-                }
-
-JAMonBufferListener
-    public void addRow(Object[] row) {
-        list.addRow(row);
-    }
-
-
-             */
             Monitor summaryMonitor = factory.getMonitor(key);
-            if (!summaryMonitor.hasListeners()) {
-                //     public BufferList(String[] header, int bufferSize,  BufferHolder bufferHolder) {
-
+            if (!summaryMonitor.hasListener("value", SUMMARY_LISTENER)) {
                 summaryMonitor.addListener("value", getSummaryFIFOBufferListener(summaryMonitor));
-
-//                summaryMonitor.addListener("value", JAMonListenerFactory.get("FIFOBuffer"));
             }
             merge(monitor, summaryMonitor);
-/**
- * xxxxx*****
- * jamonbufferrrlistener=====null
- * xxx=[local, com.jamonapi.Exceptions, Exception,
- */
-            System.err.println("xxxxx*****");
-//        to.getListenerType("value").getListener("FIFOBuffer").processEvent(to);
-            JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) summaryMonitor.getListenerType("value").getListener(SUMMARY_LISTENER);
-            System.err.println("jamonbufferrrlistener====="+jaMonBufferListener);
-            System.err.println("xxx="+getRowData(monitor));
-            jaMonBufferListener.addRow(getRowData(monitor).toArray());
-            //monitor.getMonKey().clone();
-            // iterator for append sets instancename....monitor.getMonKey().setInstanceName("aggregate");
+            addMonitorToSummaryFifoBuffer(summaryMonitor, monitor);
         }
         return factory.getRootMonitor();
     }
 
-    private static List<String> getHeader(Monitor mon) {
+    private void addMonitorToSummaryFifoBuffer(Monitor summaryMonitor, Monitor monitor) {
+        JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) summaryMonitor.getListenerType("value").getListener(SUMMARY_LISTENER);
+        jaMonBufferListener.addRow(getRowData(monitor).toArray());
+    }
+
+    private List<String> getHeader(Monitor mon) {
         List<String> header = new ArrayList();
         mon.getMonKey().getHeader(header);
         return getDataPartHeader(header, "");
     }
 
 
-    private static List<String> getDataPartHeader(List<String> header, String prefix) {
-        header.add(prefix+"Hits");
-        header.add(prefix+"Avg");
-        header.add(prefix+"Total");
-        header.add(prefix+"StdDev");
-        header.add(prefix+"LastValue");
-        header.add(prefix+"Min");
-        header.add(prefix+"Max");
-        header.add(prefix+"Active");
-        header.add(prefix+"AvgActive");
-        header.add(prefix+"MaxActive");
-        header.add(prefix+"FirstAccess");
-        header.add(prefix+"LastAccess");
-        header.add(prefix+"Enabled");
-        header.add(prefix+"Primary");
-        header.add(prefix+"HasListeners");
+    private List<String> getDataPartHeader(List<String> header, String prefix) {
+        header.add(prefix + "Hits");
+        header.add(prefix + "Avg");
+        header.add(prefix + "Total");
+        header.add(prefix + "StdDev");
+        header.add(prefix + "LastValue");
+        header.add(prefix + "Min");
+        header.add(prefix + "Max");
+        header.add(prefix + "Active");
+        header.add(prefix + "AvgActive");
+        header.add(prefix + "MaxActive");
+        header.add(prefix + "FirstAccess");
+        header.add(prefix + "LastAccess");
+        header.add(prefix + "Enabled");
+        header.add(prefix + "Primary");
+        header.add(prefix + "HasListeners");
         return header;
 
     }
 
 
-    private static JAMonBufferListener getSummaryFIFOBufferListener(Monitor mon) {
-        //     public BufferList(String[] header, int bufferSize,  BufferHolder bufferHolder) {
-
-        BufferHolder bufferHolder=new FIFOBufferHolder();
-        BufferList bufferList=new BufferList(getHeader(mon).toArray(new String[0]),100, bufferHolder);
+    private JAMonBufferListener getSummaryFIFOBufferListener(Monitor mon) {
+        // make this configurable from both size and whether to do or not.?????
+        BufferList bufferList = new BufferList(getHeader(mon).toArray(new String[0]), 100);
         return new JAMonBufferListener(SUMMARY_LISTENER, bufferList);
-
     }
 
-    private static List getRowData(Monitor mon) {
+    private List getRowData(Monitor mon) {
         List rowData = new ArrayList();
         mon.getMonKey().getRowData(rowData);
-//        mon.getMonKey().getBasicRowData(rowData);
         rowData.add(mon.getHits());
         rowData.add(mon.getAvg());
         rowData.add(mon.getTotal());
@@ -213,99 +179,93 @@ JAMonBufferListener
         rowData.add(mon.isEnabled());
         rowData.add(mon.isPrimary());
         rowData.add(mon.hasListeners());
-
         return rowData;
-
-
     }
 
 
     /**
-         * Remove any of the MonitorComposites associated with the key.  This data could be in memory,  on HazelCast
-         * or in a file for example.
-         *
-         * @param instanceKey
-         */
+     * Remove any of the MonitorComposites associated with the key.  This data could be in memory,  on HazelCast
+     * or in a file for example.
+     *
+     * @param instanceKey An instance to remove
+     */
     public void remove(String... instanceKey) {
-        for (int i=0;i<instanceKey.length;i++) {
-            persister.remove(instanceKey[i]);
+        for (String instance : instanceKey) {
+            persister.remove(instance);
         }
     }
 
-
-    public static Monitor merge(Monitor from, Monitor to) {
-        // next
-        //  - unit tests
-        //  - null and null date
-        //  - active stats?
-        //  - std dev?
-        //  - listeners/buffers
-        //    - save full monitor for each server?
-        //    - save numinstances as well as buffer of the names
-        //    - save most recent n.  configurable?
-        //    - save other buffers? max, min, ...
-        //  - log4j
-        //  - steps for jetty, automon, tomcat
-        to.setHits(to.getHits()+from.getHits());
-        // to.add(...) ??
-        to.setTotal(to.getTotal()+from.getTotal());
+    /**
+     * Take a monitor from one instance (from) and merge it with the ongoing totals for all the instances (to)
+     *
+     * @param from a monitor from a single instance (such as local, tomcat8_production etc)
+     * @param to   the monitor where the aggregation of all single instances will be stored
+     * @return the 'to' monitor for convenience.
+     */
+    Monitor merge(Monitor from, Monitor to) {
+        to.setTotalActive(to.getAvgActive() * to.getHits() + from.getAvgActive() * from.getHits());
+        to.setHits(to.getHits() + from.getHits());
+        to.setTotal(to.getTotal() + from.getTotal());
         to.setMin(Math.min(to.getMin(), from.getMin()));
-        to.setMax(Math.max(to.getMax(),  from.getMax()));
+        to.setMax(Math.max(to.getMax(), from.getMax()));
         to.setMaxActive(Math.max(to.getMaxActive(), from.getMaxActive()));
-        to.setActive(to.getActive()+from.getActive());
-        // to.setTotalActive();//?
-        // to.globalactive....
-        // null and null_date should never be the min or max if the other one has a value.
-        // ??????
-        //       List row=new ArrayList();
-        //        mon.getBasicRowData(row);
-        // mon.getBasicHeaderData(headeer)
-//        public List getBasicHeader(List header) {
-//            monData.key.getBasicHeader(header);
-//            getThisData(header);
-//
-//            return header;
-//        }
-
-//   mondetail.jsp
-//       setBufferSize((JAMonBufferListener) listener, bufferSize);
-//
-//        DetailData detailData=((JAMonBufferListener)listener).getDetailData();
-//        ResultSetConverter rsc=getResultSetConverter(detailData.getHeader(), detailData.getData(), arraySQLExec);
-
+        to.setActive(to.getActive() + from.getActive());
         to.setFirstAccess(Misc.min(to.getFirstAccess(), from.getFirstAccess()));// ?
         Date lastAccess = Misc.max(to.getLastAccess(), from.getLastAccess());
         to.setLastAccess(lastAccess);//?
         // need to do a date compare to use the max dates lastValue
-        if (lastAccess!=null && lastAccess.equals(from.getLastAccess())) {
-            // doesn't work - need max access date for all monitors not just this one.?
-          to.setLastValue(from.getLastValue());
+        if (lastAccess != null && lastAccess.equals(from.getLastAccess())) {
+            to.setLastValue(from.getLastValue());
         }
 
-        to.getAvgActive();// uses     public void setTotalActive(double value) {
-        to.getAvgGlobalActive();// no access to it i think so just make 0 or default?
-        to.getAvgPrimaryActive();//no access to it i think so just make 0 or default?
-        to.getStdDev(); // track in a peer structurre?
-        to.setPrimary(to.isPrimary() || from.isPrimary());//?
-
+        calculateStdDev(from, to);
+        to.setPrimary(to.isPrimary() || from.isPrimary());
         return to;
     }
 
-//    x public double getTotal();
-//    x public double getAvg();
-//    x public double getMin();
-//   x  public double getMax();
-//    x public double getHits();
-//    public double getStdDev();
-//    x public Date getFirstAccess();
-//    x public Date getLastAccess();
-//    x public double getLastValue();
-//? public boolean isEnabled();
-// x public double getActive();
-//   x public double getMaxActive();
-//    public void setTotalActive(double value);
-//    public double getAvgActive();
-//    public boolean isPrimary();
-//public boolean hasListeners(String listenerTypeName);
-//    public boolean hasListeners();
+    private void calculateStdDev(Monitor from, Monitor to) {
+        MonKey key = to.getMonKey();
+        // note we are wiping out the key details if they exist, but if this is done with the limited use
+        // within this class that is ok as it is a key that doesn't use the existing details if they exist.
+        // This is a bit of a hack so we can keep track of the std deviation without access to sum of squares etc.
+        if (key.getDetails() == null || !(key.getDetails() instanceof StdDev)) {
+            key.setDetails(new StdDev());
+        }
+
+        StdDev stdDev = (StdDev) key.getDetails();
+        stdDev.addStdDev(from.getStdDev());
+    }
+
+    /**
+     * Class used to take the average of each instances stddeviation. This is done because the inner calculation of sumofsquares
+     * etc isn't available. So if there are 3 instances we are summarizing say with a stddev of 5,15,13 then the avgStdDev
+     * would be 11 (i.e. 33/3)
+     */
+    static class StdDev implements Serializable {
+        private static final long serialVersionUID = 282L;
+        private int count;
+        private double totalStDev;
+
+        public StdDev addStdDev(double newValue) {
+            count += 1;
+            totalStDev += newValue;
+            return this;
+        }
+
+        public double getAvgStdDev() {
+            if (count <= 0) {
+                return 0;
+            }
+            return totalStDev / count;
+        }
+
+        @Override
+        public String toString() {
+            return "StdDev{" +
+                    "count=" + count +
+                    ", totalStDev=" + totalStDev +
+                    '}';
+        }
+    }
+
 }

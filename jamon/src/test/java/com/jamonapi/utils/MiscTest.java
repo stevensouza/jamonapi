@@ -98,4 +98,5 @@ public class MiscTest {
         assertThat(Misc.max(min, max)).isEqualTo(max);
         assertThat(Misc.max(max, min)).isEqualTo(max);
     }
+
 }

@@ -271,8 +271,8 @@ public class Misc {
     /**
      * Which of the 2 dates is smaller. null or Date(0) are both considered null and are never the minimum
      *
-     * @param date1
-     * @param date2
+     * @param date1 a date to use in comparison
+     * @param date2 another date to use in comparison
      * @return The minimum of date1 or date2
      */
     public static Date min(Date date1, Date date2) {
@@ -290,8 +290,8 @@ public class Misc {
     /**
      * Which of the 2 dates is greater. null or Date(0) are both considered null and are never the maximum
      *
-     * @param date1
-     * @param date2
+     * @param date1 a date to use in comparison
+     * @param date2 another date to use in comparison
      * @return The maximum of date1 or date2
      */
     public static Date max(Date date1, Date date2) {
@@ -305,6 +305,7 @@ public class Misc {
 
         return compare(date1, date2) >= 0 ? date1 : date2;
     }
+
 
 }
 
