@@ -122,36 +122,10 @@ public class MonitorCompositeCombiner {
         return factory.getRootMonitor();
     }
 
+    // Each monitor from an instance will have its value saved for display in a fifo buffer.
     private void addMonitorToSummaryFifoBuffer(Monitor summaryMonitor, Monitor monitor) {
         JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) summaryMonitor.getListenerType("value").getListener(SUMMARY_LISTENER);
         jaMonBufferListener.addRow(getRowData(monitor).toArray());
-    }
-
-    private List<String> getHeader(Monitor mon) {
-        List<String> header = new ArrayList();
-        mon.getMonKey().getHeader(header);
-        return getDataPartHeader(header, "");
-    }
-
-
-    private List<String> getDataPartHeader(List<String> header, String prefix) {
-        header.add(prefix + "Hits");
-        header.add(prefix + "Avg");
-        header.add(prefix + "Total");
-        header.add(prefix + "StdDev");
-        header.add(prefix + "LastValue");
-        header.add(prefix + "Min");
-        header.add(prefix + "Max");
-        header.add(prefix + "Active");
-        header.add(prefix + "AvgActive");
-        header.add(prefix + "MaxActive");
-        header.add(prefix + "FirstAccess");
-        header.add(prefix + "LastAccess");
-        header.add(prefix + "Enabled");
-        header.add(prefix + "Primary");
-        header.add(prefix + "HasListeners");
-        return header;
-
     }
 
 
@@ -161,13 +135,48 @@ public class MonitorCompositeCombiner {
         return new JAMonBufferListener(SUMMARY_LISTENER, bufferList);
     }
 
+    /**
+     * Header to be used in value listener fifo buffer for each instance monitor
+     *
+     * @param mon a monitor to calculate the header from. Note it is calculated with the first monitor only
+     * @return header as a list
+     */
+    private List<String> getHeader(Monitor mon) {
+        List<String> header = new ArrayList();
+        mon.getMonKey().getHeader(header);
+        header.add("Hits");
+        header.add("Avg");
+        header.add("Total");
+        header.add("StdDev");
+        header.add("LastValue");
+        header.add("Min");
+        header.add("Max");
+        header.add("Active");
+        header.add("AvgActive");
+        header.add("MaxActive");
+        header.add("FirstAccess");
+        header.add("LastAccess");
+        header.add("Enabled");
+        header.add("Primary");
+        header.add("HasListeners");
+        return header;
+    }
+
+    /**
+     * Convert the monitor to a list so it can be viewed in the jamon web app in a value listener
+     * fifo buffer
+     *
+     * @param mon monitor to be converted to a row
+     * @return A row version of the monitor
+     */
     private List getRowData(Monitor mon) {
         List rowData = new ArrayList();
         mon.getMonKey().getRowData(rowData);
         rowData.add(mon.getHits());
         rowData.add(mon.getAvg());
         rowData.add(mon.getTotal());
-        rowData.add(mon.getStdDev());
+        MonitorCompositeCombiner.StdDev stdDev = (MonitorCompositeCombiner.StdDev) mon.getMonKey().getDetails();
+        rowData.add(stdDev.getAvgStdDev());
         rowData.add(mon.getLastValue());
         rowData.add(mon.getMin());
         rowData.add(mon.getMax());
