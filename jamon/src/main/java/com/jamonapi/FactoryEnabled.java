@@ -21,10 +21,21 @@ public class FactoryEnabled implements MonitorFactoryInterface {
 
     private static final long serialVersionUID = 279L;
 
-    /** Creates a new instance of MonFactoryEnabled.  Also initializes the standard
-     * JAMon time monitor range (ms.)
+    /**
+     * Creates a new instance of MonFactoryEnabled.  Also initializes the standard
+     * JAMon time monitor range (ms.).  Enables a jamon buffer listener for any thrown exception
      */
     public FactoryEnabled() {
+        this(true);
+    }
+
+    /**
+     * Creates a new instance of MonFactoryEnabled.  Also initializes the standard
+     * JAMon time monitor range (ms.).  You can enable or disable whether there is an jamon buffer
+     * listener for exceptions by passing in true or false respectively to the constructor.
+     */
+    public FactoryEnabled(boolean enableExceptionBufferListener) {
+        this.enableExceptionBufferListener = enableExceptionBufferListener;
         initialize();
     }
 
@@ -35,25 +46,27 @@ public class FactoryEnabled implements MonitorFactoryInterface {
     private Map map;
     private Counter allActive;
     private Counter primaryActive;
-    private boolean activityTracking=false;
+    private boolean activityTracking = false;
     private RangeFactory rangeFactory;// Builds Range objects
     private GetMonitor getMonitor;
     private int maxMonitors;
     private AtomicLong totalKeySize;
     private int maxSqlSize;
 
-    private static final boolean PRIMARY=true;
-    private static final boolean NOT_PRIMARY=false;
-    private static final boolean TIME_MONITOR=true;
-    private static final boolean NOT_TIME_MONITOR=false;
-    private static final int DEFAULT_MAP_SIZE=500;
-    private static final NullMonitor NULL_MON=new NullMonitor();// used when disabled
+    private boolean enableExceptionBufferListener = true;
+
+    private static final boolean PRIMARY = true;
+    private static final boolean NOT_PRIMARY = false;
+    private static final boolean TIME_MONITOR = true;
+    private static final boolean NOT_TIME_MONITOR = false;
+    private static final int DEFAULT_MAP_SIZE = 500;
+    private static final NullMonitor NULL_MON = new NullMonitor();// used when disabled
 
     private synchronized void initialize() {
-        allActive=new Counter();
+        allActive = new Counter();
         primaryActive=new Counter();
         rangeFactory=new RangeFactory();// Builds Range objects
-        activityTracking=false;
+        activityTracking = false;
 
         setRangeDefault("ms.", RangeHolder.getMSHolder());
         setRangeDefault("percent", RangeHolder.getPercentHolder());
@@ -63,14 +76,20 @@ public class FactoryEnabled implements MonitorFactoryInterface {
             enableTotalKeySizeTracking();
         }
 
-        addExceptionFifoBufferListener();
+        if (enableExceptionBufferListener) {
+            addExceptionBufferListener(JAMonListenerFactory.get("FIFOBuffer"));
+        }
     }
 
-    private void addExceptionFifoBufferListener() {
-        Monitor mon =  getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception");
-        if (!mon.hasListener("value", "FIFOBuffer")) {
-            mon.addListener("value", JAMonListenerFactory.get("FIFOBuffer"));
+    private void addExceptionBufferListener(JAMonListener listener) {
+        Monitor mon = getExceptionMonitor();
+        if (!mon.hasListener("value", listener.getName())) {
+            mon.addListener("value", listener);
         }
+    }
+
+    private Monitor getExceptionMonitor() {
+        return getMonitor(MonitorFactory.EXCEPTIONS_LABEL, "Exception");
     }
 
 

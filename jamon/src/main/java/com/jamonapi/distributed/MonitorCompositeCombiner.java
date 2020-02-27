@@ -38,8 +38,8 @@ public class MonitorCompositeCombiner {
 
     private List<MonitorComposite> getMonitorComposites(String[] instanceKeys) {
         List<MonitorComposite> monitorCompositeList = new ArrayList<MonitorComposite>();
-        for (int i = 0; i < instanceKeys.length; i++) {
-            MonitorComposite monitorComposite = persister.get(instanceKeys[i]);
+        for (String instanceKey : instanceKeys) {
+            MonitorComposite monitorComposite = persister.get(instanceKey);
             if (monitorComposite != null) {
                 monitorCompositeList.add(monitorComposite);
             }
@@ -78,31 +78,34 @@ public class MonitorCompositeCombiner {
     }
 
     public MonitorComposite aggregate(Collection<MonitorComposite> monitorCompositeList) {
-        FactoryEnabled factory = new FactoryEnabled();
-        // get rid of following remove.  might not need it now with the following haslistener check.  also
-        // wouldn't need to change autoload of exception
-        // change hasListener below
-        // configurable sizes and features
-        // stddev average
-        //  others too
-        // break out merge and header functions somehow
+        FactoryEnabled factory = new FactoryEnabled(false);
+        // x get rid of following remove.  might not need it now with the following haslistener check.  also
+        // x wouldn't need to change autoload of exception
+        // x change hasListener below
+        // configurable sizes and features??
+        // x stddev average
+        // x  others too
+        // x break out merge and header functions somehow
         // tests
+        // check failing test with date i think.
+        // more memory efficient
+        // i think web app is wrong for clearing cache.  should be when anyting changes including aggregate
         // other jamonlisteners
         //        // next
 //        //  - unit tests
 //        //  - null and null date
 //        //  - active stats?
-//        //  - std dev?
 //        //  - listeners/buffers
-//        //    - save full monitor for each server?
+//        //    -  x save full monitor for each server?
 //        //    - save numinstances as well as buffer of the names
 //        //    - save most recent n.  configurable?
 //        //    - save other buffers? max, min, ...
 //        //  - log4j
 //        //  - steps for jetty, automon, tomcat
-        factory.remove(new MonKeyImp(MonitorFactory.EXCEPTIONS_LABEL, "Exception")); //??????
-        // ???count monitorCompositeList and or add the instancename to the details - fifobuffer????
-        //    MonitorFactory.add("com.jamonapi.instances", "count", monitorCompositeList.size());
+
+        // upgrade hazel cast to 4
+
+
         MonitorComposite mc = append(monitorCompositeList);
         Monitor[] monitors = mc.getMonitors();
         // 1) iterate data creating monitors and and setup listeners
@@ -113,13 +116,17 @@ public class MonitorCompositeCombiner {
             key.setInstanceName("aggregated");
 
             Monitor summaryMonitor = factory.getMonitor(key);
-            if (!summaryMonitor.hasListener("value", SUMMARY_LISTENER)) {
-                summaryMonitor.addListener("value", getSummaryFIFOBufferListener(summaryMonitor));
-            }
             merge(monitor, summaryMonitor);
+            addSummaryFifoBufferIfAbsent(summaryMonitor);
             addMonitorToSummaryFifoBuffer(summaryMonitor, monitor);
         }
         return factory.getRootMonitor();
+    }
+
+    private void addSummaryFifoBufferIfAbsent(Monitor summaryMonitor) {
+        if (!summaryMonitor.hasListener("value", SUMMARY_LISTENER)) {
+            summaryMonitor.addListener("value", getSummaryFIFOBufferListener(summaryMonitor));
+        }
     }
 
     // Each monitor from an instance will have its value saved for display in a fifo buffer.
@@ -196,11 +203,11 @@ public class MonitorCompositeCombiner {
      * Remove any of the MonitorComposites associated with the key.  This data could be in memory,  on HazelCast
      * or in a file for example.
      *
-     * @param instanceKey An instance to remove
+     * @param instanceKeys An instance to remove
      */
-    public void remove(String... instanceKey) {
-        for (String instance : instanceKey) {
-            persister.remove(instance);
+    public void remove(String... instanceKeys) {
+        for (String instanceKey : instanceKeys) {
+            persister.remove(instanceKey);
         }
     }
 
