@@ -85,7 +85,6 @@ public class MonitorCompositeCombinerTest {
     public void merge() {
         Monitor from = MonitorFactory.getMonitor();
         Monitor to = MonitorFactory.getMonitor();
-//        Date lastAccess = new Date(System.currentTimeMillis()-1000000); // ? fails
         Date firstAccess = new Date();
         Date lastAccess = new Date(System.currentTimeMillis() + 1000000);
 
@@ -123,8 +122,52 @@ public class MonitorCompositeCombinerTest {
         assertThat(to.getLastAccess()).isEqualTo(lastAccess);
         assertTrue(to.isEnabled());
         assertTrue(to.isPrimary());
-        MonitorCompositeCombiner.StdDev stdDev = (MonitorCompositeCombiner.StdDev) to.getMonKey().getDetails();
-        assertThat(stdDev.getAvgStdDev()).isBetween(7.07, 7.08); // 7.0710678118654755
+        assertThat(to.getStdDev()).isNaN(); // standard deviation isn't calculated when aggrregating instances. would have to redesign some things to get this done.
+    }
+
+    @Test
+    public void mergeFromIsLastAccess() {
+        Monitor from = MonitorFactory.getMonitor();
+        Monitor to = MonitorFactory.getMonitor();
+        Date lastAccess = new Date(System.currentTimeMillis() + 1000000); // ? fails
+        Date firstAccess = new Date();
+
+        to.add(10);
+        from.add(20);
+
+        from.setFirstAccess(lastAccess);
+        from.setLastAccess(lastAccess);
+        to.setFirstAccess(firstAccess);
+        to.setLastAccess(firstAccess);
+
+        new MonitorCompositeCombiner(null).merge(from, to);
+
+        assertThat(to.getLastValue()).isEqualTo(20); // test when other value is last????
+        assertThat(to.getFirstAccess()).isEqualTo(firstAccess);
+        assertThat(to.getLastAccess()).isEqualTo(lastAccess);
+    }
+
+    @Test
+    public void mergeToIsLastAccess() {
+        Monitor from = MonitorFactory.getMonitor();
+        Monitor to = MonitorFactory.getMonitor();
+        Date lastAccess = new Date(System.currentTimeMillis() + 1000000);
+        Date firstAccess = new Date();
+        Date secondAccess = new Date(System.currentTimeMillis() + 50000);
+
+        to.add(10);
+        from.add(20);
+
+        from.setFirstAccess(firstAccess);
+        from.setLastAccess(firstAccess);
+        to.setFirstAccess(secondAccess);
+        to.setLastAccess(lastAccess);
+
+        new MonitorCompositeCombiner(null).merge(from, to);
+
+        assertThat(to.getLastValue()).isEqualTo(10); // test when other value is last????
+        assertThat(to.getFirstAccess()).isEqualTo(firstAccess);
+        assertThat(to.getLastAccess()).isEqualTo(lastAccess);
     }
 
 }

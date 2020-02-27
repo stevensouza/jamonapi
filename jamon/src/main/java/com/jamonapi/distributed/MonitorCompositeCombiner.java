@@ -5,7 +5,6 @@ import com.jamonapi.utils.BufferList;
 import com.jamonapi.utils.Misc;
 import com.jamonapi.utils.SerializationUtils;
 
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -17,6 +16,7 @@ public class MonitorCompositeCombiner {
     private JamonDataPersister persister;
 
     private static final String SUMMARY_LISTENER = "FIFOBufferInstanceSummary";
+    private static final String AGGREGATED_INSTANCENAME = "aggregated";
 
     public MonitorCompositeCombiner(JamonDataPersister persister) {
         this.persister = persister;
@@ -32,24 +32,39 @@ public class MonitorCompositeCombiner {
         return append(getMonitorComposites(instanceKeys));
     }
 
-    public MonitorComposite aggregate(String... instanceKeys) {
-        return aggregate(getMonitorComposites(instanceKeys));
-    }
-
-    private List<MonitorComposite> getMonitorComposites(String[] instanceKeys) {
-        List<MonitorComposite> monitorCompositeList = new ArrayList<MonitorComposite>();
-        for (String instanceKey : instanceKeys) {
-            MonitorComposite monitorComposite = persister.get(instanceKey);
-            if (monitorComposite != null) {
-                monitorCompositeList.add(monitorComposite);
-            }
-        }
-        return monitorCompositeList;
-    }
-
+    // i think web app is wrong for clearing cache.  should be when anyting changes including aggregate
+    // combiner tests
+    // copy jamon listener buffers     // configurable sizes and features??
+    //      i.e. other jamonlisteners
+    //      max,min,fifo,??
+    // make this configurable from both size and whether to do or not.?????
+    //        //  - log4j
+    //        //  - steps for jetty, automon, tomcat
+    // upgrade hazel cast to 4
 
     /**
-     * Combine multiple MonitorComposites into 1 MonitorComposite.
+     * Take a list of instance names, query them and combine their monitor composite data into one aggregated
+     * monitor composite. This allows to look at a summary of all servers data in one report.
+     *
+     * @param instanceKeys A list of servers that have jamon data on them.
+     * @return An aggregated version of all the servers jamon data.
+     */
+    public MonitorComposite aggregate(String... instanceKeys) {
+        FactoryEnabled factory = new FactoryEnabled(false);
+        for (String instanceKey : instanceKeys) {
+            MonitorComposite monitorComposite = persister.get(instanceKey);
+            countInstanceName(factory, monitorComposite.getInstanceName());
+            aggregate(factory, monitorComposite);
+        }
+
+        MonitorComposite aggregated = factory.getRootMonitor();
+        aggregated.setInstanceName(AGGREGATED_INSTANCENAME);
+        return aggregated;
+    }
+
+    /**
+     * Combine multiple MonitorComposites into 1 MonitorComposite, that is a sequential concatenation of all the
+     * individual servers jamon data.
      *
      * @param monitorCompositeList
      * @return MonitorComposite
@@ -77,53 +92,48 @@ public class MonitorCompositeCombiner {
         return mc.setInstanceName(Misc.getAsString(instanceNameList));
     }
 
-    public MonitorComposite aggregate(Collection<MonitorComposite> monitorCompositeList) {
-        FactoryEnabled factory = new FactoryEnabled(false);
-        // x get rid of following remove.  might not need it now with the following haslistener check.  also
-        // x wouldn't need to change autoload of exception
-        // x change hasListener below
-        // configurable sizes and features??
-        // x stddev average
-        // x  others too
-        // x break out merge and header functions somehow
-        // tests
-        // check failing test with date i think.
-        // more memory efficient
-        // i think web app is wrong for clearing cache.  should be when anyting changes including aggregate
-        // other jamonlisteners
-        //        // next
-//        //  - unit tests
-//        //  - null and null date
-//        //  - active stats?
-//        //  - listeners/buffers
-//        //    -  x save full monitor for each server?
-//        //    - save numinstances as well as buffer of the names
-//        //    - save most recent n.  configurable?
-//        //    - save other buffers? max, min, ...
-//        //  - log4j
-//        //  - steps for jetty, automon, tomcat
+    private void aggregate(FactoryEnabled factory, MonitorComposite monitorComposite) {
+        Monitor[] monitors = monitorComposite.getMonitors();
 
-        // upgrade hazel cast to 4
-
-
-        MonitorComposite mc = append(monitorCompositeList);
-        Monitor[] monitors = mc.getMonitors();
-        // 1) iterate data creating monitors and and setup listeners
-        // 2) loop through a second time and merge monitor values and populate listeners (maybe done in same method)
+        // loop monitors creating aggregated monitors and setup their listeners
         for (Monitor monitor : monitors) {
             // make a copy of the key as we have to change the instance name and don't want to change it for the local instance
             MonKey key = SerializationUtils.deepCopy(monitor.getMonKey());
-            key.setInstanceName("aggregated");
+            key.setInstanceName(AGGREGATED_INSTANCENAME);
 
             Monitor summaryMonitor = factory.getMonitor(key);
+            if (!monitorComposite.isLocalInstance()) {
+                // done so monitors can be identified by instance when viewed in jamonadmin.jsp
+                // Don't want to do this for the local instance as it is not needed as it is the default and
+                // it is the only one that is not a copy/clone of the original.
+                monitor.getMonKey().setInstanceName(monitorComposite.getInstanceName());
+            }
             merge(monitor, summaryMonitor);
-            addSummaryFifoBufferIfAbsent(summaryMonitor);
+            createSummaryFifoBufferIfAbsent(summaryMonitor);
             addMonitorToSummaryFifoBuffer(summaryMonitor, monitor);
         }
-        return factory.getRootMonitor();
+
     }
 
-    private void addSummaryFifoBufferIfAbsent(Monitor summaryMonitor) {
+    private void countInstanceName(FactoryEnabled factory, String instanceName) {
+        MonKey key = new MonKeyImp("com.jamonapi.distributed.numInstances", "count");
+        key.setDetails(instanceName);
+        key.setInstanceName(AGGREGATED_INSTANCENAME);
+        factory.getMonitor(key).add(1);
+    }
+
+    private List<MonitorComposite> getMonitorComposites(String[] instanceKeys) {
+        List<MonitorComposite> monitorCompositeList = new ArrayList<MonitorComposite>();
+        for (String instanceKey : instanceKeys) {
+            MonitorComposite monitorComposite = persister.get(instanceKey);
+            if (monitorComposite != null) {
+                monitorCompositeList.add(monitorComposite);
+            }
+        }
+        return monitorCompositeList;
+    }
+
+    private void createSummaryFifoBufferIfAbsent(Monitor summaryMonitor) {
         if (!summaryMonitor.hasListener("value", SUMMARY_LISTENER)) {
             summaryMonitor.addListener("value", getSummaryFIFOBufferListener(summaryMonitor));
         }
@@ -135,9 +145,7 @@ public class MonitorCompositeCombiner {
         jaMonBufferListener.addRow(getRowData(monitor).toArray());
     }
 
-
     private JAMonBufferListener getSummaryFIFOBufferListener(Monitor mon) {
-        // make this configurable from both size and whether to do or not.?????
         BufferList bufferList = new BufferList(getHeader(mon).toArray(new String[0]), 100);
         return new JAMonBufferListener(SUMMARY_LISTENER, bufferList);
     }
@@ -182,8 +190,7 @@ public class MonitorCompositeCombiner {
         rowData.add(mon.getHits());
         rowData.add(mon.getAvg());
         rowData.add(mon.getTotal());
-        MonitorCompositeCombiner.StdDev stdDev = (MonitorCompositeCombiner.StdDev) mon.getMonKey().getDetails();
-        rowData.add(stdDev.getAvgStdDev());
+        rowData.add(mon.getStdDev());
         rowData.add(mon.getLastValue());
         rowData.add(mon.getMin());
         rowData.add(mon.getMax());
@@ -219,6 +226,8 @@ public class MonitorCompositeCombiner {
      * @return the 'to' monitor for convenience.
      */
     Monitor merge(Monitor from, Monitor to) {
+        // note std deviation is not calculated when instances are merged. Sum of squares would be
+        // required and this is a private data structure. If it is of interest downstream it could be added
         to.setTotalActive(to.getAvgActive() * to.getHits() + from.getAvgActive() * from.getHits());
         to.setHits(to.getHits() + from.getHits());
         to.setTotal(to.getTotal() + from.getTotal());
@@ -226,62 +235,16 @@ public class MonitorCompositeCombiner {
         to.setMax(Math.max(to.getMax(), from.getMax()));
         to.setMaxActive(Math.max(to.getMaxActive(), from.getMaxActive()));
         to.setActive(to.getActive() + from.getActive());
-        to.setFirstAccess(Misc.min(to.getFirstAccess(), from.getFirstAccess()));// ?
+        to.setFirstAccess(Misc.min(to.getFirstAccess(), from.getFirstAccess()));
         Date lastAccess = Misc.max(to.getLastAccess(), from.getLastAccess());
-        to.setLastAccess(lastAccess);//?
+        to.setLastAccess(lastAccess);
         // need to do a date compare to use the max dates lastValue
         if (lastAccess != null && lastAccess.equals(from.getLastAccess())) {
             to.setLastValue(from.getLastValue());
         }
 
-        calculateStdDev(from, to);
         to.setPrimary(to.isPrimary() || from.isPrimary());
         return to;
-    }
-
-    private void calculateStdDev(Monitor from, Monitor to) {
-        MonKey key = to.getMonKey();
-        // note we are wiping out the key details if they exist, but if this is done with the limited use
-        // within this class that is ok as it is a key that doesn't use the existing details if they exist.
-        // This is a bit of a hack so we can keep track of the std deviation without access to sum of squares etc.
-        if (key.getDetails() == null || !(key.getDetails() instanceof StdDev)) {
-            key.setDetails(new StdDev());
-        }
-
-        StdDev stdDev = (StdDev) key.getDetails();
-        stdDev.addStdDev(from.getStdDev());
-    }
-
-    /**
-     * Class used to take the average of each instances stddeviation. This is done because the inner calculation of sumofsquares
-     * etc isn't available. So if there are 3 instances we are summarizing say with a stddev of 5,15,13 then the avgStdDev
-     * would be 11 (i.e. 33/3)
-     */
-    static class StdDev implements Serializable {
-        private static final long serialVersionUID = 282L;
-        private int count;
-        private double totalStDev;
-
-        public StdDev addStdDev(double newValue) {
-            count += 1;
-            totalStDev += newValue;
-            return this;
-        }
-
-        public double getAvgStdDev() {
-            if (count <= 0) {
-                return 0;
-            }
-            return totalStDev / count;
-        }
-
-        @Override
-        public String toString() {
-            return "StdDev{" +
-                    "count=" + count +
-                    ", totalStDev=" + totalStDev +
-                    '}';
-        }
     }
 
 }
