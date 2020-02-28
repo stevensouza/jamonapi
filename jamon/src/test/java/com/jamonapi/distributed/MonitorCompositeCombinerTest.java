@@ -1,5 +1,6 @@
 package com.jamonapi.distributed;
 
+import com.jamonapi.MonKeyImp;
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorComposite;
 import com.jamonapi.MonitorFactory;
@@ -168,6 +169,45 @@ public class MonitorCompositeCombinerTest {
         assertThat(to.getLastValue()).isEqualTo(10); // test when other value is last????
         assertThat(to.getFirstAccess()).isEqualTo(firstAccess);
         assertThat(to.getLastAccess()).isEqualTo(lastAccess);
+    }
+
+    @Test
+    public void aggregate() {
+        MonitorFactory.add("instance.label1", "count", 10);
+        MonitorFactory.add("instance1.label2", "bytes", 20);
+        MonitorComposite mc1 = MonitorFactory.getRootMonitor();
+        MonitorFactory.reset();
+
+        MonitorFactory.add("instance.label1", "count", 40);
+        MonitorFactory.add("instance2.label1", "bytes", 30);
+        MonitorComposite mc2 = MonitorFactory.getRootMonitor();
+        MonitorFactory.reset();
+
+        JamonDataPersister persister = mock(JamonDataPersister.class);
+        when(persister.get("instance1")).thenReturn(mc1);
+        when(persister.get("instance2")).thenReturn(mc2);
+        String[] instances = {"instance1", "instance2"};
+
+        MonitorCompositeCombiner monitorCompositeCombiner = new MonitorCompositeCombiner(persister);
+        MonitorComposite aggregate = monitorCompositeCombiner.aggregate(instances);
+
+        assertThat(aggregate.getNumRows()).isEqualTo(5);
+        assertThat(aggregate.getInstanceName()).isEqualTo(MonitorCompositeCombiner.AGGREGATED_INSTANCENAME);
+        isExpected(aggregate.getMonitor(new MonKeyImp("instance.label1", "count")), 2, 50, true);
+        isExpected(aggregate.getMonitor(new MonKeyImp("instance1.label2", "bytes")), 1, 20, true);
+        isExpected(aggregate.getMonitor(new MonKeyImp("instance2.label1", "bytes")), 1, 30, true);
+        isExpected(aggregate.getMonitor(new MonKeyImp("com.jamonapi.Exceptions", "Exception")), 0, 0, true);
+        isExpected(aggregate.getMonitor(new MonKeyImp("com.jamonapi.distributed.numInstances", "count")), 2, 2, false);
+    }
+
+    private void isExpected(Monitor mon, int hits, double total, boolean bufferListenerExists) {
+        assertThat(mon.getMonKey().getInstanceName()).isEqualTo(MonitorCompositeCombiner.AGGREGATED_INSTANCENAME);
+        System.out.println(mon.getHits());
+        assertThat(mon.getHits()).isEqualTo(hits);
+        assertThat(mon.getTotal()).isEqualTo(total);
+        if (bufferListenerExists) {
+            assertTrue(mon.getListenerType("value").hasListener(MonitorCompositeCombiner.SUMMARY_LISTENER));
+        }
     }
 
 }

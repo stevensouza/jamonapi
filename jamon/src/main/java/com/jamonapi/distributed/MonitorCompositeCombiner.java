@@ -15,8 +15,8 @@ import java.util.*;
 public class MonitorCompositeCombiner {
     private JamonDataPersister persister;
 
-    private static final String SUMMARY_LISTENER = "FIFOBufferInstanceSummary";
-    private static final String AGGREGATED_INSTANCENAME = "aggregated";
+    static final String SUMMARY_LISTENER = "FIFOBufferInstanceSummary";
+    static final String AGGREGATED_INSTANCENAME = "aggregated";
 
     public MonitorCompositeCombiner(JamonDataPersister persister) {
         this.persister = persister;
@@ -33,6 +33,15 @@ public class MonitorCompositeCombiner {
     }
 
     // i think web app is wrong for clearing cache.  should be when anyting changes including aggregate
+    // not sure why tomcat8_production works in tomcat but not in jetty. shows as local in jetty when selected
+    //   debug to log
+    //   seems to work if i don't call log4j (works for sql, and automon)
+    //   it was a serialization issue due to log4j jar missing in jetty
+    // stackTrace=com.hazelcast.nio.serialization.HazelcastSerializationException: java.lang.NoClassDefFoundError: org/apache/log4j/spi/LoggingEvent
+    //  probably get rid of that error by not rreturning loggingevent
+    //     public LoggingEvent getLoggingEvent() {
+    //        return (LoggingEvent) getParam();
+    //    }
     // combiner tests
     // copy jamon listener buffers     // configurable sizes and features??
     //      i.e. other jamonlisteners
