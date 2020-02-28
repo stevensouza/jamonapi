@@ -58,7 +58,7 @@
          <!-- Version settings -->         
          <assertj.version>1.7.0</assertj.version>
          <commons.version>3.3.2</commons.version>
-         <hazelcast.version>3.2.5</hazelcast.version>
+         <hazelcast.version>3.12.6</hazelcast.version>
          <hsqldb.version>2.3.2</hsqldb.version>
          <jakarta-oro.version>2.13.1</jakarta-oro.version>
          <javaee.version>6.0</javaee.version>
