@@ -202,7 +202,6 @@ public class MonitorCompositeCombinerTest {
 
     private void isExpected(Monitor mon, int hits, double total, boolean bufferListenerExists) {
         assertThat(mon.getMonKey().getInstanceName()).isEqualTo(MonitorCompositeCombiner.AGGREGATED_INSTANCENAME);
-        System.out.println(mon.getHits());
         assertThat(mon.getHits()).isEqualTo(hits);
         assertThat(mon.getTotal()).isEqualTo(total);
         if (bufferListenerExists) {
