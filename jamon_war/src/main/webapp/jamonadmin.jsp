@@ -133,15 +133,15 @@ if (isLocal(instanceName)) {
         mc = mc.copy();
     }
 
-Date refreshDate = mc.getDateCreated();
-mc = mc.filterByUnits(rangeName);
-session.setAttribute("monitorComposite",mc);
+    Date refreshDate = mc.getDateCreated();
+    session.setAttribute("monitorComposite", mc);
+    mc = mc.filterByUnits(rangeName);
 
-Map map=new HashMap();
+    Map map = new HashMap();
 // used for html page
-map.put("sortPageName", "jamonadmin.jsp");
-map.put("query", query);
-map.put("imagesDir","images/");
+    map.put("sortPageName", "jamonadmin.jsp");
+    map.put("query", query);
+    map.put("imagesDir", "images/");
 
 
 // used for xml1 page.

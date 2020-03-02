@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import static com.jamonapi.distributed.MonitorCompositeCombiner.AGGREGATED_MONITOR_LABEL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -193,11 +194,12 @@ public class MonitorCompositeCombinerTest {
 
         assertThat(aggregate.getNumRows()).isEqualTo(5);
         assertThat(aggregate.getInstanceName()).isEqualTo(MonitorCompositeCombiner.AGGREGATED_INSTANCENAME);
+
         isExpected(aggregate.getMonitor(new MonKeyImp("instance.label1", "count")), 2, 50, true);
         isExpected(aggregate.getMonitor(new MonKeyImp("instance1.label2", "bytes")), 1, 20, true);
         isExpected(aggregate.getMonitor(new MonKeyImp("instance2.label1", "bytes")), 1, 30, true);
         isExpected(aggregate.getMonitor(new MonKeyImp("com.jamonapi.Exceptions", "Exception")), 0, 0, true);
-        isExpected(aggregate.getMonitor(new MonKeyImp("com.jamonapi.distributed.numInstances", "count")), 2, 2, false);
+        isExpected(aggregate.getMonitor(new MonKeyImp(AGGREGATED_MONITOR_LABEL, "count")), 2, 2, false);
     }
 
     private void isExpected(Monitor mon, int hits, double total, boolean bufferListenerExists) {

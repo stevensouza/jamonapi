@@ -17,6 +17,8 @@ public class MonitorCompositeCombiner {
 
     static final String SUMMARY_LISTENER = "FIFOBufferInstanceSummary";
     static final String AGGREGATED_INSTANCENAME = "aggregated";
+    static final String AGGREGATED_MONITOR_LABEL = "com.jamonapi.distributed.aggregated";
+
 
     public MonitorCompositeCombiner(JamonDataPersister persister) {
         this.persister = persister;
@@ -32,24 +34,25 @@ public class MonitorCompositeCombiner {
         return append(getMonitorComposites(instanceKeys));
     }
 
-    // i think web app is wrong for clearing cache.  should be when anyting changes including aggregate
-    // not sure why tomcat8_production works in tomcat but not in jetty. shows as local in jetty when selected
-    //   debug to log
-    //   seems to work if i don't call log4j (works for sql, and automon)
-    //   it was a serialization issue due to log4j jar missing in jetty
-    // stackTrace=com.hazelcast.nio.serialization.HazelcastSerializationException: java.lang.NoClassDefFoundError: org/apache/log4j/spi/LoggingEvent
+    // can i change serializable log4j so it doesn't fail?
+    //      it was a serialization issue due to log4j jar missing in jetty
+    //      stackTrace=com.hazelcast.nio.serialization.HazelcastSerializationException: java.lang.NoClassDefFoundError: org/apache/log4j/spi/LoggingEvent
     //  probably get rid of that error by not rreturning loggingevent
     //     public LoggingEvent getLoggingEvent() {
     //        return (LoggingEvent) getParam();
     //    }
-    // combiner tests
+    // test filterbyunits test
     // copy jamon listener buffers     // configurable sizes and features??
     //      i.e. other jamonlisteners
     //      max,min,fifo,??
     // make this configurable from both size and whether to do or not.?????
     //        //  - log4j
     //        //  - steps for jetty, automon, tomcat
-    // upgrade hazel cast to 4
+    // start/stop for each instance to aggregate
+    // upgrade log4j
+    // x upgrade hazel cast to 4
+    // x combiner tests
+
 
     /**
      * Take a list of instance names, query them and combine their monitor composite data into one aggregated
@@ -62,7 +65,7 @@ public class MonitorCompositeCombiner {
         FactoryEnabled factory = new FactoryEnabled(false);
         for (String instanceKey : instanceKeys) {
             MonitorComposite monitorComposite = persister.get(instanceKey);
-            countInstanceName(factory, monitorComposite.getInstanceName());
+            incrementInstanceMonitor(factory, monitorComposite.getInstanceName());
             aggregate(factory, monitorComposite);
         }
 
@@ -124,8 +127,8 @@ public class MonitorCompositeCombiner {
 
     }
 
-    private void countInstanceName(FactoryEnabled factory, String instanceName) {
-        MonKey key = new MonKeyImp("com.jamonapi.distributed.numInstances", "count");
+    private void incrementInstanceMonitor(FactoryEnabled factory, String instanceName) {
+        MonKey key = new MonKeyImp(AGGREGATED_MONITOR_LABEL, "count");
         key.setDetails(instanceName);
         key.setInstanceName(AGGREGATED_INSTANCENAME);
         factory.getMonitor(key).add(1);
@@ -150,6 +153,13 @@ public class MonitorCompositeCombiner {
 
     // Each monitor from an instance will have its value saved for display in a fifo buffer.
     private void addMonitorToSummaryFifoBuffer(Monitor summaryMonitor, Monitor monitor) {
+        JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) summaryMonitor.getListenerType("value").getListener(SUMMARY_LISTENER);
+        jaMonBufferListener.addRow(getRowData(monitor).toArray());
+    }
+
+    // Each monitor from an instance will have its value saved for display in a fifo buffer.
+    private void addBufferListenersToSummaryFifoBuffer(Monitor summaryMonitor, Monitor monitor) {
+        monitor.getListenerType("value");
         JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) summaryMonitor.getListenerType("value").getListener(SUMMARY_LISTENER);
         jaMonBufferListener.addRow(getRowData(monitor).toArray());
     }
