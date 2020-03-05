@@ -1,41 +1,40 @@
 package com.jamonapi.distributed;
 
 import com.jamonapi.*;
+import com.jamonapi.utils.BufferList;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class GetListenersTest {
+public class DistributedUtilsTest {
 
 
     @Test
     public void getAllNoListeners() {
-        GetListeners getListeners = new GetListeners();
         FactoryEnabled factory = new FactoryEnabled();
         Monitor mon = factory.getMonitor("mymon", "units");
-        assertThat(getListeners.getAll(mon).size()).isEqualTo(0);
+        assertThat(DistributedUtils.getAllListeners(mon).size()).isEqualTo(0);
     }
 
     @Test
     public void getAllWithValueListener() {
-        GetListeners getListeners = new GetListeners();
         FactoryEnabled factory = new FactoryEnabled();
         Monitor mon = factory.getMonitor("mymon", "units");
         JAMonListener listener = JAMonListenerFactory.get("FIFOBuffer");
         mon.addListener("value", listener);
 
-        List<GetListeners.ListenerInfo> list = getListeners.getAll(mon);
+        List<DistributedUtils.ListenerInfo> list = DistributedUtils.getAllListeners(mon);
         assertThat(list.size()).isEqualTo(1);
         assertThat(list.get(0).getListener()).isEqualTo(listener);
     }
 
     @Test
     public void getAllWithValueCompositeListener() {
-        GetListeners getListeners = new GetListeners();
         FactoryEnabled factory = new FactoryEnabled();
         Monitor mon = factory.getMonitor("mymon", "units");
         JAMonListener listener1 = JAMonListenerFactory.get("FIFOBuffer");
@@ -51,7 +50,7 @@ public class GetListenersTest {
         mon.addListener("value", compositeListener);
         mon.addListener("value", listener4);
 
-        List<GetListeners.ListenerInfo> list = getListeners.getAll(mon);
+        List<DistributedUtils.ListenerInfo> list = DistributedUtils.getAllListeners(mon);
         // note a better check would be for the examples to be the exact expected instances. However, jamon in some cases
         // changes the instance.
         assertThat(list.size()).isEqualTo(4);
@@ -68,7 +67,6 @@ public class GetListenersTest {
 
     @Test
     public void getAllWithAllListeners() {
-        GetListeners getListeners = new GetListeners();
         FactoryEnabled factory = new FactoryEnabled();
         Monitor mon = factory.getMonitor("mymon", "units");
         JAMonListener listener1 = JAMonListenerFactory.get("FIFOBuffer");
@@ -81,7 +79,7 @@ public class GetListenersTest {
         mon.addListener("min", listener3);
         mon.addListener("maxactive", listener4);
 
-        List<GetListeners.ListenerInfo> list = getListeners.getAll(mon);
+        List<DistributedUtils.ListenerInfo> list = DistributedUtils.getAllListeners(mon);
         // note a better check would be for the examples to be the exact expected instances. However, jamon in some cases
         // changes the instance.
         assertThat(list.size()).isEqualTo(4);
@@ -95,6 +93,61 @@ public class GetListenersTest {
         actual = Arrays.asList(list.get(0).getListenerType(), list.get(1).getListenerType(), list.get(2).getListenerType(), list.get(3).getListenerType());
         assertThat(actual.size()).isEqualTo(4);
         assertTrue(actual.containsAll(expected));
+    }
+
+    @Test
+    public void copyJamonBufferListenerData_noData() {
+        FactoryEnabled factory = new FactoryEnabled();
+
+        Monitor from = factory.getMonitor("from", "count");
+        Monitor to = factory.getMonitor("to", "count");
+
+        DistributedUtils.copyJamonBufferListenerData(from, to);
+        assertFalse(to.hasListeners());
+    }
+
+    @Test
+    public void copyJamonBufferListenerData_withListeners() {
+        FactoryEnabled factory = new FactoryEnabled();
+        JAMonBufferListener fifo = (JAMonBufferListener) JAMonListenerFactory.get("FIFOBuffer");
+        JAMonListener minFifo = JAMonListenerFactory.get("FIFOBuffer");
+        minFifo.setName("minFIFOBuffer");// to test with a different name
+        JAMonListener nLargest = JAMonListenerFactory.get("NLargestValueBuffer");
+
+        Monitor from = factory.getTimeMonitor("from");
+        from.addListener("value", fifo.copy());
+        from.addListener("min", minFifo);
+        from.addListener("max", fifo.copy());
+        from.addListener("max", nLargest);
+        from.addListener("maxactive", fifo.copy());
+        from.start();
+        factory.getTimeMonitor("from").start().stop(); // this will allow for a maxactive
+        from.stop();
+
+        Monitor to = factory.getMonitor("to", "count");
+
+        DistributedUtils.copyJamonBufferListenerData(from, to);
+        // check that listeners were properly created.
+        assertTrue(to.hasListeners());
+        assertTrue(to.hasListener("value", DistributedUtils.getFifoBufferName("FIFOBuffer")));
+        assertTrue(to.hasListener("min", DistributedUtils.getFifoBufferName("minFIFOBuffer")));
+        assertTrue(to.hasListener("max", DistributedUtils.getFifoBufferName("FIFOBuffer")));
+        assertTrue(to.hasListener("maxactive", DistributedUtils.getFifoBufferName("FIFOBuffer")));
+        List<DistributedUtils.ListenerInfo> list = DistributedUtils.getAllListeners(to);
+        assertThat(list.size()).isEqualTo(5);
+
+        // check that the 'to' monitor has the proper number of rows in its buffer\
+        assertBufferListeners(to, "value", "FIFOBuffer", 2);
+        assertBufferListeners(to, "min", "minFIFOBuffer", 1);
+        assertBufferListeners(to, "max", "FIFOBuffer", 2);
+        assertBufferListeners(to, "maxactive", "FIFOBuffer", 1);
+    }
+
+    private void assertBufferListeners(Monitor to, String listenerType, String listenerName, int expectedRows) {
+        JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) to.getListenerType(listenerType).getListener(DistributedUtils.getFifoBufferName(listenerName));
+        BufferList bufferList = jaMonBufferListener.getBufferList();
+        assertThat(bufferList.getBufferSize()).isEqualTo(DistributedUtils.DEFAULT_BUFFER_SIZE);
+        assertThat(bufferList.getRowCount()).isEqualTo(expectedRows);
     }
 
 

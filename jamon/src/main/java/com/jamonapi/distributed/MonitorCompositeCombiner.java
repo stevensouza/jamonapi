@@ -34,6 +34,95 @@ public class MonitorCompositeCombiner {
         return append(getMonitorComposites(instanceKeys));
     }
 
+
+    // test filterbyunits test
+    // copy jamon listener buffers     // configurable sizes and features??
+    //      i.e. other jamonlisteners
+    //      max,min,fifo,??
+    //             JAMonBufferListener bufferListener = (JAMonBufferListener) mon.getListenerType("value").getListener(listenerType[0].toString());
+    //            // each should have 50 rows of data.
+    //            assertThat(bufferListener.getRowCount()).isEqualTo(BUFFER_SIZE);
+    //            Object[][] data = bufferListener.getDetailData().getData();
+    //     JAMonBufferListener.public void addRow(Object[] row) {
+    //  how to get data in order?
+    // always add to fifo buffer in the respective listenertype.
+    // JAMonDetailRow = note Arrays.asList(mon.getInstanceName(), label, ...)
+    //         Object[][] data=((JAMonBufferListener)listener).getDetailData().getData();
+    // public class BufferList implements DetailData {
+    //    bufferListener.getBufferList().getRowCount())
+    // note i think the following consructor is used if i want different data to be dislayed in each row
+//    public JAMonBufferListener(String name){
+//        this(name, new BufferList(DEFAULT_HEADER,50));
+//    }
+//
+//    /** Name the listener and pass in the jamon BufferList to use */
+//    public JAMonBufferListener(String name, BufferList list) {
+//        this.name=name;
+//        this.list=list;
+//    }
+//    private static JAMonBufferListener getFIFO() {
+//        BufferHolder bufferHolder=new FIFOBufferHolder();
+//        BufferList bufferList=new BufferList(JAMonBufferListener.DEFAULT_HEADER,bufferHolder);
+//              public BufferList(String[] header, int bufferSize,  BufferHolder bufferHolder) {
+//        return new JAMonBufferListener("FIFOBuffer", bufferList);
+//    }
+    // public class DetailDataWrapper implements DetailData {
+    //     public BufferList(String[] header, int bufferSize,  BufferHolder bufferHolder) {
+
+    //  List original=bufferHolder.getOrderedCollection();
+    //  Log4JBufferListener ----
+    // getBufferList().addRow(toArray(key.getLoggingEvent(), mon));
+//    private static HeaderInfo log4jHeader=getHeaderInfo(new String[] { "Label", "LoggerName",
+//            "Level", "ThreadName", "Exception" });
+
+//    protected Object[] toArray(LoggingEvent event, Monitor mon) {
+//        // populate header with standard monitor data first and after the fact by log4j data
+//        Object[] data=log4jHeader.getData(mon);
+//        data[0]=mon.getMonKey().getDetails();
+//        data[1]=event.getLoggerName();
+//        data[2]=event.getLevel().toString();
+//        data[3]=event.getThreadName();
+//        data[4]=(event.getThrowableInformation() == null || event.getThrowableInformation().getThrowable() == null) ?
+//                "" : Misc.getExceptionTrace(event.getThrowableInformation().getThrowable());
+//
+//        return data;
+//    }
+    // JAMonBufferListener - Label
+    //     public static HeaderInfo getHeaderInfo(String[] firstPart) {
+    //        return new HeaderInfo(firstPart);
+    //    }
+//public static HeaderInfo getDefaultHeaderInfo() {
+//    return getHeaderInfo(new String[]{"Label"});
+
+//}
+//JAMonDetailValue
+// public Object[] toArray() {
+//    if (row==null) {
+//        if (keyToString)
+//            row = new Object[]{Misc.getAsString(key.getDetails()),new Double(value), new Double(active), new Date(time)};
+//        else {
+//            List list=new ArrayList();
+//            Misc.addTo(list, key.getDetails()); // key details is a List with instanceName, label
+//            list.add(new Double(value));
+//            list.add(new Double(active));
+//            list.add(new Date(time));
+//            row=list.toArray();
+//        }
+// Misc
+//    public static void addTo(Collection coll, Object objToAdd) {
+    // List list ;
+    // list.add(instanceName);
+    // list.add(mon.getLabel())
+    // key.setDetails(list)
+
+
+    // make this configurable from both size and whether to do or not.?????
+    //        //  - log4j
+    //        //  - steps for jetty, automon, tomcat
+    // start/stop for each instance to aggregate
+    //      numinstances fifobuffer add it
+    // git push/ git push github_origin
+    // upgrade log4j
     // can i change serializable log4j so it doesn't fail?
     //      it was a serialization issue due to log4j jar missing in jetty
     //      stackTrace=com.hazelcast.nio.serialization.HazelcastSerializationException: java.lang.NoClassDefFoundError: org/apache/log4j/spi/LoggingEvent
@@ -41,15 +130,7 @@ public class MonitorCompositeCombiner {
     //     public LoggingEvent getLoggingEvent() {
     //        return (LoggingEvent) getParam();
     //    }
-    // test filterbyunits test
-    // copy jamon listener buffers     // configurable sizes and features??
-    //      i.e. other jamonlisteners
-    //      max,min,fifo,??
-    // make this configurable from both size and whether to do or not.?????
-    //        //  - log4j
-    //        //  - steps for jetty, automon, tomcat
-    // start/stop for each instance to aggregate
-    // upgrade log4j
+    // what java version do i support?
     // x upgrade hazel cast to 4
     // x combiner tests
 
@@ -60,6 +141,7 @@ public class MonitorCompositeCombiner {
      *
      * @param instanceKeys A list of servers that have jamon data on them.
      * @return An aggregated version of all the servers jamon data.
+     * @since 2.82
      */
     public MonitorComposite aggregate(String... instanceKeys) {
         FactoryEnabled factory = new FactoryEnabled(false);
@@ -122,7 +204,8 @@ public class MonitorCompositeCombiner {
             }
             merge(monitor, summaryMonitor);
             createSummaryFifoBufferIfAbsent(summaryMonitor);
-            addMonitorToSummaryFifoBuffer(summaryMonitor, monitor);
+            addMonitorDataToSummaryFifoBuffer(monitor, summaryMonitor);
+            DistributedUtils.copyJamonBufferListenerData(monitor, summaryMonitor);
         }
 
     }
@@ -152,17 +235,11 @@ public class MonitorCompositeCombiner {
     }
 
     // Each monitor from an instance will have its value saved for display in a fifo buffer.
-    private void addMonitorToSummaryFifoBuffer(Monitor summaryMonitor, Monitor monitor) {
+    private void addMonitorDataToSummaryFifoBuffer(Monitor monitor, Monitor summaryMonitor) {
         JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) summaryMonitor.getListenerType("value").getListener(SUMMARY_LISTENER);
         jaMonBufferListener.addRow(getRowData(monitor).toArray());
     }
 
-    // Each monitor from an instance will have its value saved for display in a fifo buffer.
-    private void addBufferListenersToSummaryFifoBuffer(Monitor summaryMonitor, Monitor monitor) {
-        monitor.getListenerType("value");
-        JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) summaryMonitor.getListenerType("value").getListener(SUMMARY_LISTENER);
-        jaMonBufferListener.addRow(getRowData(monitor).toArray());
-    }
 
     private JAMonBufferListener getSummaryFIFOBufferListener(Monitor mon) {
         BufferList bufferList = new BufferList(getHeader(mon).toArray(new String[0]), 100);
