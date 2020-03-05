@@ -114,16 +114,15 @@ public class DistributedUtilsTest {
         minFifo.setName("minFIFOBuffer");// to test with a different name
         JAMonListener nLargest = JAMonListenerFactory.get("NLargestValueBuffer");
 
-        Monitor from = factory.getTimeMonitor("from");
+        Monitor from = factory.getMonitor("from", "count");
         from.addListener("value", fifo.copy());
         from.addListener("min", minFifo);
         from.addListener("max", fifo.copy());
         from.addListener("max", nLargest);
         from.addListener("maxactive", fifo.copy());
-        from.start();
-        factory.getTimeMonitor("from").start().stop(); // this will allow for a maxactive
-        from.stop();
-
+        from.add(1);
+        from.add(2);
+        
         Monitor to = factory.getMonitor("to", "count");
 
         DistributedUtils.copyJamonBufferListenerData(from, to);
@@ -140,6 +139,15 @@ public class DistributedUtilsTest {
         assertBufferListeners(to, "value", "FIFOBuffer", 2);
         assertBufferListeners(to, "min", "minFIFOBuffer", 1);
         assertBufferListeners(to, "max", "FIFOBuffer", 2);
+        assertBufferListeners(to, "maxactive", "FIFOBuffer", 0);
+
+        // max active buffer check
+        from = factory.getTimeMonitor("from");
+        from.addListener("maxactive", fifo.copy());
+        from.start();
+        factory.getTimeMonitor("from").start().stop(); // this will allow for a maxactive
+        from.stop();
+        DistributedUtils.copyJamonBufferListenerData(from, to);
         assertBufferListeners(to, "maxactive", "FIFOBuffer", 1);
     }
 
