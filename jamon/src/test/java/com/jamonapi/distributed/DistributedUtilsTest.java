@@ -122,7 +122,7 @@ public class DistributedUtilsTest {
         from.addListener("maxactive", fifo.copy());
         from.add(1);
         from.add(2);
-        
+
         Monitor to = factory.getMonitor("to", "count");
 
         DistributedUtils.copyJamonBufferListenerData(from, to);

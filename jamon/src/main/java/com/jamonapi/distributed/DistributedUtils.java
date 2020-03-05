@@ -47,7 +47,7 @@ class DistributedUtils {
                     to.addListener(listenerInfo.getListenerType(), toJamonBufferListener);
                 }
 
-                copyBufferListenerData(fromJamonBufferListener, toJamonBufferListener);
+                copyBufferListenerData(fromJamonBufferListener, toJamonBufferListener, from.getMonKey().getInstanceName());
             }
         }
     }
@@ -58,10 +58,16 @@ class DistributedUtils {
      * @param from source data
      * @param to   destination data
      */
-    private static void copyBufferListenerData(JAMonBufferListener from, JAMonBufferListener to) {
+    private static void copyBufferListenerData(JAMonBufferListener from, JAMonBufferListener to, String instanceName) {
         if (from.hasData()) {
+            final int LABEL = 0;
             Object[][] data = from.getBufferList().getDetailData().getData();
             for (Object[] row : data) {
+                // add instance name to monitor label - example: select * from table where name='steve' - (tomcat8_production)
+                // if the key setDetails was called label will be that value or else it will be the monitor label
+                if (row != null && row[LABEL] != null) {
+                    row[LABEL] = new StringBuilder().append(row[LABEL]).append(" - (instanceName: ").append(instanceName).append(")").toString();
+                }
                 // note addRow will honor the rules of the given buffer listener. For example a fifo buffer listener will always
                 // add the row, whereas a max listener will only add it if it is a new max.
                 to.addRow(row);

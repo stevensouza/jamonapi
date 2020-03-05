@@ -131,6 +131,9 @@ public class MonitorCompositeCombiner {
     //        return (LoggingEvent) getParam();
     //    }
     // what java version do i support?
+    // documentatiion - inline and web site?
+    //
+    // video - about new features and about running, checking in, and compiling
     // x upgrade hazel cast to 4
     // x combiner tests
 
