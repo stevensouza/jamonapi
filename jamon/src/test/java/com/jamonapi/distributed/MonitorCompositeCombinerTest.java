@@ -1,9 +1,6 @@
 package com.jamonapi.distributed;
 
-import com.jamonapi.MonKeyImp;
-import com.jamonapi.Monitor;
-import com.jamonapi.MonitorComposite;
-import com.jamonapi.MonitorFactory;
+import com.jamonapi.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -174,11 +171,16 @@ public class MonitorCompositeCombinerTest {
 
     @Test
     public void aggregate() {
+        Monitor mon = MonitorFactory.getMonitor("instance.label1", "count");
+        mon.addListener("value", JAMonListenerFactory.get("FIFOBuffer"));
         MonitorFactory.add("instance.label1", "count", 10);
+
         MonitorFactory.add("instance1.label2", "bytes", 20);
         MonitorComposite mc1 = MonitorFactory.getRootMonitor();
         MonitorFactory.reset();
 
+        mon = MonitorFactory.getMonitor("instance.label1", "count");
+        mon.addListener("value", JAMonListenerFactory.get("FIFOBuffer"));
         MonitorFactory.add("instance.label1", "count", 40);
         MonitorFactory.add("instance2.label1", "bytes", 30);
         MonitorComposite mc2 = MonitorFactory.getRootMonitor();
@@ -194,12 +196,17 @@ public class MonitorCompositeCombinerTest {
 
         assertThat(aggregate.getNumRows()).isEqualTo(5);
         assertThat(aggregate.getInstanceName()).isEqualTo(MonitorCompositeCombiner.AGGREGATED_INSTANCENAME);
+        assertTrue(aggregate.hasListeners());
 
         isExpected(aggregate.getMonitor(new MonKeyImp("instance.label1", "count")), 2, 50, true);
         isExpected(aggregate.getMonitor(new MonKeyImp("instance1.label2", "bytes")), 1, 20, true);
         isExpected(aggregate.getMonitor(new MonKeyImp("instance2.label1", "bytes")), 1, 30, true);
         isExpected(aggregate.getMonitor(new MonKeyImp("com.jamonapi.Exceptions", "Exception")), 0, 0, true);
         isExpected(aggregate.getMonitor(new MonKeyImp(AGGREGATED_MONITOR_LABEL, "count")), 2, 2, false);
+        mon = aggregate.getMonitor(new MonKeyImp("instance.label1", "count"));
+        assertTrue(mon.hasListener("value", DistributedUtils.getFifoBufferName("FIFOBuffer")));
+        JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) mon.getListenerType("value").getListener(DistributedUtils.getFifoBufferName("FIFOBuffer"));
+        assertThat(jaMonBufferListener.getRowCount()).isEqualTo(2);
     }
 
     private void isExpected(Monitor mon, int hits, double total, boolean bufferListenerExists) {
