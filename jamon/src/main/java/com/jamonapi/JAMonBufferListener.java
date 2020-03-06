@@ -142,7 +142,9 @@ public  class JAMonBufferListener implements JAMonListener, CopyJAMonListener {
             return header.length;
         }
 
-        /** Return an array with spaces for the values in header and values populated for monitor data - last value, active and last access */
+        /**
+         * Return an array with a place to hold an object for the values in header and values populated for monitor data - last value, active and last access
+         */
         public Object[] getData(Monitor mon) {
             Object[] retData=new Object[header.length];// all but the 2 values will be null and will be replaced by caller.
             retData[lastValueIndex]=new Double(mon.getLastValue());

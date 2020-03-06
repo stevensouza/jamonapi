@@ -30,8 +30,8 @@ public class Log4jBufferListener extends JAMonBufferListener {
          */
     private boolean isLog4jMonKey = false;
 
-    private static HeaderInfo log4jHeader=getHeaderInfo(new String[] { "Label", "LoggerName",
-            "Level", "ThreadName", "Exception" });
+    private static HeaderInfo log4jHeader = getHeaderInfo(new String[]{"InstanceName", "Label", "LoggerName",
+            "Level", "ThreadName", "Exception"});
 
     /**
      * Constructor that creaates this object with its default name (the class
@@ -91,13 +91,14 @@ public class Log4jBufferListener extends JAMonBufferListener {
      * @return Object[]
      */
     protected Object[] toArray(LoggingEvent event, Monitor mon) {
-        // populate header with standard monitor data first and after the fact by log4j data
-        Object[] data=log4jHeader.getData(mon);
-        data[0]=mon.getMonKey().getDetails();
-        data[1]=event.getLoggerName();
-        data[2]=event.getLevel().toString();
-        data[3]=event.getThreadName();
-        data[4]=(event.getThrowableInformation() == null || event.getThrowableInformation().getThrowable() == null) ?
+        // populate first with standard monitor data (by calling getData(mon)) first and after the fact by log4j data
+        Object[] data = log4jHeader.getData(mon);// allocate full array and populate value, active, and date (the last columns)
+        data[0] = mon.getMonKey().getInstanceName();
+        data[1] = mon.getMonKey().getDetails();
+        data[2] = event.getLoggerName();
+        data[3] = event.getLevel().toString();
+        data[4] = event.getThreadName();
+        data[5] = (event.getThrowableInformation() == null || event.getThrowableInformation().getThrowable() == null) ?
                 "" : Misc.getExceptionTrace(event.getThrowableInformation().getThrowable());
 
         return data;

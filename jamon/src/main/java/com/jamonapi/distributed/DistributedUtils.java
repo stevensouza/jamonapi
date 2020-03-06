@@ -63,7 +63,8 @@ class DistributedUtils {
             final int INSTANCE_NAME_INDEX = 0;
             Object[][] data = from.getBufferList().getDetailData().getData();
             for (Object[] row : data) {
-                // add instance name to monitor label - example: select * from table where name='steve' - (tomcat8_production)
+                // add instance name to monitor label - example: select * from table where name='steve' - (tomcat8_production).
+                // The instanceName is passed in and changed as all of them are 'local' without doing that.
                 // if the key setDetails was called label will be that value or else it will be the monitor label
                 if (row != null && !"local".equals(instanceName)) {
                     row[INSTANCE_NAME_INDEX] = instanceName;
