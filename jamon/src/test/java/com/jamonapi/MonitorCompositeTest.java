@@ -20,6 +20,7 @@ public class MonitorCompositeTest {
     private static final int BUFFER_SIZE = 50;
     private static final String EXCEPTION_METHOD = "mymethodexception";
     private static final String EXCEPTION_NAME = "My Exception";
+    private static final int LABEL_INDEX = 1;
 
     @Before
     public void setUp() throws Exception {
@@ -175,7 +176,7 @@ public class MonitorCompositeTest {
             // each row should have a stacktrace in it.  We look for "My ExceptionN"
             // and RuntimeException
             for (int i=0; i < data.length; i++) {
-                String stackTrace = data[i][0].toString();
+                String stackTrace = data[i][LABEL_INDEX].toString();
                 assertThat(stackTrace).contains(EXCEPTION_NAME + i);
                 assertThat(stackTrace).contains("RuntimeException");
             }

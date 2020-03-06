@@ -18,6 +18,7 @@ public class MonitorCompositeCombiner {
     static final String SUMMARY_LISTENER = "FIFOBufferInstanceSummary";
     static final String AGGREGATED_INSTANCENAME = "aggregated";
     static final String AGGREGATED_MONITOR_LABEL = "com.jamonapi.distributed.aggregated";
+    static final int SUMMARY_FIFO_BUFFER_SIZE = 100;
 
 
     public MonitorCompositeCombiner(JamonDataPersister persister) {
@@ -45,6 +46,7 @@ public class MonitorCompositeCombiner {
     //            Object[][] data = bufferListener.getDetailData().getData();
     //     JAMonBufferListener.public void addRow(Object[] row) {
     //  how to get data in order?
+    // maybe make the ijnstancename an extrra column
     // always add to fifo buffer in the respective listenertype.
     // JAMonDetailRow = note Arrays.asList(mon.getInstanceName(), label, ...)
     //         Object[][] data=((JAMonBufferListener)listener).getDetailData().getData();
@@ -114,6 +116,11 @@ public class MonitorCompositeCombiner {
     // list.add(instanceName);
     // list.add(mon.getLabel())
     // key.setDetails(list)
+    //pass in and change instancename from mc to key.
+//                        except for local
+//                        config from properties
+//                        SAVE TIME FORR EACH PROCESSED INSTANCE WITH A FIFOBUFFER
+//                        try log4j listener for instnace name
 
 
     // make this configurable from both size and whether to do or not.?????
@@ -208,7 +215,7 @@ public class MonitorCompositeCombiner {
             merge(monitor, summaryMonitor);
             createSummaryFifoBufferIfAbsent(summaryMonitor);
             addMonitorDataToSummaryFifoBuffer(monitor, summaryMonitor);
-            DistributedUtils.copyJamonBufferListenerData(monitor, summaryMonitor);
+            DistributedUtils.copyJamonBufferListenerData(monitor, summaryMonitor, monitorComposite.getInstanceName());
         }
 
     }
@@ -245,7 +252,7 @@ public class MonitorCompositeCombiner {
 
 
     private JAMonBufferListener getSummaryFIFOBufferListener(Monitor mon) {
-        BufferList bufferList = new BufferList(getHeader(mon).toArray(new String[0]), 100);
+        BufferList bufferList = new BufferList(getHeader(mon).toArray(new String[0]), SUMMARY_FIFO_BUFFER_SIZE);
         return new JAMonBufferListener(SUMMARY_LISTENER, bufferList);
     }
 

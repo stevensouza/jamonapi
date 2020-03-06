@@ -94,7 +94,7 @@ public  class JAMonBufferListener implements JAMonListener, CopyJAMonListener {
 
 
     public static HeaderInfo getDefaultHeaderInfo() {
-        return getHeaderInfo(new String[]{"Label"});
+        return getHeaderInfo(new String[]{"InstanceName", "Label"});
 
     }
 

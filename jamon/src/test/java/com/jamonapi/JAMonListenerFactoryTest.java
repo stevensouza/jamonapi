@@ -10,9 +10,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class JAMonListenerFactoryTest {
 
-    private static final String[] EXPECTED_LISTENERS=   {"FIFOBuffer", "helloListener", "NLargestValueBuffer", "NLargestValueBuffer24Hrs", "NLargestValueBuffer7Days", "NSmallestValueBuffer",
-        "NSmallestValueBuffer24Hrs", "NSmallestValueBuffer7Days", "SharedFIFOBuffer", "SharedNLargestValueBuffer", "SharedNLargestValueBuffer24Hrs", "SharedNLargestValueBuffer7Days",
-        "SharedNSmallestValueBuffer", "SharedNSmallestValueBuffer24Hrs", "SharedNSmallestValueBuffer7Days", "tester"};
+    private static int VALUE_INDEX = 2;
+    private static final String[] EXPECTED_LISTENERS = {"FIFOBuffer", "helloListener", "NLargestValueBuffer", "NLargestValueBuffer24Hrs", "NLargestValueBuffer7Days", "NSmallestValueBuffer",
+            "NSmallestValueBuffer24Hrs", "NSmallestValueBuffer7Days", "SharedFIFOBuffer", "SharedNLargestValueBuffer", "SharedNLargestValueBuffer24Hrs", "SharedNLargestValueBuffer7Days",
+            "SharedNSmallestValueBuffer", "SharedNSmallestValueBuffer24Hrs", "SharedNSmallestValueBuffer7Days", "tester"};
 
 
     @Test
@@ -168,14 +169,14 @@ public class JAMonListenerFactoryTest {
             for (int i=1,j=-50;i<=100;i++,j++) {
                 cal.setTime(new Date());
                 cal.add(dateToAdd, j);
-                bl.addRow(new Object[]{"label"+i,new Integer(i),"Active"+i,cal.getTime()});
+                bl.addRow(new Object[]{"myInstanceName", "label" + i, new Integer(i), "Active" + i, cal.getTime()});
             }
 
         } else {
             for (int i=100,j=50;i>=1;i--,j--) {
                 cal.setTime(new Date());
                 cal.add(dateToAdd, j);
-                bl.addRow(new Object[]{"label"+i,new Integer(i),"Active"+i,cal.getTime()});
+                bl.addRow(new Object[]{"myInstanceName", "label" + i, new Integer(i), "Active" + i, cal.getTime()});
             }
 
         }
@@ -192,19 +193,19 @@ public class JAMonListenerFactoryTest {
 
         cal.setTime(new Date());
         cal.add(dateToAdd, firstVal);
-        bl.addRow(new Object[]{"label",new Integer(1000),"Active",cal.getTime()});
+        bl.addRow(new Object[]{"myInstanceName", "label", new Integer(1000), "Active", cal.getTime()});
 
         cal.setTime(new Date());
         cal.add(dateToAdd, firstVal);
-        bl.addRow(new Object[]{"label",new Integer(-1000),"Active",cal.getTime()});
+        bl.addRow(new Object[]{"myInstanceName", "label", new Integer(-1000), "Active", cal.getTime()});
 
         cal.setTime(new Date());
         cal.add(dateToAdd, secondVal);
-        bl.addRow(new Object[]{"label",new Integer(1100),"Active",cal.getTime()});
+        bl.addRow(new Object[]{"myInstanceName", "label", new Integer(1100), "Active", cal.getTime()});
 
         cal.setTime(new Date());
         cal.add(dateToAdd, secondVal);
-        bl.addRow(new Object[]{"label",new Integer(-1100),"Active",cal.getTime()});
+        bl.addRow(new Object[]{"myInstanceName", "label", new Integer(-1100), "Active", cal.getTime()});
 
         return grabIntegers(bl.getData());
     }
@@ -212,7 +213,7 @@ public class JAMonListenerFactoryTest {
     private static List<Integer> grabIntegers(Object[][] data) {
         List<Integer> list=new ArrayList<Integer>();
         for (int i=0;i<data.length;i++) {
-            list.add(Integer.parseInt(data[i][1].toString()));
+            list.add(Integer.parseInt(data[i][VALUE_INDEX].toString()));
         }
 
         return list;

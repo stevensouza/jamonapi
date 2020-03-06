@@ -15,9 +15,11 @@ import static org.assertj.core.api.Assertions.offset;
 
 public class MonitorFactoryTest {
 
-    private static final int SIZE=50;
-    private static final int FIRST_MIN=0;
-    private static final int FIRST_MAX=40;
+    private static final int SIZE = 50;
+    private static final int FIRST_MIN = 0;
+    private static final int FIRST_MAX = 40;
+    private static final int VALUE_INDEX = 2;
+    private static final int MAX_ACTIVE_INDEX = 3;
 
     @Before
     public void setUp() throws Exception {
@@ -621,7 +623,7 @@ public class MonitorFactoryTest {
     private void assertValueListenerIsNonDecreasing(Monitor mon) {
         Double previous=-1000.0;
         // value listener should be nondecreasing.
-        List<Double> values=getListenerValues(mon.getListenerType("value").getListener(), 1);
+        List<Double> values = getListenerValues(mon.getListenerType("value").getListener(), VALUE_INDEX);
         assertThat(values.size()).isEqualTo(SIZE);
         for (Double value : values)  {
             assertThat(value).isGreaterThanOrEqualTo(previous);
@@ -632,7 +634,7 @@ public class MonitorFactoryTest {
     private void assertMaxListenerGreaterThanFirstMax(Monitor mon) {
         Double previous=-1000.0;
         // max listener should be nondecreasing.
-        List<Double> values=getListenerValues(mon.getListenerType("max").getListener(), 1);
+        List<Double> values = getListenerValues(mon.getListenerType("max").getListener(), VALUE_INDEX);
         assertThat(values.size()).isGreaterThan(0);
         for (Double value : values)  {
             assertThat(value).isGreaterThanOrEqualTo(FIRST_MAX);
@@ -643,7 +645,7 @@ public class MonitorFactoryTest {
 
     private void assertMinListenerEqualToZero(Monitor mon) {
         // min listener should be nondecreasing.
-        List<Double> values=getListenerValues(mon.getListenerType("min").getListener(), 1);
+        List<Double> values = getListenerValues(mon.getListenerType("min").getListener(), VALUE_INDEX);
         assertThat(values.size()).isGreaterThan(0);
         for (Double value : values)  {
             assertThat(value).isEqualTo(FIRST_MIN);
@@ -652,7 +654,7 @@ public class MonitorFactoryTest {
 
     private void assertMaxActiveListenerValues(Monitor mon) {
         // maxactive listener should be nondecreasing.
-        List<Double> values=getListenerValues(mon.getListenerType("maxactive").getListener(), 2);
+        List<Double> values = getListenerValues(mon.getListenerType("maxactive").getListener(), MAX_ACTIVE_INDEX);
         assertThat(values.size()).isEqualTo(3);
         assertThat(values.get(0)).isEqualTo(3);
         assertThat(values.get(1)).isEqualTo(2);

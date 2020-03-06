@@ -102,7 +102,7 @@ public class DistributedUtilsTest {
         Monitor from = factory.getMonitor("from", "count");
         Monitor to = factory.getMonitor("to", "count");
 
-        DistributedUtils.copyJamonBufferListenerData(from, to);
+        DistributedUtils.copyJamonBufferListenerData(from, to, "myInstanceName");
         assertFalse(to.hasListeners());
     }
 
@@ -125,7 +125,7 @@ public class DistributedUtilsTest {
 
         Monitor to = factory.getMonitor("to", "count");
 
-        DistributedUtils.copyJamonBufferListenerData(from, to);
+        DistributedUtils.copyJamonBufferListenerData(from, to, "myInstanceName");
         // check that listeners were properly created.
         assertTrue(to.hasListeners());
         assertTrue(to.hasListener("value", DistributedUtils.getFifoBufferName("FIFOBuffer")));
@@ -135,7 +135,7 @@ public class DistributedUtilsTest {
         List<DistributedUtils.ListenerInfo> list = DistributedUtils.getAllListeners(to);
         assertThat(list.size()).isEqualTo(5);
 
-        // check that the 'to' monitor has the proper number of rows in its buffer\
+        // check that the 'to' monitor has the proper number of rows in its buffer
         assertBufferListeners(to, "value", "FIFOBuffer", 2);
         assertBufferListeners(to, "min", "minFIFOBuffer", 1);
         assertBufferListeners(to, "max", "FIFOBuffer", 2);
@@ -147,7 +147,7 @@ public class DistributedUtilsTest {
         from.start();
         factory.getTimeMonitor("from").start().stop(); // this will allow for a maxactive
         from.stop();
-        DistributedUtils.copyJamonBufferListenerData(from, to);
+        DistributedUtils.copyJamonBufferListenerData(from, to, "myInstanceName");
         assertBufferListeners(to, "maxactive", "FIFOBuffer", 1);
     }
 
@@ -156,6 +156,10 @@ public class DistributedUtilsTest {
         BufferList bufferList = jaMonBufferListener.getBufferList();
         assertThat(bufferList.getBufferSize()).isEqualTo(DistributedUtils.DEFAULT_BUFFER_SIZE);
         assertThat(bufferList.getRowCount()).isEqualTo(expectedRows);
+        if (expectedRows > 0) {
+            Object[][] data = bufferList.getDetailData().getData();
+            assertThat(data[0][0].toString()).isEqualTo("myInstanceName");
+        }
     }
 
 

@@ -12,7 +12,7 @@ import java.util.Date;
  * Track exceptions caught by jamon.
  */
 public class ExceptionMXBeanImp implements ExceptionMXBean {
-    private static final int STACKTRACE = 0;
+    private static final int STACKTRACE_INDEX = 1;
     public static ObjectName getObjectName() {
         return JmxUtils.getObjectName(ExceptionMXBean.class.getPackage().getName() + ":type=current,name=Exceptions");
     }
@@ -46,6 +46,6 @@ public class ExceptionMXBeanImp implements ExceptionMXBean {
     private static String getMostRecentStacktrace(JAMonBufferListener listener) {
         Object[][] stackTraces = listener.getDetailData().getData();
         int mostRecent = stackTraces.length-1;
-        return stackTraces[mostRecent][STACKTRACE].toString();
+        return stackTraces[mostRecent][STACKTRACE_INDEX].toString();
     }
 }
