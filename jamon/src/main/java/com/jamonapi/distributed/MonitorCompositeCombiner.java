@@ -16,7 +16,7 @@ public class MonitorCompositeCombiner {
     private JamonDataPersister persister;
 
     static final String SUMMARY_LISTENER = "FIFOBufferInstanceSummary";
-    static final String AGGREGATED_INSTANCENAME = "combined";
+    static final String AGGREGATED_INSTANCENAME = "aggregated";
     static final String AGGREGATED_MONITOR_LABEL = "com.jamonapi.distributed.aggregated";
     static final String FIFO_BUFFER = "FIFOBuffer";
     static final int SUMMARY_FIFO_BUFFER_SIZE = 100;

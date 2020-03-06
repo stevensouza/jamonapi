@@ -11,6 +11,7 @@ import java.util.List;
  */
 class DistributedUtils {
     private static final String FIFO_BUFFER = "FIFOBuffer";
+    static final String FIFO_BUFFER_SUFFIX = "combined";
     static final int DEFAULT_BUFFER_SIZE = 250;
 
     public static List<ListenerInfo> getAllListeners(Monitor monitor) {
@@ -106,14 +107,26 @@ class DistributedUtils {
     }
 
     private static JAMonBufferListener createBufferListener(String name, JAMonBufferListener from) {
-        JAMonBufferListener fifo = (JAMonBufferListener) from.copy();
+        JAMonBufferListener fifo = createBufferListener(from);
         fifo.getBufferList().setBufferSize(DEFAULT_BUFFER_SIZE);
         fifo.setName(name);
         return fifo;
     }
 
+    // The following method tries to create a cloned version of the passed in JAMonBufferListener. If it fails
+    // we don't want routine to fail so we fallback to creating a FIFO buffer. The primary reason it would fail is
+    // for a required library to not exist and so a serialization error would occur.  This could happen for example if
+    // the log4j library is not an available library and a log4j buffer listener was used.
+    private static JAMonBufferListener createBufferListener(JAMonBufferListener from) {
+        try {
+            return (JAMonBufferListener) from.copy();
+        } catch (RuntimeException e) {
+            return (JAMonBufferListener) JAMonListenerFactory.get(FIFO_BUFFER);
+        }
+    }
+
     static String getFifoBufferName(String name) {
-        return name + "_aggregated";
+        return name + "_" + FIFO_BUFFER_SUFFIX;
     }
 
     public static class ListenerInfo {
