@@ -20,8 +20,6 @@ public class MonitorCompositeCombiner {
     static final String AGGREGATED_MONITOR_LABEL = "com.jamonapi.distributed.aggregated";
     static final String FIFO_BUFFER = "FIFOBuffer";
     static final int SUMMARY_FIFO_BUFFER_SIZE = 100;
-    static final int INSTANCE_COUNT_FIFO_BUFFER_SIZE = 250;
-
 
     public MonitorCompositeCombiner(JamonDataPersister persister) {
         this.persister = persister;
@@ -146,9 +144,7 @@ public class MonitorCompositeCombiner {
     private Monitor startInstanceMonitor() {
         Monitor mon = MonitorFactory.start(AGGREGATED_MONITOR_LABEL);
         if (!mon.hasListeners()) {
-            JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) JAMonListenerFactory.get(FIFO_BUFFER);
-            jaMonBufferListener.getBufferList().setBufferSize(INSTANCE_COUNT_FIFO_BUFFER_SIZE);
-            mon.addListener("value", jaMonBufferListener);
+            mon.addListener("value", JAMonListenerFactory.get(FIFO_BUFFER));
         }
         return mon;
     }
