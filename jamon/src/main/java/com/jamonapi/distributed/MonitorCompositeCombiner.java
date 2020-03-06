@@ -18,7 +18,9 @@ public class MonitorCompositeCombiner {
     static final String SUMMARY_LISTENER = "FIFOBufferInstanceSummary";
     static final String AGGREGATED_INSTANCENAME = "aggregated";
     static final String AGGREGATED_MONITOR_LABEL = "com.jamonapi.distributed.aggregated";
+    static final String FIFO_BUFFER = "FIFOBuffer";
     static final int SUMMARY_FIFO_BUFFER_SIZE = 100;
+    static final int INSTANCE_COUNT_FIFO_BUFFER_SIZE = 250;
 
 
     public MonitorCompositeCombiner(JamonDataPersister persister) {
@@ -36,91 +38,10 @@ public class MonitorCompositeCombiner {
     }
 
 
-    // test filterbyunits test
-    // copy jamon listener buffers     // configurable sizes and features??
-    //      i.e. other jamonlisteners
-    //      max,min,fifo,??
-    //             JAMonBufferListener bufferListener = (JAMonBufferListener) mon.getListenerType("value").getListener(listenerType[0].toString());
-    //            // each should have 50 rows of data.
-    //            assertThat(bufferListener.getRowCount()).isEqualTo(BUFFER_SIZE);
-    //            Object[][] data = bufferListener.getDetailData().getData();
-    //     JAMonBufferListener.public void addRow(Object[] row) {
-    //  how to get data in order?
-    // maybe make the ijnstancename an extrra column
-    // always add to fifo buffer in the respective listenertype.
-    // JAMonDetailRow = note Arrays.asList(mon.getInstanceName(), label, ...)
-    //         Object[][] data=((JAMonBufferListener)listener).getDetailData().getData();
-    // public class BufferList implements DetailData {
-    //    bufferListener.getBufferList().getRowCount())
-    // note i think the following consructor is used if i want different data to be dislayed in each row
-//    public JAMonBufferListener(String name){
-//        this(name, new BufferList(DEFAULT_HEADER,50));
-//    }
-//
-//    /** Name the listener and pass in the jamon BufferList to use */
-//    public JAMonBufferListener(String name, BufferList list) {
-//        this.name=name;
-//        this.list=list;
-//    }
-//    private static JAMonBufferListener getFIFO() {
-//        BufferHolder bufferHolder=new FIFOBufferHolder();
-//        BufferList bufferList=new BufferList(JAMonBufferListener.DEFAULT_HEADER,bufferHolder);
-//              public BufferList(String[] header, int bufferSize,  BufferHolder bufferHolder) {
-//        return new JAMonBufferListener("FIFOBuffer", bufferList);
-//    }
-    // public class DetailDataWrapper implements DetailData {
-    //     public BufferList(String[] header, int bufferSize,  BufferHolder bufferHolder) {
-
-    //  List original=bufferHolder.getOrderedCollection();
-    //  Log4JBufferListener ----
-    // getBufferList().addRow(toArray(key.getLoggingEvent(), mon));
-//    private static HeaderInfo log4jHeader=getHeaderInfo(new String[] { "Label", "LoggerName",
-//            "Level", "ThreadName", "Exception" });
-
-//    protected Object[] toArray(LoggingEvent event, Monitor mon) {
-//        // populate header with standard monitor data first and after the fact by log4j data
-//        Object[] data=log4jHeader.getData(mon);
-//        data[0]=mon.getMonKey().getDetails();
-//        data[1]=event.getLoggerName();
-//        data[2]=event.getLevel().toString();
-//        data[3]=event.getThreadName();
-//        data[4]=(event.getThrowableInformation() == null || event.getThrowableInformation().getThrowable() == null) ?
-//                "" : Misc.getExceptionTrace(event.getThrowableInformation().getThrowable());
-//
-//        return data;
-//    }
-    // JAMonBufferListener - Label
-    //     public static HeaderInfo getHeaderInfo(String[] firstPart) {
-    //        return new HeaderInfo(firstPart);
-    //    }
-//public static HeaderInfo getDefaultHeaderInfo() {
-//    return getHeaderInfo(new String[]{"Label"});
-
-//}
-//JAMonDetailValue
-// public Object[] toArray() {
-//    if (row==null) {
-//        if (keyToString)
-//            row = new Object[]{Misc.getAsString(key.getDetails()),new Double(value), new Double(active), new Date(time)};
-//        else {
-//            List list=new ArrayList();
-//            Misc.addTo(list, key.getDetails()); // key details is a List with instanceName, label
-//            list.add(new Double(value));
-//            list.add(new Double(active));
-//            list.add(new Date(time));
-//            row=list.toArray();
-//        }
-// Misc
-//    public static void addTo(Collection coll, Object objToAdd) {
-    // List list ;
-    // list.add(instanceName);
-    // list.add(mon.getLabel())
-    // key.setDetails(list)
-    //pass in and change instancename from mc to key.
-//                        except for local
-//                        config from properties
+    // test filterbyunits test - need to redoplay war
+    // try max buffer listener to see if it works (maybe introduce random slow down in a test page)
+    //                        config from properties
 //                        SAVE TIME FORR EACH PROCESSED INSTANCE WITH A FIFOBUFFER
-//                        try log4j listener for instnace name
 
 
     // make this configurable from both size and whether to do or not.?????
@@ -156,9 +77,11 @@ public class MonitorCompositeCombiner {
     public MonitorComposite aggregate(String... instanceKeys) {
         FactoryEnabled factory = new FactoryEnabled(false);
         for (String instanceKey : instanceKeys) {
+            Monitor mon = startInstanceMonitor();
             MonitorComposite monitorComposite = persister.get(instanceKey);
-            incrementInstanceMonitor(factory, monitorComposite.getInstanceName());
+            mon.getMonKey().setDetails(monitorComposite.getInstanceName());
             aggregate(factory, monitorComposite);
+            mon.stop();
         }
 
         MonitorComposite aggregated = factory.getRootMonitor();
@@ -220,11 +143,14 @@ public class MonitorCompositeCombiner {
 
     }
 
-    private void incrementInstanceMonitor(FactoryEnabled factory, String instanceName) {
-        MonKey key = new MonKeyImp(AGGREGATED_MONITOR_LABEL, "count");
-        key.setDetails(instanceName);
-        key.setInstanceName(AGGREGATED_INSTANCENAME);
-        factory.getMonitor(key).add(1);
+    private Monitor startInstanceMonitor() {
+        Monitor mon = MonitorFactory.start(AGGREGATED_MONITOR_LABEL);
+        if (!mon.hasListeners()) {
+            JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) JAMonListenerFactory.get(FIFO_BUFFER);
+            jaMonBufferListener.getBufferList().setBufferSize(INSTANCE_COUNT_FIFO_BUFFER_SIZE);
+            mon.addListener("value", jaMonBufferListener);
+        }
+        return mon;
     }
 
     private List<MonitorComposite> getMonitorComposites(String[] instanceKeys) {

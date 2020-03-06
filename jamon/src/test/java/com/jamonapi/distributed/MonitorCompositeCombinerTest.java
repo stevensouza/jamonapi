@@ -15,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class MonitorCompositeCombinerTest {
+    private static int NOT_APPLICABLE = -1;
 
     @Before
     public void setUp() throws Exception {
@@ -194,7 +195,7 @@ public class MonitorCompositeCombinerTest {
         MonitorCompositeCombiner monitorCompositeCombiner = new MonitorCompositeCombiner(persister);
         MonitorComposite aggregate = monitorCompositeCombiner.aggregate(instances);
 
-        assertThat(aggregate.getNumRows()).isEqualTo(5);
+        assertThat(aggregate.getNumRows()).isEqualTo(4);
         assertThat(aggregate.getInstanceName()).isEqualTo(MonitorCompositeCombiner.AGGREGATED_INSTANCENAME);
         assertTrue(aggregate.hasListeners());
 
@@ -202,7 +203,8 @@ public class MonitorCompositeCombinerTest {
         isExpected(aggregate.getMonitor(new MonKeyImp("instance1.label2", "bytes")), 1, 20, true);
         isExpected(aggregate.getMonitor(new MonKeyImp("instance2.label1", "bytes")), 1, 30, true);
         isExpected(aggregate.getMonitor(new MonKeyImp("com.jamonapi.Exceptions", "Exception")), 0, 0, true);
-        isExpected(aggregate.getMonitor(new MonKeyImp(AGGREGATED_MONITOR_LABEL, "count")), 2, 2, false);
+        assertThat(MonitorFactory.getMonitor(new MonKeyImp(AGGREGATED_MONITOR_LABEL, "ms.")).getHits()).isEqualTo(2);
+        assertTrue(MonitorFactory.getMonitor(new MonKeyImp(AGGREGATED_MONITOR_LABEL, "ms.")).hasListeners());
         mon = aggregate.getMonitor(new MonKeyImp("instance.label1", "count"));
         assertTrue(mon.hasListener("value", DistributedUtils.getFifoBufferName("FIFOBuffer")));
         JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) mon.getListenerType("value").getListener(DistributedUtils.getFifoBufferName("FIFOBuffer"));
@@ -212,7 +214,11 @@ public class MonitorCompositeCombinerTest {
     private void isExpected(Monitor mon, int hits, double total, boolean bufferListenerExists) {
         assertThat(mon.getMonKey().getInstanceName()).isEqualTo(MonitorCompositeCombiner.AGGREGATED_INSTANCENAME);
         assertThat(mon.getHits()).isEqualTo(hits);
-        assertThat(mon.getTotal()).isEqualTo(total);
+
+        if (total != NOT_APPLICABLE) {
+            assertThat(mon.getTotal()).isEqualTo(total);
+        }
+
         if (bufferListenerExists) {
             assertTrue(mon.getListenerType("value").hasListener(MonitorCompositeCombiner.SUMMARY_LISTENER));
         }
