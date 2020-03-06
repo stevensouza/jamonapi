@@ -2,6 +2,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ page import="com.fdsapi.*, com.fdsapi.arrays.*, net.sf.xsshtmlfilter.HTMLFilter, java.text.DateFormat, java.text.DecimalFormat, java.util.*,  java.util.regex.Matcher" %>
 <%@ page import="java.util.regex.Pattern" %>
+
 <%
 String outputType= getValue(request.getParameter("outputTypeValue"),"html");
 if ("csv".equalsIgnoreCase(outputType) || "csv1".equalsIgnoreCase(outputType)) {
