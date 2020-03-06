@@ -12,19 +12,22 @@ MonitorComposite mc = (MonitorComposite) session.getAttribute("monitorComposite"
 MonKey key=null;
 
 int keyNum=0;
+if (request.getParameter("key")!=null) { // monmanage.jsp?key=21
+        keyNum=getNum(request.getParameter("key"), "1")-1;
+        key=getMonKey(mc, keyNum);
+        session.setAttribute("monKey", key);
+        session.setAttribute("keyNum", keyNum);
+}
 // monKey is the previous key that the user picked in session.  i.e. they didn't come by clicking on jamonadmin.jsp
-if (request.getParameter("key")==null  && session.getAttribute("monKey")!=null) {
+else if (mc.isLocalInstance() && session.getAttribute("monKey")!=null) {
 //  keyNum=Integer.parseInt((String)session.getAttribute("keyNum"));
   key=(MonKey) session.getAttribute("monKey");
-} else if (request.getParameter("key")!=null) {
-  keyNum=getNum(request.getParameter("key"), "1")-1;
-  key=getMonKey(mc, keyNum);
-  session.setAttribute("monKey", key);
-  session.setAttribute("keyNum", keyNum);
+} else if (session.getAttribute("keyNum")!=null) { // this is used for composites combining multiple server instances - i.e. not local only
+    keyNum=getNum(session.getAttribute("keyNum").toString(), "1");
 }
 
 
-String listenerType = "value";
+    String listenerType = "value";
 if (request.getParameter("listenertype")==null  && session.getAttribute("listenerType")!=null)
   listenerType=(String)session.getAttribute("listenerType");
 else if (request.getParameter("listenertype")!=null) {
@@ -42,14 +45,16 @@ if (mc.isLocalInstance()) {
 Monitor mon=null;
 boolean hasListeners=false;
 boolean enabled=false;
+// local can have elements shift around due to new monitors being added so we have to use the key
 if (mc.isLocalInstance() && mc.exists(key)) {
   mon=mc.getMonitor(key);
   hasListeners=mon.hasListeners();
   enabled=mon.isEnabled();
-} else  {
+} else  { // can't use MonKey in a composite because each instance (local, local-saved,...) can have the same key
     mon=mc.getMonitors()[keyNum];
     hasListeners=mon.hasListeners();
     enabled=mon.isEnabled();
+    key=mon.getMonKey();
 }
 
 %>

@@ -28,7 +28,7 @@
 <%
     long duration = sleepRandom(5);
 %>
-<p>The page slept for <%=duration%> seconds.</p>
+<p>The page slept for <%=duration%> milliseconds.</p>
 <p><b>You can see the results in JAMonAdmin.jsp. Filter on 'sleep.jsp'</b></p>
 
 

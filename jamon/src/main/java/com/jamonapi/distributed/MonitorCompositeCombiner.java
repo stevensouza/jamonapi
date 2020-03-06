@@ -40,16 +40,15 @@ public class MonitorCompositeCombiner {
     // try max buffer listener to see if it works (maybe introduce random slow down in a test page)
     //                        config from properties
 //                        SAVE TIME FORR EACH PROCESSED INSTANCE WITH A FIFOBUFFER
+    // jamonadmin.jsp optimize imports
 
 
     // make this configurable from both size and whether to do or not.?????
     //        //  - log4j
     //        //  - steps for jetty, automon, tomcat
-    // start/stop for each instance to aggregate
-    //      numinstances fifobuffer add it
     // git push/ git push github_origin
     // upgrade log4j
-    // can i change serializable log4j so it doesn't fail?
+    //  can i change serializable log4j so it doesn't fail?
     //      it was a serialization issue due to log4j jar missing in jetty
     //      stackTrace=com.hazelcast.nio.serialization.HazelcastSerializationException: java.lang.NoClassDefFoundError: org/apache/log4j/spi/LoggingEvent
     //  probably get rid of that error by not rreturning loggingevent
@@ -62,6 +61,8 @@ public class MonitorCompositeCombiner {
     // video - about new features and about running, checking in, and compiling
     // x upgrade hazel cast to 4
     // x combiner tests
+    // x start/stop for each instance to aggregate
+    // x     numinstances fifobuffer add it
 
 
     /**
