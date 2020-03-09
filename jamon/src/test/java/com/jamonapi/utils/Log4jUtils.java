@@ -1,7 +1,9 @@
 package com.jamonapi.utils;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+
+import com.jamonapi.MonitorFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
@@ -11,40 +13,74 @@ import java.util.Properties;
 public class Log4jUtils {
 
 
-    public static Logger log() {
-        PropertyConfigurator.configure(getDefaultProps());
-        Logger logger = org.apache.log4j.Logger.getLogger("com.jamonapi.log4j");
+    public static void log() {
 
-        logger.trace("trace message " + 1);
+    }
+//    public static Logger log() {
+//        PropertyConfigurator.configure(getDefaultProps());
+//        Logger logger = org.apache.log4j.Logger.getLogger("com.jamonapi.log4j");
+//
+//        logger.trace("trace message " + 1);
+//
+//        logger.debug("debug message " + 2);
+//        logger.debug("debug message " + 2);
+//
+//        logger.info("info message " + 3);
+//        logger.info("info message " + 3);
+//        logger.info("info message " + 3);
+//
+//        logger.warn("warn message " + 4);
+//        logger.warn("warn message " + 4);
+//        logger.warn("warn message " + 4);
+//        logger.warn("warn message " + 4);
+//
+//        logger.error("error message " + 5);
+//        logger.error("error message " + 5);
+//        logger.error("error message " + 5);
+//        logger.error("error message " + 5);
+//        logger.error("error message " + 5);
 
-        logger.debug("debug message " + 2);
-        logger.debug("debug message " + 2);
+//        logger.fatal("fatal message " + 6);
+//        logger.fatal("fatal message " + 6);
+//        logger.fatal("fatal message " + 6);
+//        logger.fatal("fatal message " + 6);
+//        logger.fatal("fatal message " + 6);
+//        logger.fatal("fatal message " + 6);
 
-        logger.info("info message " + 3);
-        logger.info("info message " + 3);
-        logger.info("info message " + 3);
+//        return logger;
+//    }
 
-        logger.warn("warn message " + 4);
-        logger.warn("warn message " + 4);
-        logger.warn("warn message " + 4);
-        logger.warn("warn message " + 4);
+    private static Logger delme = LoggerFactory.getLogger(Log4jUtils.class);
 
-        logger.error("error message " + 5);
-        logger.error("error message " + 5);
-        logger.error("error message " + 5);
-        logger.error("error message " + 5);
-        logger.error("error message " + 5);
+    private static void delme() {
+       delme.error("hi {}", 100);
+       delme.info("bye");
+       System.err.println(MonitorFactory.getReport());
 
-        logger.fatal("fatal message " + 6);
-        logger.fatal("fatal message " + 6);
-        logger.fatal("fatal message " + 6);
-        logger.fatal("fatal message " + 6);
-        logger.fatal("fatal message " + 6);
-        logger.fatal("fatal message " + 6);
-
-        return logger;
     }
 
+    public static void main(String[] args) {
+        delme();
+    }
+/*
+Loggerj ctx = (LoggerContext) LogManager.getContext(false);
+Configuration config = ctx.getConfiguration();
+
+PatternLayout layout = PatternLayout.newBuilder()
+  .withConfiguration(config)
+  .withPattern("%d{HH:mm:ss.SSS} %level %msg%n")
+  .build();
+
+Appender appender = FileAppender.newBuilder()
+  .setConfiguration(config)
+  .withName("programmaticFileAppender")
+  .withLayout(layout)
+  .withFileName("java.log")
+  .build();
+
+appender.start();
+config.addAppender(appender);
+ */
 
     private static Properties getDefaultProps() {
         // # Set root logger level to DEBUG and its only appender to A1.

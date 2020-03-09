@@ -8,7 +8,7 @@ import com.jamonapi.utils.BufferList;
 import com.jamonapi.utils.DetailData;
 import com.jamonapi.utils.DetailDataWrapper;
 import com.jamonapi.utils.Misc;
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
 
 /**
  * This class can act as a standard JAMonBufferListener/FIFOBuffer or more
@@ -21,7 +21,7 @@ import org.apache.log4j.spi.LoggingEvent;
  * <p>It will create details of the key details (Label (formattedMessage), LoggerName, Level, Threadname, Exception) followed by
  * lastvalue, active, and the date of the invocation</p>
  * 
- * 
+ *  @since 2.82
  */
 public class Log4jBufferListener extends JAMonBufferListener {
     private static final long serialVersionUID = 278L;
@@ -90,7 +90,7 @@ public class Log4jBufferListener extends JAMonBufferListener {
      * @param mon
      * @return Object[]
      */
-    protected Object[] toArray(LoggingEvent event, Monitor mon) {
+    protected Object[] toArray(LogEvent event, Monitor mon) {
         // populate first with standard monitor data (by calling getData(mon)) first and after the fact by log4j data
         Object[] data = log4jHeader.getData(mon);// allocate full array and populate value, active, and date (the last columns)
         data[0] = mon.getMonKey().getInstanceName();
@@ -98,8 +98,10 @@ public class Log4jBufferListener extends JAMonBufferListener {
         data[2] = event.getLoggerName();
         data[3] = event.getLevel().toString();
         data[4] = event.getThreadName();
-        data[5] = (event.getThrowableInformation() == null || event.getThrowableInformation().getThrowable() == null) ?
-                "" : Misc.getExceptionTrace(event.getThrowableInformation().getThrowable());
+        data[5] = (event.getThrown() == null) ?
+                "" : Misc.getExceptionTrace(event.getThrown());
+        //        data[5] = (event.getThrowableInformation() == null || event.getThrowableInformation().getThrowable() == null) ?
+//                "" : Misc.getExceptionTrace(event.getThrowableInformation().getThrowable());
 
         return data;
     }

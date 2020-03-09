@@ -3,16 +3,27 @@ package com.jamonapi.log4j;
 import com.jamonapi.*;
 import com.jamonapi.utils.DefaultGeneralizer;
 import com.jamonapi.utils.Generalizer;
-import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.Level;
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.*;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.config.Property;
+import org.apache.logging.log4j.core.config.plugins.Plugin;
+import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
+import org.apache.logging.log4j.core.config.plugins.PluginElement;
+import org.apache.logging.log4j.core.config.plugins.PluginFactory;
+import org.apache.logging.log4j.core.layout.PatternLayout;
+
+import java.io.Serializable;
 
 /**
  * Implementaton of a log4j Appender that allows you to summarize log4j stats via jamon and view
  * the tail of the log in realtime in a jamon web page.  Click here for more info on how to use the <a href="http://jamonapi.sourceforge.net/log4j_jamonappender.html">JAMonAppender</a>.
+ *
+ * @since 2.82
  */
 
-public class JAMonAppender extends AppenderSkeleton {
+@Plugin(name = "JamonAppender", category = Core.CATEGORY_NAME, elementType = Appender.ELEMENT_TYPE, printObject = true)
+public class JAMonAppender extends AbstractAppender {
     /* Prefix for this classes jamon monitor labels */
     private final String PREFIX = "com.jamonapi.log4j.JAMonAppender.";
 
@@ -39,9 +50,43 @@ public class JAMonAppender extends AppenderSkeleton {
         JAMonListenerFactory.put(new Log4jBufferListener());
     }
 
-    public JAMonAppender() {
+    public JAMonAppender(final String name, final Filter filter, final Layout<? extends Serializable> layout, final boolean ignoreExceptions,
+                         int bufferSize,
+                         boolean enableListenerDetails,
+                         boolean enableLevelMonitoring,
+                         boolean generalize,
+                         String levelListenerType) {
+        super(name, filter, layout, ignoreExceptions, Property.EMPTY_ARRAY);
+        setListenerBufferSize(bufferSize);
+        setEnableListenerDetails(enableListenerDetails);
+        setEnableLevelMonitoring(enableLevelMonitoring);
+        setGeneralize(generalize);
+        setEnableListeners(levelListenerType);
     }
 
+    // EnableLevelMonitoring=false
+    //  i.e. TOTAL, error etc counts
+   // EnableListeners" value="BASIC
+    // <param name="generalize" value="true"/>
+
+
+    @PluginFactory
+    public static JAMonAppender createAppender(@PluginAttribute("name") String name,
+                                               @PluginAttribute("ignoreExceptions") boolean ignoreExceptions, // true - just log exception, false - log and pass exception to the application
+                                               @PluginElement("Layout") Layout layout,
+                                               @PluginElement("Filters") Filter filter,
+                                               @PluginAttribute(value = "bufferSize", defaultInt = 100) int bufferSize,
+                                               @PluginAttribute(value = "enableListenerDetails", defaultBoolean = true) boolean enableListenerDetails,
+                                               @PluginAttribute(value = "enableLevelMonitoring", defaultBoolean = true) boolean enableLevelMonitoring,
+                                               @PluginAttribute(value = "generalize", defaultBoolean = false) boolean generalize,
+                                               @PluginAttribute(value = "enableListeners", defaultString = "NONE") String levelListenerType
+    ) {
+        if (layout == null) {
+            layout = PatternLayout.createDefaultLayout();
+        }
+
+        return new JAMonAppender(name, filter, layout, ignoreExceptions, bufferSize, enableListenerDetails, enableLevelMonitoring, generalize, levelListenerType);
+    }
     /**
      * If the appender is enabled then start and stop a JAMon entry. Depending
      * on how this object is configured it may also put details into a
@@ -52,10 +97,19 @@ public class JAMonAppender extends AppenderSkeleton {
      * @param event
      */
     @Override
-    protected void append(LoggingEvent event) {
-
-        String message = (getLayout() == null) ? event.getRenderedMessage() : getLayout().format(
-                event);
+    public void append(LogEvent event) {
+//        String message = (getLayout() == null) ? event.getMessage() : getLayout()..format(
+//////                event);
+        // note sure of below compared to above.  also does it make sense toconditionally do iit
+        String message = event.getMessage().toString();
+        System.err.println(this);
+        /*
+             if (event instanceof MutableLogEvent) {
+            events.add(((MutableLogEvent) event).createMemento());
+        } else {
+            events.add(event);
+        }
+         */
         if (getEnableLevelMonitoring()) {
             // monitor that counts all calls to log4j logging methods
             MonitorFactory.add(createKey(PREFIX + "TOTAL", message, event), 1);
@@ -70,14 +124,13 @@ public class JAMonAppender extends AppenderSkeleton {
         if (getGeneralize()) {
             MonitorFactory.add(createKey(generalize(message), message, event), 1);
         }
-
     }
+
 
     // Return a key that will put LoggingEvent info in a bufferlistenr if
     // enableListenerDetails has been enabled,
     // else simply use the standard jamon MonKeyImp
-    private MonKey createKey(String summaryLabel, String detailLabel,
-            LoggingEvent event) {
+    private MonKey createKey(String summaryLabel, String detailLabel, LogEvent event) {
         if (enableListenerDetails) // put array in details buffer
             return new Log4jMonKey(summaryLabel, detailLabel, units, event);
         else
@@ -85,11 +138,6 @@ public class JAMonAppender extends AppenderSkeleton {
 
     }
 
-    /**  Required log4j method. Currently a no-op. */
-    @Override
-    public void close() {
-
-    }
 
     /**
      * JAMonAppender doesn't have to have a layount because it is acceptable to
@@ -104,10 +152,7 @@ public class JAMonAppender extends AppenderSkeleton {
      * log4j.appender.jamonAppender.layout
      * </p>
      */
-    @Override
-    public boolean requiresLayout() {
-        return true;
-    }
+
 
     /**
      * @return Returns the units. By default this is 'log4j' though it can be
@@ -183,7 +228,7 @@ public class JAMonAppender extends AppenderSkeleton {
             addDefaultListener(MonitorFactory.getMonitor(PREFIX + Level.ERROR, units));
         else if (Level.FATAL.toString().equalsIgnoreCase(level.toUpperCase()))
             addDefaultListener(MonitorFactory.getMonitor(PREFIX + Level.FATAL, units));
-        else if ("TOTAL".toString().equalsIgnoreCase(level.toUpperCase()))
+        else if ("TOTAL".equalsIgnoreCase(level.toUpperCase()))
             addDefaultListener(MonitorFactory.getMonitor(PREFIX + "TOTAL", units));
         else if (Level.ALL.toString().equalsIgnoreCase(level.toUpperCase())) {
             addDefaultListener(MonitorFactory.getMonitor(PREFIX + Level.DEBUG, units));
@@ -192,7 +237,7 @@ public class JAMonAppender extends AppenderSkeleton {
             addDefaultListener(MonitorFactory.getMonitor(PREFIX + Level.ERROR, units));
             addDefaultListener(MonitorFactory.getMonitor(PREFIX + Level.FATAL, units));
             addDefaultListener(MonitorFactory.getMonitor(PREFIX + "TOTAL", units));
-        } else if ("BASIC".toString().equalsIgnoreCase(level.toUpperCase())) {
+        } else if ("BASIC".equalsIgnoreCase(level.toUpperCase())) {
             addDefaultListener(MonitorFactory.getMonitor(PREFIX + "TOTAL", units));
             addDefaultListener(MonitorFactory.getMonitor(PREFIX + Level.ERROR, units));
             addDefaultListener(MonitorFactory.getMonitor(PREFIX + Level.FATAL, units));
@@ -282,4 +327,16 @@ public class JAMonAppender extends AppenderSkeleton {
         this.generalizer = (Generalizer) Class.forName(generalizerClassStr).newInstance();
     }
 
+    @Override
+    public String toString() {
+        return "JAMonAppender{" +
+                "PREFIX='" + PREFIX + '\'' +
+                ", bufferSize=" + bufferSize +
+                ", units='" + units + '\'' +
+                ", enableListenerDetails=" + enableListenerDetails +
+                ", enableLevelMonitoring=" + enableLevelMonitoring +
+                ", generalize=" + generalize +
+                ", generalizer=" + generalizer +
+                '}';
+    }
 }

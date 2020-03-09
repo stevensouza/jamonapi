@@ -1,7 +1,7 @@
 package com.jamonapi.log4j;
 
 import com.jamonapi.MonKeyImp;
-import org.apache.log4j.spi.LoggingEvent;
+import org.apache.logging.log4j.core.LogEvent;
 
 /**
  * MonKey used to put log4j records into jamon hashmap. It is the same as
@@ -11,7 +11,8 @@ import org.apache.log4j.spi.LoggingEvent;
  * LoggingEvent of this key use a Log4jBufferListener for log4j JAMon monitors.
  * A regular FIFO buffer can also be used, however all info in the LoggingEvent
  * won't be used in this case.
- * 
+ *
+ *  @since 2.82
  */
 public class Log4jMonKey extends MonKeyImp {
 
@@ -19,14 +20,14 @@ public class Log4jMonKey extends MonKeyImp {
 
     /** Constructor for building jamon key for log4j */
     public Log4jMonKey(String summaryLabel, String detailLabel, String units,
-            LoggingEvent event) {
+                       LogEvent event) {
         super(summaryLabel, detailLabel, units);
         setParam(event);
     }
 
     /** Return the log4j LoggingEvent object that is part of this key */
-    public LoggingEvent getLoggingEvent() {
-        return (LoggingEvent) getParam();
+    public LogEvent getLoggingEvent() {
+        return (LogEvent) getParam();
     }
 
     /**

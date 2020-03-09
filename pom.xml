@@ -67,7 +67,7 @@
          <jetty9.version>9.2.1.v20140609</jetty9.version>
          <jsp.version>2.0</jsp.version>
          <junit.version>4.11</junit.version>
-         <log4j.version>1.2.15</log4j.version>
+         <log4j.version>2.13.1</log4j.version>
          <mockito.version>1.9.5</mockito.version>
          <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
          <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
@@ -117,24 +117,21 @@
          </dependency>
 
          <dependency>
-             <groupId>log4j</groupId>
-             <artifactId>log4j</artifactId>
+                 <groupId>org.apache.logging.log4j</groupId>
+                 <artifactId>log4j-core</artifactId>
+                 <version>${log4j.version}</version>
+         </dependency>
+
+         <dependency>
+             <groupId>org.apache.logging.log4j</groupId>
+             <artifactId>log4j-api</artifactId>
              <version>${log4j.version}</version>
-             <exclusions>
-                 <exclusion>
-                     <groupId>com.sun.jdmk</groupId>
-                     <artifactId>jmxtools</artifactId>
-                 </exclusion>
-                 <exclusion>
-                     <groupId>com.sun.jmx</groupId>
-                     <artifactId>jmxri</artifactId>
-                 </exclusion>
-                 <exclusion>
-                     <groupId>javax.jms</groupId>
-                     <artifactId>jms</artifactId>
-                 </exclusion>
-             </exclusions>
-             <scope>provided</scope>
+         </dependency>
+
+         <dependency>
+             <groupId>org.apache.logging.log4j</groupId>
+             <artifactId>log4j-slf4j-impl</artifactId>
+             <version>${log4j.version}</version>
          </dependency>
 
          <dependency>

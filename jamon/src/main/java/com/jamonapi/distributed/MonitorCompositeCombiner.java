@@ -35,11 +35,7 @@ public class MonitorCompositeCombiner {
         return append(getMonitorComposites(instanceKeys));
     }
 
-
-    // test filterbyunits test - need to redoplay war
-    // try max buffer listener to see if it works (maybe introduce random slow down in a test page)
     //                        config from properties
-//                        SAVE TIME FORR EACH PROCESSED INSTANCE WITH A FIFOBUFFER
     // jamonadmin.jsp optimize imports
 
 
@@ -63,6 +59,9 @@ public class MonitorCompositeCombiner {
     // x combiner tests
     // x start/stop for each instance to aggregate
     // x     numinstances fifobuffer add it
+    // x test filterbyunits test - need to redoplay war
+    // x try max buffer listener to see if it works (maybe introduce random slow down in a test page)
+//     x                   SAVE TIME FORR EACH PROCESSED INSTANCE WITH A FIFOBUFFER
 
 
     /**
