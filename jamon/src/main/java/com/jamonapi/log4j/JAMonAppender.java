@@ -64,11 +64,6 @@ public class JAMonAppender extends AbstractAppender {
         setEnableListeners(levelListenerType);
     }
 
-    // EnableLevelMonitoring=false
-    //  i.e. TOTAL, error etc counts
-   // EnableListeners" value="BASIC
-    // <param name="generalize" value="true"/>
-
 
     @PluginFactory
     public static JAMonAppender createAppender(@PluginAttribute("name") String name,
@@ -98,31 +93,23 @@ public class JAMonAppender extends AbstractAppender {
      */
     @Override
     public void append(LogEvent event) {
-//        String message = (getLayout() == null) ? event.getMessage() : getLayout()..format(
-//////                event);
-        // note sure of below compared to above.  also does it make sense toconditionally do iit
-        String message = event.getMessage().toString();
-        System.err.println(this);
-        /*
-             if (event instanceof MutableLogEvent) {
-            events.add(((MutableLogEvent) event).createMemento());
-        } else {
-            events.add(event);
-        }
-         */
-        if (getEnableLevelMonitoring()) {
-            // monitor that counts all calls to log4j logging methods
-            MonitorFactory.add(createKey(PREFIX + "TOTAL", message, event), 1);
-            // monitor that counts calls to log4j at each level (DEBUG/WARN/...)
-            MonitorFactory.add(createKey(PREFIX + event.getLevel(), message, event), 1);
-        }
+        if (getEnableLevelMonitoring() || getGeneralize()) {
+            LogEvent immutableEvent = event.toImmutable(); // might or might not make copy.
+            String message = (event.getMessage()==null) ? "" : event.getMessage().getFormattedMessage();;
+            if (getEnableLevelMonitoring()) {
+                // monitor that counts all calls to log4j logging methods
+                MonitorFactory.add(createKey(PREFIX + "TOTAL", message, immutableEvent), 1);
+                // monitor that counts calls to log4j at each level (DEBUG/WARN/...)
+                MonitorFactory.add(createKey(PREFIX + event.getLevel(), message, immutableEvent), 1);
+            }
 
-        // if the object was configured to generalize the message then do as
-        // such. This will create a jamon record with the generalized method
-        // so it is important for the developer to ensure that the generalized
-        // message is unique enough not to grow jamon unbounded.
-        if (getGeneralize()) {
-            MonitorFactory.add(createKey(generalize(message), message, event), 1);
+            // if the object was configured to generalize the message then do as
+            // such. This will create a jamon record with the generalized method
+            // so it is important for the developer to ensure that the generalized
+            // message is unique enough not to grow jamon unbounded.
+            if (getGeneralize()) {
+                MonitorFactory.add(createKey(generalize(message), message, immutableEvent), 1);
+            }
         }
     }
 
@@ -326,17 +313,5 @@ public class JAMonAppender extends AbstractAppender {
     IllegalAccessException, ClassNotFoundException {
         this.generalizer = (Generalizer) Class.forName(generalizerClassStr).newInstance();
     }
-
-    @Override
-    public String toString() {
-        return "JAMonAppender{" +
-                "PREFIX='" + PREFIX + '\'' +
-                ", bufferSize=" + bufferSize +
-                ", units='" + units + '\'' +
-                ", enableListenerDetails=" + enableListenerDetails +
-                ", enableLevelMonitoring=" + enableLevelMonitoring +
-                ", generalize=" + generalize +
-                ", generalizer=" + generalizer +
-                '}';
-    }
+    
 }
