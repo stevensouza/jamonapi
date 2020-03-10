@@ -146,8 +146,8 @@ public class JAMonAppender extends AbstractAppender {
 
     private String standardizeSummaryLabel(String message, LogEvent event) {
         // add ERROR etc to summarylabel and generalize it.
-        // INFO: user name is ? with age ?
-        return new StringBuilder(event.getLevel().toString()).append(": ").append(generalize(message)).toString();
+        // com.jamonapi.log4j.JAMonAppender.INFO: user name is ? with age ?
+        return new StringBuilder(PREFIX).append(event.getLevel().toString()).append(": ").append(generalize(message)).toString();
     }
 
     // Return a key that will put LogEvent info in a bufferlistenr if

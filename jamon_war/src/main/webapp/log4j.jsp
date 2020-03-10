@@ -1,6 +1,7 @@
 <%@ page language="java" buffer="8kb" autoFlush="true" isThreadSafe="true" isErrorPage="false"  %>
-<%@ page import="com.fdsapi.*, com.fdsapi.arrays.*, org.apache.log4j.Logger, org.apache.log4j.PropertyConfigurator, java.util.Properties" %>
+<%@ page import="com.fdsapi.*, com.fdsapi.arrays.*, java.util.Properties" %>
 <%@ page import="com.jamonapi.*, com.jamonapi.proxy.*, com.jamonapi.utils.*, com.jamonapi.distributed.*" %>
+<%@ page import="org.apache.logging.log4j.LogManager, org.apache.logging.log4j.Logger" %>
 
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"> 
@@ -60,7 +61,6 @@ function helpWin() {
 boolean generateData=(request.getParameter("generateData")==null) ? false : true;
 
 if (generateData) {
-
   logTest();
 %>
 
@@ -96,29 +96,19 @@ if (generateData) {
 <%!
 
   void logTest() {
-    //# Set root logger level to DEBUG and its only appender to A1.
-    Properties properties=new Properties();
-    properties.put("log4j.logger.com.jamonapi.log4j","DEBUG, jamonAppender");
-    properties.put("log4j.appender.jamonAppender","com.jamonapi.log4j.JAMonAppender");
-	properties.put("log4j.appender.jamonAppender.EnableListeners","BASIC");
-	
- 	PropertyConfigurator.configure(properties);
-    Logger log1 = Logger.getLogger("com.jamonapi.log4j");
+      // note put log4j2.xml somewhere accesible by the server.
+      // in jetty i put it in resources/
 
-    for (int i = 0; i < 1000; i++) {
-        Exception e=new Exception("This is my demo exception string"); 
-        
-        log1.debug("debug message " + i);
-        log1.error("error message " + i, e);
-        log1.info("info message " + i);
-        log1.warn("warn message " + i);
-        log1.fatal("fatal message " + i);
-
+      Logger logger = LogManager.getLogger();
+      for (int i = 0; i < 1000; i++) {
+          Exception e=new Exception("This is my demo exception string");
+          logger.debug("debug message " + i);
+          logger.error("error message " + i, e);
+          logger.info("info message " + i);
+          logger.warn("warn message " + i);
+          logger.fatal("fatal message " + i);
     }
 }
-
-
-	
 
 
 %>

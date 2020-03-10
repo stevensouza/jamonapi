@@ -46,12 +46,12 @@ public class Log4jTest {
     public void testLog4jIndividualMessages() {
         Log4jUtils.logWithLog4j(LOG4J2_XML);
 
-        assertThat(MonitorFactory.getMonitor("TRACE: trace message ?","log4j").getHits()).isEqualTo(1);
-        assertThat(MonitorFactory.getMonitor("DEBUG: debug message ?","log4j").getHits()).isEqualTo(2);
-        assertThat(MonitorFactory.getMonitor("INFO: info message ?","log4j").getHits()).isEqualTo(3);
-        assertThat(MonitorFactory.getMonitor("WARN: warn message ?","log4j").getHits()).isEqualTo(4);
-        assertThat(MonitorFactory.getMonitor("ERROR: error message ?","log4j").getHits()).isEqualTo(5);
-        assertThat(MonitorFactory.getMonitor("FATAL: fatal message ?","log4j").getHits()).isEqualTo(6);
+        assertThat(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.TRACE: trace message ?","log4j").getHits()).isEqualTo(1);
+        assertThat(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.DEBUG: debug message ?","log4j").getHits()).isEqualTo(2);
+        assertThat(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.INFO: info message ?","log4j").getHits()).isEqualTo(3);
+        assertThat(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.WARN: warn message ?","log4j").getHits()).isEqualTo(4);
+        assertThat(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.ERROR: error message ?","log4j").getHits()).isEqualTo(5);
+        assertThat(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.FATAL: fatal message ?","log4j").getHits()).isEqualTo(6);
 
     }
 
@@ -106,12 +106,12 @@ public class Log4jTest {
     public void testLog4jIndividualMessages_withDefaults() {
         Log4jUtils.logWithLog4j(LOG4J2_DEFAULTS_XML);
 
-        assertThat(MonitorFactory.getMonitor("TRACE: trace message ?","log4j").getHits()).isEqualTo(0);
-        assertThat(MonitorFactory.getMonitor("DEBUG: debug message ?","log4j").getHits()).isEqualTo(0);
-        assertThat(MonitorFactory.getMonitor("INFO: info message ?","log4j").getHits()).isEqualTo(0);
-        assertThat(MonitorFactory.getMonitor("WARN: warn message ?","log4j").getHits()).isEqualTo(0);
-        assertThat(MonitorFactory.getMonitor("ERROR: error message ?","log4j").getHits()).isEqualTo(0);
-        assertThat(MonitorFactory.getMonitor("FATAL: fatal message ?","log4j").getHits()).isEqualTo(0);
+        assertThat(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.TRACE: trace message ?","log4j").getHits()).isEqualTo(0);
+        assertThat(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.DEBUG: debug message ?","log4j").getHits()).isEqualTo(0);
+        assertThat(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.INFO: info message ?","log4j").getHits()).isEqualTo(0);
+        assertThat(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.WARN: warn message ?","log4j").getHits()).isEqualTo(0);
+        assertThat(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.ERROR: error message ?","log4j").getHits()).isEqualTo(0);
+        assertThat(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.FATAL: fatal message ?","log4j").getHits()).isEqualTo(0);
     }
 
     @Test
