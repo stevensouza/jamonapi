@@ -42,6 +42,8 @@ public class MonitorCompositeCombiner {
     // make this configurable from both size and whether to do or not.?????
     //        //  - log4j
     //        //  - steps for jetty, automon, tomcat
+    // log4j generalizer
+    // improve pom for log4j/sl4j
     // git push/ git push github_origin
     // upgrade log4j
     //  can i change serializable log4j so it doesn't fail?

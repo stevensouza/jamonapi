@@ -139,9 +139,15 @@ public class JAMonAppender extends AbstractAppender {
             // so it is important for the developer to ensure that the generalized
             // message is unique enough not to grow jamon unbounded.
             if (getGeneralize()) {
-                MonitorFactory.add(createKey(generalize(message), message, immutableEvent), 1);
+                MonitorFactory.add(createKey(standardizeSummaryLabel(message, immutableEvent), message, immutableEvent), 1);
             }
         }
+    }
+
+    private String standardizeSummaryLabel(String message, LogEvent event) {
+        // add ERROR etc to summarylabel and generalize it.
+        // INFO: user name is ? with age ?
+        return new StringBuilder(event.getLevel().toString()).append(": ").append(generalize(message)).toString();
     }
 
     // Return a key that will put LogEvent info in a bufferlistenr if
