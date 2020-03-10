@@ -13,8 +13,9 @@ public class Log4jMXBeanImpTest {
 
     @Before
     public void setUp() throws Exception {
+        Log4jUtils.shutdownLog4j();
         MonitorFactory.reset();
-        Log4jUtils.log();
+        Log4jUtils.logWithLog4j("log4j2_defaults.xml");
     }
 
     @After

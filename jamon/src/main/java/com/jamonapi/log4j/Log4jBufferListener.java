@@ -24,6 +24,7 @@ import org.apache.logging.log4j.core.LogEvent;
  *  @since 2.82
  */
 public class Log4jBufferListener extends JAMonBufferListener {
+    public static final String NAME = "Log4jBufferListener";
     private static final long serialVersionUID = 278L;
     /* looks at data to determine if a key is log4j. if so header used to display details in
          * the JAMonBufferListener.
@@ -38,7 +39,7 @@ public class Log4jBufferListener extends JAMonBufferListener {
      * name)
      */
     public Log4jBufferListener() {
-        super("Log4jBufferListener");
+        super(NAME);
     }
 
     /** Pass in the jamonListener name */
@@ -98,11 +99,7 @@ public class Log4jBufferListener extends JAMonBufferListener {
         data[2] = event.getLoggerName();
         data[3] = event.getLevel().toString();
         data[4] = event.getThreadName();
-        data[5] = (event.getThrown() == null) ?
-                "" : Misc.getExceptionTrace(event.getThrown());
-        //        data[5] = (event.getThrowableInformation() == null || event.getThrowableInformation().getThrowable() == null) ?
-//                "" : Misc.getExceptionTrace(event.getThrowableInformation().getThrowable());
-
+        data[5] = (event.getThrown() == null) ? "" : Misc.getExceptionTrace(event.getThrown());
         return data;
     }
 
