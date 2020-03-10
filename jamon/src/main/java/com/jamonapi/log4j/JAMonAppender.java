@@ -272,6 +272,10 @@ public class JAMonAppender extends AbstractAppender {
         this.bufferSize = bufferSize;
     }
 
+    public int getListenerBufferSize() {
+        return bufferSize;
+    }
+
     /** Indicate whether or not a jamon record should be created from the passed in message.
      * Note you can use the DefaultGeneralizer, your own Generalizer.  It is very important that
      * you ensure the String returned by the generalizer is unique enough that JAMon doesn't grow unbounded.

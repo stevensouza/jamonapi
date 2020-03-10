@@ -1,7 +1,9 @@
 package com.jamonapi.utils;
 
 
+import com.jamonapi.log4j.JAMonAppender;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,7 +75,14 @@ public class Log4jUtils {
         logger.fatal("fatal message " + 6);
         logger.fatal("fatal message " + 6);
 
+
         return logger;
+    }
+
+    public static JAMonAppender getJAMonAppender() {
+        LoggerContext lc = (LoggerContext) LogManager.getContext(false);
+        JAMonAppender jaMonAppender = (JAMonAppender) lc.getConfiguration().getAppender("jamonAppender");
+        return jaMonAppender;
     }
 
     public static void shutdownLog4j() {
