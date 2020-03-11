@@ -17,7 +17,7 @@
 <img src="jamon1.jpg" id="fdsbanner1" border="0" /></a>
 </p>
 
-<h2 align='center'>JAMonAppender for Log4j</h2>
+<h2 align='center'>JAMonAppender for Log4j2</h2>
 
 
 <!-- START JAMON SPECIFIC HTML -->
@@ -25,7 +25,7 @@
 <ul id="menu">
    <li><a href="#problems">Some Problems with Log Files</a></li>
    <li><a href="#jamonenhances">How does JAMon enhance Log4j?</a></li>
-   <li><a href="#background">Background on Log4j Appenders</a></li>
+   <li><a href="#background">Background on Log4j2 Appenders</a></li>
    <li><a href="#primer">A Very Brief JAMon Primer</a></li>
    <li><a href="#defaultbehaviour">Setting up the JAMonAppender - Default Behaviour</a></li>
    <li><a href="#tail">Using the JAMonAppender to mimic 'tail'</a></li>
@@ -74,7 +74,8 @@
     <li><b>Display all of the above in real-time with no code changes via a web application.</b></li>
   </ul>
 
-  <p>JAMon 2.6 introduces the Log4J JAMonAppender which allows you to do all of the above and more.</p> 
+  <p>JAMon 2.6 introduces the Log4J JAMonAppender which allows you to do all of the above and more with log4j1. JAMon 2.82 and higher works with log4j2 (and
+  no longer works with log4j1)</p>
 
   <p>
   JAMon can also track realtime performance stats for SQL statements, and web pages  (See http://www.jamonapi.com for more info).  
@@ -95,17 +96,16 @@
     <h2><a name="background">Background on Log4j Appenders</a></h2>
 
   <p>
-   <a href="http://logging.apache.org/log4j/docs/">Log4j</a> allows logging requests to be sent to multiple destinations including a console, 
-   file, database, or even a Socket Server.   Log4j uses its <a href="http://logging.apache.org/log4j/docs/api/org/apache/log4j/Appender.html">Appender</a> 
+   <a href="https://logging.apache.org/log4j/2.x/">Log4j2</a> allows logging requests to be sent to multiple destinations including a console,
+   file, database, or even a Socket Server.   Log4j uses its <a href="https://logging.apache.org/log4j/2.x/log4j-core/apidocs/org/apache/logging/log4j/core/Appender.html">Appender</a>
    interface to accomplish this.  Log4j allows developers to attach multiple Appenders to each Logger via a property file, XML configuration file or 
    programmatically via the Log4J API. 
   <p>
 
   <p>
    Loggers call their attached Appenders every time the Loggers trace/debug/warn/info/error/fatal methods are called.  
-   The Appenders "append(LoggingEvent event)" method is called.  An instance of the Log4j LoggingEvent object is passed to the Appender.  
-   The LoggingEvent has context information about the message being logged such as the "LoggerName", "Level", "ThreadName", "Message", 
-   "Date", and the "Exception Stacktrace" (In the case of "Exception" if the overloaded methods such as "logger.error(message, exception)" were called).
+   The Appenders "append(LogEvent event)" method is called.  An instance of the Log4j LogEvent object is passed to the Appender.
+   The LogEvent has context information about the message being logged.
   </p>
 
     <h2><a name="primer">A Very Brief JAMon Primer</a></h2>
@@ -122,12 +122,12 @@
     <li>If every time a the Log4j method 'logger.error(...)' is called we call the following JAMon add method we could count how many times 'error' 
       was called.  ('log4j' will be in JAMon's units column).  The value of '1' simply adds '1' to the aggregated totals with each call.</li>
           <ul><li>MonitorFactory.add("ERROR","log4j",1);</ul></li>
-    <li>If you generalize a log4j message before sending it to JAMon we can count keep aggregate statistics on how many times that log message has 
-         been called.  The following would allow you to track how many times your application through a particular Exception (assuming a custom 
+    <li>If you generalize a log4j message before sending it to JAMon we can keep aggregate statistics on how many times that log message has
+         been called.  The following would allow you to track how many times your application threw a particular Exception (assuming a custom
          Exception for your app).  Note the JAMonAppender uses a similar approach which we will discuss below.  Note the use of runtime data 
          in the monitor label.</li>
           <ul><li>MonitorFactory.add("MyAppException."+myAppException.getShortMessage(), "Exception", 1);</ul></li>
-    <li>JAMon's start/stop methods aggregate on time in milliseconds.  Assuming every time a query of the generalized format 'select * from table where name=?' 
+    <li>JAMon's start/stop methods aggregate time in milliseconds.  Assuming every time a query of the generalized format 'select * from table where name=?'
         was executed start/stop were called in the following manner we would have aggregate stats for the query.</li>
           <ul>
            <li>Monitor mon=MonitorFactory.start("select * from table where name=?");</li>
@@ -139,7 +139,7 @@
   <p>
    JAMon has a concept similar to Log4j's Appenders.  They are called JAMonListeners.  Everytime "MonitorFactory.add(...)" is called any 
    registered JAMonListeners are notified and given the numeric value the method was passed as well as any contextual information.  
-   JAMon comes with some very useful JAMonListeners.  One of them is the Log4jBufferListener which keeps the most recent N (configurable by Log4j 
+   JAMon comes with some very useful JAMonListeners.  One of them is the FIFOBuffer which keeps the most recent N (configurable via Log4j
    or the JAMon web app) messages written to the monitor associated with the key.
   </p>
 
@@ -156,13 +156,13 @@
    <li><a href="http://sourceforge.net/project/showfiles.php?group_id=96550">Download JAMon</a> and extract the following from the zip file.</li>
    <li>Put JAMon's jar file in your classpath (jamon-2.6.jar or higher for future releases)</li>
    <li>Install JAMon.war in your application, so you can view your Log4J statistics and log records.</li>
-   <li>Configure Log4j to use JAMon's Appender.  Example:  log4j.rootLogger=DEBUG, jamonAppender</li>
-   <li>The JAMon web application has a log4j.jsp which will run the JAMonAppender.  You must have both JAMon and Log4j in your classpath 
+   <li>Configure Log4j to use JAMon's Appender. </li>
+   <li>The JAMon web application has a log4j.jsp which will exercise the JAMonAppender.  You must have both JAMon and Log4j in your classpath
      for the page to work.  You can access this page with the following link:  http://yourhost:port/jamon/log4j.jsp</li>
  </ol>
 
- <p>Note the JAMonAppender has useful default behaviour and need not have any properties set.  By default JAMon keeps summary stats of how 
-   many times each of the different logging methods associated with the various methods are called (trace/debug/warn/info/error/fatal).  
+ <p>Note the JAMonAppender has useful default behaviour.  By default JAMon keeps summary stats of how
+   many times each of the different logging methods are called (trace/debug/warn/info/error/fatal).
    Each of these correspond to a label in the JAMon report of the format 'com.jamonapi.log4j.JAMonAppender.LEVEL' where LEVEL is replaced 
    by one of the Levels such as DEBUG.   The report indicates that log methods associated with each of the different levels were called 15,000 times.  
    The "LastAccess" column indicates when the method associated with the JAMon label was last called.   Most of the other columns have no real 
@@ -176,11 +176,11 @@
  <p>
 
  <p>This behaviour is by default enabled, but if you wish to turn it off you can set the following JAMonAppender property:  
-  log4j.appender.jamonAppender.EnableLevelMonitoring=false
+  EnableLevelMonitoring=false
  </p>
 
- <p>Note many of the JAMon web pages can be 'queried' via the <a href="http://www.fdsapi.com">FormattedDataSet</a> APIs ArraySQL class which allows you to query JAMon's 
-  internal data structures with a SQL like syntax.  Don't be confused by this JAMon data is not kept in a database but are stored in memory.  
+ <p>Note many of the JAMon web pages can be 'queried' via the <a href="http://www.fdsapi.com">FormattedDataSet</a> API ArraySQL class which allows you to query JAMon's
+  internal data structures with a SQL like syntax.  Don't be confused by this. JAMon data is not kept in a database but is stored in memory.
   The screen snapshot shows how only 'log4j' JAMon rows are displayed by putting 'log4j' in the filter text box.  For more info on querying 
   data see the pages help section as well as and the FormattedDataSet. 
  </p>
@@ -201,36 +201,32 @@
 
    
    <pre>
-       &lt;appender name="JAMONAPPENDER" class="com.jamonapi.log4j.JAMonAppender"&gt;
-          &lt;param name="EnableListeners" value="BASIC"/&gt;
-       &lt;/appender&gt;
-
-       &lt;root&gt;
-          &lt;appender-ref ref="CONSOLE"/&gt;
-          &lt;appender-ref ref="FILE"/&gt;
-          &lt;appender-ref ref="JAMONAPPENDER"/&gt;
-       &lt;/root&gt;
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+        &lt;Configuration&gt;
+    &lt;Appenders&gt;
+        &lt;Console name=&quot;Console&quot; target=&quot;SYSTEM_OUT&quot;&gt;
+            &lt;PatternLayout pattern=&quot;%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n&quot;/&gt;
+        &lt;/Console&gt;
+        &lt;JamonAppender name=&quot;JamonAppender&quot;  enableListeners=&quot;BASIC&quot;&gt;
+        &lt;/JamonAppender&gt;
+    &lt;/Appenders&gt;
+    &lt;Loggers&gt;
+        &lt;Root level=&quot;info&quot;&gt;
+            &lt;AppenderRef ref=&quot;Console&quot;/&gt;
+            &lt;AppenderRef ref=&quot;JamonAppender&quot;/&gt;
+        &lt;/Root&gt;
+    &lt;/Loggers&gt;
+&lt;/Configuration&gt;
    </pre>
 
 
 
   <p>BASIC means to track the most recent N log messages at the error/fatal/total levels.  This means that we will have 3 buffers each of 
   100 rows (this is configurable via a JAMonAppender or at runtime via the JAMon war.  The default is 100 rows) that will contain Log4J data 
-  including the LoggerName, Level, ThreadName, FormattedMessage, Date, and Exception Stack trace (if there is one).  See the sample screen that 
+  including the message.  See the sample screen that
   follows.  Note the screen is sortable, queryable, and realtime.  Valid values for the EnableListeners property:  
-  DEBUG/WARN/INFO/ERROR/FATAL/TOTAL/ALL/BASIC.  ALL enables individual buffers for each of the Levels as well as for TOTAL.  
-  Note these are additive in the XML file and so you can enable any combination of the values by using an approach like the one below:
+  DEBUG/WARN/INFO/ERROR/FATAL/TOTAL/ALL/BASIC/NONE.  ALL enables individual buffers for each of the Levels as well as for TOTAL.
   </p>
-
-   <pre>
-      &lt;appender name="jamonAppender" class="com.jamonapi.log4j.JAMonAppender"&gt;
-         &lt;param name="EnableListeners" value="ERROR"/&gt;
-         &lt;param name="EnableListeners" value="FATAL"/&gt;
-         &lt;param name="EnableListeners" value="WARN"/&gt;
-      &lt;/appender&gt;
-       </pre>
-
-
 
    <p>To view the Log4jBufferListener click on the blue square labeled "Modify" on the jamonadmin.jsp page (see image above).  From the "Modify" from the 
    "Current" JAMonListeners list box select to display "Log4jBufferListener" and you will get a screen similar to the following (if you select TOTAL from jamonadmin.jsp).  
@@ -279,7 +275,7 @@
 
   <p>To perform generalization the JAMonAppender uses "com.jamonapi.utils.DefaultGeneralizer" which implements the 
     "com.jamonapi.utils.Generalizer interface".  However, as this is a simple interface with one method (String generalize(String input)) you can 
-    implement it and easily replace the default behaviour.  Later I will show how you can override the default class via Log4j configuration.
+    implement it and easily replace the default behaviour.
   </p>
 
   <p>Take care to surround portions of Strings that aren't very unique with quotes, so they are replaced with '?' (examples would be names that 
@@ -291,24 +287,34 @@
    and pass the results through JAMon.  The following example would take a String a log message of the format:
    </p>
 
-    <p>&nbsp;&nbsp;&nbsp;&nbsp;ERROR.com.mypackage - Invalid password provided by user 'aeinstein'</p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;Invalid password provided by user 'aeinstein'</p>
 
    <p>and convert it to</p>
 
-     <p>&nbsp;&nbsp;&nbsp;&nbsp;ERROR.com.mypackage - Invalid password provided by user ?</p>
+     <p>&nbsp;&nbsp;&nbsp;&nbsp;Invalid password provided by user ?</p>
 
     <p>And create a JAMon entry with the new String and put the original detailed String in a buffer for this monitor label (if enabled).  
      The following information shows the xml configuration file used to do this.
     </p>
 
     <pre>
-     &lt;appender name="jamonAppender" class="com.jamonapi.log4j.JAMonAppender"&gt;
-        &lt;param name="EnableListeners" value="BASIC"/&gt;
-        &lt;param name="generalize" value="true"/&gt;
-        &lt;layout class="org.apache.log4j.PatternLayout"&gt;
-           &lt;param name="ConversionPattern" value="%p.%c-%m"/&gt;
-        &lt;/layout&gt;
-     &lt;/appender&gt;
+     &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+     &lt;Configuration&gt;
+       &lt;Appenders&gt;
+        &lt;Console name=&quot;Console&quot; target=&quot;SYSTEM_OUT&quot;&gt;
+            &lt;PatternLayout pattern=&quot;%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n&quot;/&gt;
+        &lt;/Console&gt;
+        &lt;JamonAppender name=&quot;JamonAppender&quot;  generalize=&quot;true&quot; enableListeners=&quot;BASIC&quot;&gt;
+            &lt;PatternLayout pattern=&quot;%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n&quot;/&gt;
+        &lt;/JamonAppender&gt;
+      &lt;/Appenders&gt;
+      &lt;Loggers&gt;
+        &lt;Root level=&quot;trace&quot;&gt;
+            &lt;AppenderRef ref=&quot;Console&quot;/&gt;
+            &lt;AppenderRef ref=&quot;JamonAppender&quot;/&gt;
+        &lt;/Root&gt;
+     &lt;/Loggers&gt;
+    &lt;/Configuration&gt;
 </pre>
 
 
@@ -318,7 +324,7 @@
 
   <br>
 
-  <p>Assuming we have enabled a JAMon "Log4jBufferListener" for the generalized monitor we can view the N most recent details written 
+  <p>Assuming we have enabled a JAMon "FIFOBuffer" for the generalized monitor we can view the N most recent details written
     to the buffer via mondetail.jsp. Note the nongeneralized form is put in the buffer (In this case that can be identified by 'aeinstein'.  Unfortunately
     at this time the only way to enable buffer listeners for log message monitors is via the JAMon web app or programmatically (i.e. it can't be done
     via Log4j configuration files)
@@ -326,34 +332,6 @@
   </p>
 
   <br>
-
-  <p>Note if the log message is already generalized (say a layout of %c is used) then you can disable using the DefaultGeneralizer and pass 
-   the raw message through to JAMon.  This isn't required however it will save a few cycles.  Be careful when doing this or JAMon memory consumption 
-   can grow unbounded (every unique string consumes memory in JAMon).  The following xml file will do this.  An example of the JAMon label is 
-   'ERROR.com.mypackage':
-  </p>
-
-<pre>
-&lt;appender name="jamonAppender" class="com.jamonapi.log4j.JAMonAppender"&gt;
-  &lt;param name="EnableListeners" value="BASIC"/&gt;
-  &lt;param name="generalize" value="true"/&gt;
-  &lt;param name="enableDefaultGeneralizer" value="false"/&gt;
-  &lt;layout class="org.apache.log4j.PatternLayout"&gt;
-            &lt;param name="ConversionPattern" value="%p.%c"/&gt;
-  &lt;/layout&gt;
-&lt;/appender&gt;
-</pre>
-
-Finally if you want to provide your own Generalizer simply provide a default noarg constructor and pass the class name into the JAMonAppender via the Log4j configuration file.
-<pre>
-&lt;appender name="jamonAppender" class="com.jamonapi.log4j.JAMonAppender"&gt;
-    &lt;param name="generalize" value="true"/&gt;
-    &lt;param name="GeneralizerDynamic" value="com.mypackage.MyGeneralizer"/&gt;
-    &lt;layout class="org.apache.log4j.PatternLayout"&gt;
-            &lt;param name="ConversionPattern" value="%p.%c-%m"/&gt;
-    &lt;/layout&gt;
-&lt;/appender&gt;
-</pre>
 
 
 
