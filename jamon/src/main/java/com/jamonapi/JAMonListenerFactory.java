@@ -128,7 +128,6 @@ public class JAMonListenerFactory {
         } catch (Exception e) {
             throw new RuntimeException("Error getting listener from factory: "+listenerName+", "+e);
         }
-
     }
 
     /** Various factory methods used to populate the JAMonListenerFactory with default JAMonBufferListeners */

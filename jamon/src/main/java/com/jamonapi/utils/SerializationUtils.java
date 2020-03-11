@@ -48,9 +48,10 @@ public class SerializationUtils {
     /** Create a deep copy/clone of any serializable object */
     public static <T> T deepCopy(Serializable object) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        OutputStream buffered = new BufferedOutputStream(outputStream);
         try {
-            serialize(object, outputStream);
-            return deserialize(new ByteArrayInputStream(outputStream.toByteArray()));
+            serialize(object, buffered);
+            return deserialize(new BufferedInputStream(new ByteArrayInputStream(outputStream.toByteArray())));
         } catch (Throwable e) {
             throw new RuntimeException("Failed in performing a deep copy", e);
         }

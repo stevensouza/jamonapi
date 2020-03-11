@@ -33,12 +33,6 @@ public class JAMonAppender extends AbstractAppender {
 
     private String units = "log4j"; // units in jamon monitors
 
-    // indicates whether or not log4j LogEvent info is placed in jamon listener buffer.
-    // This could potentially be slower though I didn't test it, and I
-    // wouldn't be overly concerned about it. Note the LogEvent isn't converted to an
-    // Object[] unless it is diplayed.
-    private boolean enableListenerDetails = true;
-
     // Enable monitoring of the various log4j levels in jamon.  For example counts
     // and pass a key to TOTAL, ERROR, INFO ...
     private boolean enableLevelMonitoring = true;
@@ -47,10 +41,6 @@ public class JAMonAppender extends AbstractAppender {
 
     private Generalizer generalizer = new DefaultGeneralizer();
 
-    static {
-        // Register this object to be available for use in the JAMonListenerFactory.
-        JAMonListenerFactory.put(new Log4jBufferListener());
-    }
 
     /**
      * This constructor is called automatically by log4j/sl4j
@@ -60,20 +50,17 @@ public class JAMonAppender extends AbstractAppender {
      * @param layout
      * @param ignoreExceptions
      * @param bufferSize
-     * @param enableListenerDetails
      * @param enableLevelMonitoring
      * @param generalize
      * @param levelListenerType
      */
     public JAMonAppender(final String name, final Filter filter, final Layout<? extends Serializable> layout, final boolean ignoreExceptions,
                          int bufferSize,
-                         boolean enableListenerDetails,
                          boolean enableLevelMonitoring,
                          boolean generalize,
                          String levelListenerType) {
         super(name, filter, layout, ignoreExceptions, Property.EMPTY_ARRAY);
         setListenerBufferSize(bufferSize);
-        setEnableListenerDetails(enableListenerDetails);
         setEnableLevelMonitoring(enableLevelMonitoring);
         setGeneralize(generalize);
         setEnableListeners(levelListenerType);
@@ -87,7 +74,6 @@ public class JAMonAppender extends AbstractAppender {
      * @param layout
      * @param filter
      * @param bufferSize
-     * @param enableListenerDetails
      * @param enableLevelMonitoring
      * @param generalize
      * @param levelListenerType
@@ -100,7 +86,6 @@ public class JAMonAppender extends AbstractAppender {
                                                @PluginElement("Layout") Layout layout,
                                                @PluginElement("Filters") Filter filter,
                                                @PluginAttribute(value = "bufferSize", defaultInt = 100) int bufferSize,
-                                               @PluginAttribute(value = "enableListenerDetails", defaultBoolean = true) boolean enableListenerDetails,
                                                @PluginAttribute(value = "enableLevelMonitoring", defaultBoolean = true) boolean enableLevelMonitoring,
                                                @PluginAttribute(value = "generalize", defaultBoolean = false) boolean generalize,
                                                @PluginAttribute(value = "enableListeners", defaultString = "NONE") String levelListenerType
@@ -109,7 +94,7 @@ public class JAMonAppender extends AbstractAppender {
             layout = PatternLayout.createDefaultLayout();
         }
 
-        return new JAMonAppender(name, filter, layout, ignoreExceptions, bufferSize, enableListenerDetails, enableLevelMonitoring, generalize, levelListenerType);
+        return new JAMonAppender(name, filter, layout, ignoreExceptions, bufferSize, enableLevelMonitoring, generalize, levelListenerType);
     }
     /**
      * If the appender is enabled then start and stop a JAMon entry. Depending
@@ -123,15 +108,14 @@ public class JAMonAppender extends AbstractAppender {
     @Override
     public void append(LogEvent event) {
         if (MonitorFactory.isEnabled() && (getEnableLevelMonitoring() || getGeneralize())) {
-            // might or might not make copy. in tests it didn't copy and did return the same instance.
-            LogEvent immutableEvent = event.toImmutable();
             String message = (event.getMessage()==null) ? "" : event.getMessage().getFormattedMessage();;
+            // createDetailMessage(event); // ERROR: my message is 100 (note it isn't generalized
 
             if (getEnableLevelMonitoring()) { // i.e. count at least one of TOTAL, ERROR, INFO etc.
                 // monitor that counts all calls to log4j logging methods
-                MonitorFactory.add(createKey(TOTAL_KEY, message, immutableEvent), 1);
+                MonitorFactory.add(createKey(TOTAL_KEY, message), 1);
                 // monitor that counts calls to log4j at each level (DEBUG/WARN/...)
-                MonitorFactory.add(createKey(getLevelKey(event), message, immutableEvent), 1);
+                MonitorFactory.add(createKey(getLevelKey(event), message), 1);
             }
 
             // if the object was configured to generalize the message then do as
@@ -139,25 +123,30 @@ public class JAMonAppender extends AbstractAppender {
             // so it is important for the developer to ensure that the generalized
             // message is unique enough not to grow jamon unbounded.
             if (getGeneralize()) {
-                MonitorFactory.add(createKey(standardizeSummaryLabel(message, immutableEvent), message, immutableEvent), 1);
+                MonKey key = createKey(standardizeAndGeneralizeSummaryLabel(message, event), createDetailMessage(message, event));
+                MonitorFactory.add(key,1);
             }
         }
     }
 
-    private String standardizeSummaryLabel(String message, LogEvent event) {
+    // Example -  ERROR: my message that isn't generalized blah blah 100
+    private String createDetailMessage(String message, LogEvent event) {
+        return new StringBuilder(event.getLevel().toString())
+                .append(": ")
+                .append(message)
+                .toString();
+    }
+
+    // Example - com.jamonapi.log4j.JAMonAppender.INFO: user name is ? with age ?
+    private String standardizeAndGeneralizeSummaryLabel(String message, LogEvent event) {
         // add ERROR etc to summarylabel and generalize it.
         // com.jamonapi.log4j.JAMonAppender.INFO: user name is ? with age ?
         return new StringBuilder(PREFIX).append(event.getLevel().toString()).append(": ").append(generalize(message)).toString();
     }
 
     // Return a key that will put LogEvent info in a bufferlistenr if
-    // enableListenerDetails has been enabled,  else simply use the standard jamon MonKeyImp
-    private MonKey createKey(String summaryLabel, String detailLabel, LogEvent event) {
-        if (enableListenerDetails) // put array in details buffer
-            return new Log4jMonKey(summaryLabel, detailLabel, units, event);
-        else
-            return new MonKeyImp(summaryLabel, detailLabel, units);
-
+    private MonKey createKey(String summaryLabel, String detailLabel) {
+      return new MonKeyImp(summaryLabel, detailLabel, units);
     }
 
     private String getLevelKey(LogEvent event) {
@@ -179,22 +168,6 @@ public class JAMonAppender extends AbstractAppender {
      */
     public void setUnits(String units) {
         this.units = units;
-    }
-
-    /**
-     * Specifies whether or not LogEvent info will be used in the attached
-     * Log4jBufferListener. By default this is enabled.
-     */
-    public boolean getEnableListenerDetails() {
-        return enableListenerDetails;
-    }
-
-    /**
-     * Specify whether or not LogEvent info will be used in the attached
-     * Log4jBufferListener
-     */
-    public void setEnableListenerDetails(boolean arrayDetails) {
-        this.enableListenerDetails = arrayDetails;
     }
 
     /**
@@ -259,10 +232,10 @@ public class JAMonAppender extends AbstractAppender {
         }
     }
 
-    // Add a Log4jBufferListener to the passed in Monitor
+    // Add a fifo bufferr listener to the passed in Monitor
     private void addDefaultListener(Monitor mon) {
         if (!mon.hasListeners()) {
-            Log4jBufferListener listener = new Log4jBufferListener();
+            JAMonBufferListener listener = (JAMonBufferListener) JAMonListenerFactory.get("FIFOBuffer");
             listener.getBufferList().setBufferSize(bufferSize);
             mon.addListener("value", listener);
         }
@@ -290,6 +263,9 @@ public class JAMonAppender extends AbstractAppender {
      */
     public void setGeneralize(boolean generalize) {
         this.generalize = generalize;
+        if (generalize && generalizer==null) {
+            generalizer = new DefaultGeneralizer();
+        }
     }
 
     /** Return whether or not generalization will occur */
@@ -299,7 +275,7 @@ public class JAMonAppender extends AbstractAppender {
 
     /** generalize the passed in String if a Genaralizer is set */
     protected String generalize(String detailedMessage) {
-        return (generalizer != null) ? generalizer.generalize(detailedMessage) : detailedMessage;
+        return (generalize && generalizer != null) ? generalizer.generalize(detailedMessage) : detailedMessage;
     }
 
     /** Enable the use of the DefaultGeneralizer. As a side effect setGeneralize(true) is called
@@ -308,10 +284,11 @@ public class JAMonAppender extends AbstractAppender {
      */
     public void setEnableDefaultGeneralizer(boolean enableDefaultGeneralizer) {
         if (enableDefaultGeneralizer) {
-            this.generalizer = new DefaultGeneralizer();
             setGeneralize(true);
-        } else
+        } else {
             this.generalizer = null;
+            setGeneralize(false);
+        }
     }
 
     /** Indicates whether or not a Generalizer has been set */

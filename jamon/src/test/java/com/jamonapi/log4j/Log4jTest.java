@@ -1,12 +1,14 @@
 package com.jamonapi.log4j;
 
-import com.jamonapi.Monitor;
-import com.jamonapi.MonitorFactory;
-import com.jamonapi.MonitorFactoryInterface;
+import com.jamonapi.*;
 import com.jamonapi.utils.Log4jUtils;
+import com.jamonapi.utils.SerializationUtils;
 import org.apache.logging.log4j.LogManager;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
@@ -52,7 +54,6 @@ public class Log4jTest {
         assertThat(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.WARN: warn message ?","log4j").getHits()).isEqualTo(4);
         assertThat(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.ERROR: error message ?","log4j").getHits()).isEqualTo(5);
         assertThat(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.FATAL: fatal message ?","log4j").getHits()).isEqualTo(6);
-
     }
 
     @Test
@@ -76,7 +77,6 @@ public class Log4jTest {
         JAMonAppender appender = Log4jUtils.getJAMonAppender();
         assertThat(appender.getUnits()).isEqualTo("log4j");
         assertThat(appender.getListenerBufferSize()).isEqualTo(400);
-        assertTrue(appender.getEnableListenerDetails());
         assertTrue(appender.getEnableLevelMonitoring());
         assertTrue(appender.getGeneralize());
         monitorHasAllListeners();
@@ -89,7 +89,6 @@ public class Log4jTest {
         JAMonAppender appender = Log4jUtils.getJAMonAppender();
         assertThat(appender.getUnits()).isEqualTo("log4j");
         assertThat(appender.getListenerBufferSize()).isEqualTo(100);
-        assertTrue(appender.getEnableListenerDetails());
         assertTrue(appender.getEnableLevelMonitoring());
         assertFalse(appender.getGeneralize());
         monitorHasNoListeners();
@@ -118,6 +117,18 @@ public class Log4jTest {
     public void testLog4jBuffers_withDefaults() {
         Log4jUtils.logWithLog4j(LOG4J2_DEFAULTS_XML);
         monitorHasNoListeners();
+    }
+
+    @Test
+    public void testSerialization() throws Throwable {
+        Log4jUtils.logWithLog4j(LOG4J2_XML);
+
+        // serialize and deserialize monitors
+        MonitorComposite original = MonitorFactory.getRootMonitor();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        SerializationUtils.serialize(original, outputStream);
+        MonitorComposite deserialized = SerializationUtils.deserialize(new ByteArrayInputStream(outputStream.toByteArray()));
+        assertThat(original.getNumRows()).isEqualTo(deserialized.getNumRows());
     }
 
     private void monitorHasExpectedHits() {
@@ -153,8 +164,8 @@ public class Log4jTest {
     }
 
     private int getRows(Monitor monitor) {
-        Log4jBufferListener log4jBufferListener = (Log4jBufferListener) monitor.getListenerType("value")
-                .getListener(Log4jBufferListener.NAME);
+        JAMonBufferListener log4jBufferListener = (JAMonBufferListener) monitor.getListenerType("value")
+                .getListener("FIFOBuffer");
         return log4jBufferListener==null ? 0 : log4jBufferListener.getRowCount();
     }
 

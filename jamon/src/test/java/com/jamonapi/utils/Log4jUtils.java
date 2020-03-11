@@ -81,7 +81,7 @@ public class Log4jUtils {
 
     public static JAMonAppender getJAMonAppender() {
         LoggerContext lc = (LoggerContext) LogManager.getContext(false);
-        JAMonAppender jaMonAppender = (JAMonAppender) lc.getConfiguration().getAppender("jamonAppender");
+        JAMonAppender jaMonAppender = (JAMonAppender) lc.getConfiguration().getAppender("JamonAppender");
         return jaMonAppender;
     }
 

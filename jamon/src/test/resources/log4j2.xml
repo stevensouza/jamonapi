@@ -4,14 +4,14 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
-        <JamonAppender name="jamonAppender" enableDefaultGeneralizer="true" bufferSize="400" generalize="true" enableListeners="ALL">
+        <JamonAppender name="JamonAppender"  bufferSize="400" generalize="true" enableListeners="ALL">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </JamonAppender>
     </Appenders>
     <Loggers>
         <Root level="trace">
             <AppenderRef ref="Console"/>
-            <AppenderRef ref="jamonAppender"/>
+            <AppenderRef ref="JamonAppender"/>
         </Root>
     </Loggers>
 </Configuration>
