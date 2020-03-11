@@ -102,7 +102,7 @@ if (generateData) {
       Logger logger = LogManager.getLogger();
       for (int i = 0; i < 1000; i++) {
           Exception e=new Exception("This is my demo exception string");
-          logger.debug("trace message " + i);
+          logger.trace("trace message " + i);
           logger.debug("debug message " + i);
           logger.error("error message " + i, e);
           logger.info("info message " + i);

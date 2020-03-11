@@ -35,24 +35,18 @@ public class MonitorCompositeCombiner {
         return append(getMonitorComposites(instanceKeys));
     }
 
-    //                        config from properties
     // jamonadmin.jsp optimize imports
+    // buffer for log4j only keeps the most recent servers as it is 400 size each
+    //   so shoujld i somehow for fifo buffer only bufferSize/numservers
+    //   for max min buffers just feed them all?
+    // properites - configurable?
+    // jamonadmin iis pulliing up wrpong buffer instances when filtered by log4j - numbers are wrong.
 
 
     // make this configurable from both size and whether to do or not.?????
     //        //  - log4j
     //        //  - steps for jetty, automon, tomcat
-    // log4j generalizer
-    // improve pom for log4j/sl4j
     // git push/ git push github_origin
-    // upgrade log4j
-    //  can i change serializable log4j so it doesn't fail?
-    //      it was a serialization issue due to log4j jar missing in jetty
-    //      stackTrace=com.hazelcast.nio.serialization.HazelcastSerializationException: java.lang.NoClassDefFoundError: org/apache/log4j/spi/LoggingEvent
-    //  probably get rid of that error by not rreturning loggingevent
-    //     public LoggingEvent getLoggingEvent() {
-    //        return (LoggingEvent) getParam();
-    //    }
     // what java version do i support?
     // documentatiion - inline and web site?
     //

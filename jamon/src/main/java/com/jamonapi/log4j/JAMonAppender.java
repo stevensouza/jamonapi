@@ -86,9 +86,9 @@ public class JAMonAppender extends AbstractAppender {
                                                @PluginElement("Layout") Layout layout,
                                                @PluginElement("Filters") Filter filter,
                                                @PluginAttribute(value = "bufferSize", defaultInt = 100) int bufferSize,
-                                               @PluginAttribute(value = "enableLevelMonitoring", defaultBoolean = true) boolean enableLevelMonitoring,
-                                               @PluginAttribute(value = "generalize", defaultBoolean = false) boolean generalize,
-                                               @PluginAttribute(value = "enableListeners", defaultString = "NONE") String levelListenerType
+                                               @PluginAttribute(value = "enableLevelMonitoring", defaultBoolean = true) boolean enableLevelMonitoring, // count DEBUG/INFO/ERROR etc.
+                                               @PluginAttribute(value = "generalize", defaultBoolean = false) boolean generalize, // don't generalize by default
+                                               @PluginAttribute(value = "enableListeners", defaultString = "NONE") String levelListenerType // no buffer listeners by default
     ) {
         if (layout == null) {
             layout = PatternLayout.createDefaultLayout();
@@ -109,13 +109,13 @@ public class JAMonAppender extends AbstractAppender {
     public void append(LogEvent event) {
         if (MonitorFactory.isEnabled() && (getEnableLevelMonitoring() || getGeneralize())) {
             String message = (event.getMessage()==null) ? "" : event.getMessage().getFormattedMessage();;
-            // createDetailMessage(event); // ERROR: my message is 100 (note it isn't generalized
+            String detailMessage = createDetailMessage(message, event); // ERROR: my message is 100 (note it isn't generalized
 
             if (getEnableLevelMonitoring()) { // i.e. count at least one of TOTAL, ERROR, INFO etc.
                 // monitor that counts all calls to log4j logging methods
-                MonitorFactory.add(createKey(TOTAL_KEY, message), 1);
+                MonitorFactory.add(createKey(TOTAL_KEY, detailMessage), 1);
                 // monitor that counts calls to log4j at each level (DEBUG/WARN/...)
-                MonitorFactory.add(createKey(getLevelKey(event), message), 1);
+                MonitorFactory.add(createKey(getLevelKey(event), detailMessage), 1);
             }
 
             // if the object was configured to generalize the message then do as
@@ -123,7 +123,7 @@ public class JAMonAppender extends AbstractAppender {
             // so it is important for the developer to ensure that the generalized
             // message is unique enough not to grow jamon unbounded.
             if (getGeneralize()) {
-                MonKey key = createKey(standardizeAndGeneralizeSummaryLabel(message, event), createDetailMessage(message, event));
+                MonKey key = createKey(standardizeAndGeneralizeSummaryLabel(message, event), detailMessage);
                 MonitorFactory.add(key,1);
             }
         }
