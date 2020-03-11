@@ -109,13 +109,15 @@ public class JAMonAppender extends AbstractAppender {
     public void append(LogEvent event) {
         if (MonitorFactory.isEnabled() && (getEnableLevelMonitoring() || getGeneralize())) {
             String message = (event.getMessage()==null) ? "" : event.getMessage().getFormattedMessage();;
-            String detailMessage = createDetailMessage(message, event); // ERROR: my message is 100 (note it isn't generalized
 
             if (getEnableLevelMonitoring()) { // i.e. count at least one of TOTAL, ERROR, INFO etc.
+                // note the TOTAL buffer has a mix of messages from all levels, so the detailed message includes level
+                // to differentiate: ERROR: my message is 100 (note it isn't generalized
+                String detailMessage = createDetailMessage(message, event);
                 // monitor that counts all calls to log4j logging methods
                 MonitorFactory.add(createKey(TOTAL_KEY, detailMessage), 1);
                 // monitor that counts calls to log4j at each level (DEBUG/WARN/...)
-                MonitorFactory.add(createKey(getLevelKey(event), detailMessage), 1);
+                MonitorFactory.add(createKey(getLevelKey(event), message), 1);
             }
 
             // if the object was configured to generalize the message then do as
@@ -123,7 +125,7 @@ public class JAMonAppender extends AbstractAppender {
             // so it is important for the developer to ensure that the generalized
             // message is unique enough not to grow jamon unbounded.
             if (getGeneralize()) {
-                MonKey key = createKey(standardizeAndGeneralizeSummaryLabel(message, event), detailMessage);
+                MonKey key = createKey(standardizeAndGeneralizeSummaryLabel(message, event), message);
                 MonitorFactory.add(key,1);
             }
         }
@@ -141,7 +143,7 @@ public class JAMonAppender extends AbstractAppender {
     private String standardizeAndGeneralizeSummaryLabel(String message, LogEvent event) {
         // add ERROR etc to summarylabel and generalize it.
         // com.jamonapi.log4j.JAMonAppender.INFO: user name is ? with age ?
-        return new StringBuilder(PREFIX).append(event.getLevel().toString()).append(": ").append(generalize(message)).toString();
+        return new StringBuilder(PREFIX).append("message.").append(event.getLevel().toString()).append(": ").append(generalize(message)).toString();
     }
 
     // Return a key that will put LogEvent info in a bufferlistenr if
