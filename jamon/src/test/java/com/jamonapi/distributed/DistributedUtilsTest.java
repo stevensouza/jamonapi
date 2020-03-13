@@ -2,6 +2,7 @@ package com.jamonapi.distributed;
 
 import com.jamonapi.*;
 import com.jamonapi.utils.BufferList;
+import com.jamonapi.utils.Log4jUtils;
 import com.jamonapi.utils.MiscTest;
 import org.junit.Test;
 
@@ -155,7 +156,7 @@ public class DistributedUtilsTest {
     @Test
     public void testChangeInstanceName() throws Exception {
         final String NEW_INSTANCE_NAME = "newInstanceName";
-        final int INSTANCE_NAME_INDEX = 0;
+        Log4jUtils.logWithLog4j("log4j2.xml");
 
         Monitor helloMon = MonitorFactory.getMonitor("hello", "ms.");
         helloMon.addListener("value", JAMonListenerFactory.get("FIFOBuffer"));
@@ -168,10 +169,16 @@ public class DistributedUtilsTest {
         assertThat(answer.getNumRows()).isEqualTo(monitorComposite.getNumRows());
         List<Monitor> list = new MonitorCompositeIterator(Arrays.asList(answer)).toList();
         assertThat(MiscTest.instanceNames(list)).containsOnly(NEW_INSTANCE_NAME);
-        JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) helloMon.getListenerType("value").getListener("FIFOBuffer");
-        Object[][] bufferRows = jaMonBufferListener.getBufferList().getDetailData().getData();
-        assertThat(bufferRows[0][INSTANCE_NAME_INDEX]).isEqualTo(NEW_INSTANCE_NAME);
+
+        assertInstanceName(NEW_INSTANCE_NAME,answer.getMonitor(new MonKeyImp("com.jamonapi.log4j.JAMonAppender.TRACE","log4j")));
+        assertInstanceName(NEW_INSTANCE_NAME,answer.getMonitor(new MonKeyImp("com.jamonapi.log4j.JAMonAppender.DEBUG","log4j")));
+        assertInstanceName(NEW_INSTANCE_NAME,answer.getMonitor(new MonKeyImp("com.jamonapi.log4j.JAMonAppender.INFO","log4j")));
+        assertInstanceName(NEW_INSTANCE_NAME,answer.getMonitor(new MonKeyImp("com.jamonapi.log4j.JAMonAppender.WARN","log4j")));
+        assertInstanceName(NEW_INSTANCE_NAME,answer.getMonitor(new MonKeyImp("com.jamonapi.log4j.JAMonAppender.ERROR","log4j")));
+        assertInstanceName(NEW_INSTANCE_NAME,answer.getMonitor(new MonKeyImp("com.jamonapi.log4j.JAMonAppender.FATAL","log4j")));
+        assertInstanceName(NEW_INSTANCE_NAME,answer.getMonitor(new MonKeyImp("com.jamonapi.log4j.JAMonAppender.TOTAL","log4j")));
     }
+
 
     private void assertBufferListeners(Monitor to, String listenerType, String listenerName, int expectedRows) {
         JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) to.getListenerType(listenerType).getListener(DistributedUtils.getFifoBufferName(listenerName));
@@ -185,4 +192,13 @@ public class DistributedUtilsTest {
     }
 
 
+    private void assertInstanceName(String expectedInstanceName, Monitor monitor) {
+        assertThat(expectedInstanceName).isEqualTo(monitor.getMonKey().getInstanceName());
+        JAMonBufferListener log4jBufferListener = (JAMonBufferListener) monitor.getListenerType("value")
+                .getListener("FIFOBuffer");
+        log4jBufferListener.getBufferList().getCollection().stream().forEach(obj -> {
+            JAMonDetailValue value =  ((JAMonDetailValue)obj);
+            assertThat(expectedInstanceName).isEqualTo(value.getMonKey().getInstanceName());
+        });
+    }
 }

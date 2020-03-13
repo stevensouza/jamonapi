@@ -58,7 +58,6 @@ public class Log4jTest {
 
     @Test
     public void testLog4jBuffers() {
-        // note sl4j doesn't have FATAL
         Log4jUtils.logWithLog4j(LOG4J2_XML);
 
         assertThat(getRows(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.TRACE","log4j"))).isEqualTo(1);
@@ -69,6 +68,7 @@ public class Log4jTest {
         assertThat(getRows(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.FATAL","log4j"))).isEqualTo(6);
         assertThat(getRows(MonitorFactory.getMonitor("com.jamonapi.log4j.JAMonAppender.TOTAL","log4j"))).isEqualTo(21);
     }
+
 
     @Test
     public void testLog4jConfig() {
@@ -168,5 +168,6 @@ public class Log4jTest {
                 .getListener("FIFOBuffer");
         return log4jBufferListener==null ? 0 : log4jBufferListener.getRowCount();
     }
+
 
 }
