@@ -41,6 +41,7 @@ public class JamonPropertiesLoaderTest {
         assertThat(props.getProperty("jamonDataPersister.label")).isEqualTo("myapplication name");
         assertThat(props.getProperty("jamonDataPersister.label.prefix")).isEqualTo("myprefix:");
         assertThat(props.getProperty("jamonDataPersister.directory")).isEqualTo("persistence/jamondata");
+        assertThat(props.getProperty("monitorCompositeCombiner.defaultFifoBufferSize")).isEqualTo("500");
     }
 
     @Test
