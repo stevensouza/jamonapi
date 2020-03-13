@@ -19,6 +19,8 @@ import java.util.Properties;
  */
 public class JamonPropertiesLoader {
 
+    public static final Properties PROPS = new JamonPropertiesLoader().getJamonProperties();
+
     private String fileName;
     private Properties jamonProps;
     private List<JamonListenerProperty> listenerList;
@@ -132,6 +134,7 @@ public class JamonPropertiesLoader {
         defaults.put("jamonListener.name", "FIFOBuffer");
         defaults.put("jamonListener.size", "50");
         defaults.put("jamonJmxBean.size", "50");
+        defaults.put("monitorCompositeCombiner.defaultFifoBufferSize", "100");
         return defaults;
     }
 

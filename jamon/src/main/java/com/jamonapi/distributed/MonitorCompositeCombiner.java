@@ -19,8 +19,9 @@ public class MonitorCompositeCombiner {
     static final String AGGREGATED_INSTANCENAME = "aggregated";
     static final String AGGREGATED_MONITOR_LABEL = "com.jamonapi.distributed.aggregated";
     static final String FIFO_BUFFER = "FIFOBuffer";
-    static final int SUMMARY_FIFO_BUFFER_SIZE = 100;
-    static final Properties PROPS = new JamonPropertiesLoader().getJamonProperties();
+    // The amount of server instanes that will be held in the summary buffer for each instance.  This buffer contains each of the top level monitors
+    // of the same key for each server.  Example: Monitor for all servers that have SQL All.
+    static final int SUMMARY_FIFO_BUFFER_SIZE = Integer.valueOf(JamonPropertiesLoader.PROPS.getProperty("monitorCompositeCombiner.defaultFifoBufferSize", "100"));
 
     public MonitorCompositeCombiner(JamonDataPersister persister) {
         this.persister = persister;
@@ -39,7 +40,7 @@ public class MonitorCompositeCombiner {
     // jamonadmin.jsp optimize imports
     // petes logic - remaing rows/remaining instances
     //   maybe first set 500
-    // arraysql on deail page
+    // x arraysql on deail page
     // jamonadmin iis pulliing up wrpong buffer instances when filtered by log4j - numbers are wrong.
         // it is due to caching all composite but clicking on mc frrom  filterbyunits
     // buffer for log4j only keeps the most recent servers as it is 400 size each

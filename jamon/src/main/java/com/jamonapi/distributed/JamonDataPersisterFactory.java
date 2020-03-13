@@ -19,7 +19,7 @@ public class JamonDataPersisterFactory {
     private Properties jamonProperties;
 
     private JamonDataPersisterFactory() {
-        jamonProperties = new JamonPropertiesLoader().getJamonProperties();
+        jamonProperties = JamonPropertiesLoader.PROPS;
         jamonDataPersisterName = jamonProperties.getProperty("jamonDataPersister");
     }
 
