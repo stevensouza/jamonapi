@@ -46,7 +46,7 @@ public class LocalJamonFilePersister extends LocalJamonDataPersister {
         try {
             createDirectory();
             String fileName = getFileName(instanceKey);
-            MonitorComposite monitorComposite = MonitorFactory.getRootMonitor().setInstanceName(instanceKey);
+            MonitorComposite monitorComposite = DistributedUtils.changeInstanceName(instanceKey, MonitorFactory.getRootMonitor().copy());;
             SerializationUtils.serializeToFile(monitorComposite, fileName);
         } catch (IOException e) {
             throw new RuntimeException("Exception while trying to save jamondata", e);

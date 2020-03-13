@@ -58,4 +58,7 @@ public final class JAMonDetailValue implements Serializable, ToArray {
         return keyToString;
     }
 
+    public MonKey getMonKey() {
+        return key;
+    }
 }

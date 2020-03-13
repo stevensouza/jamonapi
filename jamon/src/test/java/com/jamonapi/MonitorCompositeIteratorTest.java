@@ -1,11 +1,11 @@
 package com.jamonapi;
 
+import com.jamonapi.utils.MiscTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -58,16 +58,8 @@ public class MonitorCompositeIteratorTest {
         int size = list.size();
 
         assertThat(size).isEqualTo(monitorComposite1.getNumRows()+monitorComposite2.getNumRows());
-        assertThat(instanceNames(list)).containsOnly("mc1","mc2");
+        assertThat(MiscTest.instanceNames(list)).containsOnly("local");
     }
 
-    private Set<String> instanceNames(List<Monitor> list) {
-        Iterator<Monitor> iter = list.iterator();
-        Set<String> set = new HashSet<String>();
-        while (iter.hasNext()) {
-            set.add(iter.next().getMonKey().getInstanceName());
-        }
-        return set;
-    }
 
 }

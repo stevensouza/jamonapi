@@ -72,17 +72,10 @@ import java.util.List;
     public List<Monitor> toList() {
         List<Monitor> list = new ArrayList<Monitor>();
         while (hasNext()) {
-            Monitor mon = next();
-            if (!currentMonitorComposite.isLocalInstance()) {
-              // done so monitors can be identified by instance when viewed in jamonadmin.jsp
-              // Don't want to do this for the local instance as it is not needed as it is the default and
-              // it is the only one that is not a copy/clone of the original.
-              mon.getMonKey().setInstanceName(currentMonitorComposite.getInstanceName());
-            }
-
-            list.add(mon);
+          list.add(next());
         }
 
         return list;
     }
+
 }

@@ -2,6 +2,7 @@ package com.jamonapi.distributed;
 
 import com.jamonapi.*;
 import com.jamonapi.utils.BufferList;
+import com.jamonapi.utils.MiscTest;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -102,7 +103,7 @@ public class DistributedUtilsTest {
         Monitor from = factory.getMonitor("from", "count");
         Monitor to = factory.getMonitor("to", "count");
 
-        DistributedUtils.copyJamonBufferListenerData(from, to, "myInstanceName");
+        DistributedUtils.copyJamonBufferListenerData(from, to);
         assertFalse(to.hasListeners());
     }
 
@@ -125,7 +126,7 @@ public class DistributedUtilsTest {
 
         Monitor to = factory.getMonitor("to", "count");
 
-        DistributedUtils.copyJamonBufferListenerData(from, to, "myInstanceName");
+        DistributedUtils.copyJamonBufferListenerData(from, to);
         // check that listeners were properly created.
         assertTrue(to.hasListeners());
         assertTrue(to.hasListener("value", DistributedUtils.getFifoBufferName("FIFOBuffer")));
@@ -147,8 +148,29 @@ public class DistributedUtilsTest {
         from.start();
         factory.getTimeMonitor("from").start().stop(); // this will allow for a maxactive
         from.stop();
-        DistributedUtils.copyJamonBufferListenerData(from, to, "myInstanceName");
+        DistributedUtils.copyJamonBufferListenerData(from, to);
         assertBufferListeners(to, "maxactive", "FIFOBuffer", 1);
+    }
+
+    @Test
+    public void testChangeInstanceName() throws Exception {
+        final String NEW_INSTANCE_NAME = "newInstanceName";
+        final int INSTANCE_NAME_INDEX = 0;
+
+        Monitor helloMon = MonitorFactory.getMonitor("hello", "ms.");
+        helloMon.addListener("value", JAMonListenerFactory.get("FIFOBuffer"));
+        MonitorFactory.start("hello").stop();
+        MonitorFactory.start("world").stop();
+        MonitorFactory.add("page", "counter", 1);
+        MonitorComposite monitorComposite = MonitorFactory.getRootMonitor();
+        MonitorComposite answer = DistributedUtils.changeInstanceName(NEW_INSTANCE_NAME, monitorComposite);
+
+        assertThat(answer.getNumRows()).isEqualTo(monitorComposite.getNumRows());
+        List<Monitor> list = new MonitorCompositeIterator(Arrays.asList(answer)).toList();
+        assertThat(MiscTest.instanceNames(list)).containsOnly(NEW_INSTANCE_NAME);
+        JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) helloMon.getListenerType("value").getListener("FIFOBuffer");
+        Object[][] bufferRows = jaMonBufferListener.getBufferList().getDetailData().getData();
+        assertThat(bufferRows[0][INSTANCE_NAME_INDEX]).isEqualTo(NEW_INSTANCE_NAME);
     }
 
     private void assertBufferListeners(Monitor to, String listenerType, String listenerName, int expectedRows) {
@@ -158,7 +180,7 @@ public class DistributedUtilsTest {
         assertThat(bufferList.getRowCount()).isEqualTo(expectedRows);
         if (expectedRows > 0) {
             Object[][] data = bufferList.getDetailData().getData();
-            assertThat(data[0][0].toString()).isEqualTo("myInstanceName");
+            assertThat(data[0][0].toString()).isEqualTo("local");
         }
     }
 

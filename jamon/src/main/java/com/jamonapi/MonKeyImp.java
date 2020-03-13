@@ -173,7 +173,7 @@ public class MonKeyImp implements MonKey {
 
     @Override
     public String toString() {
-        return new StringBuffer().append("JAMon Label=").append(getLabel()).append(", Units=").append(getUnits()).toString();
+        return new StringBuffer().append("JAMon Label=").append(getLabel()).append(", Units=").append(getUnits()).append(", InstanceName=").append(getInstanceName()).toString();
 
     }
 

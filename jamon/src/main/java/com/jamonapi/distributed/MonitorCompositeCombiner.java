@@ -20,6 +20,7 @@ public class MonitorCompositeCombiner {
     static final String AGGREGATED_MONITOR_LABEL = "com.jamonapi.distributed.aggregated";
     static final String FIFO_BUFFER = "FIFOBuffer";
     static final int SUMMARY_FIFO_BUFFER_SIZE = 100;
+    static final Properties PROPS = new JamonPropertiesLoader().getJamonProperties();
 
     public MonitorCompositeCombiner(JamonDataPersister persister) {
         this.persister = persister;
@@ -36,12 +37,18 @@ public class MonitorCompositeCombiner {
     }
 
     // jamonadmin.jsp optimize imports
+    // petes logic - remaing rows/remaining instances
+    //   maybe first set 500
+    // arraysql on deail page
+    // jamonadmin iis pulliing up wrpong buffer instances when filtered by log4j - numbers are wrong.
+        // it is due to caching all composite but clicking on mc frrom  filterbyunits
     // buffer for log4j only keeps the most recent servers as it is 400 size each
     //   so shoujld i somehow for fifo buffer only bufferSize/numservers
     //   for max min buffers just feed them all?
-    // properites - configurable?
-    // jamonadmin iis pulliing up wrpong buffer instances when filtered by log4j - numbers are wrong.
+        //     private static void copyBufferListenerData(JAMonBufferListener from, JAMonBufferListener to, String instanceName) {
+    // properites - configurable? for MonitorCompositeCombiner properties?
 
+    // screen snapshots on page.  maybe updated log4j images
 
     // make this configurable from both size and whether to do or not.?????
     //        //  - log4j
@@ -115,24 +122,18 @@ public class MonitorCompositeCombiner {
 
     private void aggregate(FactoryEnabled factory, MonitorComposite monitorComposite) {
         Monitor[] monitors = monitorComposite.getMonitors();
-
         // loop monitors creating aggregated monitors and setup their listeners
         for (Monitor monitor : monitors) {
             // make a copy of the key as we have to change the instance name and don't want to change it for the local instance
             MonKey key = SerializationUtils.deepCopy(monitor.getMonKey());
-            key.setInstanceName(AGGREGATED_INSTANCENAME);
+            key.setInstanceName(AGGREGATED_INSTANCENAME); // keys as displayed in jamon admin page
 
             Monitor summaryMonitor = factory.getMonitor(key);
-            if (!monitorComposite.isLocalInstance()) {
-                // done so monitors can be identified by instance when viewed in jamonadmin.jsp
-                // Don't want to do this for the local instance as it is not needed as it is the default and
-                // it is the only one that is not a copy/clone of the original.
-                monitor.getMonKey().setInstanceName(monitorComposite.getInstanceName());
-            }
+
             merge(monitor, summaryMonitor);
             createSummaryFifoBufferIfAbsent(summaryMonitor);
             addMonitorDataToSummaryFifoBuffer(monitor, summaryMonitor);
-            DistributedUtils.copyJamonBufferListenerData(monitor, summaryMonitor, monitorComposite.getInstanceName());
+            DistributedUtils.copyJamonBufferListenerData(monitor, summaryMonitor);
         }
 
     }

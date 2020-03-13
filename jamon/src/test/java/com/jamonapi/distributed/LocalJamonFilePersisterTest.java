@@ -78,7 +78,7 @@ public class LocalJamonFilePersisterTest {
     @Test
     public void testPut() throws Exception {
         persister.put();
-        MonitorComposite expected = MonitorFactory.getRootMonitor();
+        MonitorComposite expected = DistributedUtils.changeInstanceName(LocalJamonFilePersister.JAMON_FILE_NAME, MonitorFactory.getRootMonitor().copy());
         MonitorComposite fileData = persister.get(LocalJamonFilePersister.JAMON_FILE_NAME);
         assertThat(fileData.getInstanceName()).isEqualTo(LocalJamonFilePersister.JAMON_FILE_NAME);
         assertThat(fileData.getReport()).isEqualTo(expected.getReport());

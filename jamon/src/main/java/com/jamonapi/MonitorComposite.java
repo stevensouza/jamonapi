@@ -15,8 +15,7 @@ import java.util.*;
 public class MonitorComposite extends Monitor implements DetailData  {
 
     private static final long serialVersionUID = 279L;
-    private static final String LOCAL="local";
-    private static final String INSTANCE_NAME_HEADER = "Instance";
+    public static final String LOCAL="local";
 
     private final Monitor[] monitors;// the monitors in the composite
     private final int numRows; // rows in the composite

@@ -177,7 +177,7 @@ public class MonKeyBase implements MonKey {
 
         }
 
-        return buff.toString();
+        return buff.append(", InstanceName=").append(getInstanceName()).toString();
     }
 
     /** Returns either the passed in range key, or it builds the key from the maps keys concatenated */

@@ -1,10 +1,9 @@
 package com.jamonapi.utils;
 
+import com.jamonapi.Monitor;
 import org.junit.Test;
 
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Map;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -13,6 +12,15 @@ public class MiscTest {
     private final Date NULL_DATE = new Date(0);
     private final Date min = new Date();
     private final Date max = new Date(min.getTime()+1000000);
+
+    public static Set<String> instanceNames(List<Monitor> list) {
+        Iterator<Monitor> iter = list.iterator();
+        Set<String> set = new HashSet<String>();
+        while (iter.hasNext()) {
+            set.add(iter.next().getMonKey().getInstanceName());
+        }
+        return set;
+    }
 
     @Test
     public void testDateMethods() {

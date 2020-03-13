@@ -46,8 +46,11 @@ public class HazelcastPersisterImp implements JamonDataPersister {
     @Override
     public void put(String key) {
         intitialize();
-        jamonDataMap.set(key, MonitorFactory.getRootMonitor().setInstanceName(key));
+        // change monitorComposite and individual monitors to have an instance name of this servers instance instead of 'local'.
+        // for example: tomcat9_inventory_production so it can be easily recognized in the various jamon reports.
+        jamonDataMap.set(key, DistributedUtils.changeInstanceName(key, MonitorFactory.getRootMonitor().copy()));
     }
+
 
     @Override
     public MonitorComposite get(String key) {
