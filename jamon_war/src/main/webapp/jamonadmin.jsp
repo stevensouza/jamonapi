@@ -50,7 +50,7 @@ String highlightString=getValue(request.getParameter("highlight"),"");
 String displayType=getValue(request.getParameter("displayTypeValue"), "BasicColumns");
 String rangeName=getValue(request.getParameter("RangeName"),"AllMonitors");
 
-// AllMonitors can't display ranges so allways change displayType to BasicColumns in this case
+// AllMonitors can't display ranges so always change displayType to BasicColumns in this case
 displayType=(rangeName.equalsIgnoreCase("AllMonitors")) ? "BasicColumns" : displayType;
 
 // Assign defaults for arraysql.  If nothing is provided use 'select * from array'.  If the first word is not 
@@ -138,6 +138,7 @@ if (isLocal(instanceName)) {
     Date refreshDate = mc.getDateCreated();
     session.setAttribute("monitorComposite", mc);
     mc = mc.filterByUnits(rangeName);
+    session.setAttribute("monitorCompositeFilteredByUnits", mc);
 
     Map map = new HashMap();
 // used for html page

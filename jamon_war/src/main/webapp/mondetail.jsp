@@ -7,7 +7,7 @@
 
 
 FormattedDataSet fds=new FormattedDataSet();
-MonitorComposite mc = (MonitorComposite) session.getAttribute("monitorComposite");
+MonitorComposite mc = (MonitorComposite) session.getAttribute("monitorCompositeFilteredByUnits");
     MonKey key=null;
     Integer keyNum = null;
     if (mc.isLocalInstance()) {
@@ -51,9 +51,7 @@ if (arraySQLExec.trim().toLowerCase().startsWith("select"))
 else if (arraySQLExec.trim().toLowerCase().startsWith("where")) 
    arraySQLExec="select * from array "+arraySQL;// where clause entered:  where hits>100 and total<50000
 else
-   arraySQLExec="select * from array where col1 like '"+arraySQL+"'";
-
-arraySQLExec = (arraySQLExec.trim().toLowerCase().startsWith("select")) ? arraySQLExec : "select * from array where col1 like '"+arraySQL+"'";
+   arraySQLExec="select * from array where label like '"+arraySQL+"'";
 
 // Build the request parameter query string that will be part of every clickable column.
 String query="";

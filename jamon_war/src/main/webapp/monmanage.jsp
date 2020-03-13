@@ -8,7 +8,7 @@ FormattedDataSet fds=new FormattedDataSet();
 
 // Assign request parameters to local variables.
 String action    = getValue(request.getParameter("monitormgmt"),"");
-MonitorComposite mc = (MonitorComposite) session.getAttribute("monitorComposite");
+MonitorComposite mc = (MonitorComposite) session.getAttribute("monitorCompositeFilteredByUnits");
 MonKey key=null;
 
 int keyNum=0;
@@ -19,15 +19,15 @@ if (request.getParameter("key")!=null) { // monmanage.jsp?key=21
         session.setAttribute("keyNum", keyNum);
 }
 // monKey is the previous key that the user picked in session.  i.e. they didn't come by clicking on jamonadmin.jsp
+// this will only work with local instance
 else if (mc.isLocalInstance() && session.getAttribute("monKey")!=null) {
-//  keyNum=Integer.parseInt((String)session.getAttribute("keyNum"));
   key=(MonKey) session.getAttribute("monKey");
 } else if (session.getAttribute("keyNum")!=null) { // this is used for composites combining multiple server instances - i.e. not local only
-    keyNum=getNum(session.getAttribute("keyNum").toString(), "1");
+    keyNum=getNum(session.getAttribute("keyNum").toString(), "0");
 }
 
 
-    String listenerType = "value";
+String listenerType = "value";
 if (request.getParameter("listenertype")==null  && session.getAttribute("listenerType")!=null)
   listenerType=(String)session.getAttribute("listenerType");
 else if (request.getParameter("listenertype")!=null) {
