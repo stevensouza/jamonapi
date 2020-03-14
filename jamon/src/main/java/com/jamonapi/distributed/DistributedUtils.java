@@ -1,6 +1,7 @@
 package com.jamonapi.distributed;
 
 import com.jamonapi.*;
+import com.jamonapi.utils.FIFOBufferHolder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,8 +13,8 @@ import java.util.List;
  */
 public class DistributedUtils {
     private static final String FIFO_BUFFER = "FIFOBuffer";
-    static final String FIFO_BUFFER_SUFFIX = "combined";
-    static final int DEFAULT_BUFFER_SIZE = 250;
+    static final String BUFFER_SUFFIX = "combined";
+    static final int COMBINED_FIFO_BUFFER_SIZE = Integer.valueOf(JamonPropertiesLoader.PROPS.getProperty("monitorCompositeCombiner.combinedFifoBufferSize", "250"));
     private static final int INSTANCE_NAME_INDEX = 0;
 
 
@@ -29,30 +30,48 @@ public class DistributedUtils {
 
     /**
      * Copy
-     *  @param from
+     *
+     * @param from
      * @param to
+     * @param numInstances Represents the total number of instances that will be sharing this buffer. This number is used to
+     *                     determine how many rows from each instance are put into a FIFOBuffer. The amount of rows put in each
+     *                     the buffer by each buffer is maxRowsInBuffer/numInstances. If maxRowsInBuffer=400 and numInstances=10 then
+     *                     each instance could put a max of 40 rows in the buffer.
+     *                     Note this number doesn't apply to other types of buffers such as max buffer where any server can dominate.
      */
-    public static void copyJamonBufferListenerData(Monitor from, Monitor to) {
+    public static void copyJamonBufferListenerData(Monitor from, Monitor to, int numInstances) {
         List<DistributedUtils.ListenerInfo> listeners = DistributedUtils.getAllListeners(from);
         Iterator<DistributedUtils.ListenerInfo> iter = listeners.iterator();
         while (iter.hasNext()) {
             DistributedUtils.ListenerInfo listenerInfo = iter.next();
             // only copying jamon buffer listener data - for now. ignoring other listeners
             if (listenerInfo.getListener() instanceof JAMonBufferListener) {
-                String fifoName = getFifoBufferName(listenerInfo.getListener().getName());
+                String fifoName = getBufferName(listenerInfo.getListener().getName());
                 JAMonBufferListener fromJamonBufferListener = (JAMonBufferListener) listenerInfo.getListener();
                 JAMonBufferListener toJamonBufferListener = null;
+                // get/create JAMonBufferListener
                 if (to.hasListener(listenerInfo.getListenerType(), fifoName)) {
                     toJamonBufferListener = (JAMonBufferListener) to.getListenerType(listenerInfo.getListenerType()).getListener(fifoName);
                 } else {
                     toJamonBufferListener = createBufferListener(fifoName, fromJamonBufferListener);
-                    toJamonBufferListener.getBufferList().reset();
+                    toJamonBufferListener.getBufferList().reset();// copied buffer in from buffer listener, so it has data in it still.
                     to.addListener(listenerInfo.getListenerType(), toJamonBufferListener);
                 }
 
-                copyBufferListenerData(fromJamonBufferListener, toJamonBufferListener);
+                // populate buffer listener
+                copyBufferListenerData(fromJamonBufferListener, toJamonBufferListener, numInstances);
             }
         }
+    }
+
+    /**
+     * Copy
+     *
+     * @param from
+     * @param to
+     */
+    public static void copyJamonBufferListenerData(Monitor from, Monitor to) {
+        copyJamonBufferListenerData(from, to, 1);
     }
 
     /**
@@ -98,20 +117,36 @@ public class DistributedUtils {
 
     /**
      * Copy buffer data from the from/source listener to the to/destination buffer listener.
-     *  @param from source data
-     * @param to   destination data
+     *
+     * @param from         source data
+     * @param to           destination data
+     * @param numInstances used to determine how many rows to put in from the fifo buffer.
      */
 
-    private static void copyBufferListenerData(JAMonBufferListener from, JAMonBufferListener to) {
+    private static void copyBufferListenerData(JAMonBufferListener from, JAMonBufferListener to, int numInstances) {
         if (from.hasData()) {
             Object[][] data = from.getBufferList().getDetailData().getData();
-            for (Object[] row : data) {
+            int firstFifoIndexToBeAdded = getFifoFirstIndexToBeAdded(COMBINED_FIFO_BUFFER_SIZE, data.length, numInstances);
+            int startIndex = isFifoBufferListener(from) ? firstFifoIndexToBeAdded : 0;
+            // note fifo buffer only puts the most recent rows in and tries to put an equal amount in from each instance buffer.
+            for (int i=startIndex; i<data.length; i++) {
                 // note addRow will honor the rules of the given buffer listener. For example a fifo buffer listener will always
                 // add the row, whereas a max listener will only add it if it is a new max.
-                to.addRow(row);
+                to.addRow(data[i]);
             }
         }
+    }
 
+    private static boolean isFifoBufferListener(JAMonBufferListener listener) {
+        return listener.getBufferList().getBufferHolder() instanceof FIFOBufferHolder;
+    }
+
+    // If there are 10 instances adding to a fifo buffer of size 400 then each of them can only add a max of 40 rows.
+    // Let's say an instances own buffer size is 100 then assuming 0 indexing the rows 60-99 would be added inclusive.
+    // This example will be played out in the example below.
+    static int getFifoFirstIndexToBeAdded(int combinedFifoBufferSize, int sourceBufferSize, int numInstances) {
+        int numFifoBufferRowsToAdd = combinedFifoBufferSize / numInstances; // 400/10=40
+        return numFifoBufferRowsToAdd >= sourceBufferSize ? 0 : sourceBufferSize - numFifoBufferRowsToAdd; // 100-40=60 (first index to add)
     }
 
     private static void addAllListeners(List<ListenerInfo> list, Monitor monitor, String listenerTypeName) {
@@ -144,7 +179,7 @@ public class DistributedUtils {
 
     private static JAMonBufferListener createBufferListener(String name, JAMonBufferListener from) {
         JAMonBufferListener fifo = createBufferListener(from);
-        fifo.getBufferList().setBufferSize(DEFAULT_BUFFER_SIZE);
+        fifo.getBufferList().setBufferSize(COMBINED_FIFO_BUFFER_SIZE);
         fifo.setName(name);
         return fifo;
     }
@@ -161,8 +196,8 @@ public class DistributedUtils {
         }
     }
 
-    static String getFifoBufferName(String name) {
-        return name + "_" + FIFO_BUFFER_SUFFIX;
+    static String getBufferName(String name) {
+        return name + "_" + BUFFER_SUFFIX;
     }
 
 

@@ -14,7 +14,6 @@ public class FIFOBufferHolder implements BufferHolder {
 
     public void add(Object replaceWithObj) {
         bufferList.addLast(replaceWithObj);
-
     }
 
     public void remove(Object replaceWithObj) {

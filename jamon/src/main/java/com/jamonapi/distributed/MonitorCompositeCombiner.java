@@ -21,8 +21,11 @@ public class MonitorCompositeCombiner {
     static final String FIFO_BUFFER = "FIFOBuffer";
     // The amount of server instanes that will be held in the summary buffer for each instance.  This buffer contains each of the top level monitors
     // of the same key for each server.  Example: Monitor for all servers that have SQL All.
-    static final int SUMMARY_FIFO_BUFFER_SIZE = Integer.valueOf(JamonPropertiesLoader.PROPS.getProperty("monitorCompositeCombiner.defaultFifoBufferSize", "100"));
-
+    static final int SUMMARY_FIFO_BUFFER_SIZE = Integer.valueOf(JamonPropertiesLoader.PROPS.getProperty("monitorCompositeCombiner.summaryFifoBufferSize", "100"));
+//    static final int COMBINED_FIFO_BUFFER_SIZE = Integer.valueOf(JamonPropertiesLoader.PROPS.getProperty("monitorCompositeCombiner.combinedFifoBufferSize", "250"));
+//private int getBufferRowsPerInstance(String[] instanceKeys) {
+//    return instanceKeys==null ? 0 : COMBINED_FIFO_BUFFER_SIZE/instanceKeys.length;
+//}
     public MonitorCompositeCombiner(JamonDataPersister persister) {
         this.persister = persister;
     }
@@ -37,6 +40,9 @@ public class MonitorCompositeCombiner {
         return append(getMonitorComposites(instanceKeys));
     }
 
+    // 1) why does total buffer have local.  maybe reset everythiing except tomcatprod and see what happens? i think it is a jsp issue
+    // 2) finish fifo buffer takiing only the most recent into combined buffer
+    // 3
     // jamonadmin.jsp optimize imports
     // petes logic - remaing rows/remaining instances
     //   maybe first set 500
@@ -78,11 +84,12 @@ public class MonitorCompositeCombiner {
      */
     public MonitorComposite aggregate(String... instanceKeys) {
         FactoryEnabled factory = new FactoryEnabled(false);
+
         for (String instanceKey : instanceKeys) {
             Monitor mon = startInstanceMonitor();
             MonitorComposite monitorComposite = persister.get(instanceKey);
             mon.getMonKey().setDetails(monitorComposite.getInstanceName());
-            aggregate(factory, monitorComposite);
+            aggregate(factory, monitorComposite, instanceKeys.length);
             mon.stop();
         }
 
@@ -121,7 +128,7 @@ public class MonitorCompositeCombiner {
         return mc.setInstanceName(Misc.getAsString(instanceNameList));
     }
 
-    private void aggregate(FactoryEnabled factory, MonitorComposite monitorComposite) {
+    private void aggregate(FactoryEnabled factory, MonitorComposite monitorComposite, int numInstances) {
         Monitor[] monitors = monitorComposite.getMonitors();
         // loop monitors creating aggregated monitors and setup their listeners
         for (Monitor monitor : monitors) {
@@ -134,9 +141,8 @@ public class MonitorCompositeCombiner {
             merge(monitor, summaryMonitor);
             createSummaryFifoBufferIfAbsent(summaryMonitor);
             addMonitorDataToSummaryFifoBuffer(monitor, summaryMonitor);
-            DistributedUtils.copyJamonBufferListenerData(monitor, summaryMonitor);
+            DistributedUtils.copyJamonBufferListenerData(monitor, summaryMonitor, numInstances);
         }
-
     }
 
     private Monitor startInstanceMonitor() {

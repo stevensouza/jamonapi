@@ -206,8 +206,8 @@ public class MonitorCompositeCombinerTest {
         assertThat(MonitorFactory.getMonitor(new MonKeyImp(AGGREGATED_MONITOR_LABEL, "ms.")).getHits()).isEqualTo(2);
         assertTrue(MonitorFactory.getMonitor(new MonKeyImp(AGGREGATED_MONITOR_LABEL, "ms.")).hasListeners());
         mon = aggregate.getMonitor(new MonKeyImp("instance.label1", "count"));
-        assertTrue(mon.hasListener("value", DistributedUtils.getFifoBufferName("FIFOBuffer")));
-        JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) mon.getListenerType("value").getListener(DistributedUtils.getFifoBufferName("FIFOBuffer"));
+        assertTrue(mon.hasListener("value", DistributedUtils.getBufferName("FIFOBuffer")));
+        JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) mon.getListenerType("value").getListener(DistributedUtils.getBufferName("FIFOBuffer"));
         assertThat(jaMonBufferListener.getRowCount()).isEqualTo(2);
     }
 

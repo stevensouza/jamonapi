@@ -134,7 +134,8 @@ public class JamonPropertiesLoader {
         defaults.put("jamonListener.name", "FIFOBuffer");
         defaults.put("jamonListener.size", "50");
         defaults.put("jamonJmxBean.size", "50");
-        defaults.put("monitorCompositeCombiner.defaultFifoBufferSize", "100");
+        defaults.put("monitorCompositeCombiner.summaryFifoBufferSize", "100");
+        defaults.put("monitorCompositeCombiner.combinedFifoBufferSize", "300");
         return defaults;
     }
 

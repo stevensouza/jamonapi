@@ -15,6 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 public class DistributedUtilsTest {
 
+    private static final int DETAILS_INDEX = 2;
 
     @Test
     public void getAllNoListeners() {
@@ -130,10 +131,10 @@ public class DistributedUtilsTest {
         DistributedUtils.copyJamonBufferListenerData(from, to);
         // check that listeners were properly created.
         assertTrue(to.hasListeners());
-        assertTrue(to.hasListener("value", DistributedUtils.getFifoBufferName("FIFOBuffer")));
-        assertTrue(to.hasListener("min", DistributedUtils.getFifoBufferName("minFIFOBuffer")));
-        assertTrue(to.hasListener("max", DistributedUtils.getFifoBufferName("FIFOBuffer")));
-        assertTrue(to.hasListener("maxactive", DistributedUtils.getFifoBufferName("FIFOBuffer")));
+        assertTrue(to.hasListener("value", DistributedUtils.getBufferName("FIFOBuffer")));
+        assertTrue(to.hasListener("min", DistributedUtils.getBufferName("minFIFOBuffer")));
+        assertTrue(to.hasListener("max", DistributedUtils.getBufferName("FIFOBuffer")));
+        assertTrue(to.hasListener("maxactive", DistributedUtils.getBufferName("FIFOBuffer")));
         List<DistributedUtils.ListenerInfo> list = DistributedUtils.getAllListeners(to);
         assertThat(list.size()).isEqualTo(5);
 
@@ -179,18 +180,99 @@ public class DistributedUtilsTest {
         assertInstanceName(NEW_INSTANCE_NAME,answer.getMonitor(new MonKeyImp("com.jamonapi.log4j.JAMonAppender.TOTAL","log4j")));
     }
 
+    @Test
+    public void getFifoFirstIndexToBeAdded() {
+        // test all combinations of combinedFifoBufferSize(>,=,<)sourceBufferSize with 1,2,3 instances
+        // sourceBufferSize of 5 has index values 0,1,2,3,4
+
+        // combinedFifoBufferSize>sourceBufferSize
+        assertThat(DistributedUtils.getFifoFirstIndexToBeAdded(10,5, 1)).isEqualTo(0);
+        assertThat(DistributedUtils.getFifoFirstIndexToBeAdded(10,5, 2)).isEqualTo(0);
+        assertThat(DistributedUtils.getFifoFirstIndexToBeAdded(10,5, 3)).isEqualTo(2); // index 2 gets 3 values from each buffer for a total of 9
+
+        // combinedFifoBufferSize<sourceBufferSize
+        assertThat(DistributedUtils.getFifoFirstIndexToBeAdded(5,10, 1)).isEqualTo(5);
+        assertThat(DistributedUtils.getFifoFirstIndexToBeAdded(5,10, 2)).isEqualTo(8);
+        assertThat(DistributedUtils.getFifoFirstIndexToBeAdded(5,10, 3)).isEqualTo(9);// last values index
+
+        // combinedFifoBufferSize==sourceBufferSize
+        assertThat(DistributedUtils.getFifoFirstIndexToBeAdded(10,10, 1)).isEqualTo(0);
+        assertThat(DistributedUtils.getFifoFirstIndexToBeAdded(10,10, 2)).isEqualTo(5);
+        assertThat(DistributedUtils.getFifoFirstIndexToBeAdded(10,10, 3)).isEqualTo(7);
+    }
+
+
+    @Test
+    public void copyJamonBufferListenerData_lowData() {
+        // less data in 'from' buffers (2 of 50 rows) than in 'to' buffer (250 rows)
+        Monitor from1 = MonitorFactory.getMonitor("label1", "count");
+        JAMonBufferListener listener1 = (JAMonBufferListener) JAMonListenerFactory.get("FIFOBuffer");
+        from1.addListener("value", listener1);
+
+        Monitor from2 = MonitorFactory.getMonitor("label2", "count");
+        JAMonBufferListener listener2 = (JAMonBufferListener) JAMonListenerFactory.get("FIFOBuffer");
+        from2.addListener("value", listener2);
+
+        for (int i=0;i<1000;i++) {
+            MonitorFactory.add(new MonKeyImp("label1", i, "count"), i);
+            MonitorFactory.add(new MonKeyImp("label2", i, "count"), i);
+        }
+        Monitor to = MonitorFactory.getMonitor();
+        // from buffer size=50
+        DistributedUtils.copyJamonBufferListenerData(from1, to, 2);
+        DistributedUtils.copyJamonBufferListenerData(from2, to, 2);
+
+        JAMonBufferListener toListener = (JAMonBufferListener) to.getListenerType("value").getListener(DistributedUtils.getBufferName("FIFOBuffer"));
+        // so there should be 100 rows in 'to' buffer for the last rows i.e first 50 rows
+        // would have values 50..99 followed by another 50 rows of values 50..99
+        assertThat(toListener.getRowCount()).isEqualTo(100);
+        Object details = ((Object[])toListener.getBufferList().getCollection().get(49))[DETAILS_INDEX];
+        assertThat(details).isEqualTo(999.0);
+        details = ((Object[])toListener.getBufferList().getCollection().get(99))[DETAILS_INDEX];
+        assertThat(details).isEqualTo(999.0);
+    }
+
+    @Test
+    public void copyJamonBufferListenerData_highData() {
+        // less data in 'from' buffers (2 of 1000 rows) than in 'to' buffer (250 rows)
+        Monitor from1 = MonitorFactory.getMonitor("label1", "count");
+        JAMonBufferListener listener1 = (JAMonBufferListener) JAMonListenerFactory.get("FIFOBuffer");
+        listener1.getBufferList().setBufferSize(1000);
+        from1.addListener("value", listener1);
+
+        Monitor from2 = MonitorFactory.getMonitor("label2", "count");
+        JAMonBufferListener listener2 = (JAMonBufferListener) JAMonListenerFactory.get("FIFOBuffer");
+        listener2.getBufferList().setBufferSize(1000);
+        from2.addListener("value", listener2);
+
+        for (int i=0;i<1000;i++) {
+            MonitorFactory.add(new MonKeyImp("label1", i, "count"), i);
+            MonitorFactory.add(new MonKeyImp("label2", i, "count"), i);
+        }
+        Monitor to = MonitorFactory.getMonitor();
+        // from buffer size=50
+        DistributedUtils.copyJamonBufferListenerData(from1, to, 2);
+        DistributedUtils.copyJamonBufferListenerData(from2, to, 2);
+
+        JAMonBufferListener toListener = (JAMonBufferListener) to.getListenerType("value").getListener(DistributedUtils.getBufferName("FIFOBuffer"));
+        // so there should be 250 rows in 'to' buffer for the last 125 rows in each 'from' buffer
+        assertThat(toListener.getRowCount()).isEqualTo(250);
+        Object details = ((Object[])toListener.getBufferList().getCollection().get(124))[DETAILS_INDEX];
+        assertThat(details).isEqualTo(999.0);
+        details = ((Object[])toListener.getBufferList().getCollection().get(249))[DETAILS_INDEX];
+        assertThat(details).isEqualTo(999.0);
+    }
 
     private void assertBufferListeners(Monitor to, String listenerType, String listenerName, int expectedRows) {
-        JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) to.getListenerType(listenerType).getListener(DistributedUtils.getFifoBufferName(listenerName));
+        JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) to.getListenerType(listenerType).getListener(DistributedUtils.getBufferName(listenerName));
         BufferList bufferList = jaMonBufferListener.getBufferList();
-        assertThat(bufferList.getBufferSize()).isEqualTo(DistributedUtils.DEFAULT_BUFFER_SIZE);
+        assertThat(bufferList.getBufferSize()).isEqualTo(DistributedUtils.COMBINED_FIFO_BUFFER_SIZE);
         assertThat(bufferList.getRowCount()).isEqualTo(expectedRows);
         if (expectedRows > 0) {
             Object[][] data = bufferList.getDetailData().getData();
             assertThat(data[0][0].toString()).isEqualTo("local");
         }
     }
-
 
     private void assertInstanceName(String expectedInstanceName, Monitor monitor) {
         assertThat(expectedInstanceName).isEqualTo(monitor.getMonKey().getInstanceName());
