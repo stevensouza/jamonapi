@@ -4,6 +4,7 @@ import com.jamonapi.*;
 import com.jamonapi.utils.BufferList;
 import com.jamonapi.utils.Log4jUtils;
 import com.jamonapi.utils.MiscTest;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -16,6 +17,11 @@ import static org.junit.Assert.assertTrue;
 public class DistributedUtilsTest {
 
     private static final int DETAILS_INDEX = 2;
+
+    @Before
+    public void setUp() {
+        MonitorFactory.reset();
+    }
 
     @Test
     public void getAllNoListeners() {

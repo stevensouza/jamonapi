@@ -24,8 +24,8 @@ public class JamonPropertiesLoaderTest {
         assertThat(props.getProperty("jamonListener.name")).isEqualTo("FIFOBuffer");
         assertThat(props.getProperty("jamonListener.size")).isEqualTo("50");
         assertThat(props.getProperty("jamonJmxBean.size")).isEqualTo("50");
-        assertThat(props.getProperty("monitorCompositeCombiner.summaryFifoBufferSize")).isEqualTo(100);
-        assertThat(props.getProperty("monitorCompositeCombiner.combinedFifoBufferSize")).isEqualTo(300);
+        assertThat(props.getProperty("monitorCompositeCombiner.summaryFifoBufferSize")).isEqualTo("100");
+        assertThat(props.getProperty("monitorCompositeCombiner.combinedFifoBufferSize")).isEqualTo("300");
     }
 
     @Test

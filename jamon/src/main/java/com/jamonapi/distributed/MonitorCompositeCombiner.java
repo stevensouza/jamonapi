@@ -22,10 +22,6 @@ public class MonitorCompositeCombiner {
     // The amount of server instanes that will be held in the summary buffer for each instance.  This buffer contains each of the top level monitors
     // of the same key for each server.  Example: Monitor for all servers that have SQL All.
     static final int SUMMARY_FIFO_BUFFER_SIZE = Integer.valueOf(JamonPropertiesLoader.PROPS.getProperty("monitorCompositeCombiner.summaryFifoBufferSize", "100"));
-//    static final int COMBINED_FIFO_BUFFER_SIZE = Integer.valueOf(JamonPropertiesLoader.PROPS.getProperty("monitorCompositeCombiner.combinedFifoBufferSize", "250"));
-//private int getBufferRowsPerInstance(String[] instanceKeys) {
-//    return instanceKeys==null ? 0 : COMBINED_FIFO_BUFFER_SIZE/instanceKeys.length;
-//}
     public MonitorCompositeCombiner(JamonDataPersister persister) {
         this.persister = persister;
     }
