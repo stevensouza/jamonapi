@@ -244,6 +244,7 @@ public class MonitorComposite extends Monitor implements DetailData  {
      * no range info
      */
     public String getReport(int sortCol, String sortOrder) {
+        final int LABEL = 1;
         if (!hasData())
             return "";
 
@@ -258,7 +259,7 @@ public class MonitorComposite extends Monitor implements DetailData  {
         for (int i=0;i<cols;i++)
             html.append("<th>"+header[i]+"</th>");
 
-        html.append("<th>"+header[0]+"</th>");//repeat first header
+        html.append("<th>"+header[LABEL]+"</th>");//repeat label header
         html.append("\n");
 
         for (int i=0;i<rows;i++) {
@@ -266,7 +267,7 @@ public class MonitorComposite extends Monitor implements DetailData  {
             for (int j=0;j<cols;j++) {
                 html.append("<td>"+data[i][j]+"</td>");
             }
-            html.append("<td>"+data[i][0]+"</td>");// repeat first column
+            html.append("<td>"+data[i][LABEL]+"</td>");// repeat label column
             html.append("</tr>\n");
         }
 
