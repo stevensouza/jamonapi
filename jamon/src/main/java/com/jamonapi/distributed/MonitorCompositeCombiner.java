@@ -115,8 +115,8 @@ public class MonitorCompositeCombiner {
         Iterator<MonitorComposite> iter = monitorCompositeList.iterator();
         // note 2 lists are used instead of a Map so if 2 instanceNames are the same (say 'local') each of them can be
         // retained.
-        List<MonitorComposite> monitorCompositeResultsList = new ArrayList<MonitorComposite>();
-        List<String> instanceNameList = new ArrayList<String>();
+        List<MonitorComposite> monitorCompositeResultsList = new ArrayList<>();
+        List<String> instanceNameList = new ArrayList<>();
 
         while (iter.hasNext()) {
             MonitorComposite mc = iter.next();
@@ -140,9 +140,13 @@ public class MonitorCompositeCombiner {
             MonKey key = SerializationUtils.deepCopy(monitor.getMonKey());
             key.setInstanceName(AGGREGATED_INSTANCENAME); // keys as displayed in jamon admin page
 
+            // summaryMonitor would combine data from all monitors with the same key in all composite monitors
+            // i.e. local, local_saved, tomcat8_production for example.
             Monitor summaryMonitor = factory.getMonitor(key);
 
+            // copy from monitor data into summaryMonitor
             merge(monitor, summaryMonitor);
+            // add the summary buffer to the summaryMonitor
             createSummaryFifoBufferIfAbsent(summaryMonitor);
             addMonitorDataToSummaryFifoBuffer(monitor, summaryMonitor);
             DistributedUtils.copyJamonBufferListenerData(monitor, summaryMonitor, numInstances);

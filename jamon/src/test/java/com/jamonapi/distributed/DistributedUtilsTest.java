@@ -166,8 +166,11 @@ public class DistributedUtilsTest {
         Log4jUtils.logWithLog4j("log4j2.xml");
 
         Monitor helloMon = MonitorFactory.getMonitor("hello", "ms.");
-        helloMon.addListener("value", JAMonListenerFactory.get("FIFOBuffer"));
+        JAMonBufferListener jbl = (JAMonBufferListener) JAMonListenerFactory.get("FIFOBuffer");
+        helloMon.addListener("value", jbl);
         MonitorFactory.start("hello").stop();
+        MonitorFactory.start("hello").stop();
+
         MonitorFactory.start("world").stop();
         MonitorFactory.add("page", "counter", 1);
         MonitorComposite monitorComposite = MonitorFactory.getRootMonitor();
@@ -176,6 +179,11 @@ public class DistributedUtilsTest {
         assertThat(answer.getNumRows()).isEqualTo(monitorComposite.getNumRows());
         List<Monitor> list = new MonitorCompositeIterator(Arrays.asList(answer)).toList();
         assertThat(MiscTest.instanceNames(list)).containsOnly(NEW_INSTANCE_NAME);
+        Object[][] fifoBufferListenerData = jbl.getDetailData().getData();
+        for (int i=0;i<fifoBufferListenerData.length;i++) {
+            assertThat(fifoBufferListenerData[i][0]).isEqualTo(NEW_INSTANCE_NAME);
+        }
+
 
         assertInstanceName(NEW_INSTANCE_NAME,answer.getMonitor(new MonKeyImp("com.jamonapi.log4j.JAMonAppender.TRACE","log4j")));
         assertInstanceName(NEW_INSTANCE_NAME,answer.getMonitor(new MonKeyImp("com.jamonapi.log4j.JAMonAppender.DEBUG","log4j")));
@@ -240,7 +248,7 @@ public class DistributedUtilsTest {
 
     @Test
     public void copyJamonBufferListenerData_highData() {
-        // less data in 'from' buffers (2 of 1000 rows) than in 'to' buffer (250 rows)
+        // more data in 'from' buffers (2 of 1000 rows each) than in 'to' buffer (250 rows)
         Monitor from1 = MonitorFactory.getMonitor("label1", "count");
         JAMonBufferListener listener1 = (JAMonBufferListener) JAMonListenerFactory.get("FIFOBuffer");
         listener1.getBufferList().setBufferSize(1000);
@@ -256,7 +264,7 @@ public class DistributedUtilsTest {
             MonitorFactory.add(new MonKeyImp("label2", i, "count"), i);
         }
         Monitor to = MonitorFactory.getMonitor();
-        // from buffer size=50
+        // from buffer size=1000
         DistributedUtils.copyJamonBufferListenerData(from1, to, 2);
         DistributedUtils.copyJamonBufferListenerData(from2, to, 2);
 
