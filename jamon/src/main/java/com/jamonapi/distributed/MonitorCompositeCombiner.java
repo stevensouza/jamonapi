@@ -36,7 +36,15 @@ public class MonitorCompositeCombiner {
         return append(getMonitorComposites(instanceKeys));
     }
 
+    // 0) note the logic problem is in moniotrcombiner.agggregate as
+    //   when i boot and run combine, or individidual after serialization iti s fine
+    //   however it scrrews up the buffer instnacename to local when i run aggregate to just say local
+    //  no idea why
     // 1) why does total buffer have local.  maybe reset everythiing except tomcatprod and see what happens? i think it is a jsp issue
+    // 2) note after reboot the first aggregated one works in mondetail (i.e. showed local, local-saved, tomcat8-prodcution).  had it cached too.
+    //    after that it does't work and has all local for aggregate, but also
+    //    local for just one of them i.e. only pick local-saved, or tomcat8-production it has local as instancename  in mondetail
+           // monitorcombiner.aggregate(
     // 2) finish fifo buffer takiing only the most recent into combined buffer
     // 3
     // jamonadmin.jsp optimize imports

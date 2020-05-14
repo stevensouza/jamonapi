@@ -1,8 +1,6 @@
-<%@ page language="java" buffer="8kb" autoFlush="true" isThreadSafe="true" isErrorPage="false"  %>
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ page import="com.fdsapi.*, com.fdsapi.arrays.*, net.sf.xsshtmlfilter.HTMLFilter, java.text.DateFormat, java.text.DecimalFormat, java.util.*,  java.util.regex.Matcher" %>
 <%@ page import="java.util.regex.Pattern" %>
-<%@ page import="com.jamonapi.*, com.jamonapi.proxy.*, com.jamonapi.utils.*, com.jamonapi.distributed.*" %>
 
 <%
 String outputType= getValue(request.getParameter("outputTypeValue"),"html");
@@ -103,14 +101,14 @@ if (isLocal(instanceName)) {
     List<String> prevInstanceName = (List<String>) session.getAttribute("prevInstanceName");
     String prevAggregateInstances = (String) session.getAttribute("prevAggregateInstances");
 
-// the way html works is if cache is false it is not passed in hence the not true check on cache.
 // we need to get new data (not use cached data) under the following conditions. Basically if any of the following
 // have changed since the last request (instance names, whether to aggregate or not) or if the user selects not to use cached data.
+// the way html works is if cache is false it is not passed in hence the not true check on cache.
     if (mc == null || // first time on page so no data exists
             !"true".equalsIgnoreCase(cache) ||  // user explicitly selected not to cache the data
             prevInstanceName == null || // There wasn't a previous instance of data selected
             !prevInstanceName.equals(instanceName) || // we don't have the data if the user just changed selected instance(s)
-            prevAggregateInstances == null ||
+            prevAggregateInstances == null || // there wasn't previously an aggregated monitor composite
             !prevAggregateInstances.equals(aggregateInstances) // we were previously aggregating and now we are not or vice versa
     ) {
         // get new data (i.e don't use cached data)
