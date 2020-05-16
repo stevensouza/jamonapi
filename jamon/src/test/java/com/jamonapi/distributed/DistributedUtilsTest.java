@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
@@ -228,8 +230,13 @@ public class DistributedUtilsTest {
         from2.addListener("value", listener2);
 
         for (int i=0;i<1000;i++) {
-            MonitorFactory.add(new MonKeyImp("label1", i, "count"), i);
-            MonitorFactory.add(new MonKeyImp("label2", i, "count"), i);
+            MonKeyImp key = new MonKeyImp("label1", i, "count");
+            key.setInstanceName("instance1");
+            MonitorFactory.add(key, i);
+
+            key = new MonKeyImp("label2", i, "count");
+            key.setInstanceName("instance2");
+            MonitorFactory.add(key, i);
         }
         Monitor to = MonitorFactory.getMonitor();
         // from buffer size=50
@@ -242,8 +249,13 @@ public class DistributedUtilsTest {
         assertThat(toListener.getRowCount()).isEqualTo(100);
         Object details = ((Object[])toListener.getBufferList().getCollection().get(49))[DETAILS_INDEX];
         assertThat(details).isEqualTo(999.0);
+
         details = ((Object[])toListener.getBufferList().getCollection().get(99))[DETAILS_INDEX];
         assertThat(details).isEqualTo(999.0);
+        // instanceName of returned data should only be instance1, and instance2
+        List<Object[]> data = Arrays.asList(toListener.getBufferList().getDetailData().getData());
+        Set<String> set = data.stream().map(arr->arr[0].toString()).collect(Collectors.toSet());
+        assertThat(set).containsOnly("instance1","instance2");
     }
 
     @Test
