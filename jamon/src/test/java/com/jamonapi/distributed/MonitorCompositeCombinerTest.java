@@ -8,6 +8,8 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.jamonapi.distributed.MonitorCompositeCombiner.AGGREGATED_MONITOR_LABEL;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -172,17 +174,21 @@ public class MonitorCompositeCombinerTest {
 
     @Test
     public void aggregate() {
-        Monitor mon = MonitorFactory.getMonitor("instance.label1", "count");
+        MonKey key = new MonKeyImp("instance.label1", "count");
+        key.setInstanceName("first");
+        Monitor mon = MonitorFactory.getMonitor(key);
         mon.addListener("value", JAMonListenerFactory.get("FIFOBuffer"));
-        MonitorFactory.add("instance.label1", "count", 10);
+        MonitorFactory.add(key, 10);
 
         MonitorFactory.add("instance1.label2", "bytes", 20);
         MonitorComposite mc1 = MonitorFactory.getRootMonitor();
         MonitorFactory.reset();
 
-        mon = MonitorFactory.getMonitor("instance.label1", "count");
+        key = new MonKeyImp("instance.label1", "count");
+        key.setInstanceName("second");
+        mon = MonitorFactory.getMonitor(key);
         mon.addListener("value", JAMonListenerFactory.get("FIFOBuffer"));
-        MonitorFactory.add("instance.label1", "count", 40);
+        MonitorFactory.add(key, 40);
         MonitorFactory.add("instance2.label1", "bytes", 30);
         MonitorComposite mc2 = MonitorFactory.getRootMonitor();
         MonitorFactory.reset();
@@ -199,16 +205,22 @@ public class MonitorCompositeCombinerTest {
         assertThat(aggregate.getInstanceName()).isEqualTo(MonitorCompositeCombiner.AGGREGATED_INSTANCENAME);
         assertTrue(aggregate.hasListeners());
 
-        isExpected(aggregate.getMonitor(new MonKeyImp("instance.label1", "count")), 2, 50, true);
+        isExpected(aggregate.getMonitor(key), 2, 50, true);
         isExpected(aggregate.getMonitor(new MonKeyImp("instance1.label2", "bytes")), 1, 20, true);
         isExpected(aggregate.getMonitor(new MonKeyImp("instance2.label1", "bytes")), 1, 30, true);
         isExpected(aggregate.getMonitor(new MonKeyImp("com.jamonapi.Exceptions", "Exception")), 0, 0, true);
         assertThat(MonitorFactory.getMonitor(new MonKeyImp(AGGREGATED_MONITOR_LABEL, "ms.")).getHits()).isEqualTo(2);
         assertTrue(MonitorFactory.getMonitor(new MonKeyImp(AGGREGATED_MONITOR_LABEL, "ms.")).hasListeners());
-        mon = aggregate.getMonitor(new MonKeyImp("instance.label1", "count"));
+        mon = aggregate.getMonitor(key);
         assertTrue(mon.hasListener("value", DistributedUtils.getBufferName("FIFOBuffer")));
         JAMonBufferListener jaMonBufferListener = (JAMonBufferListener) mon.getListenerType("value").getListener(DistributedUtils.getBufferName("FIFOBuffer"));
         assertThat(jaMonBufferListener.getRowCount()).isEqualTo(2);
+
+        // instanceName of returned data should only be instance1, and instance2
+        final int INSTANCE_NAME = 0;
+        List<Object[]> data = Arrays.asList(jaMonBufferListener.getBufferList().getDetailData().getData());
+        Set<String> set = data.stream().map(arr->arr[INSTANCE_NAME].toString()).collect(Collectors.toSet());
+        assertThat(set).containsOnly("first","second");
     }
 
     private void isExpected(Monitor mon, int hits, double total, boolean bufferListenerExists) {
