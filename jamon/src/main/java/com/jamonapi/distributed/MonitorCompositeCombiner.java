@@ -19,7 +19,7 @@ public class MonitorCompositeCombiner {
     static final String AGGREGATED_INSTANCENAME = "aggregated";
     static final String AGGREGATED_MONITOR_LABEL = "com.jamonapi.distributed.aggregated";
     static final String FIFO_BUFFER = "FIFOBuffer";
-    // The amount of server instanes that will be held in the summary buffer for each instance.  This buffer contains each of the top level monitors
+    // The amount of server instances that will be held in the summary buffer for each instance.  This buffer contains each of the top level monitors
     // of the same key for each server.  Example: Monitor for all servers that have SQL All.
     static final int SUMMARY_FIFO_BUFFER_SIZE = Integer.valueOf(JamonPropertiesLoader.PROPS.getProperty("monitorCompositeCombiner.summaryFifoBufferSize", "100"));
     public MonitorCompositeCombiner(JamonDataPersister persister) {
@@ -36,47 +36,6 @@ public class MonitorCompositeCombiner {
         return append(getMonitorComposites(instanceKeys));
     }
 
-    // 0) note the logic problem is in moniotrcombiner.agggregate as
-    //   when i boot and run combine, or individidual after serialization iti s fine
-    //   however it scrrews up the buffer instnacename to local when i run aggregate to just say local
-    //  no idea why
-    // 1) why does total buffer have local.  maybe reset everythiing except tomcatprod and see what happens? i think it is a jsp issue
-    // 2) note after reboot the first aggregated one works in mondetail (i.e. showed local, local-saved, tomcat8-prodcution).  had it cached too.
-    //    after that it does't work and has all local for aggregate, but also
-    //    local for just one of them i.e. only pick local-saved, or tomcat8-production it has local as instancename  in mondetail
-           // monitorcombiner.aggregate(
-    // 2) finish fifo buffer takiing only the most recent into combined buffer
-    // 3
-    // jamonadmin.jsp optimize imports
-    // petes logic - remaing rows/remaining instances
-    //   maybe first set 500
-    // x arraysql on deail page
-    // jamonadmin iis pulliing up wrpong buffer instances when filtered by log4j - numbers are wrong.
-        // it is due to caching all composite but clicking on mc frrom  filterbyunits
-    // buffer for log4j only keeps the most recent servers as it is 400 size each
-    //   so shoujld i somehow for fifo buffer only bufferSize/numservers
-    //   for max min buffers just feed them all?
-        //     private static void copyBufferListenerData(JAMonBufferListener from, JAMonBufferListener to, String instanceName) {
-    // properites - configurable? for MonitorCompositeCombiner properties?
-
-    // screen snapshots on page.  maybe updated log4j images
-
-    // make this configurable from both size and whether to do or not.?????
-    //        //  - log4j
-    //        //  - steps for jetty, automon, tomcat
-    // git push/ git push github_origin
-    // what java version do i support?
-    // documentatiion - inline and web site?
-    //
-    // video - about new features and about running, checking in, and compiling
-    // x upgrade hazel cast to 4
-    // x combiner tests
-    // x start/stop for each instance to aggregate
-    // x     numinstances fifobuffer add it
-    // x test filterbyunits test - need to redoplay war
-    // x try max buffer listener to see if it works (maybe introduce random slow down in a test page)
-//     x                   SAVE TIME FORR EACH PROCESSED INSTANCE WITH A FIFOBUFFER
-
 
     /**
      * Take a list of instance names, query them and combine their monitor composite data into one aggregated
@@ -91,7 +50,13 @@ public class MonitorCompositeCombiner {
 
         for (String instanceKey : instanceKeys) {
             Monitor mon = startInstanceMonitor();
-            MonitorComposite monitorComposite = persister.get(instanceKey);
+            // Note: I had a difficult to figure out bug due to the local instance if I didn't copy/clone. Technically
+            // as hazelcast already returns a copy this is only required for the local instance, however should I change the
+            // implementation later to something that doesn't support hazelcasts contract it is safer to make a copy. Alternatively
+            // I could change the jamon persisters contract to always return a copy. I didn't opt for this. The bug would display
+            // 'local' as an instance name in the fifo buffer display page even if I only selected 'local-saved', and
+            // 'tomcat8-production'.
+            MonitorComposite monitorComposite = persister.get(instanceKey).copy();
             mon.getMonKey().setDetails(monitorComposite.getInstanceName());
             aggregate(factory, monitorComposite, instanceKeys.length);
             mon.stop();

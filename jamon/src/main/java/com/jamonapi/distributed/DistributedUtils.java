@@ -9,7 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Get a list of listeners associated with a monitor.
+ * Utility methods that help in displaying and saving distributed jamon stats.  They are often used in aggregation and combining/appending
+ * of multiple jamon datasets.
  */
 public class DistributedUtils {
     private static final String FIFO_BUFFER = "FIFOBuffer";
@@ -18,6 +19,9 @@ public class DistributedUtils {
     private static final int INSTANCE_NAME_INDEX = 0;
 
 
+    /**
+     * Get a list of listeners associated with a monitor.
+     */
     public static List<DistributedUtils.ListenerInfo> getAllListeners(Monitor monitor) {
         List<DistributedUtils.ListenerInfo> list = new ArrayList<>();
         // min, max, value, maxactive
