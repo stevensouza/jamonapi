@@ -27,6 +27,8 @@ public class JAMonListenerFactoryTest {
     @Test
     public void testFactoryPopulatedAndReset() {
         final int BUFFER_SIZE=301;
+        JAMonListenerFactory.reset();
+
         List<String> listeners=listenerNamesToCollection(JAMonListenerFactory.getData());
         assertThat(listeners).hasSize(14);
 
