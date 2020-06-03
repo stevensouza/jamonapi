@@ -12,6 +12,7 @@ import java.sql.*;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 
 /** Class that tests the various JAMon proxy classes via the main method */
@@ -373,7 +374,87 @@ public class MonProxyTest {
         return rs;
     }
 
+    @Test
+    public void testSqlExecuteBatchPrepStatProxy() throws Exception {
+        FactoryEnabled mf = new FactoryEnabled();
 
+        Class.forName("org.hsqldb.jdbcDriver");
+        Connection conn = DriverManager.getConnection("jdbc:hsqldb:mem:.", "sa", "");
+
+        // returns monitored connection
+        MonProxyFactory.enableAll(true);
+        conn = MonProxyFactory.monitor(conn);
+
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery("create table if not exists TEST(id INTEGER)");  
+        
+        PreparedStatement ps = conn.prepareStatement("update TEST set id=? WHERE id=?");
+        ps.setInt(1, 1);
+        ps.setInt(2, 1);
+        ps.addBatch();
+        ps.setInt(1, 2);
+        ps.setInt(2, 3);
+        ps.addBatch();
+        ps.setInt(1, 2);
+        ps.setInt(2, 3);
+        ps.addBatch();
+        
+        int[] executeBatchPS = ps.executeBatch();
+        
+        
+// to get the following keys
+//        for (int i=0; i< MonitorFactory.getMap().keySet().toArray().length;i++) {
+//           System.out.println( MonitorFactory.getMap().keySet().toArray()[i] );
+//	}
+//        System.out.println(" ");
+//       
+//       	JAMon Label=MonProxy-SQL-Type: create, Units=ms.
+//	       JAMon Label=MonProxy-SQL-Type: update, Units=ms.
+//	       JAMon Label=MonProxy-SQL-PreparedStatement: update TEST set id=? WHERE id=?, Units=ms.
+//	       JAMon Label=MonProxy-SQL-PreparedStatement Reuse, Units=count
+//	       JAMon Label=MonProxy-Interface (class=org.hsqldb.jdbc.JDBCPreparedStatement): public abstract void java.sql.PreparedStatement.addBatch() throws java.sql.SQLException, Units=ms.
+//	       JAMon Label=MonProxy-Interface (class=org.hsqldb.jdbc.JDBCPreparedStatement): public abstract void java.sql.PreparedStatement.setInt(int,int) throws java.sql.SQLException, Units=ms.
+//	       JAMon Label=MonProxy-SQL-Type: All, Units=ms.
+//	       JAMon Label=MonProxy-Interface (class=org.hsqldb.jdbc.JDBCConnection): public abstract java.sql.PreparedStatement java.sql.Connection.prepareStatement(java.lang.String) throws java.sql.SQLException, Units=ms.
+//	       JAMon Label=MonProxy-Interface (class=org.hsqldb.jdbc.JDBCStatement): public abstract java.sql.ResultSet java.sql.Statement.executeQuery(java.lang.String) throws java.sql.SQLException, Units=ms.
+//	       JAMon Label=MonProxy-Interface (class=org.hsqldb.jdbc.JDBCConnection): public abstract java.sql.Statement java.sql.Connection.createStatement() throws java.sql.SQLException, Units=ms.
+//	       JAMon Label=com.jamonapi.Exceptions, Units=Exception
+//	       JAMon Label=MonProxy-Interface (class=org.hsqldb.jdbc.JDBCPreparedStatement): public abstract int[] java.sql.Statement.executeBatch() throws java.sql.SQLException, Units=ms.
+//	       JAMon Label=MonProxy-SQL-Statement: create table if not exists TEST(id INTEGER), Units=ms.
+        
+
+        assertEquals(3,executeBatchPS.length);
+        assertEquals((int)  MonitorFactory.getMonitor("MonProxy-SQL-PreparedStatement: update TEST set id=? WHERE id=?", "ms.").getHits(),executeBatchPS.length);
+        assertEquals((int)  MonitorFactory.getMonitor("MonProxy-SQL-Type: update", "ms.").getHits(),executeBatchPS.length);   
+    }
+    
+    @Test(expected = UnsupportedOperationException.class)
+    public void testSqlExecuteBatchStatementProxy() throws Exception {
+        int times = 2000;
+        Params params = new Params();
+        FactoryEnabled mf = new FactoryEnabled();
+
+        Class.forName("org.hsqldb.jdbcDriver");
+        Connection conn = DriverManager.getConnection("jdbc:hsqldb:mem:.", "sa", "");
+
+        // returns monitored connection
+        MonProxyFactory.enableAll(true);
+        conn = MonProxyFactory.monitor(conn);
+
+        //mainTestMethod("MonProxyFactory defaults first time", conn, times, params, mf);
+
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery("create table if not exists TEST(id INTEGER)");  
+                
+        Statement statement = conn.createStatement();
+        statement.addBatch("update TEST set id=21 WHERE id=10");
+        statement.addBatch("update TEST set id=22 WHERE id=11");
+        statement.addBatch("update TEST set id=23 WHERE id=12");
+        statement.addBatch("update TEST set id=24 WHERE id=13");
+        
+        int[] executeBatchSt = statement.executeBatch(); //doit lever UnsupportedOperationException car cette version de JAMon ne traite pas les Batchs avec Statement
+    }
+    
     private static void throwException(Connection conn) {
         try {
             Statement st = conn.createStatement();

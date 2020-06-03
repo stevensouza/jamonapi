@@ -56,6 +56,7 @@ class JDBCMonProxy extends MonProxy {
         Object[] row=null;
         SQLDeArgMon sqlMon=null;
         String stackTrace="";
+        int hits = 1;// default 1, and change if executeBatch() 
         // These values need to be checked at beginning and end of routine, so need to ensure they don't change during this method call
         // hence the local versions of them.
         boolean isSQLSummaryEnabled=params.isSQLSummaryEnabled && params.isEnabled ;
@@ -84,6 +85,10 @@ class JDBCMonProxy extends MonProxy {
 
                 } else { // a query associated with a PreparedStatement/CallableStatement is being executed
                     sqlMon=(SQLDeArgMon) statementsMap.get(getMonitoredObject());  // get existing object associated with this PreparedStatement/CallableStatement
+                     if (sqlMon == null && "executeBatch".equals(method.getName())) { // Statement with executeBatch, forbidden until implemetation of a solution                                           
+			    throw new UnsupportedOperationException("Doesn't support executeBatch with Statement");
+		    }
+                    
                     statementReuseCounter=sqlMon.incrementCounter();// increment the reuse counter.
                     if (isSQLSummaryEnabled)
                         MonitorFactory.add("MonProxy-SQL-PreparedStatement Reuse","count", 2*statementReuseCounter);// to get the average to be accurate multiply by 2
@@ -104,7 +109,10 @@ class JDBCMonProxy extends MonProxy {
 
             // Invoke the underlying method
             Object returnValue=super.invoke(proxy, method, args);
-
+            if ("executeBatch".equals(method.getName())) {   
+		hits = ((int[]) returnValue).length;
+	    }
+            
             // If sql monitoring is not enabled or if the proxy is already there then don't wrap a proxy.  For example Statements can
             // return the underlying Connection which will probably already be Monitored. Note for jdbc if the Object returns another jdbc Object
             // type that should be monitored it will also be monitored.
@@ -139,8 +147,8 @@ class JDBCMonProxy extends MonProxy {
                 if (isSQLDetailEnabled && row!=null)
                     row[SQL_EXECUTION_TIME_IND]=new Long(executionTime);
 
-                if (isSQLSummaryEnabled)
-                    sqlMon.add(executionTime).appendDetails(stackTrace).stop();
+                if (isSQLSummaryEnabled && sqlMon != null)
+                    sqlMon.add(hits, executionTime).appendDetails(stackTrace).stop();
             }
 
         }
@@ -148,7 +156,7 @@ class JDBCMonProxy extends MonProxy {
 
 
     private boolean isExecuteQueryMethod(String methodName) {
-        return "executeQuery".equals(methodName) || "executeUpdate".equals(methodName) || "execute".equals(methodName);
+        return "executeQuery".equals(methodName) || "executeUpdate".equals(methodName) || "execute".equals(methodName) || "executeBatch".equals(methodName);
     }
 
     // note i don't think this is right in that prepareCall returns a CallableStatement which inherits from PreparedStatement and so adds more methods.  I
@@ -294,8 +302,8 @@ class JDBCMonProxy extends MonProxy {
             return this;
         }
 
-        private SQLDeArgMon add(double time) {
-            monitors.add(time);
+        private SQLDeArgMon add(int hits, double time) {
+            monitors.add(hits,time);
             return this;
         }
 

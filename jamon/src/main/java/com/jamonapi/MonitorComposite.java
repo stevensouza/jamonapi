@@ -633,12 +633,15 @@ public class MonitorComposite extends Monitor implements DetailData  {
         return (MonitorImp)monitors[0];
     }
 
-
-
     @Override
     public Monitor add(double value) {
+        return add(1, value);
+    }
+
+    @Override
+    public Monitor add(int hits, double value) {
         for (int i=0;i<numRows;i++)
-            monitors[i].add(value);
+            monitors[i].add(hits,value);
 
         return this;
     }
