@@ -379,7 +379,11 @@ public abstract class Monitor implements MonitorInt, Serializable {
         return this;
     }
 
-    public Monitor add(double value) {
+     public Monitor add(double value){
+         return add(1,value);
+     }
+             
+    public Monitor add(int hits, double value) {  //add int hits argument 
         if (monData.enabled) {
             synchronized (monData) {
                 /* Being as TimeMonitors already have the current time and are passing it in the value (casted as long)
@@ -392,7 +396,7 @@ public abstract class Monitor implements MonitorInt, Serializable {
                 // most recent value
                 monData.lastValue = value;
                 // calculate hits i.e. n
-                monData.hits++;
+                monData.hits += hits;
                 // calculate total i.e. sumofX's
                 monData.total += value;
                 // used in std deviation
