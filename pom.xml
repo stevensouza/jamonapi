@@ -63,7 +63,7 @@
          <jakarta-oro.version>2.13.1</jakarta-oro.version>
          <javaee.version>6.0</javaee.version>
          <jdk.version>1.6</jdk.version>
-         <jetty6.version>6.1.25</jetty6.version>
+         <jetty6.version>6.1.26</jetty6.version>
          <jetty9.version>9.2.1.v20140609</jetty9.version>
          <jsp.version>2.0</jsp.version>
          <junit.version>4.13.2</junit.version>
