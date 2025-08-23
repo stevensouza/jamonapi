@@ -67,7 +67,7 @@
          <jetty9.version>9.2.1.v20140609</jetty9.version>
          <jsp.version>2.0</jsp.version>
          <junit.version>4.13.2</junit.version>
-         <log4j.version>2.17.1</log4j.version>
+         <log4j.version>2.24.3</log4j.version>
          <mockito.version>5.14.2</mockito.version>
          <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
          <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
@@ -75,7 +75,7 @@
          <servlet.version>2.4</servlet.version>
          <spring.aop.version>1.8.0</spring.aop.version>
          <spring.version>4.0.2.RELEASE</spring.version>
-         <tomcat-catalina.version>6.0.26</tomcat-catalina.version>
+         <tomcat-catalina.version>6.0.53</tomcat-catalina.version>
      </properties>
      <distributionManagement>
          <snapshotRepository>
