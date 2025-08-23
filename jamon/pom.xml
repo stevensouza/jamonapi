@@ -47,6 +47,24 @@
                   <target>8</target>
               </configuration>
           </plugin>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-surefire-plugin</artifactId>
+              <version>3.2.5</version>
+              <configuration>
+                  <argLine>
+                      --add-modules java.se
+                      --add-exports java.base/jdk.internal.ref=ALL-UNNAMED
+                      --add-opens java.base/java.lang=ALL-UNNAMED
+                      --add-opens java.base/java.nio=ALL-UNNAMED
+                      --add-opens java.base/sun.nio.ch=ALL-UNNAMED
+                      --add-opens java.management/sun.management=ALL-UNNAMED
+                      --add-opens jdk.management/com.sun.management.internal=ALL-UNNAMED
+                      --add-opens java.base/java.util=ALL-UNNAMED
+                      --add-opens java.base/java.lang.reflect=ALL-UNNAMED
+                  </argLine>
+              </configuration>
+          </plugin>
       </plugins>
   </build>
 

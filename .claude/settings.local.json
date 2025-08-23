@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn dependency:*)",
+      "Bash(mvn versions:display-dependency-updates:*)",
+      "Bash(mvn versions:*)",
+      "Bash(mvn org.owasp:dependency-check-maven:check:*)",
+      "Bash(mvn clean:*)",
+      "Bash(mvn test:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(mvn compile test:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
