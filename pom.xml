@@ -57,7 +57,7 @@
          <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
          <!-- Version settings -->         
          <assertj.version>1.7.0</assertj.version>
-         <commons.version>3.3.2</commons.version>
+         <commons.version>3.18.0</commons.version>
          <hazelcast.version>3.12.6</hazelcast.version>
          <hsqldb.version>2.3.2</hsqldb.version>
          <jakarta-oro.version>2.13.1</jakarta-oro.version>
@@ -66,9 +66,10 @@
          <jetty6.version>6.1.25</jetty6.version>
          <jetty9.version>9.2.1.v20140609</jetty9.version>
          <jsp.version>2.0</jsp.version>
-         <junit.version>4.13.1</junit.version>
+         <junit.version>4.13.2</junit.version>
          <log4j.version>2.17.1</log4j.version>
          <mockito.version>1.9.5</mockito.version>
+         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
          <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
          <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
          <servlet.version>2.4</servlet.version>
