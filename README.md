@@ -13,7 +13,7 @@ The JAMon repositories on both sourceforge and github are the latest version of 
         <dependency>
             <groupId>com.jamonapi</groupId>
             <artifactId>jamon</artifactId>
-            <version>2.82</version>
+            <version>2.83</version>
         </dependency>
     </dependencies>
 ```
