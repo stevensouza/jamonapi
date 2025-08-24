@@ -21,3 +21,11 @@ CVS/
 # Maven
 log/
 target/
+
+# JAMon runtime data
+jamondata/
+
+# Downloaded dependencies (temporary)
+*.jar
+!**/lib/*.jar
+!**/target/*.jar
