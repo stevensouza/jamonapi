@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hazelcast xsi:schemaLocation="http://www.hazelcast.com/schema/config hazelcast-config-3.12.xsd"
+           xmlns="http://www.hazelcast.com/schema/config"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <group>
+        <name>test</name>
+        <password>test-pass</password>
+    </group>
+    
+    <properties>
+        <!-- Disable all discovery mechanisms for faster startup -->
+        <property name="hazelcast.discovery.enabled">false</property>
+        <property name="hazelcast.shutdownhook.enabled">false</property>
+        <property name="hazelcast.wait.seconds.before.join">0</property>
+        <property name="hazelcast.max.wait.seconds.before.join">1</property>
+        <!-- Aggressive partition optimization -->
+        <property name="hazelcast.partition.count">1</property>
+        <property name="hazelcast.partition.migration.timeout">1</property>
+        <property name="hazelcast.partition.table.send.interval">1</property>
+        <property name="hazelcast.partition.migration.interval">1</property>
+        <property name="hazelcast.partition.backup.sync.timeout">1000</property>
+        <!-- Fast operation timeouts -->
+        <property name="hazelcast.operation.call.timeout.millis">3000</property>
+        <property name="hazelcast.operation.backup.timeout.millis">1000</property>
+        <!-- Disable health monitoring -->
+        <property name="hazelcast.health.monitoring.level">OFF</property>
+        <property name="hazelcast.health.monitoring.delay.seconds">86400</property>
+    </properties>
+    
+    <network>
+        <port auto-increment="false">5701</port>
+        <join>
+            <!-- Disable multicast completely -->
+            <multicast enabled="false" />
+            <!-- Disable TCP-IP discovery -->
+            <tcp-ip enabled="false" />
+            <!-- Disable AWS discovery -->
+            <aws enabled="false" />
+        </join>
+    </network>
+    
+    <!-- Minimal configuration for testing -->
+    <map name="default">
+        <backup-count>0</backup-count>
+        <async-backup-count>0</async-backup-count>
+    </map>
+    
+</hazelcast>

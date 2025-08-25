@@ -29,3 +29,8 @@ jamondata/
 *.jar
 !**/lib/*.jar
 !**/target/*.jar
+
+# Local Claude Code files
+CLAUDE.local.md
+.claude/settings.local.json
+jamon_284_upgrade.md

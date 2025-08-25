@@ -9,7 +9,16 @@
       "Bash(mvn test:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(mvn compile test:*)"
+      "Bash(mvn compile test:*)",
+      "Bash(java:*)",
+      "Bash(mvn package:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(git log:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(git tag:*)",
+      "Bash(git push:*)",
+      "Bash(time mvn test:*)"
     ],
     "deny": [],
     "ask": []

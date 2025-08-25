@@ -11,7 +11,7 @@
   <artifactId>jamon-parent</artifactId>
   <packaging>pom</packaging>
   <name>JAMon Parent</name>
-  <version>2.83</version>
+  <version>2.84</version>
 
   <modules>
    <module>jamon</module>
@@ -52,30 +52,30 @@
 
      <properties>
          <!-- Maven setting -->
-         <maven.compiler.source>1.6</maven.compiler.source>
-         <maven.compiler.target>1.6</maven.compiler.target>        
+         <maven.compiler.source>8</maven.compiler.source>
+         <maven.compiler.target>8</maven.compiler.target>        
          <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
          <!-- Version settings -->         
-         <assertj.version>1.7.0</assertj.version>
+         <assertj.version>3.26.3</assertj.version>
          <commons.version>3.18.0</commons.version>
-         <hazelcast.version>3.12.6</hazelcast.version>
+         <hazelcast.version>3.12.13</hazelcast.version>
          <hsqldb.version>2.7.4</hsqldb.version>
          <jakarta-oro.version>2.13.1</jakarta-oro.version>
-         <javaee.version>6.0</javaee.version>
-         <jdk.version>1.6</jdk.version>
+         <javaee.version>7.0</javaee.version>
+         <jdk.version>8</jdk.version>
          <jetty6.version>6.1.26</jetty6.version>
-         <jetty9.version>9.2.1.v20140609</jetty9.version>
-         <jsp.version>2.0</jsp.version>
+         <jetty9.version>10.0.24</jetty9.version>
+         <jsp.version>2.3.3</jsp.version>
          <junit.version>4.13.2</junit.version>
          <log4j.version>2.24.3</log4j.version>
-         <mockito.version>5.14.2</mockito.version>
-         <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
-         <maven.javadoc.plugin.version>2.9.1</maven.javadoc.plugin.version>
-         <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
-         <servlet.version>2.4</servlet.version>
+         <mockito.version>5.19.0</mockito.version>
+         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+         <maven.javadoc.plugin.version>3.10.1</maven.javadoc.plugin.version>
+         <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
+         <servlet.version>3.1.0</servlet.version>
          <spring.aop.version>1.9.24</spring.aop.version>
          <spring.version>4.3.30.RELEASE</spring.version>
-         <tomcat-catalina.version>6.0.53</tomcat-catalina.version>
+         <tomcat-catalina.version>7.0.109</tomcat-catalina.version>
      </properties>
      <distributionManagement>
          <snapshotRepository>
@@ -132,15 +132,29 @@
          </dependency>
 
          <dependency>
+             <groupId>org.slf4j</groupId>
+             <artifactId>slf4j-api</artifactId>
+             <version>2.0.16</version>
+             <scope>test</scope>
+         </dependency>
+
+         <dependency>
+             <groupId>org.apache.logging.log4j</groupId>
+             <artifactId>log4j-slf4j2-impl</artifactId>
+             <version>${log4j.version}</version>
+             <scope>test</scope>
+         </dependency>
+
+         <dependency>
              <groupId>javax.servlet</groupId>
-             <artifactId>servlet-api</artifactId>
+             <artifactId>javax.servlet-api</artifactId>
              <version>${servlet.version}</version>
              <scope>provided</scope>
          </dependency>
 
          <dependency>
              <groupId>javax.servlet.jsp</groupId>
-             <artifactId>jsp-api</artifactId>
+             <artifactId>javax.servlet.jsp-api</artifactId>
              <version>${jsp.version}</version>
              <scope>provided</scope>
          </dependency>
@@ -154,7 +168,7 @@
 
          <dependency>
              <groupId>org.apache.tomcat</groupId>
-             <artifactId>catalina</artifactId>
+             <artifactId>tomcat-catalina</artifactId>
              <version>${tomcat-catalina.version}</version>
              <scope>provided</scope>
          </dependency>
