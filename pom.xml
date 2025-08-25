@@ -74,8 +74,8 @@
          <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
          <servlet.version>3.1.0</servlet.version>
          <spring.aop.version>1.9.24</spring.aop.version>
-         <spring.version>4.3.30.RELEASE</spring.version>
-         <tomcat-catalina.version>7.0.109</tomcat-catalina.version>
+         <spring.version>5.3.39</spring.version>
+         <tomcat-catalina.version>9.0.98</tomcat-catalina.version>
      </properties>
      <distributionManagement>
          <snapshotRepository>

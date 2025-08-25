@@ -113,7 +113,8 @@ public class JAMonTomcat55Valve extends org.apache.catalina.valves.ValveBase {
 
     }
 
-    @Override
+    // Removed @Override getInfo() - method deprecated in Tomcat 9+  
+    // Keep method for legacy Tomcat 5.5 compatibility
     public String getInfo() {
         return PREFIX;
     }
