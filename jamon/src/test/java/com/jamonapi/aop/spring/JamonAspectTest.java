@@ -58,7 +58,9 @@ public class JamonAspectTest {
         assertThat(MonitorFactory.getMonitor("void com.jamonapi.aop.spring.HelloSpringBean.setMyString(String)", "ms.").getHits()).isEqualTo(10);
         assertThat(MonitorFactory.getMonitor("void com.jamonapi.aop.spring.MonitorMe.anotherMethod(String)", "ms.").getHits()).isEqualTo(10);
         assertThat(MonitorFactory.getMonitor("void com.jamonapi.aop.spring.MonitorMe.anotherMethodForMe()", "ms.").getHits()).isEqualTo(10);
-        // Note: MonitorMe.helloWorld() is NOT monitored by execution pointcut in full context
+        
+        // Verify excluded methods are NOT monitored (pointcut only matches "anotherMethod*", not "helloWorld")
+        assertThat(MonitorFactory.exists("void com.jamonapi.aop.spring.MonitorMe.helloWorld()", "ms.")).isFalse();
         
         // Verify exception monitors
         assertThat(MonitorFactory.getMonitor("java.io.FileNotFoundException", "Exception").getHits()).isEqualTo(10);
@@ -150,6 +152,7 @@ public class JamonAspectTest {
         context = new ClassPathXmlApplicationContext("minimalApplicationContext.xml");
         MonitorMe monitorMe = context.getBean("monitorMe", MonitorMe.class);
 
+        // Call MonitorMe methods (should be monitored)
         for (int i=0;i<10;i++) {
            monitorMe.anotherMethodForMe();
            monitorMe.helloWorld();
@@ -158,11 +161,25 @@ public class JamonAspectTest {
             } catch (Exception e) {
             }
         }
+        
+        // Call HelloSpringBean methods (should NOT be monitored - not configured in minimal context)
+        HelloSpringBean helloBean = new HelloSpringBean();
+        for (int i=0;i<5;i++) {
+            helloBean.getMyString();
+            try {
+                helloBean.setMyString("test");
+            } catch (InterruptedException e) {
+            }
+        }
 
         // Verify expected AOP method monitors (minimal context monitors ALL MonitorMe methods)
         assertThat(MonitorFactory.getMonitor("void com.jamonapi.aop.spring.MonitorMe.anotherMethod(String)", "ms.").getHits()).isEqualTo(10);
         assertThat(MonitorFactory.getMonitor("void com.jamonapi.aop.spring.MonitorMe.anotherMethodForMe()", "ms.").getHits()).isEqualTo(10);
         assertThat(MonitorFactory.getMonitor("void com.jamonapi.aop.spring.MonitorMe.helloWorld()", "ms.").getHits()).isEqualTo(10);
+        
+        // Verify HelloSpringBean methods are NOT monitored (called 5 times but not AOP-managed)
+        assertThat(MonitorFactory.exists("String com.jamonapi.aop.spring.HelloSpringBean.getMyString()", "ms.")).isFalse();
+        assertThat(MonitorFactory.exists("void com.jamonapi.aop.spring.HelloSpringBean.setMyString(String)", "ms.")).isFalse();
         
         // Verify exception monitors
         assertThat(MonitorFactory.getMonitor("java.io.FileNotFoundException", "Exception").getHits()).isEqualTo(10);
