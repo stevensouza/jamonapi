@@ -9,13 +9,6 @@
         </JamonAppender>
     </Appenders>
     <Loggers>
-        <!-- Reduce Spring framework verbosity to prevent excessive JAMon monitors -->
-        <Logger name="org.springframework" level="warn" />
-        <Logger name="org.springframework.beans" level="warn" />
-        <Logger name="org.springframework.context" level="warn" />
-        <Logger name="org.springframework.aop" level="warn" />
-        <Logger name="org.springframework.core" level="warn" />
-        
         <Root level="trace">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="JamonAppender"/>

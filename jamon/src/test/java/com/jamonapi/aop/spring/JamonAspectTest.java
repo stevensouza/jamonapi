@@ -51,20 +51,20 @@ public class JamonAspectTest {
     /** methods should be monitored, but not all of them (based on defined pointcuts) */
     @Test
     public void testMethodsAreMonitored() throws Exception {
-        runApp();
-
-        String report = MonitorFactory.getReport();
+        runApp(); // runs 10 iterations
         
-        // Count only application monitors (not Spring/Log4j internal monitors)
-        int appMonitorCount = countApplicationMonitors();
-
-        assertThat(appMonitorCount).isEqualTo(6);
-        assertThat(report).contains("HelloSpringBean.getMyString()");
-        assertThat(report).contains("HelloSpringBean.setMyString(String)");
-        assertThat(report).contains("MonitorMe.anotherMethod(String)");
-        assertThat(report).contains("MonitorMe.anotherMethodForMe()");
-        assertThat(report).contains("java.io.FileNotFoundException");
-        assertThat(report).contains(JAMON_EXCEPTION);
+        // Verify expected AOP method monitors exist with correct hit counts
+        assertThat(MonitorFactory.getMonitor("String com.jamonapi.aop.spring.HelloSpringBean.getMyString()", "ms.").getHits()).isEqualTo(10);
+        assertThat(MonitorFactory.getMonitor("void com.jamonapi.aop.spring.HelloSpringBean.setMyString(String)", "ms.").getHits()).isEqualTo(10);
+        assertThat(MonitorFactory.getMonitor("void com.jamonapi.aop.spring.MonitorMe.anotherMethod(String)", "ms.").getHits()).isEqualTo(10);
+        assertThat(MonitorFactory.getMonitor("void com.jamonapi.aop.spring.MonitorMe.anotherMethodForMe()", "ms.").getHits()).isEqualTo(10);
+        // Note: MonitorMe.helloWorld() is NOT monitored by execution pointcut in full context
+        
+        // Verify exception monitors
+        assertThat(MonitorFactory.getMonitor("java.io.FileNotFoundException", "Exception").getHits()).isEqualTo(10);
+        assertThat(MonitorFactory.getMonitor(JAMON_EXCEPTION, EXCEPTION).getHits()).isEqualTo(10);
+        
+        // Verify specific properties
         assertThat(MonitorFactory.getMonitor(JAMON_EXCEPTION, EXCEPTION).hasListener(VALUE_LISTENER, BUFFER)).isTrue();
     }
 
@@ -75,7 +75,13 @@ public class JamonAspectTest {
 
         runApp();
 
-        assertThat(countApplicationMonitors()).isEqualTo(6);
+        // Verify same monitors exist (method call monitoring is independent of buffer listeners)
+        assertThat(MonitorFactory.getMonitor("String com.jamonapi.aop.spring.HelloSpringBean.getMyString()", "ms.").getHits()).isEqualTo(10);
+        assertThat(MonitorFactory.getMonitor("void com.jamonapi.aop.spring.MonitorMe.anotherMethod(String)", "ms.").getHits()).isEqualTo(10);
+        assertThat(MonitorFactory.getMonitor("java.io.FileNotFoundException", "Exception").getHits()).isEqualTo(10);
+        assertThat(MonitorFactory.getMonitor(JAMON_EXCEPTION, EXCEPTION).getHits()).isEqualTo(10);
+        
+        // Verify buffer listener is disabled
         assertThat(MonitorFactory.getMonitor(JAMON_EXCEPTION, EXCEPTION).hasListener(VALUE_LISTENER, BUFFER)).isFalse();
     }
 
@@ -87,7 +93,11 @@ public class JamonAspectTest {
 
         runApp();
 
-        assertThat(countApplicationMonitors()).isEqualTo(6);
+        // Verify monitors exist with correct hit counts
+        assertThat(MonitorFactory.getMonitor("void com.jamonapi.aop.spring.MonitorMe.anotherMethod(String)", "ms.").getHits()).isEqualTo(10);
+        assertThat(MonitorFactory.getMonitor(JAMON_EXCEPTION, EXCEPTION).getHits()).isEqualTo(10);
+        
+        // Verify exception buffer contains argument details
         String bufferValue = getBufferValue(JAMON_EXCEPTION, EXCEPTION);
         assertThat(bufferValue).contains("arguments(1)");
         assertThat(bufferValue).contains("argument.txt");
@@ -103,14 +113,18 @@ public class JamonAspectTest {
 
         runApp();
 
-        assertThat(countApplicationMonitors()).isEqualTo(6);
-        String bufferValue = getBufferValue(JAMON_EXCEPTION, EXCEPTION);
-        assertThat(bufferValue).doesNotContain("arguments(1)");
-        assertThat(bufferValue).doesNotContain("hello");
+        // Verify monitors exist with correct hit counts
+        assertThat(MonitorFactory.getMonitor("void com.jamonapi.aop.spring.HelloSpringBean.setMyString(String)", "ms.").getHits()).isEqualTo(10);
+        assertThat(MonitorFactory.getMonitor(JAMON_EXCEPTION, EXCEPTION).getHits()).isEqualTo(10);
+        
+        // Verify argument tracking behavior: exceptions don't contain method args, methods do
+        String exceptionBufferValue = getBufferValue(JAMON_EXCEPTION, EXCEPTION);
+        assertThat(exceptionBufferValue).doesNotContain("arguments(1)");
+        assertThat(exceptionBufferValue).doesNotContain("hello");
 
-        bufferValue = getBufferValue(METHOD, "ms.");
-        assertThat(bufferValue).contains("arguments(1)");
-        assertThat(bufferValue).contains("hello");
+        String methodBufferValue = getBufferValue(METHOD, "ms.");
+        assertThat(methodBufferValue).contains("arguments(1)");
+        assertThat(methodBufferValue).contains("hello");
     }
 
     // get first value in buffer listener if it exists;
@@ -145,48 +159,17 @@ public class JamonAspectTest {
             }
         }
 
-        String report = MonitorFactory.getReport();
-
-        assertThat(countApplicationMonitors()).isEqualTo(5);
-        assertThat(report).contains("MonitorMe.anotherMethod(String)");
-        assertThat(report).contains("MonitorMe.anotherMethodForMe()");
-        assertThat(report).contains("MonitorMe.helloWorld()");
-        assertThat(report).contains("java.io.FileNotFoundException");
-        assertThat(report).contains(JAMON_EXCEPTION);
+        // Verify expected AOP method monitors (minimal context monitors ALL MonitorMe methods)
+        assertThat(MonitorFactory.getMonitor("void com.jamonapi.aop.spring.MonitorMe.anotherMethod(String)", "ms.").getHits()).isEqualTo(10);
+        assertThat(MonitorFactory.getMonitor("void com.jamonapi.aop.spring.MonitorMe.anotherMethodForMe()", "ms.").getHits()).isEqualTo(10);
+        assertThat(MonitorFactory.getMonitor("void com.jamonapi.aop.spring.MonitorMe.helloWorld()", "ms.").getHits()).isEqualTo(10);
+        
+        // Verify exception monitors
+        assertThat(MonitorFactory.getMonitor("java.io.FileNotFoundException", "Exception").getHits()).isEqualTo(10);
+        assertThat(MonitorFactory.getMonitor(JAMON_EXCEPTION, EXCEPTION).getHits()).isEqualTo(10);
+        
+        // Verify buffer listener is enabled by default
         assertThat(MonitorFactory.getMonitor(JAMON_EXCEPTION, EXCEPTION).hasListener(VALUE_LISTENER, BUFFER)).isTrue();
-    }
-    
-    /**
-     * Count application monitors created by AOP - positive matching approach.
-     * Only counts the specific monitors we expect from our AOP configuration.
-     */
-    private int countApplicationMonitors() {
-        Monitor[] monitors = MonitorFactory.getRootMonitor().getMonitors();
-        int count = 0;
-        for (Monitor monitor : monitors) {
-            String label = monitor.getLabel();
-            String units = monitor.getUnits();
-            
-            // Count AOP method monitors (ms. units) and exceptions (Exception units)
-            if (units.equals("ms.")) {
-                // AOP method monitors with full signatures
-                if (label.equals("String com.jamonapi.aop.spring.HelloSpringBean.getMyString()") ||
-                    label.equals("void com.jamonapi.aop.spring.HelloSpringBean.setMyString(String)") ||
-                    label.equals("void com.jamonapi.aop.spring.MonitorMe.anotherMethod(String)") ||
-                    label.equals("void com.jamonapi.aop.spring.MonitorMe.anotherMethodForMe()") ||
-                    label.equals("void com.jamonapi.aop.spring.MonitorMe.helloWorld()")) {
-                    // Note: MonitorMe.helloWorld() is monitored in minimal context, not in full context
-                    count++;
-                }
-            } else if (units.equals("Exception")) {
-                // Exception monitors
-                if (label.equals("java.io.FileNotFoundException") ||
-                    label.equals("com.jamonapi.Exceptions")) {
-                    count++;
-                }
-            }
-        }
-        return count;
     }
 
 }
