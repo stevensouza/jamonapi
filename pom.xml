@@ -11,7 +11,7 @@
   <artifactId>jamon-parent</artifactId>
   <packaging>pom</packaging>
   <name>JAMon Parent</name>
-  <version>2.84</version>
+  <version>2.85</version>
 
   <modules>
    <module>jamon</module>
@@ -75,7 +75,7 @@
          <servlet.version>3.1.0</servlet.version>
          <spring.aop.version>1.9.24</spring.aop.version>
          <spring.version>5.3.39</spring.version>
-         <tomcat-catalina.version>9.0.98</tomcat-catalina.version>
+         <tomcat-catalina.version>9.0.107</tomcat-catalina.version>
      </properties>
      <distributionManagement>
          <snapshotRepository>
