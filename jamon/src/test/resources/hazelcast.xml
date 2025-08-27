@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<hazelcast xsi:schemaLocation="http://www.hazelcast.com/schema/config hazelcast-config-3.12.xsd"
+<hazelcast xsi:schemaLocation="http://www.hazelcast.com/schema/config hazelcast-config-5.5.xsd"
            xmlns="http://www.hazelcast.com/schema/config"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <group>
-        <name>test</name>
-        <password>test-pass</password>
-    </group>
+    <cluster-name>test</cluster-name>
     
     <properties>
         <!-- Disable all discovery mechanisms for faster startup -->
@@ -25,18 +22,28 @@
         <!-- Disable health monitoring -->
         <property name="hazelcast.health.monitoring.level">OFF</property>
         <property name="hazelcast.health.monitoring.delay.seconds">86400</property>
+        <!-- Disable multicast completely for test environment -->
+        <property name="hazelcast.discovery.enabled">false</property>
+        <property name="hazelcast.socket.bind.any">false</property>
+        <!-- Force unisocket mode for testing -->
+        <property name="hazelcast.unisocket.enabled">false</property>
+        <!-- Disable phone home to prevent shutdown errors -->
+        <property name="hazelcast.phone.home.enabled">false</property>
     </properties>
     
     <network>
         <port auto-increment="false">5701</port>
         <join>
-            <!-- Disable multicast completely -->
+            <!-- Explicitly use TCP-IP with localhost only -->
             <multicast enabled="false" />
-            <!-- Disable TCP-IP discovery -->
-            <tcp-ip enabled="false" />
-            <!-- Disable AWS discovery -->
-            <aws enabled="false" />
+            <tcp-ip enabled="true">
+                <member>127.0.0.1:5701</member>
+            </tcp-ip>
+            <auto-detection enabled="false" />
         </join>
+        <interfaces enabled="true">
+            <interface>127.0.0.1</interface>
+        </interfaces>
     </network>
     
     <!-- Minimal configuration for testing -->

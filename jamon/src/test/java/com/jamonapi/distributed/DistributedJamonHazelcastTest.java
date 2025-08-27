@@ -13,20 +13,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class DistributedJamonHazelcastTest {
 
+    private HazelcastPersister jamonData;
+
     @Before
     public void setUp() throws Exception {
         MonitorFactory.reset();
+        jamonData = new HazelcastPersister();
     }
 
     @After
     public void tearDown() throws Exception {
-
+        if (jamonData != null) {
+            jamonData.shutDownHazelCast();
+        }
     }
 
 
     @Test
     public void putGetRemove() throws InterruptedException {
-            HazelcastPersister jamonData = new HazelcastPersister();
             int i=0;
             while (true) {
                 i++;
@@ -45,7 +49,6 @@ public class DistributedJamonHazelcastTest {
           assertThat(jamonData.get(jamonData.getInstance()).getNumRows()).isEqualTo(102);
           jamonData.remove(jamonData.getInstance());
           assertThat(jamonData.get(jamonData.getInstance())).isNull();
-          jamonData.shutDownHazelCast();
     }
 
 

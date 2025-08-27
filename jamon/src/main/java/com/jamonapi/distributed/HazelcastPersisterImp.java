@@ -2,7 +2,7 @@ package com.jamonapi.distributed;
 
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.core.IMap;
+import com.hazelcast.map.IMap;
 import com.jamonapi.MonitorComposite;
 import com.jamonapi.MonitorFactory;
 
