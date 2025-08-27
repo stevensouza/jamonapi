@@ -12,7 +12,7 @@ see [jamonapi.sourceforge.net](http://jamonapi.sourceforge.net) for more informa
 
 - **[Latest Releases](https://github.com/stevensouza/jamonapi/releases)** - Complete release history
 - **[Release Notes](RELEASE_NOTES.md)** - Detailed changes and upgrade guide
-- **Current Version**: 2.84 ([What's New](https://github.com/stevensouza/jamonapi/releases/tag/v2_84))
+- **Current Version**: 2.85 ([What's New](https://github.com/stevensouza/jamonapi/releases/tag/v2_85))
 
 ## Requirements
 
@@ -30,7 +30,7 @@ The JAMon repositories on both sourceforge and github are the latest version of 
         <dependency>
             <groupId>com.jamonapi</groupId>
             <artifactId>jamon</artifactId>
-            <version>2.84</version>
+            <version>2.85</version>
         </dependency>
     </dependencies>
 ```
