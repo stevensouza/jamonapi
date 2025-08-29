@@ -1,5 +1,50 @@
 # JAMon Release Notes
 
+## [2.85] - 2025-08-29
+
+### 🎯 Final Maintenance Release
+- **End-of-Life Release**: Final JAMon maintenance update focusing on compatibility and cleanup
+- **Java 8 Compatible**: Maintained Java 8+ compatibility for existing deployments
+- **Ultra-Minimal Approach**: Conservative dependency updates prioritizing stability
+
+### 🔧 Code Quality Improvements  
+- **Deprecation Fixes**: Resolved 39+ Java deprecation warnings across 18 files
+  - Fixed wrapper constructors: `new Double()` → `Double.valueOf()`
+  - Updated collection operations for type safety
+  - Enhanced array initialization patterns
+- **Version Consistency**: Updated all references from 2.82/2.84 → 2.85
+- **Legacy File Management**: Marked obsolete Ant builds as deprecated (last working: v2.75)
+
+### 🧪 Container Integration Testing
+- **New Test Coverage**: Added `ContainerIntegrationTest` with 5 focused integration tests
+- **Mock-Based Validation**: Tests servlet filters, Tomcat valves, Jetty handlers without container deployment
+- **JDBC Workflow Testing**: Validates Generate Data button functionality with in-memory HSQLDB
+- **Exception Handling**: Verifies monitoring continues during error conditions
+
+### 📦 Infrastructure Updates
+- **Hazelcast 5.5.0**: Major distributed caching upgrade (completed in earlier commits)
+- **GitHub Actions CI/CD**: Automated release pipeline implementation
+- **Tomcat Security**: Updated to 9.0.107 addressing 9 CVEs
+- **Legacy Script Updates**: Updated deployment scripts for version 2.85
+
+### 🔒 Security Status
+- **Dependency Health**: All major security vulnerabilities addressed
+- **CVE Resolutions**: Tomcat and Spring framework security patches applied
+- **Production Ready**: Safe for production deployments requiring Java 8 compatibility
+
+### 📋 Technical Validation
+- **344/344 Tests Passing**: All tests successful including new container integration tests
+- **Multi-JDK Compatible**: Verified on Java 8, 11, 17, 21
+- **Build System**: Maven-only builds (Ant deprecated)
+- **Container Testing**: Servlet filters, valves, and handlers validated
+
+### 🎯 Migration Notes
+- **From 2.84**: Direct upgrade, no breaking changes
+- **From Earlier Versions**: Review dependency compatibility for Hazelcast 5.x
+- **Java 6/7 Users**: Must upgrade to Java 8+ before using JAMon 2.85
+
+---
+
 ## [2.84] - 2025-01-26
 
 ### 🎯 Major Improvements
@@ -77,7 +122,7 @@
 <dependency>
     <groupId>com.jamonapi</groupId>
     <artifactId>jamon</artifactId>
-    <version>2.84</version>
+    <version>2.85</version>
 </dependency>
 ```
 
@@ -86,6 +131,7 @@
 - [Maven Central](https://central.sonatype.com/artifact/com.jamonapi/jamon)
 
 ### Requirements  
+- **JAMon 2.85**: Java 8+ (compiles with Java 8+, runs on Java 8+)  
 - **JAMon 2.84**: Java 8+ (compiles with Java 8+, runs on Java 8+)
 - **JAMon 2.83**: Java 6+ (legacy compatibility)
 
