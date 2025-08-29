@@ -229,7 +229,7 @@ public class Misc {
             // create a constructor that takes the size i.e. new ConcurrentHashMap(size)
             Class constructorArgs[] = new Class[] {Integer.TYPE};
             Constructor ct = cls.getConstructor(constructorArgs);
-            Object[] params=new Object[] {new Integer(size)};
+            Object[] params=new Object[] {Integer.valueOf(size)};
             map = (Map) ct.newInstance(params);
         } catch (Exception e) {
             map=Collections.synchronizedMap(new HashMap(size));

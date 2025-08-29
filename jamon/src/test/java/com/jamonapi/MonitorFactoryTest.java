@@ -188,7 +188,7 @@ public class MonitorFactoryTest {
         // test for bug: https://sourceforge.net/p/jamonapi/bugs/16/
         assertThat(mon.getHits()).isEqualTo(1);
         assertThat(mon.getLastValue()).isEqualTo(10*TimeMonNano.NANOSECS_PER_MILLISEC, offset(50.0*TimeMonNano.NANOSECS_PER_MILLISEC));
-        assertThat((Long)mon.getValue("starttime")).isLessThan(new Long(nanoTime));
+        assertThat((Long)mon.getValue("starttime")).isLessThan(Long.valueOf(nanoTime));
         mon.reset();
         assertThat((Long)mon.getValue("starttime")).isEqualTo(0);
     }
@@ -689,7 +689,7 @@ public class MonitorFactoryTest {
         List<Double> values=new ArrayList<Double>();
         Object[][] data=((JAMonBufferListener)listener).getDetailData().getData();
         for (int i=0;i<data.length;i++) {
-            values.add(new Double(data[i][colNum].toString()));
+            values.add(Double.valueOf(data[i][colNum].toString()));
         }
 
         return values;

@@ -215,7 +215,7 @@ public class Mon extends HttpServlet {
     /** convert string to Double */
     private Double toDouble (String numStr) {
         try {
-            return new Double(numStr);
+            return Double.valueOf(numStr);
         } catch (Exception e) {
             return null;
         }

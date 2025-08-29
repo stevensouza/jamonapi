@@ -171,14 +171,14 @@ public class JAMonListenerFactoryTest {
             for (int i=1,j=-50;i<=100;i++,j++) {
                 cal.setTime(new Date());
                 cal.add(dateToAdd, j);
-                bl.addRow(new Object[]{"myInstanceName", "label" + i, new Integer(i), "Active" + i, cal.getTime()});
+                bl.addRow(new Object[]{"myInstanceName", "label" + i, Integer.valueOf(i), "Active" + i, cal.getTime()});
             }
 
         } else {
             for (int i=100,j=50;i>=1;i--,j--) {
                 cal.setTime(new Date());
                 cal.add(dateToAdd, j);
-                bl.addRow(new Object[]{"myInstanceName", "label" + i, new Integer(i), "Active" + i, cal.getTime()});
+                bl.addRow(new Object[]{"myInstanceName", "label" + i, Integer.valueOf(i), "Active" + i, cal.getTime()});
             }
 
         }
@@ -195,19 +195,19 @@ public class JAMonListenerFactoryTest {
 
         cal.setTime(new Date());
         cal.add(dateToAdd, firstVal);
-        bl.addRow(new Object[]{"myInstanceName", "label", new Integer(1000), "Active", cal.getTime()});
+        bl.addRow(new Object[]{"myInstanceName", "label", Integer.valueOf(1000), "Active", cal.getTime()});
 
         cal.setTime(new Date());
         cal.add(dateToAdd, firstVal);
-        bl.addRow(new Object[]{"myInstanceName", "label", new Integer(-1000), "Active", cal.getTime()});
+        bl.addRow(new Object[]{"myInstanceName", "label", Integer.valueOf(-1000), "Active", cal.getTime()});
 
         cal.setTime(new Date());
         cal.add(dateToAdd, secondVal);
-        bl.addRow(new Object[]{"myInstanceName", "label", new Integer(1100), "Active", cal.getTime()});
+        bl.addRow(new Object[]{"myInstanceName", "label", Integer.valueOf(1100), "Active", cal.getTime()});
 
         cal.setTime(new Date());
         cal.add(dateToAdd, secondVal);
-        bl.addRow(new Object[]{"myInstanceName", "label", new Integer(-1100), "Active", cal.getTime()});
+        bl.addRow(new Object[]{"myInstanceName", "label", Integer.valueOf(-1100), "Active", cal.getTime()});
 
         return grabIntegers(bl.getData());
     }

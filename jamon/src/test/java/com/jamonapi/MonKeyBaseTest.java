@@ -18,11 +18,11 @@ public class MonKeyBaseTest {
 
         steveMap.put("fn",new MonKeyItemBase("steve summary","steve detail"));
         steveMap.put("ln","souza");
-        steveMap.put("age", new Long(44));
+        steveMap.put("age", Long.valueOf(44));
 
         mindyMap.put("fn","mindy");
         mindyMap.put("ln","bobish");
-        mindyMap.put("age", new Long(33));
+        mindyMap.put("age", Long.valueOf(33));
 
         MonKey steveMonKey=new MonKeyBase("Steves Range", steveMap);
         MonKey steveMonKey2=new MonKeyBase(steveMap);
@@ -39,7 +39,7 @@ public class MonKeyBaseTest {
         LinkedHashMap<String, Object> steveMap=new LinkedHashMap<String, Object>();
         steveMap.put("fn",new MonKeyItemBase("steve summary","steve detail"));
         steveMap.put("ln","souza");
-        steveMap.put("age", new Long(44));
+        steveMap.put("age", Long.valueOf(44));
         MonKey steveMonKey=new MonKeyBase("Steves Range", steveMap);
 
         // getting values out assertions
@@ -55,8 +55,8 @@ public class MonKeyBaseTest {
 
         // data assertions
         assertThat(steveMonKey.getBasicRowData(new ArrayList()).get(1).toString()).isEqualTo("steve summary, souza, 44");
-        assertThat(steveMonKey.getRowData(new ArrayList())).containsExactly("local", new MonKeyItemBase("steve summary","steve detail"),"souza",new Long(44));
-        assertThat(steveMonKey.getRowDisplayData(new ArrayList())).containsExactly("local", new MonKeyItemBase("steve summary","detail doesn't need to match"),"souza",new Long(44));
+        assertThat(steveMonKey.getRowData(new ArrayList())).containsExactly("local", new MonKeyItemBase("steve summary","steve detail"),"souza",Long.valueOf(44));
+        assertThat(steveMonKey.getRowDisplayData(new ArrayList())).containsExactly("local", new MonKeyItemBase("steve summary","detail doesn't need to match"),"souza",Long.valueOf(44));
         assertThat(steveMonKey.getDetails().toString()).isEqualTo("[steve detail, souza, 44]");
     }
 

@@ -83,16 +83,16 @@ class MonitorImp extends Monitor implements RowData  {
     }
 
     private List getThisRowData(List rowData) {
-        rowData.add(new Double(getHits()));
-        rowData.add(new Double(getAvg()));
-        rowData.add(new Double(getTotal()));
-        rowData.add(new Double(getStdDev()));
-        rowData.add(new Double(getLastValue()));
-        rowData.add(new Double(getMin()));
-        rowData.add(new Double(getMax()));
-        rowData.add(new Double(getActive()));
-        rowData.add(new Double(getAvgActive()));
-        rowData.add(new Double(getMaxActive()));
+        rowData.add(Double.valueOf(getHits()));
+        rowData.add(Double.valueOf(getAvg()));
+        rowData.add(Double.valueOf(getTotal()));
+        rowData.add(Double.valueOf(getStdDev()));
+        rowData.add(Double.valueOf(getLastValue()));
+        rowData.add(Double.valueOf(getMin()));
+        rowData.add(Double.valueOf(getMax()));
+        rowData.add(Double.valueOf(getActive()));
+        rowData.add(Double.valueOf(getAvgActive()));
+        rowData.add(Double.valueOf(getMaxActive()));
         rowData.add(getFirstAccess());
         rowData.add(getLastAccess());
         rowData.add(bool(isEnabled()));

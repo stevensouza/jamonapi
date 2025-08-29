@@ -158,7 +158,7 @@ public final class LocaleContext {
         char getDecimalGroupSeparator() {
             if (decimalSeparator == 0) {
                 DecimalFormatSymbols symbols = new DecimalFormatSymbols(getLocale());
-                decimalSeparator = (new Character(symbols.getGroupingSeparator())).charValue();
+                decimalSeparator = Character.valueOf(symbols.getGroupingSeparator()).charValue();
             }
             return decimalSeparator;
         }

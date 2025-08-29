@@ -45,7 +45,7 @@ class TimeMonNano extends DecoMon {
     @Override
     public Object getValue(String key) {
         if ("starttime".equalsIgnoreCase(key)) {
-            return new Long(startTime);
+            return Long.valueOf(startTime);
         } else {
             return super.getValue(key);
         }

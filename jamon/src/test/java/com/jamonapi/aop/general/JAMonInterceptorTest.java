@@ -154,7 +154,7 @@ public class JAMonInterceptorTest {
     @Test
     public void testCreateExceptionDetails_WithParameters() throws Exception {
         JAMonInterceptor interceptor = new JAMonInterceptor();
-        String details = interceptor.createExceptionDetails("mylabel", new Object[]{new Integer(1962), "hello"}, null);
+        String details = interceptor.createExceptionDetails("mylabel", new Object[]{Integer.valueOf(1962), "hello"}, null);
         assertThat(details).contains("mylabel");
         assertThat(details).contains("1962");
         assertThat(details).contains("hello");
@@ -164,7 +164,7 @@ public class JAMonInterceptorTest {
     public void testCreateExceptionDetails_WithParametersAndException() throws Exception {
         JAMonInterceptor interceptor = new JAMonInterceptor();
         RuntimeException e = new RuntimeException("my fancy error message");
-        String details = interceptor.createExceptionDetails("mylabel", new Object[]{new Integer(1962), "hello"}, e);
+        String details = interceptor.createExceptionDetails("mylabel", new Object[]{Integer.valueOf(1962), "hello"}, e);
         assertThat(details).contains("mylabel");
         assertThat(details).contains("1962");
         assertThat(details).contains("hello");
@@ -175,7 +175,7 @@ public class JAMonInterceptorTest {
     public void testCreateExceptionDetails_WithExceptionButParametersDisabled() throws Exception {
         JAMonInterceptor interceptor = new JAMonInterceptor().setUseParametersInDetails(false);
         RuntimeException e = new RuntimeException("my fancy error message");
-        String details = interceptor.createExceptionDetails("mylabel", new Object[]{new Integer(1962), "hello"}, e);
+        String details = interceptor.createExceptionDetails("mylabel", new Object[]{Integer.valueOf(1962), "hello"}, e);
         assertThat(details).contains("mylabel");
         assertThat(details).doesNotContain("1962");
         assertThat(details).doesNotContain("hello");

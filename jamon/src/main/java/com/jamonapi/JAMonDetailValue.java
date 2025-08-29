@@ -35,13 +35,13 @@ public final class JAMonDetailValue implements Serializable, ToArray {
     public Object[] toArray() {
         if (row==null) {
             if (keyToString)
-                row = new Object[]{key.getInstanceName(), Misc.getAsString(key.getDetails()), new Double(value), new Double(active), new Date(time)};
+                row = new Object[]{key.getInstanceName(), Misc.getAsString(key.getDetails()), Double.valueOf(value), Double.valueOf(active), new Date(time)};
             else {
                 List list=new ArrayList();
                 list.add(key.getInstanceName());
                 Misc.addTo(list, key.getDetails());
-                list.add(new Double(value));
-                list.add(new Double(active));
+                list.add(Double.valueOf(value));
+                list.add(Double.valueOf(active));
                 list.add(new Date(time));
                 row=list.toArray();
             }

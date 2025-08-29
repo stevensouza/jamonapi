@@ -18,7 +18,13 @@
       "WebFetch(domain:github.com)",
       "Bash(git tag:*)",
       "Bash(git push:*)",
-      "Bash(time mvn test:*)"
+      "Bash(time mvn test:*)",
+      "Bash(JSON_INPUT='{\"\"session_id\"\":\"\"demo\"\",\"\"cwd\"\":\"\"/Users/stevesouza/my/data/gitrepo/jamonapi-delme\"\",\"\"model\"\":{\"\"display_name\"\":\"\"Sonnet 4\"\"},\"\"cost\"\":{\"\"total_cost_usd\"\":0.005},\"\"output_style\"\":\"\"explanatory\"\"}' ~/.claude/jamon-statusline.sh)",
+      "Bash(chmod:*)",
+      "Bash(alias cs)",
+      "Bash(~/.claude/claude-summary.sh:*)",
+      "Bash(pbpaste)",
+      "Bash(cs)"
     ],
     "deny": [],
     "ask": []

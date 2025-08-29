@@ -48,9 +48,9 @@ abstract class FrequencyDistImp extends MonitorImp implements FrequencyDist {
     @Override
     public List getRowData(List rowData) {
         super.getRowData(rowData);
-        rowData.add(new Double(getAvgActive()));
-        rowData.add(new Double(getAvgPrimaryActive()));
-        rowData.add(new Double(getAvgGlobalActive()));
+        rowData.add(Double.valueOf(getAvgActive()));
+        rowData.add(Double.valueOf(getAvgPrimaryActive()));
+        rowData.add(Double.valueOf(getAvgGlobalActive()));
         return rowData;
     }
 

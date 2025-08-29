@@ -147,16 +147,16 @@ public  class JAMonBufferListener implements JAMonListener, CopyJAMonListener {
          */
         public Object[] getData(Monitor mon) {
             Object[] retData=new Object[header.length];// all but the 2 values will be null and will be replaced by caller.
-            retData[lastValueIndex]=new Double(mon.getLastValue());
-            retData[activeIndex]=new Double(mon.getActive());
+            retData[lastValueIndex]=Double.valueOf(mon.getLastValue());
+            retData[activeIndex]=Double.valueOf(mon.getActive());
             retData[dateIndex]=mon.getLastAccess();
             return retData;
         }
 
         /** Pass in list and add monitor data to the end of it */
         public Object[] getData(List dataList, Monitor mon) {
-            dataList.add(new Double(mon.getLastValue()));
-            dataList.add(new Double(mon.getActive()));
+            dataList.add(Double.valueOf(mon.getLastValue()));
+            dataList.add(Double.valueOf(mon.getActive()));
             dataList.add(mon.getLastAccess());
             return dataList.toArray();
         }

@@ -32,7 +32,7 @@ class JDBCMonProxy extends MonProxy {
     // A weakHashMap() is used as you can't guarantee when a PreparedStatement closes, and there has to be some way of cleaning up
     // stale objects in the map.  WeakHashMaps() automatically remove any Object that has no other reference.
     private static Map statementsMap=Collections.synchronizedMap(new WeakHashMap());
-    private static Long DEFAULT_SQL_TIME=new Long(-99);// number for when the query hasn't finished executing yet.
+    private static Long DEFAULT_SQL_TIME=Long.valueOf(-99);// number for when the query hasn't finished executing yet.
     private static int ARGS_SQL_STATEMENT=0;// The sql is always the first argument to methods like executeQuery(sql,...);
     // the following numbers correspond to this header
     //String[] sqlHeader={"ID", "StartTime", "Executiontime", "StatementReuse", "SQL",  "ExceptionStackTrace", "MethodName", };
@@ -96,7 +96,7 @@ class JDBCMonProxy extends MonProxy {
                     sqlMon.start();
 
                 if (isSQLDetailEnabled) {
-                    row=new Object[] {new Long(++params.sqlID), new Date(), DEFAULT_SQL_TIME,  new Integer(statementReuseCounter), actualSQL, "", method.toString(),};
+                    row=new Object[] {Long.valueOf(++params.sqlID), new Date(), DEFAULT_SQL_TIME,  Integer.valueOf(statementReuseCounter), actualSQL, "", method.toString(),};
                     params.sqlBuffer.addRow(row);
                 }
             } // end if enabled
@@ -137,7 +137,7 @@ class JDBCMonProxy extends MonProxy {
                 long executionTime=mon.stop();
 
                 if (isSQLDetailEnabled && row!=null)
-                    row[SQL_EXECUTION_TIME_IND]=new Long(executionTime);
+                    row[SQL_EXECUTION_TIME_IND]=Long.valueOf(executionTime);
 
                 if (isSQLSummaryEnabled)
                     sqlMon.add(executionTime).appendDetails(stackTrace).stop();

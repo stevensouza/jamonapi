@@ -54,7 +54,7 @@ public class ArraySorterTest {
     /** Test array is sorted in descending order by the first column */
     @Test
     public void testSortDoubleArrayAscOnCol2() {
-        Object[][] array=new Double[][]{{new Double(10),new Double(30)},{new Double(20),new Double(40)}};
+        Object[][] array=new Double[][]{{Double.valueOf(10),Double.valueOf(30)},{Double.valueOf(20),Double.valueOf(40)}};
         ArraySorter sorter=new ArraySorter(array, 1, "desc");
         array=sorter.sort();
 

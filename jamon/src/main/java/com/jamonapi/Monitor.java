@@ -495,29 +495,29 @@ public abstract class Monitor implements MonitorInt, Serializable {
     /** Alternative method of getting the values in the 'get' methods like getHits(), getAvg() etc. */
     public Object getValue(String key) {
         if (AVG.equalsIgnoreCase(key))
-            return new Double(getAvg());
+            return Double.valueOf(getAvg());
         else if (HITS.equalsIgnoreCase(key))
-            return new Double(getHits());
+            return Double.valueOf(getHits());
         else if (MIN.equalsIgnoreCase(key))
-            return new Double(getMin());
+            return Double.valueOf(getMin());
         else if (MAX.equalsIgnoreCase(key))
-            return new Double(getMax());
+            return Double.valueOf(getMax());
         else if (TOTAL.equalsIgnoreCase(key))
-            return new Double(getTotal());
+            return Double.valueOf(getTotal());
         else if (ACTIVE.equalsIgnoreCase(key))
-            return new Double(getActive());
+            return Double.valueOf(getActive());
         else if (STDDEV.equalsIgnoreCase(key))
-            return new Double(getStdDev());
+            return Double.valueOf(getStdDev());
         else if (VALUE.equalsIgnoreCase(key) || LASTVALUE.equalsIgnoreCase(key))
-            return new Double(getLastValue());
+            return Double.valueOf(getLastValue());
         else if (LASTACCESS.equalsIgnoreCase(key))
             return getLastAccess();
         else if (FIRSTACCESS.equalsIgnoreCase(key))
             return getFirstAccess();
         else if (AVGACTIVE.equalsIgnoreCase(key))
-            return new Double(getAvgActive());
+            return Double.valueOf(getAvgActive());
         else if (MAXACTIVE.equalsIgnoreCase(key))
-            return new Double(getMaxActive());
+            return Double.valueOf(getMaxActive());
         else if (MonKey.LABEL_HEADER.equalsIgnoreCase(key))
             return getLabel();
         else if (MonKey.UNITS_HEADER.equalsIgnoreCase(key))
