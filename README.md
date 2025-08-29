@@ -16,8 +16,15 @@ see [jamonapi.sourceforge.net](http://jamonapi.sourceforge.net) for more informa
 
 ## Requirements
 
-- **Java 17 or higher** (runtime requirement - due to Hazelcast 5.5.0 and other dependencies)
-- **Java 17 or higher** (build requirement)
+### Build & Test Requirements
+- **Java 17 or higher** (required for compilation and testing due to modern dependencies)
+
+### Runtime Requirements
+- **Java 8+** - Core JAMon functionality (monitoring, JDBC proxy, basic servlet filters)
+- **Java 11+** - Jetty 10.x integration features  
+- **Java 17+** - Hazelcast 5.5.0 distributed monitoring features
+
+**Note:** JAMon 2.85 is compiled to Java 8 bytecode but requires Java 17+ to build and test.
 
 ## Maven Dependency
 

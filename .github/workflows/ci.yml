@@ -13,7 +13,7 @@ jobs:
     
     strategy:
       matrix:
-        java: [17, 21]  # Only test versions compatible with current dependencies
+        java: [8, 11, 17, 21]  # Test runtime compatibility on multiple JDK versions
         
     steps:
     - name: Checkout code
@@ -33,7 +33,14 @@ jobs:
         restore-keys: ${{ runner.os }}-m2
         
     - name: Run tests
-      run: mvn clean test -B
+      run: |
+        if [ "${{ matrix.java }}" -lt 17 ]; then
+          # Skip Hazelcast tests on Java < 17
+          mvn clean test -B -Dtest='!DistributedJamonHazelcastTest'
+        else
+          # Run all tests on Java 17+
+          mvn clean test -B
+        fi
       working-directory: ./jamon
       
     - name: Generate test report

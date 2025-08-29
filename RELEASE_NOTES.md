@@ -39,10 +39,11 @@
 - **Container Testing**: Servlet filters, valves, and handlers validated
 
 ### 🎯 Migration Notes
-- **BREAKING**: Java 17+ now required for runtime (due to Hazelcast 5.5.0 and dependencies)
-- **From 2.84**: Major Java version upgrade required
-- **From Earlier Versions**: Review dependency compatibility for Hazelcast 5.x
-- **Java 8-16 Users**: Must upgrade to Java 17+ before using JAMon 2.85
+- **Build Change**: Java 17+ required for compilation/testing (due to modern dependencies)
+- **Runtime**: Core JAMon still supports Java 8+, advanced features require higher versions
+- **From 2.84**: No breaking changes for basic JAMon usage
+- **Hazelcast Users**: Must upgrade to Java 17+ for distributed features
+- **Jetty Users**: Must upgrade to Java 11+ for Jetty 10.x integration
 
 ---
 
@@ -132,8 +133,10 @@
 - [Maven Central](https://central.sonatype.com/artifact/com.jamonapi/jamon)
 
 ### Requirements  
-- **JAMon 2.85**: Java 17+ (compiles with Java 17+, runs on Java 17+)  
-- **JAMon 2.84**: Java 8+ (compiles with Java 8+, runs on Java 8+)
+- **JAMon 2.85**: 
+  - **Build**: Java 17+ (compilation/testing)
+  - **Runtime**: Java 8+ (core), Java 11+ (Jetty), Java 17+ (Hazelcast)
+- **JAMon 2.84**: Java 8+ (build and runtime)
 - **JAMon 2.83**: Java 6+ (legacy compatibility)
 
 ---
