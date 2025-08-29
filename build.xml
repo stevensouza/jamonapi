@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project basedir="../.." default="all" name="jamonapi">
  <!--  ===========================================================================   -->
+ <!--  DEPRECATED: This Ant build file is obsolete as of JAMon 2.85                 -->
+ <!--  Use Maven instead: mvn clean install                                         -->
+ <!--  Last working version: 2.8 - DO NOT USE FOR CURRENT BUILDS                   -->
+ <!--  ===========================================================================   -->
  <!--  Properties   -->
  <!--  ===========================================================================   -->
   <property name="project" value="JAMonAPI"/>
