@@ -30,18 +30,19 @@
 ### 🔒 Security Status
 - **Dependency Health**: All major security vulnerabilities addressed
 - **CVE Resolutions**: Tomcat and Spring framework security patches applied
-- **Production Ready**: Safe for production deployments requiring Java 8 compatibility
+- **Production Ready**: Safe for production deployments requiring Java 17+ compatibility
 
 ### 📋 Technical Validation
 - **344/344 Tests Passing**: All tests successful including new container integration tests
-- **Multi-JDK Compatible**: Verified on Java 8, 11, 17, 21
+- **Multi-JDK Compatible**: Verified on Java 17, 21
 - **Build System**: Maven-only builds (Ant deprecated)
 - **Container Testing**: Servlet filters, valves, and handlers validated
 
 ### 🎯 Migration Notes
-- **From 2.84**: Direct upgrade, no breaking changes
+- **BREAKING**: Java 17+ now required for runtime (due to Hazelcast 5.5.0 and dependencies)
+- **From 2.84**: Major Java version upgrade required
 - **From Earlier Versions**: Review dependency compatibility for Hazelcast 5.x
-- **Java 6/7 Users**: Must upgrade to Java 8+ before using JAMon 2.85
+- **Java 8-16 Users**: Must upgrade to Java 17+ before using JAMon 2.85
 
 ---
 
@@ -131,7 +132,7 @@
 - [Maven Central](https://central.sonatype.com/artifact/com.jamonapi/jamon)
 
 ### Requirements  
-- **JAMon 2.85**: Java 8+ (compiles with Java 8+, runs on Java 8+)  
+- **JAMon 2.85**: Java 17+ (compiles with Java 17+, runs on Java 17+)  
 - **JAMon 2.84**: Java 8+ (compiles with Java 8+, runs on Java 8+)
 - **JAMon 2.83**: Java 6+ (legacy compatibility)
 

@@ -16,8 +16,8 @@ see [jamonapi.sourceforge.net](http://jamonapi.sourceforge.net) for more informa
 
 ## Requirements
 
-- **Java 8 or higher** (runtime requirement)
-- **Java 17 or higher** (build requirement - due to Hazelcast 5.5.0)
+- **Java 17 or higher** (runtime requirement - due to Hazelcast 5.5.0 and other dependencies)
+- **Java 17 or higher** (build requirement)
 
 ## Maven Dependency
 
