@@ -163,7 +163,6 @@ public class DistributedUtilsTest {
     }
 
     @Test
-    @org.junit.Ignore("Temporarily disabled - Log4j listener timing issue in CI environment")
     public void testChangeInstanceName() throws Exception {
         final String NEW_INSTANCE_NAME = "newInstanceName";
         Log4jUtils.logWithLog4j("log4j2.xml");
@@ -172,7 +171,9 @@ public class DistributedUtilsTest {
         JAMonBufferListener jbl = (JAMonBufferListener) JAMonListenerFactory.get("FIFOBuffer");
         helloMon.addListener("value", jbl);
         
-        // Ensure Log4j monitors have the "value" listener attached for CI environment
+        // Workaround: Tests pass locally but fail in GitHub CI due to Log4j appender timing issues.
+        // The Log4j appender should auto-add listeners via enableListeners="ALL" but this fails in CI.
+        // Explicitly add listeners to Log4j monitors to ensure they exist for testing.
         String[] log4jLabels = {"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "TOTAL"};
         for (String label : log4jLabels) {
             Monitor log4jMon = MonitorFactory.getMonitor(new MonKeyImp("com.jamonapi.log4j.JAMonAppender." + label, "log4j"));
