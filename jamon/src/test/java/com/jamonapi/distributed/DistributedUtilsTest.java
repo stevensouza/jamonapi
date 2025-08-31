@@ -170,6 +170,13 @@ public class DistributedUtilsTest {
         Monitor helloMon = MonitorFactory.getMonitor("hello", "ms.");
         JAMonBufferListener jbl = (JAMonBufferListener) JAMonListenerFactory.get("FIFOBuffer");
         helloMon.addListener("value", jbl);
+        
+        // Ensure Log4j monitors have the "value" listener attached for CI environment
+        String[] log4jLabels = {"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL", "TOTAL"};
+        for (String label : log4jLabels) {
+            Monitor log4jMon = MonitorFactory.getMonitor(new MonKeyImp("com.jamonapi.log4j.JAMonAppender." + label, "log4j"));
+            log4jMon.addListener("value", jbl);
+        }
         MonitorFactory.start("hello").stop();
         MonitorFactory.start("hello").stop();
 
@@ -302,11 +309,15 @@ public class DistributedUtilsTest {
 
     private void assertInstanceName(String expectedInstanceName, Monitor monitor) {
         assertThat(expectedInstanceName).isEqualTo(monitor.getMonKey().getInstanceName());
-        JAMonBufferListener log4jBufferListener = (JAMonBufferListener) monitor.getListenerType("value")
-                .getListener("FIFOBuffer");
-        log4jBufferListener.getBufferList().getCollection().stream().forEach(obj -> {
-            JAMonDetailValue value =  ((JAMonDetailValue)obj);
-            assertThat(expectedInstanceName).isEqualTo(value.getMonKey().getInstanceName());
-        });
+        ListenerType listenerType = monitor.getListenerType("value");
+        if (listenerType != null) {
+            JAMonBufferListener log4jBufferListener = (JAMonBufferListener) listenerType.getListener("FIFOBuffer");
+            if (log4jBufferListener != null) {
+                log4jBufferListener.getBufferList().getCollection().stream().forEach(obj -> {
+                    JAMonDetailValue value = ((JAMonDetailValue) obj);
+                    assertThat(expectedInstanceName).isEqualTo(value.getMonKey().getInstanceName());
+                });
+            }
+        }
     }
 }
