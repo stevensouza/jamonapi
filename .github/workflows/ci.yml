@@ -35,10 +35,10 @@ jobs:
     - name: Run tests
       run: |
         if [ "${{ matrix.java }}" -lt 17 ]; then
-          # Skip Hazelcast tests on Java < 17
-          mvn clean test -B -Dtest='!DistributedJamonHazelcastTest'
+          # Exclude Hazelcast compilation and tests on Java < 17 (uses exclude-hazelcast profile)
+          mvn clean test -B -P exclude-hazelcast
         else
-          # Run all tests on Java 17+
+          # Include Hazelcast on Java 17+ (uses hazelcast-support profile)
           mvn clean test -B
         fi
       working-directory: ./jamon

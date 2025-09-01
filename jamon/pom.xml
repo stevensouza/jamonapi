@@ -84,11 +84,6 @@
           <scope>test</scope>
       </dependency>
 
-      <dependency>
-          <groupId>com.hazelcast</groupId>
-          <artifactId>hazelcast</artifactId>
-          <version>${hazelcast.version}</version>
-      </dependency>
 
       <dependency>
           <groupId>org.apache.logging.log4j</groupId>
@@ -99,5 +94,50 @@
 
   </dependencies>
 
+  <profiles>
+    <!-- Java < 17: Exclude Hazelcast source code from compilation -->
+    <profile>
+      <id>exclude-hazelcast</id>
+      <activation>
+        <jdk>(,17)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>${maven.compiler.plugin.version}</version>
+            <configuration>
+              <source>8</source>
+              <target>8</target>
+              <excludes>
+                <exclude>**/distributed/Hazelcast*.java</exclude>
+              </excludes>
+              <testExcludes>
+                <exclude>**/distributed/*Hazelcast*.java</exclude>
+                <exclude>**/distributed/JamonDataPersisterFactoryTest.java</exclude>
+                <exclude>**/JamonPropertiesLoaderTest.java</exclude>
+              </testExcludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    
+    <!-- Java 17+: Include Hazelcast dependency and compile all sources -->
+    <profile>
+      <id>hazelcast-support</id>
+      <activation>
+        <jdk>[17,)</jdk>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>com.hazelcast</groupId>
+          <artifactId>hazelcast</artifactId>
+          <version>${hazelcast.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
 
  </project>
