@@ -75,6 +75,19 @@
           <artifactId>jetty-server</artifactId>
           <version>${jetty9.version}</version>
           <scope>provided</scope>
+          <exclusions>
+            <exclusion>
+              <groupId>org.eclipse.jetty.toolchain</groupId>
+              <artifactId>jetty-servlet-api</artifactId>
+            </exclusion>
+          </exclusions>
+      </dependency>
+      
+      <dependency>
+          <groupId>javax.servlet</groupId>
+          <artifactId>javax.servlet-api</artifactId>
+          <version>3.1.0</version>
+          <scope>provided</scope>
       </dependency>
 
       <dependency>
