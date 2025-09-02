@@ -16,15 +16,8 @@ see [jamonapi.sourceforge.net](http://jamonapi.sourceforge.net) for more informa
 
 ## Requirements
 
-### Build & Test Requirements
+### Build Requirements
 - **Java 17 or higher** (required for compilation and testing due to modern dependencies)
-
-### Runtime Requirements
-- **Java 8+** - Core JAMon functionality (monitoring, JDBC proxy, basic servlet filters)
-- **Java 11+** - Jetty 10.x integration features  
-- **Java 17+** - Hazelcast 5.5.0 distributed monitoring features
-
-**Note:** JAMon 3.0 uses a modular architecture with different Java version requirements per module. Core functionality is Java 8+, while modern integrations require Java 17+.
 
 ## Maven Dependency
 
@@ -71,12 +64,15 @@ JAMon 3.0 introduces a completely modular architecture, allowing you to include 
 
 ### Core Modules
 
-| Module | Java Version | Purpose | Dependencies |
+| Module | Runtime Java | Purpose | Dependencies |
 |--------|-------------|---------|--------------|
-| `jamon-core` | Java 8+ | Core monitoring, JDBC proxy, JMX | None |
-| `jamon-http-jakarta` | Java 17+ | Jakarta Servlet filters | jamon-core |
-| `jamon-hazelcast` | Java 17+ | Distributed monitoring | jamon-core, Hazelcast 5.5.0 |
-| `jamon-tomcat` | Java 17+ | Tomcat valve integration | jamon-core, jamon-http-jakarta |
+| `jamon-core` | **Java 8+** | Core monitoring, JDBC proxy, JMX beans | None |
+| `jamon-http-jakarta` | **Java 17+** | Jakarta Servlet filters, HTTP monitoring | jamon-core |
+| `jamon-hazelcast` | **Java 17+** | Distributed monitoring with Hazelcast 5.5.0 | jamon-core |
+| `jamon-tomcat` | **Java 17+** | Tomcat 11+ valve integration | jamon-core, jamon-http-jakarta |
+
+**Build Requirements:** Java 17+ to compile all modules  
+**Runtime Requirements:** Java 8+ (core) or Java 17+ (modern integrations)
 
 ### Framework Compatibility
 
