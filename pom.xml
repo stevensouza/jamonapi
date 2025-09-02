@@ -82,6 +82,7 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>${maven.javadoc.plugin.version}</version>
                     <configuration>
+                        <skip>true</skip>
                         <additionalparam>-Xdoclint:none</additionalparam>
                     </configuration>
                 </plugin>
