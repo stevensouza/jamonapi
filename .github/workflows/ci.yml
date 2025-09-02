@@ -35,20 +35,20 @@ jobs:
     - name: Run tests
       run: |
         if [ "${{ matrix.java }}" -lt 17 ]; then
-          # Exclude Hazelcast compilation and tests on Java < 17
-          mvn clean test -B -P exclude-hazelcast
+          # Java 8/11: Only test core module
+          mvn clean test -B -pl jamon-core
         else
-          # Include Hazelcast on Java 17+ 
-          mvn clean test -B -P hazelcast-support
+          # Java 17+: Test all modules
+          mvn clean test -B
         fi
-      working-directory: ./jamon
+      working-directory: ./jamon-3.0
       
     - name: Generate test report
       uses: dorny/test-reporter@v1
       if: success() || failure()
       with:
         name: Test Results (JDK ${{ matrix.java }})
-        path: 'jamon/target/surefire-reports/*.xml'
+        path: 'jamon-3.0/*/target/surefire-reports/*.xml'
         reporter: java-junit
         fail-on-error: true
 
@@ -76,24 +76,15 @@ jobs:
         
     - name: Build project
       run: mvn clean compile -B
+      working-directory: ./jamon-3.0
       
-    - name: Verify project  
-      run: mvn verify -B
-      
-    - name: Build WAR file
-      run: mvn clean package -B
-      working-directory: ./jamon_war
+    - name: Install modules
+      run: mvn clean install -B -Dmaven.test.skip=true
+      working-directory: ./jamon-3.0
       
     - name: Upload JAR artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: jar-artifacts
-        path: jamon/target/*.jar
-        retention-days: 30
-        
-    - name: Upload WAR artifacts  
-      uses: actions/upload-artifact@v4
-      with:
-        name: war-artifacts
-        path: jamon_war/target/*.war
+        name: jar-artifacts-3.0
+        path: jamon-3.0/*/target/*.jar
         retention-days: 30
