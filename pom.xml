@@ -18,7 +18,7 @@
         <module>jamon-core</module>
         <module>jamon-http-jakarta</module>
         <module>jamon-hazelcast</module>
-        <!-- <module>jamon-jetty</module> --> <!-- TODO: Complex Jetty 12 API migration needed -->
+        <!-- <module>jamon-jetty</module> --> <!-- Jetty 12 support planned for future release -->
         <module>jamon-tomcat</module>
     </modules>
 

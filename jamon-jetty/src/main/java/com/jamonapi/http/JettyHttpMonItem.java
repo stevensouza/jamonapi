@@ -3,7 +3,7 @@ package com.jamonapi.http;
 
 import com.jamonapi.Monitor;
 import com.jamonapi.MonitorFactory;
-import org.mortbay.jetty.Request;
+import org.eclipse.jetty.server.Request;
 
 /**
  *  Used to monitor jetty requests via the JAMonJettyHandler.
@@ -42,7 +42,8 @@ class JettyHttpMonItem extends HttpMonItem {
             Request request=(Request)httpMonBase.getRequest();
             Monitor mon=httpMonBase.getNextTimeMon();
             if (mon!=null) {
-                mon.add(System.currentTimeMillis()-request.getTimeStamp()).stop();// figure elapsed time and then decrement active.
+                long startTime = request.getBeginNanoTime() / 1_000_000; // Convert nanoseconds to milliseconds
+                mon.add(System.currentTimeMillis()-startTime).stop();// figure elapsed time and then decrement active.
             }
         } else
             super.stopTimeMon(httpMonBase);
