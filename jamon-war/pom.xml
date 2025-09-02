@@ -3,17 +3,27 @@
 
      <parent>
          <groupId>com.jamonapi</groupId>
-         <artifactId>jamon-parent</artifactId>
-         <version>2.85</version>
+         <artifactId>jamon-parent-3.0</artifactId>
+         <version>3.0</version>
      </parent>
 
   <groupId>com.jamonapi</groupId>
   <artifactId>jamon_war</artifactId>
   <packaging>war</packaging>
-  <name>JAMon War</name>
+  <name>JAMon War 3.0</name>
+  <description>JAMon Web Administration Interface for 3.0 modular architecture</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.jamonapi</groupId>
+      <artifactId>jamon-core</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 
   <build>
-    <finalName>jamon</finalName>
+    <finalName>jamon-3.0</finalName>
   </build>
 
 </project>

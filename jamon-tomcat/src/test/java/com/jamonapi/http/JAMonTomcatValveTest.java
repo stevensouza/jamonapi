@@ -80,9 +80,6 @@ public class JAMonTomcatValveTest {
 
     @Test
     public void testIgnoreHttpParamsProperty() {
-        // Check actual default value first
-        boolean defaultValue = valve.getIgnoreHttpParams();
-        
         valve.setIgnoreHttpParams(true);
         assertTrue(valve.getIgnoreHttpParams());
         
