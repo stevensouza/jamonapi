@@ -21,9 +21,9 @@ see [jamonapi.sourceforge.net](http://jamonapi.sourceforge.net) for more informa
 
 ## Maven Dependency
 
-The JAMon repositories on both sourceforge and github are the latest version of JAMon.
-* https://github.com/stevensouza/jamonapi
-* https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/
+**JAMon 3.0 is exclusively hosted on GitHub.** SourceForge support has been retired as of this release.
+* **Primary Repository:** https://github.com/stevensouza/jamonapi
+* **Issues & Support:** https://github.com/stevensouza/jamonapi/issues
 
 ```xml
 <!-- JAMon 3.0 Modular Dependencies -->
@@ -57,6 +57,23 @@ The JAMon repositories on both sourceforge and github are the latest version of 
     </dependency>
 </dependencies>
 ```
+
+## 📚 Documentation
+
+### 📖 Complete Documentation Hub
+- **[📚 JAMon Documentation Hub](docs/README.md)** - **START HERE** - Complete guide with navigation and use cases
+
+### JAMon 3.0 Guides
+- **[Core API Guide](docs/core-api.md)** - Complete JAMon monitoring API reference
+- **[Jakarta Servlet Filter](docs/servlet-filter.md)** - Web application HTTP monitoring
+- **[Distributed Monitoring](docs/distributed-monitoring.md)** - Hazelcast cluster integration
+- **[Migration Guide](MIGRATION_GUIDE_3.0.md)** - Upgrade from JAMon 2.x to 3.0
+- **[Release Notes](RELEASE_NOTES_3.0.md)** - Complete 3.0 feature overview
+
+### Additional Resources
+- **[JAMon Website](http://jamonapi.sourceforge.net)** - Legacy documentation and examples
+- **[GitHub Issues](https://github.com/stevensouza/jamonapi/issues)** - Support and bug reports
+- **JavaDoc:** Generated documentation included in JAR files
 
 ## 🏗️ JAMon 3.0 Modular Architecture
 
