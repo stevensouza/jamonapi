@@ -81,58 +81,59 @@ Create `hazelcast.xml` in your classpath:
 ```
 
 ### JAMon Distributed Configuration
-Configure distributed persistence in your application:
+Configure distributed persistence via `jamonapi.properties` in your classpath:
 
-```java
-// Enable distributed monitoring
-DistributedUtils.enableDistributedJAMon();
-
-// Configure Hazelcast-based persistence
-JamonDataPersisterFactory.setInstance(
-    new HazelcastPersister("jamonData")
-);
-
-// Start periodic data synchronization (every 30 seconds)
-DistributedUtils.startPeriodicSync(30000);
+```properties
+# jamonapi.properties - Enable Hazelcast persistence
+jamonDataPersister=com.jamonapi.distributed.HazelcastPersister
 ```
+
+When `HazelcastPersister` is on the classpath and configured, `JamonDataPersisterFactory.get()` will automatically return the Hazelcast-backed implementation. Otherwise, it falls back to local file persistence.
 
 ## Usage Examples
 
 ### Basic Distributed Setup
 ```java
-import com.jamonapi.distributed.DistributedUtils;
+import com.jamonapi.distributed.JamonDataPersisterFactory;
+import com.jamonapi.distributed.JamonDataPersister;
 import com.jamonapi.MonitorFactory;
+import com.jamonapi.Monitor;
 
-// Initialize distributed monitoring
-DistributedUtils.enableDistributedJAMon();
-
-// Use JAMon normally - data automatically shared across cluster
+// Use JAMon normally - monitoring data is collected locally
 Monitor mon = MonitorFactory.start("distributed.operation");
 // ... business logic ...
 mon.stop();
 
-// View cluster-wide data
-MonitorComposite clusterStats = DistributedUtils.getClusterStatistics();
+// Persist current JAMon data to the distributed store
+JamonDataPersister persister = JamonDataPersisterFactory.get();
+persister.put();  // Saves MonitorFactory.getRootMonitor() with default instance key
+
+// Retrieve data from a specific cluster node
+MonitorComposite nodeData = persister.get("nodeInstanceKey");
+
+// List all cluster node instances
+Set<String> instances = persister.getInstances();
 ```
 
-### Web Application Integration
+### Periodic Synchronization
+Use `JamonDataPersisterTimerTask` to automatically sync data on a schedule:
+
 ```java
-@WebListener
-public class JAMonDistributedListener implements ServletContextListener {
-    
-    @Override
-    public void contextInitialized(ServletContextEvent sce) {
-        // Initialize distributed JAMon on application startup
-        DistributedUtils.enableDistributedJAMon();
-        DistributedUtils.startPeriodicSync(60000); // Sync every minute
-    }
-    
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        // Cleanup on shutdown
-        DistributedUtils.shutdown();
-    }
-}
+import com.jamonapi.distributed.JamonDataPersisterTimerTask;
+import java.util.Timer;
+
+// Sync JAMon data to Hazelcast every 60 seconds
+Timer timer = new Timer("jamon-sync", true);
+timer.schedule(new JamonDataPersisterTimerTask(), 0, 60000);
+```
+
+### Shutdown
+```java
+import com.jamonapi.distributed.HazelcastPersister;
+
+// Shut down the Hazelcast instance when your application stops
+HazelcastPersister persister = (HazelcastPersister) JamonDataPersisterFactory.get();
+persister.shutDownHazelCast();
 ```
 
 ## Migration from JAMon 2.x
@@ -186,21 +187,22 @@ JAMon 3.0 Hazelcast 5.x config:
 ## Advanced Features
 
 ### Custom Data Persistence
-```java
-// Implement custom persistence strategy
-public class CustomPersister implements JamonDataPersister {
-    public void save(MonitorComposite data) {
-        // Custom storage logic (database, file system, etc.)
-    }
-    
-    public MonitorComposite load() {
-        // Custom retrieval logic
-        return loadFromCustomStorage();
-    }
-}
+Implement `JamonDataPersister` for custom storage backends:
 
-// Use custom persister
-JamonDataPersisterFactory.setInstance(new CustomPersister());
+```java
+public class CustomPersister implements JamonDataPersister {
+    public Set<String> getInstances() { /* return tracked instance keys */ }
+    public String getInstance() { /* return this node's instance key */ }
+    public void put() { put(getInstance()); }
+    public void put(String instanceKey) { /* save MonitorFactory.getRootMonitor() */ }
+    public MonitorComposite get(String instanceKey) { /* retrieve data */ }
+    public void remove(String instanceKey) { /* remove data */ }
+}
+```
+
+Register your custom persister by setting `jamonDataPersister` in `jamonapi.properties`:
+```properties
+jamonDataPersister=com.yourapp.CustomPersister
 ```
 
 ### Monitoring Hazelcast Itself

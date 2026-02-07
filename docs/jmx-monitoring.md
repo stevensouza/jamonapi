@@ -139,7 +139,7 @@ Of course you can also see this information in the JAMon web application. The fo
 
 ### GC Detail Tracking
 
-In addition to the aggregates mentioned above, JAMon also tracks the details of each individual GC invocation via [JAMon's buffer listener](listeners.md) capabilities. Listeners can be configured in the [jamonapi.properties](https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/jamon/src/test/resources/jamonapi.properties) file. To configure and view the detailed GC invocation data click on the blue box underneath the 'Modify' column (see above).
+In addition to the aggregates mentioned above, JAMon also tracks the details of each individual GC invocation via [JAMon's buffer listener](listeners.md) capabilities. Listeners can be configured in the [jamonapi.properties](https://github.com/stevensouza/jamonapi/blob/master/jamon-core/src/test/resources/jamonapi.properties) file. To configure and view the detailed GC invocation data click on the blue box underneath the 'Modify' column (see above).
 
 Each row in the table below represents details collected for one GC invocation. Some of the data collected is: The duration of the GC invocation (in ms.), memory statistics both before and after the GC invocation (BeforeGc, and AfterGc respectively).
 
@@ -157,7 +157,7 @@ Developers can use JAMon's custom JMX metrics capabilities to add any JAMon moni
 
 ### Configuration
 
-To add your own custom JMX monitors simply add them to the [jamonapi.properties](https://sourceforge.net/p/jamonapi/jamonapi/ci/master/tree/jamon/src/test/resources/jamonapi.properties) file. Below you can see how many of the custom metrics discussed in this document are configured. Note each custom metric has to have the exact JAMon monitor label and units (comma delimited). Optionally if you would like the JMX label to appear with a different (more readable) name in JMX then this can also be provided. By convention the name should start with 'Jamon.'.
+To add your own custom JMX monitors simply add them to the [jamonapi.properties](https://github.com/stevensouza/jamonapi/blob/master/jamon-core/src/test/resources/jamonapi.properties) file. Below you can see how many of the custom metrics discussed in this document are configured. Note each custom metric has to have the exact JAMon monitor label and units (comma delimited). Optionally if you would like the JMX label to appear with a different (more readable) name in JMX then this can also be provided. By convention the name should start with 'Jamon.'.
 
 **Note:** If you provide one custom JAMon JMX monitor then you are taking ownership of ALL custom monitors. This means that if you would like any of the other 'Jamon.' custom JMX metrics discussed above to still appear they must also be in the jamonapi.properties file.
 
@@ -205,15 +205,6 @@ The following shows changes in jetty page hits since the 'refresh' button was la
 - **Trending Analysis** - Track performance trends and degradation
 - **Load Testing** - Measure performance changes during load tests
 - **Capacity Planning** - Monitor growth rates for resource planning
-
-## JAMon 3.0 JMX Enhancements
-
-With JAMon 3.0's migration to Jakarta EE and modular architecture:
-
-- **Enhanced JMX Beans** - Improved performance and memory efficiency
-- **Modular Exposure** - Only expose JMX beans for enabled modules
-- **Jakarta EE Compatibility** - Full compatibility with modern JMX implementations
-- **Thread Safety** - Enhanced concurrency support for JMX operations
 
 ## Related Documentation
 

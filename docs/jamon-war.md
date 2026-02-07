@@ -91,20 +91,18 @@ Ranges combined with [JAMon listeners](listeners.md) (which let you see the deta
 
 ## JAMon 3.0 Web Application
 
-**For JAMon 3.0 users:** The web application has been updated for Jakarta EE compatibility and enhanced features. All existing functionality is preserved while adding:
+**For JAMon 3.0 users:** The web application has been updated for Jakarta EE compatibility. All existing functionality is preserved.
 
-- **Jakarta Servlet Support** - Compatible with modern application servers
-- **Enhanced Security** - Updated for current web security standards
-- **Improved Performance** - Optimized for high-throughput environments
-- **Modular Architecture** - Lighter footprint with optional components
+> **Build Note:** The `jamon-war` module is **not** part of the parent POM multi-module build. To build the WAR, run `mvn clean package` from the `jamon-war/` directory separately.
 
 ## Deployment Instructions
 
 ### JAMon 3.0 Deployment
-1. Ensure your server supports Jakarta EE (Tomcat 11+, etc.)
-2. Deploy `jamon-3.0.war` to your server's webapps directory
-3. Ensure `jamon-core-3.0.jar` and `jamon-http-jakarta-3.0.jar` are in server classpath
-4. Access via `http://host:port/jamon-3.0/`
+1. Build the WAR: `cd jamon-war && mvn clean package`
+2. Ensure your server supports Jakarta EE (Tomcat 11+, etc.)
+3. Deploy the resulting `jamon-3.0.war` to your server's webapps directory
+4. Ensure `jamon-core-3.0.jar` and `jamon-http-jakarta-3.0.jar` are in server classpath
+5. Access via `http://host:port/jamon-3.0/`
 
 ### Legacy JAMon 2.x Deployment
 1. Deploy `jamon.war` to your server's webapps directory

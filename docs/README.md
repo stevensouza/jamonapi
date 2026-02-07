@@ -74,6 +74,7 @@ JAMon 3.0 introduces a modular architecture - include only what you need:
 | **jamon-http-jakarta** | Java 17+ | Jakarta Servlet filters, HTTP monitoring | [Servlet Filter](servlet-filter.md) |
 | **jamon-hazelcast** | Java 17+ | Distributed monitoring | [Distributed Monitoring](distributed-monitoring.md) |
 | **jamon-tomcat** | Java 17+ | Tomcat 11+ valve integration | [HTTP Monitoring](http-monitoring.md) |
+| **jamon-war** | Java 17+ | Web admin interface (built separately) | [JAMon Web App](jamon-war.md) |
 
 ## 🔄 Migration Information
 

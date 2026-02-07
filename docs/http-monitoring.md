@@ -28,6 +28,8 @@ JAMon HTTP Monitoring uses reflection to monitor different aspects of the contai
 
 ### Setup by Container Type
 
+> **Note:** The container-specific setup instructions below apply to **legacy JAMon 2.x** deployments using jar files such as `jamon-2.7.jar`. For **JAMon 3.0**, use the [Jakarta Servlet Filter](servlet-filter.md) which works across all servlet containers without container-specific configuration.
+
 #### Tomcat 6, 7, 8+
 
 1. Put `jamon-2.7.jar` (or higher) in the tomcat 'lib' directory

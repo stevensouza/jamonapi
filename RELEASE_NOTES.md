@@ -1,5 +1,11 @@
 # JAMon Release Notes
 
+## [3.0] - 2025-09
+
+See **[JAMon 3.0 Release Notes](RELEASE_NOTES_3.0.md)** for the complete modular architecture release notes.
+
+---
+
 ## [2.85] - 2025-08-29
 
 ### 🎯 Final Maintenance Release
@@ -119,7 +125,16 @@
 
 ## Installation
 
-### Maven Dependency
+### Maven Dependency (JAMon 3.0)
+```xml
+<dependency>
+    <groupId>com.jamonapi</groupId>
+    <artifactId>jamon-core</artifactId>
+    <version>3.0</version>
+</dependency>
+```
+
+### Maven Dependency (Legacy JAMon 2.x)
 ```xml
 <dependency>
     <groupId>com.jamonapi</groupId>
@@ -130,15 +145,12 @@
 
 ### Download
 - [GitHub Releases](https://github.com/stevensouza/jamonapi/releases)
-- [Maven Central](https://central.sonatype.com/artifact/com.jamonapi/jamon)
 
-### Requirements  
-- **JAMon 2.85**: 
-  - **Build**: Java 17+ (compilation/testing)
-  - **Runtime**: Java 8+ (core), Java 11+ (Jetty), Java 17+ (Hazelcast)
+### Requirements
+- **JAMon 3.0**: Java 17+ (build), Java 8+ (core runtime), Java 17+ (modern modules)
+- **JAMon 2.85**: Java 17+ (build), Java 8+ (core runtime)
 - **JAMon 2.84**: Java 8+ (build and runtime)
-- **JAMon 2.83**: Java 6+ (legacy compatibility)
 
 ---
 
-*For complete documentation, see [JAMon User Guide](src/JAMonUsersGuide/index.html)*
+*For complete documentation, see [JAMon Documentation Hub](docs/README.md)*

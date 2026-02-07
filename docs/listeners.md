@@ -180,13 +180,6 @@ The following is an example of an HttpBufferListener (An ExceptionBufferListener
 
 ![JAMon Exception Buffer Listener](images/jamon_exception_bufflistener.jpg)
 
-## Jakarta EE and JAMon 3.0 Considerations
+## JAMon 3.0 Notes
 
-With JAMon 3.0's migration to Jakarta EE and Java 17+, the listener architecture remains fully compatible while providing enhanced performance and modern features:
-
-- All existing listener implementations work seamlessly with the new modular architecture
-- Enhanced thread safety and concurrency support for high-performance applications  
-- Improved memory efficiency with better garbage collection integration
-- Full compatibility with reactive and asynchronous programming models
-
-The listener framework continues to be one of JAMon's most powerful features for detailed performance analysis and monitoring in modern Java applications.
+The listener architecture is unchanged in JAMon 3.0. All existing listener implementations (`JAMonBufferListener`, `FIFOBufferListener`, etc.) work the same as in previous versions.

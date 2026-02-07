@@ -1,4 +1,4 @@
-<%@ page language="java" buffer="8kb" autoFlush="true" isThreadSafe="true" isErrorPage="false"  %>
+<%@ page language="java" buffer="8kb" autoFlush="true" isErrorPage="false"  %>
 <%@ page import="com.fdsapi.*, com.fdsapi.arrays.*, net.sf.xsshtmlfilter.HTMLFilter, java.sql.*, java.util.ArrayList, java.util.List" %>
 <%@ page import="com.jamonapi.*, com.jamonapi.proxy.*, com.jamonapi.utils.*, com.jamonapi.distributed.*" %>
 

@@ -28,16 +28,17 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
         <!-- Plugin versions -->
-        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+        <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
         <maven.source.plugin.version>3.3.1</maven.source.plugin.version>
         <maven.javadoc.plugin.version>3.10.1</maven.javadoc.plugin.version>
-        <maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
+        <maven.surefire.plugin.version>3.5.4</maven.surefire.plugin.version>
         
         <!-- Core dependency versions -->
         <junit.version>4.13.2</junit.version>
-        <mockito.version>5.19.0</mockito.version>
+        <mockito.version>5.21.0</mockito.version>
+        <assertj.version>3.27.7</assertj.version>
         <commons.version>3.18.0</commons.version>
-        <log4j.version>2.24.3</log4j.version>
+        <log4j.version>2.25.3</log4j.version>
         
         <!-- Java 8 compatible versions -->
         <servlet.version>3.1.0</servlet.version>
@@ -47,7 +48,7 @@
         <servlet.jakarta.version>6.0.0</servlet.jakarta.version>
         <hazelcast.version>5.5.0</hazelcast.version>
         <jetty.version>12.0.15</jetty.version>
-        <tomcat.version>11.0.2</tomcat.version>
+        <tomcat.version>11.0.18</tomcat.version>
     </properties>
 
     <build>
