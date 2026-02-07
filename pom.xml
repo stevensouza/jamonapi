@@ -36,7 +36,7 @@
         <!-- Core dependency versions -->
         <junit.version>4.13.2</junit.version>
         <mockito.version>5.21.0</mockito.version>
-        <assertj.version>3.27.6</assertj.version>
+        <assertj.version>3.27.7</assertj.version>
         <commons.version>3.18.0</commons.version>
         <log4j.version>2.25.3</log4j.version>
         
