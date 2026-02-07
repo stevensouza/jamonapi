@@ -34,8 +34,12 @@ jobs:
         
     - name: Run tests
       run: |
-        if [ "${{ matrix.java }}" -lt 17 ]; then
-          # Java 8/11: Only test core module
+        if [ "${{ matrix.java }}" -eq 8 ]; then
+          # Java 8: Compile main source only (verify runtime compatibility)
+          # Tests require Mockito 5.x which needs Java 11+
+          mvn clean compile -B -pl jamon-core
+        elif [ "${{ matrix.java }}" -lt 17 ]; then
+          # Java 11: Test core module only
           mvn clean test -B -pl jamon-core
         else
           # Java 17+: Test all modules
