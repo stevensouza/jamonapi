@@ -82,7 +82,7 @@ jobs:
       run: mvn clean compile -B
 
     - name: Install modules
-      run: mvn clean install -B -Dmaven.test.skip=true
+      run: mvn clean install -B -DskipTests
       
     - name: Upload JAR artifacts
       uses: actions/upload-artifact@v4
