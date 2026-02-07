@@ -330,8 +330,22 @@ function helpWin() {
   if (request.getParameter("debug")!=null) 
     session.setAttribute("debugjamon","true");
 
-   if (session.getAttribute("debugjamon")!=null)
-    debugStr=fds.getFormattedDataSet(new String[]{"parameter","value"}, Utils.getParameters(request), "htmlTable");
+   if (session.getAttribute("debugjamon")!=null) {
+    java.util.List<String[]> paramList = new java.util.ArrayList<String[]>();
+    java.util.Enumeration<String> names = request.getParameterNames();
+    while (names.hasMoreElements()) {
+        String name = names.nextElement();
+        String[] values = request.getParameterValues(name);
+        if (values != null) {
+            for (int i = 0; i < values.length; i++) {
+                paramList.add(new String[]{name, values[i]});
+            }
+        }
+    }
+    String[][] params = paramList.isEmpty() ? null : paramList.toArray(new String[paramList.size()][]);
+    if (params != null)
+        debugStr=fds.getFormattedDataSet(new String[]{"parameter","value"}, params, "htmlTable");
+   }
 %>
 
 <%=debugStr%>

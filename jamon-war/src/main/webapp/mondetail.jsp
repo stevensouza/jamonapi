@@ -1,4 +1,4 @@
-<%@ page language="java" buffer="8kb" autoFlush="true" isThreadSafe="true" isErrorPage="false"  %>
+<%@ page language="java" buffer="8kb" autoFlush="true" isErrorPage="false"  %>
 <%@ page import="com.fdsapi.*, com.fdsapi.arrays.*, net.sf.xsshtmlfilter.HTMLFilter, java.text.DateFormat, java.text.DecimalFormat, java.util.Date, java.util.HashMap, java.util.Map, java.util.regex.Matcher" %>
 <%@ page import="java.util.regex.Pattern" %>
 <%@ page import="com.jamonapi.*, com.jamonapi.proxy.*, com.jamonapi.utils.*, com.jamonapi.distributed.*" %>
@@ -256,8 +256,22 @@ function helpWin() {
   if (request.getParameter("debug")!=null) 
     session.setAttribute("debugjamon","true");
 
-   if (session.getAttribute("debugjamon")!=null)
-    debugStr=fds.getFormattedDataSet(new String[]{"parameter","value"}, Utils.getParameters(request), "htmlTable");
+   if (session.getAttribute("debugjamon")!=null) {
+    java.util.List<String[]> paramList = new java.util.ArrayList<String[]>();
+    java.util.Enumeration<String> names = request.getParameterNames();
+    while (names.hasMoreElements()) {
+        String name = names.nextElement();
+        String[] values = request.getParameterValues(name);
+        if (values != null) {
+            for (int i = 0; i < values.length; i++) {
+                paramList.add(new String[]{name, values[i]});
+            }
+        }
+    }
+    String[][] params = paramList.isEmpty() ? null : paramList.toArray(new String[paramList.size()][]);
+    if (params != null)
+        debugStr=fds.getFormattedDataSet(new String[]{"parameter","value"}, params, "htmlTable");
+   }
 %>
 
 <%=debugStr%>

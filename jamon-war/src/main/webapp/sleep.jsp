@@ -1,4 +1,4 @@
-<%@ page language="java" buffer="8kb" autoFlush="true" isThreadSafe="true" isErrorPage="false" %>
+<%@ page language="java" buffer="8kb" autoFlush="true" isErrorPage="false" %>
 
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
