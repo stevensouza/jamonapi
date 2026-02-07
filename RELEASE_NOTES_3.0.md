@@ -165,6 +165,13 @@ Integration classes moved to appropriate modules:
 - **JAMon WAR 3.0:** No longer bundles JAR dependencies
 - **Server setup:** Install modular JARs in server common/lib
 - **Benefit:** Multiple WARs can share single JAMon installation
+- **Requires Tomcat 11+** (or equivalent Jakarta EE 10 container)
+
+### JSP Changes (jamon-war)
+- **web.xml:** Updated from Servlet 2.3 DTD to Jakarta EE 6.0 schema
+- **isThreadSafe attribute:** Removed from all JSPs (removed from Jakarta Pages 4.0 spec)
+- **Utils.getParameters():** Replaced with inline Jakarta-compatible code (fdsapi-1.2.jar uses javax.servlet which is incompatible with Tomcat 11)
+- **Impact:** The jamon-war will **not** deploy on Tomcat 9 or earlier. Use JAMon 2.x WAR for older containers.
 
 ## 🎉 What's New
 

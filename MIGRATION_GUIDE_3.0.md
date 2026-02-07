@@ -229,6 +229,13 @@ Some integration classes moved to new modules:
 - **Hazelcast:** 3.x → 5.5.0 (API compatible, but requires Java 17+)
 - **Servlet API:** javax.servlet → jakarta.servlet (for Java 17+ modules)
 
+### JAMon WAR (jamon-war)
+The admin web application now **requires Tomcat 11+** (or equivalent Jakarta EE 10 container):
+- `web.xml` updated from Servlet 2.3 DTD to Jakarta EE 6.0 schema
+- `isThreadSafe` JSP attribute removed (dropped from Jakarta Pages 4.0)
+- `Utils.getParameters()` replaced with inline code (fdsapi-1.2.jar uses javax.servlet, incompatible with Tomcat 11)
+- **If you need the WAR on Tomcat 9 or earlier**, use the JAMon 2.x WAR instead
+
 ## Testing Your Migration
 
 ### 1. Build Verification
