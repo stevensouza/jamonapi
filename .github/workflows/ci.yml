@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     
     strategy:
+      fail-fast: false
       matrix:
         java: [8, 11, 17, 21]  # Test runtime compatibility on multiple JDK versions
         
@@ -48,7 +49,7 @@ jobs:
       
     - name: Generate test report
       uses: dorny/test-reporter@v1
-      if: success() || failure()
+      if: (success() || failure()) && matrix.java != 8
       with:
         name: Test Results (JDK ${{ matrix.java }})
         path: '*/target/surefire-reports/*.xml'
