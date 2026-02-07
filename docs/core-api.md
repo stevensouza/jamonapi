@@ -96,15 +96,17 @@ httpMon.stop();
 
 **Hazelcast Distributed Monitoring (jamon-hazelcast):**
 ```java
-// Enable distributed monitoring
-DistributedUtils.enableDistributedJAMon();
-
-// Use normal JAMon API - data automatically distributed
+// Use normal JAMon API - data is collected locally
 Monitor mon = MonitorFactory.start("distributed.operation");
 mon.stop();
 
-// Access cluster-wide data
-MonitorComposite clusterData = DistributedUtils.getClusterStatistics();
+// Persist data to Hazelcast cluster
+JamonDataPersister persister = JamonDataPersisterFactory.get();
+persister.put();  // Saves current data with this node's instance key
+
+// Retrieve data from any cluster node
+Set<String> instances = persister.getInstances();
+MonitorComposite nodeData = persister.get("nodeInstanceKey");
 ```
 
 **Tomcat Valve Integration (jamon-tomcat):**
@@ -162,17 +164,12 @@ MonitorFactory.start("cache.redis.get.ms");
 
 ### Resource Management
 ```java
-// Always use try-finally or try-with-resources
+// Always use try-finally to ensure monitors are stopped
 Monitor mon = MonitorFactory.start("operation");
 try {
     return performOperation();
 } finally {
     mon.stop();
-}
-
-// Or use JAMon's auto-closeable monitors
-try (Monitor mon = MonitorFactory.startAutoClose("operation")) {
-    return performOperation();
 }
 ```
 

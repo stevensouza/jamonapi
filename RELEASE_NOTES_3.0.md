@@ -63,7 +63,7 @@ JAMon has been transformed from a monolithic library to a modular ecosystem:
 - Comprehensive unit test coverage
 
 **Size:** ~25KB  
-**Dependencies:** jamon-core, jamon-http-jakarta, Tomcat Catalina 11.0.2
+**Dependencies:** jamon-core, jamon-http-jakarta, Tomcat Catalina 11.0.18
 
 ## 🔄 Migration Guide
 
@@ -137,7 +137,7 @@ mon.stop();
 - CI/CD pipeline for all modules
 
 ### Testing
-- **341 tests** maintained across modules
+- **351 tests** maintained across modules
 - Comprehensive Tomcat valve test coverage
 - Module-specific test isolation
 - Cross-module integration testing
@@ -145,7 +145,7 @@ mon.stop();
 ### Dependencies
 - **Hazelcast:** Upgraded 3.x → 5.5.0
 - **Jakarta EE:** Modern namespace support
-- **Tomcat:** Updated to 11.0.2
+- **Tomcat:** Updated to 11.0.18
 - **Security:** All CVEs addressed
 
 ## 🚨 Breaking Changes

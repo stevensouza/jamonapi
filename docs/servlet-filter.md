@@ -197,10 +197,10 @@ For users still on JAMon 2.x with `javax.servlet` namespace:
 ```xml
 <web-app>
     <display-name>YourApp</display-name>
-    
+
     <filter>
         <filter-name>JAMonFilter</filter-name>
-        <filter-class>com.jamonapi.JAMonFilter</filter-class>
+        <filter-class>com.jamonapi.http.JAMonServletFilter</filter-class>
     </filter>
 
     <filter-mapping>

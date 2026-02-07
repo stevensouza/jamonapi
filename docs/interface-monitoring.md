@@ -124,14 +124,6 @@ This capability is invaluable for discovering hidden exceptions that might other
 - Consider using JAMon's enable/disable features in production
 - Be mindful of memory usage with exception tracking
 
-## JAMon 3.0 Interface Monitoring
-
-With JAMon 3.0's enhanced architecture:
-- **Improved Performance** - Reduced monitoring overhead
-- **Enhanced Thread Safety** - Better concurrency support
-- **Modular Design** - Include only needed monitoring components
-- **Jakarta EE Compatibility** - Works with modern Java frameworks
-
 ## Related Documentation
 
 - [SQL Monitoring](sql-monitoring.md) - JDBC interface monitoring example

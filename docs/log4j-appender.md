@@ -258,14 +258,6 @@ Assuming we have enabled a JAMon "FIFOBuffer" for the generalized monitor we can
 </JamonAppender>
 ```
 
-## JAMon 3.0 Log4j Integration
-
-With JAMon 3.0's modular architecture:
-- **Enhanced Performance** - Improved logging overhead and memory efficiency
-- **Jakarta EE Compatibility** - Works with modern logging frameworks
-- **Thread Safety** - Enhanced concurrency support for high-throughput logging
-- **Modular Design** - Include only what you need for logging monitoring
-
 ## Sample Configuration File
 
 For a complete configuration example, see: [JAMonAppender Sample Log4j XML file](../src/LegacyJAMonUsersGuide285/log4j_jamonappender.xml)

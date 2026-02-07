@@ -121,7 +121,7 @@ mon.stop();
 |-----------|-----------|-----------|-------|
 | **Java** | 8+ | 8+ (core), 17+ (modern modules) | Modular approach |
 | **Servlet API** | javax.servlet 2.4+ | jakarta.servlet 6.0.0+ | Namespace change |
-| **Tomcat** | 6.x, 7.x, 8.x, 9.x | 11.0.2+ | Major version jump |
+| **Tomcat** | 6.x, 7.x, 8.x, 9.x | 11.0.18+ | Major version jump |
 | **Jetty** | 9.x, 10.x | Not supported | Use JAMon 2.x for Jetty |
 | **Hazelcast** | 3.x | 5.5.0+ | Major version upgrade |
 | **JSP** | 2.0+ | 2.3.3+ | Updated for Jakarta |

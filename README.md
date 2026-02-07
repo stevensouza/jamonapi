@@ -2,7 +2,7 @@
 
 [![CI Status](https://github.com/stevensouza/jamonapi/workflows/JAMon%20CI/CD%20Pipeline/badge.svg)](https://github.com/stevensouza/jamonapi/actions)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/stevensouza/jamonapi)](https://github.com/stevensouza/jamonapi/releases/latest)
-[![Maven Central](https://img.shields.io/maven-central/v/com.jamonapi/jamon)](https://central.sonatype.com/artifact/com.jamonapi/jamon)
+[![Maven Central](https://img.shields.io/maven-central/v/com.jamonapi/jamon-core)](https://central.sonatype.com/artifact/com.jamonapi/jamon-core)
 
 The Java Application Monitor (JAMon) is a free, simple, high performance, thread safe, Java API that allows developers to easily monitor production applications.
 
@@ -96,7 +96,7 @@ JAMon 3.0 introduces a completely modular architecture, allowing you to include 
 | Framework | Supported Versions | JAMon Module | Java Version |
 |-----------|-------------------|--------------|--------------|
 | **Servlet API** | 3.1.0+ (javax), 6.0.0+ (jakarta) | jamon-http-jakarta | Java 17+ |
-| **Tomcat** | 11.0.2+ | jamon-tomcat | Java 17+ |
+| **Tomcat** | 11.0.18+ | jamon-tomcat | Java 17+ |
 | **Jetty** | Not supported | N/A | Legacy support in JAMon 2.x only |
 | **Hazelcast** | 5.5.0+ | jamon-hazelcast | Java 17+ |
 | **JSP** | 2.3.3+ | jamon-http-jakarta | Java 17+ |
