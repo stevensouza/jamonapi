@@ -100,7 +100,7 @@ See the following links for more info on [JAMon](../README.md) and [JAMonListene
 Setting up the JAMonAppender should only take a few minutes. The steps follow:
 
 1. [Download JAMon](http://sourceforge.net/project/showfiles.php?group_id=96550) and extract the following from the zip file
-2. Put JAMon's jar file in your classpath (`jamon-2.6.jar` or higher for future releases)
+2. Put JAMon's jar file in your classpath (`jamon-core-3.0.jar` for JAMon 3.0, or `jamon-2.x.jar` for legacy versions)
 3. Install `JAMon.war` in your application, so you can view your Log4J statistics and log records
 4. Configure Log4j to use JAMon's Appender
 5. The JAMon web application has a `log4j.jsp` which will exercise the JAMonAppender. You must have both JAMon and Log4j in your classpath for the page to work. You can access this page with the following link: `http://yourhost:port/jamon/log4j.jsp`

@@ -32,11 +32,6 @@ jobs:
       run: |
         mvn clean test -B
         mvn clean package -B
-      working-directory: ./jamon
-      
-    - name: Build WAR  
-      run: mvn clean package -B
-      working-directory: ./jamon_war
       
     - name: Generate release notes
       id: release_notes
@@ -55,7 +50,7 @@ jobs:
           git log --oneline $PREVIOUS_TAG..HEAD --format="- %s" >> $GITHUB_OUTPUT
           echo "" >> $GITHUB_OUTPUT
           echo "### Test Results:" >> $GITHUB_OUTPUT
-          echo "- All 341 tests passing" >> $GITHUB_OUTPUT
+          echo "- All 351 tests passing" >> $GITHUB_OUTPUT
           echo "- Compatible with Java 8, 11, 17, 21" >> $GITHUB_OUTPUT
           echo "" >> $GITHUB_OUTPUT
           echo "### Downloads:" >> $GITHUB_OUTPUT
@@ -77,8 +72,8 @@ jobs:
         draft: false
         prerelease: false
         files: |
-          jamon/target/*.jar
-          jamon_war/target/*.war
+          */target/*.jar
+          jamon-war/target/*.war
         token: ${{ secrets.GITHUB_TOKEN }}
 
   # deploy:
