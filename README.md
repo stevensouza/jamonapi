@@ -1,5 +1,7 @@
 # jamonapi
 
+> **End of Life Notice:** JAMon 3.0 is the **final release** of the Java Application Monitor. No further updates, bug fixes, or new features are planned. Existing users are encouraged to migrate to modern observability solutions such as [Micrometer](https://micrometer.io/), [OpenTelemetry](https://opentelemetry.io/), or [Spring Boot Actuator](https://docs.spring.io/spring-boot/reference/actuator/). If you have questions about JAMon or need help migrating, feel free to [open an issue](https://github.com/stevensouza/jamonapi/issues) -- I'm still happy to help.
+
 [![CI Status](https://github.com/stevensouza/jamonapi/workflows/JAMon%20CI/CD%20Pipeline/badge.svg)](https://github.com/stevensouza/jamonapi/actions)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/stevensouza/jamonapi)](https://github.com/stevensouza/jamonapi/releases/latest)
 [![Maven Central](https://img.shields.io/maven-central/v/com.jamonapi/jamon-core)](https://central.sonatype.com/artifact/com.jamonapi/jamon-core)
